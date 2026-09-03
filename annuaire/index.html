@@ -230,6 +230,8 @@ h2 .n{font-size:11.5px;padding:1px 7px;border-radius:5px;border:1px solid var(--
    dans les deux minutes, sans que ça empêche d'envoyer. */
 .flag-soon{background:var(--gold-wash);color:var(--gold);
  border-color:var(--gold-line)}
+/* « C'est fait » — la seule couleur qui doit rassurer d'un coup d'oeil. */
+.flag-ok{background:var(--ok-wash);color:var(--ok);border-color:var(--ok-line)}
 .kind{display:inline-block;font-size:10.5px;color:var(--muted);
  border:1px solid var(--line);background:var(--raise);border-radius:5px;
  padding:1px 7px;margin-left:7px;white-space:nowrap;letter-spacing:.02em;
@@ -1843,6 +1845,24 @@ async function router() {
   const p = DONNEES.projets.find(x => x.cle === cle);
   if (p) { await fiche(p); window.scrollTo(0, 0); } else { liste(); }
 }
+
+/* Le logo ramene a la page de depart — vraiment : les filtres sont remis a
+   zero et on remonte en haut. Un logo qui rendrait la liste telle qu'on l'a
+   laissee, filtree sur une ville et un budget, ne ramene pas « a l'accueil » :
+   il faut pouvoir repartir de rien d'un seul geste. */
+function accueil() {
+  ['ville', 'pmin', 'pmax', 'budget', 'q'].forEach(id => {
+    F[id] = '';
+    const champ = document.getElementById('f-' + id);
+    if (champ) champ.value = '';
+  });
+  if (location.hash && location.hash !== '#/') location.hash = '#/';
+  else liste();
+  window.scrollTo(0, 0);
+}
+
+const LOGO = document.querySelector('.pub-logo');
+if (LOGO) LOGO.onclick = e => { e.preventDefault(); accueil(); };
 
 addEventListener('hashchange', router);
 ['ville', 'pmin', 'pmax', 'budget', 'q'].forEach(id => {
