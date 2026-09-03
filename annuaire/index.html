@@ -1,0 +1,174 @@
+<!doctype html><html lang=fr><head><meta charset=utf-8>
+<meta name=viewport content='width=device-width,initial-scale=1'>
+<meta name=theme-color content='#101828'>
+<title>BH Nadlan — Programmes neufs en Israël</title>
+<meta name=description content="L'annuaire des programmes neufs suivis par BH
+ Nadlan : 19 programmes, 10 villes.">
+<style>
+:root{--or:#c9a227;--encre:#101828;--gris:#5a6474;--fond:#fbfaf8;--carte:#fff;
+      --trait:#e6e2da;--ombre:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.06)}
+@media (prefers-color-scheme:dark){:root{--encre:#f4f4f5;--fond:#0f1216;
+      --carte:#171c22;--gris:#a2acbb;--trait:#262d36;--ombre:none}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fond);color:var(--encre);
+     font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+a{color:inherit}
+header{position:sticky;top:0;z-index:5;background:var(--fond);
+       border-bottom:1px solid var(--trait);padding:14px 16px 10px}
+.marque{display:flex;align-items:baseline;gap:10px;justify-content:center}
+.marque b{letter-spacing:.16em;font-size:17px}
+.marque span{color:var(--gris);font-size:12px}
+.filtres{display:flex;gap:8px;overflow-x:auto;padding:12px 0 2px;
+         -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filtres::-webkit-scrollbar{display:none}
+select,input{font:inherit;font-size:14px;color:inherit;background:var(--carte);
+     border:1px solid var(--trait);border-radius:999px;padding:9px 14px;
+     min-height:40px;flex:0 0 auto;max-width:56vw}
+input{flex:1 1 150px;min-width:130px}
+.compte{color:var(--gris);font-size:13px;padding:8px 2px 0;text-align:center}
+main{max-width:1100px;margin:0 auto;padding:16px 14px 90px}
+.grille{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.tuile{background:var(--carte);border:1px solid var(--trait);border-radius:16px;
+       overflow:hidden;box-shadow:var(--ombre);cursor:pointer;text-align:left;
+       padding:0;color:inherit;font:inherit;display:block;width:100%}
+.tuile img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
+           background:var(--trait)}
+.tuile .txt{padding:12px 14px 16px}
+.tuile h2{margin:0;font-size:17px;line-height:1.25}
+.lieu{color:var(--gris);font-size:13px;margin:3px 0 10px}
+.puces{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.puce{border:1px solid var(--trait);border-radius:999px;padding:3px 9px;
+      font-size:12px;color:var(--gris)}
+.prix{color:var(--or);font-weight:700;font-size:15px}
+.vide{color:var(--gris);text-align:center;padding:50px 10px}
+.retour{background:none;border:0;color:var(--gris);font:inherit;font-size:14px;
+        padding:0 0 14px;cursor:pointer}
+.fiche{max-width:780px;margin:0 auto}
+.fiche img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:16px;
+           border:1px solid var(--trait)}
+.fiche h1{font-size:24px;margin:18px 0 2px}
+table{width:100%;border-collapse:collapse;margin:18px 0}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--trait);
+      font-size:14px}
+th{color:var(--gris);font-weight:600;font-size:12px;text-transform:uppercase;
+   letter-spacing:.06em}
+td.p{color:var(--or);font-weight:700;white-space:nowrap}
+.cta{position:sticky;bottom:0;background:linear-gradient(transparent,var(--fond) 30%);
+     padding:16px 0 10px;display:flex;gap:10px;flex-wrap:wrap}
+.wa,.tel{flex:1 1 160px;text-align:center;padding:14px 18px;border-radius:999px;
+     text-decoration:none;font-weight:700;font-size:15px}
+.wa{background:#25d366;color:#052e16}
+.tel{background:var(--carte);border:1px solid var(--trait);color:inherit}
+footer{padding:26px 16px 40px;text-align:center;color:var(--gris);font-size:12.5px}
+footer b{color:var(--encre);letter-spacing:.14em}
+@media (max-width:520px){.grille{grid-template-columns:1fr}}
+</style></head><body>
+<header>
+  <div class=marque><b>BH NADLAN</b><span>L'immobilier autrement</span></div>
+  <div id=barre>
+    <div class=filtres>
+      <input id=f-q placeholder="Chercher un programme, une ville…">
+      <select id=f-ville><option value="">Toutes les villes</option>
+        <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Jerusalem'>Jerusalem</option><option value='Kedar'>Kedar</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Tel Aviv'>Tel Aviv</option><option value='Yehud-Monosson'>Yehud-Monosson</option></select>
+      <select id=f-pieces><option value="">Toutes typologies</option>
+        <option value='2.0'>2 pièces</option><option value='2.5'>2,5 pièces</option><option value='3.0'>3 pièces</option><option value='4.0'>4 pièces</option><option value='4.5'>4,5 pièces</option><option value='5.0'>5 pièces</option><option value='6.0'>6 pièces</option><option value='9.5'>9,5 pièces</option></select>
+      <select id=f-budget><option value="">Tous budgets</option>
+        <option value='1500000'>jusqu'à 1 500 000 ₪</option><option value='2000000'>jusqu'à 2 000 000 ₪</option><option value='2500000'>jusqu'à 2 500 000 ₪</option><option value='3000000'>jusqu'à 3 000 000 ₪</option><option value='4000000'>jusqu'à 4 000 000 ₪</option><option value='5000000'>jusqu'à 5 000 000 ₪</option><option value='5422947'>jusqu'à 5 422 947 ₪</option></select>
+    </div>
+    <div class=compte id=compte></div>
+  </div>
+</header>
+<main id=vue></main>
+<footer><b>BH NADLAN</b><br>+972(0)58.56789.26 ·
+ +33(0)7.67.28.47.10<br>
+ Accompagnement des acheteurs francophones, du premier contact à la remise des
+ clés.<br><small>Prix indicatifs, susceptibles d'évolution ; disponibilités
+ sous réserve. Document non contractuel.</small></footer>
+<script>const DONNEES = {"projets": [{"cle": "harmony-ashdod", "nom": "Harmony", "ville": "Ashdod", "quartier": null, "livraison": "2031", "image": "../img/bh-harmony-2p.jpg", "prix_min": 1735000, "lots": 128, "typologies": [{"pieces": 2.0, "libelle": "2", "prix_min": 1735000, "prix_max": 1975000, "surface_min": 54.0, "surface_max": 55.0, "livraison": "2031", "parking": false, "cave": false}, {"pieces": 3.0, "libelle": "3", "prix_min": 2125000, "prix_max": 2185000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "2031", "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 2495000, "prix_max": 2805000, "surface_min": 111.0, "surface_max": 113.0, "livraison": "2031", "parking": false, "cave": false}, {"pieces": 5.0, "libelle": "5", "prix_min": 2975000, "prix_max": 3665000, "surface_min": 141.0, "surface_max": 191.0, "livraison": "2031", "parking": false, "cave": false}, {"pieces": 6.0, "libelle": "6", "prix_min": 3885000, "prix_max": 4065000, "surface_min": 165.0, "surface_max": 165.0, "livraison": "2031", "parking": false, "cave": false}], "prix_max": 4065000}, {"cle": "ramot-ashkelon", "nom": "Ramot", "ville": "Ashkelon", "quartier": null, "livraison": "2029", "image": "../img/bh-ramot-3p.jpg", "prix_min": 1875000, "lots": 84, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 1875000, "prix_max": 2259000, "surface_min": 77.0, "surface_max": 110.0, "livraison": "2029", "parking": true, "cave": true}, {"pieces": 4.0, "libelle": "4", "prix_min": 2181818, "prix_max": 2363636, "surface_min": 109.0, "surface_max": 111.0, "livraison": "2029", "parking": true, "cave": true}, {"pieces": 5.0, "libelle": "5", "prix_min": 2454000, "prix_max": 3670455, "surface_min": 124.0, "surface_max": 167.0, "livraison": "2029", "parking": true, "cave": true}, {"pieces": 6.0, "libelle": "6", "prix_min": 3545000, "prix_max": 3622000, "surface_min": 172.0, "surface_max": 181.0, "livraison": "2029", "parking": true, "cave": true}], "prix_max": 3670455}, {"cle": "island-bat-yam", "nom": "Island", "ville": "Bat Yam", "quartier": null, "livraison": null, "image": "../img/bh-island-3p.jpg", "prix_min": 3100000, "lots": 3, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 3100000, "prix_max": 3100000, "surface_min": 81.5, "surface_max": 81.5, "livraison": null, "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 3800000, "prix_max": 3800000, "surface_min": 116.0, "surface_max": 116.0, "livraison": null, "parking": false, "cave": false}, {"pieces": 5.0, "libelle": "5", "prix_min": 4300000, "prix_max": 4300000, "surface_min": 131.0, "surface_max": 131.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 4300000}, {"cle": "quartier-du-parc-face-au-lac-beer-sheva", "nom": "Quartier du parc, face au lac", "ville": "Beer Sheva", "quartier": null, "livraison": "immédiate", "image": "../img/bh-quartier-du-parc-face-au-lac-3p.jpg", "prix_min": 1685000, "lots": 6, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 1685000, "prix_max": 1685000, "surface_min": 86.0, "surface_max": 86.0, "livraison": "immédiate", "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 2200000, "prix_max": 2200000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "immédiate", "parking": false, "cave": false}, {"pieces": 5.0, "libelle": "5", "prix_min": 2500000, "prix_max": 3000000, "surface_min": 125.0, "surface_max": 140.0, "livraison": "immédiate", "parking": false, "cave": false}], "prix_max": 3000000}, {"cle": "avital-3-jerusalem", "nom": "Avital 3", "ville": "Jerusalem", "quartier": "Makor Haim", "livraison": "décembre 2027 ou juin 2028", "image": "../img/bh-avital-3-2p.jpg", "prix_min": 2380000, "lots": 5, "typologies": [{"pieces": 2.0, "libelle": "2", "prix_min": 2380000, "prix_max": 2850000, "surface_min": 52.0, "surface_max": 61.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"pieces": 3.0, "libelle": "3", "prix_min": 3850000, "prix_max": 3850000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 4600000, "prix_max": 4600000, "surface_min": 99.0, "surface_max": 99.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}], "prix_max": 4600000}, {"cle": "botanic-jerusalem", "nom": "Botanic", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": "fevrier 2030", "image": "../img/bh-botanic-3p.jpg", "prix_min": 2500000, "lots": 6, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 2500000, "prix_max": 2500000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "fevrier 2030", "parking": true, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 3270000, "prix_max": 3436906, "surface_min": 91.0, "surface_max": 111.0, "livraison": "juillet 2029", "parking": true, "cave": true}, {"pieces": 5.0, "libelle": "5", "prix_min": 3277000, "prix_max": 4263651, "surface_min": 112.0, "surface_max": 128.0, "livraison": null, "parking": true, "cave": true}], "prix_max": 4263651}, {"cle": "hadassa-aktana-jerusalem", "nom": "Hadassa Aktana", "ville": "Jerusalem", "quartier": "Kiryat Yovel", "livraison": "immédiate", "image": "../img/bh-hadassa-aktana-2p.jpg", "prix_min": 2300000, "lots": 1, "typologies": [{"pieces": 2.0, "libelle": "2", "prix_min": 2300000, "prix_max": 2300000, "surface_min": 50.0, "surface_max": 50.0, "livraison": "immédiate", "parking": true, "cave": true}], "prix_max": 2300000}, {"cle": "mexico-jerusalem", "nom": "Mexico", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": null, "image": "../img/bh-mexico-3p.jpg", "prix_min": 2755000, "lots": 2, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 2755000, "prix_max": 2755000, "surface_min": 83.0, "surface_max": 83.0, "livraison": null, "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 2940000, "prix_max": 2940000, "surface_min": 97.0, "surface_max": 97.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2940000}, {"cle": "mexico-6-jerusalem", "nom": "Mexico 6", "ville": "Jerusalem", "quartier": "6 Mexico", "livraison": null, "image": "../img/bh-mexico-6-2p.jpg", "prix_min": 2065000, "lots": 1, "typologies": [{"pieces": 2.0, "libelle": "2", "prix_min": 2065000, "prix_max": 2065000, "surface_min": 49.0, "surface_max": 49.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2065000}, {"cle": "soho-jerusalem", "nom": "Soho", "ville": "Jerusalem", "quartier": "13 Bar Yohai - Katamonim", "livraison": null, "image": "../img/bh-soho-2p.jpg", "prix_min": 2330000, "lots": 3, "typologies": [{"pieces": 2.0, "libelle": "2", "prix_min": 2330000, "prix_max": 2690000, "surface_min": 53.0, "surface_max": 61.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2690000}, {"cle": "stern-jerusalem", "nom": "Stern", "ville": "Jerusalem", "quartier": "Kiryat Yovel", "livraison": "septembre 2027", "image": "../img/bh-stern-4-5p.jpg", "prix_min": 3250000, "lots": 1, "typologies": [{"pieces": 4.5, "libelle": "4,5", "prix_min": 3250000, "prix_max": 3250000, "surface_min": 116.0, "surface_max": 116.0, "livraison": "septembre 2027", "parking": false, "cave": false}], "prix_max": 3250000}, {"cle": "uziel-48-jerusalem", "nom": "Uziel 48", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": null, "image": "../img/bh-uziel-48-3p.jpg", "prix_min": 3300000, "lots": 1, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 3300000, "prix_max": 3300000, "surface_min": 73.0, "surface_max": 73.0, "livraison": null, "parking": true, "cave": false}], "prix_max": 3300000}, {"cle": "villa-kedar-kedar", "nom": "Villa Kedar", "ville": "Kedar", "quartier": "Kedar (est de Jerusalem)", "livraison": null, "image": "../img/bh-villa-kedar-9-5p.jpg", "prix_min": 4900000, "lots": 1, "typologies": [{"pieces": 9.5, "libelle": "9,5", "prix_min": 4900000, "prix_max": 4900000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 4900000}, {"cle": "nordau-netanya", "nom": "Nordau", "ville": "Netanya", "quartier": null, "livraison": "janvier 2031", "image": "../img/bh-nordau-2-5p.jpg", "prix_min": 2125000, "lots": 145, "typologies": [{"pieces": 2.5, "libelle": "2,5", "prix_min": 2125000, "prix_max": 2642045, "surface_min": 61.0, "surface_max": 64.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"pieces": 3.0, "libelle": "3", "prix_min": 2659091, "prix_max": 3454545, "surface_min": 77.0, "surface_max": 100.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 3193182, "prix_max": 3784091, "surface_min": 111.0, "surface_max": 117.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"pieces": 5.0, "libelle": "5", "prix_min": 3750000, "prix_max": 6306818, "surface_min": 133.0, "surface_max": 189.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"pieces": 6.0, "libelle": "6", "prix_min": 4375000, "prix_max": 4715909, "surface_min": 156.0, "surface_max": 156.0, "livraison": "janvier 2031", "parking": false, "cave": false}], "prix_max": 6306818}, {"cle": "up-life-netivot", "nom": "UP LIFE", "ville": "Netivot", "quartier": "Maalot HaNachal", "livraison": null, "image": "../img/bh-up-life-4p.jpg", "prix_min": 1520000, "lots": 1, "typologies": [{"pieces": 4.0, "libelle": "4", "prix_min": 1520000, "prix_max": 1520000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 1520000}, {"cle": "bavli-tel-aviv", "nom": "Bavli", "ville": "Tel Aviv", "quartier": null, "livraison": "février 2028", "image": "../img/bh-bavli-3p.jpg", "prix_min": 5422947, "lots": 206, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 5422947, "prix_max": 9031062, "surface_min": 77.0, "surface_max": 107.0, "livraison": "février 2028", "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 6223207, "prix_max": 9031062, "surface_min": 123.0, "surface_max": 133.0, "livraison": "février 2028", "parking": false, "cave": false}, {"pieces": 5.0, "libelle": "5", "prix_min": 11594816, "prix_max": 12056816, "surface_min": 173.0, "surface_max": 173.0, "livraison": "février 2028", "parking": false, "cave": false}], "prix_max": 12056816}, {"cle": "jomo-tel-aviv-tel-aviv", "nom": "JOMO Tel Aviv", "ville": "Tel Aviv", "quartier": "Kiryat Shalom", "livraison": null, "image": "../img/bh-jomo-tel-aviv-2p.jpg", "prix_min": 2204000, "lots": 3, "typologies": [{"pieces": 2.0, "libelle": "2", "prix_min": 2204000, "prix_max": 3500000, "surface_min": 46.5, "surface_max": 54.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 3500000}, {"cle": "sde-dov-tel-aviv", "nom": "Sde Dov", "ville": "Tel Aviv", "quartier": null, "livraison": "décembre 2031", "image": "../img/bh-sde-dov-2p.jpg", "prix_min": 3764000, "lots": 118, "typologies": [{"pieces": 2.0, "libelle": "2", "prix_min": 3764000, "prix_max": 4708002, "surface_min": 49.2, "surface_max": 62.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"pieces": 3.0, "libelle": "3", "prix_min": 5748465, "prix_max": 6717517, "surface_min": 76.4, "surface_max": 78.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"pieces": 4.0, "libelle": "4", "prix_min": 8175442, "prix_max": 11270000, "surface_min": 112.7, "surface_max": 127.3, "livraison": "décembre 2031", "parking": false, "cave": false}], "prix_max": 11270000}, {"cle": "park-migshimim-yehud-monosson", "nom": "Park Migshimim", "ville": "Yehud-Monosson", "quartier": null, "livraison": null, "image": "../img/bh-park-migshimim-3p.jpg", "prix_min": 2390000, "lots": 1, "typologies": [{"pieces": 3.0, "libelle": "3", "prix_min": 2390000, "prix_max": 2390000, "surface_min": 81.0, "surface_max": 81.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2390000}], "wa": "972585678926"};</script>
+<script>
+const F = {ville:'', pieces:'', budget:'', q:''};
+const eur = n => n.toLocaleString('fr-FR').replace(/ |,/g,' ') + ' ₪';
+const el = document.getElementById('vue');
+
+function typos(p){
+  return p.typologies.map(t => t.libelle + ' P').join(' · ');
+}
+function correspond(p){
+  if (F.ville && p.ville !== F.ville) return false;
+  if (F.budget && p.prix_min > +F.budget) return false;
+  if (F.pieces && !p.typologies.some(t => String(t.pieces) === F.pieces)) return false;
+  if (F.q){
+    const foin = (p.nom+' '+p.ville+' '+(p.quartier||'')).toLowerCase();
+    if (!foin.includes(F.q.toLowerCase())) return false;
+  }
+  return true;
+}
+function liste(){
+  const vus = DONNEES.projets.filter(correspond);
+  document.getElementById('compte').textContent =
+    vus.length ? vus.length + ' programme' + (vus.length>1?'s':'') +
+      ' · à partir de ' + eur(Math.min(...vus.map(p=>p.prix_min)))
+    : '';
+  if (!vus.length){
+    el.innerHTML = '<p class=vide>Aucun programme ne correspond.<br>' +
+      'Dites-nous ce que vous cherchez, nous allons le chercher.</p>';
+    return;
+  }
+  el.innerHTML = '<div class=grille>' + vus.map(p => `
+    <button class=tuile onclick="ouvrir('${p.cle}')">
+      <img src="${p.image}" alt="" loading=lazy onerror="this.remove()">
+      <div class=txt>
+        <h2>${esc(p.nom)}</h2>
+        <p class=lieu>${esc(p.quartier ? p.quartier + ' · ' + p.ville : p.ville)}</p>
+        <div class=puces>${p.typologies.map(t=>'<span class=puce>'+t.libelle+' pièces</span>').join('')}
+          ${p.livraison ? '<span class=puce>Livraison '+esc(p.livraison)+'</span>' : ''}</div>
+        <span class=prix>À partir de ${eur(p.prix_min)}</span>
+      </div>
+    </button>`).join('') + '</div>';
+}
+function ouvrir(cle){ location.hash = '#/' + cle; }
+function fiche(p){
+  const msg = encodeURIComponent(
+    'Bonjour, je suis intéressé par le programme ' + p.nom + ' à ' + p.ville + '.');
+  el.innerHTML = `
+  <div class=fiche>
+    <button class=retour onclick="history.back()">← Tous les programmes</button>
+    <img src="${p.image}" alt="" onerror="this.remove()">
+    <h1>${esc(p.nom)}</h1>
+    <p class=lieu>${esc(p.quartier ? p.quartier + ' · ' + p.ville : p.ville)}${
+      p.livraison ? ' · Livraison ' + esc(p.livraison) : ''}</p>
+    <table><thead><tr><th>Typologie</th><th>Surface</th><th>À partir de</th></tr></thead>
+    <tbody>${p.typologies.map(t => `<tr>
+      <td>${t.libelle} pièces${t.parking?' · parking':''}${t.cave?' · cave':''}</td>
+      <td>${surface(t)}</td><td class=p>${eur(t.prix_min)}</td></tr>`).join('')}
+    </tbody></table>
+    <p class=lieu>Promoteur reconnu. Prix indicatifs, susceptibles d'évolution ;
+      disponibilités sous réserve. Document non contractuel.</p>
+    <div class=cta>
+      <a class=wa href="https://wa.me/${DONNEES.wa}?text=${msg}">Écrire sur WhatsApp</a>
+      <a class=tel href="tel:+${DONNEES.wa}">Appeler BH Nadlan</a>
+    </div>
+  </div>`;
+}
+function surface(t){
+  if (!t.surface_min) return '—';
+  const a = Math.round(t.surface_min), b = t.surface_max ? Math.round(t.surface_max) : a;
+  return (a === b ? a : a + ' à ' + b) + ' m²';
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function router(){
+  const cle = location.hash.replace(/^#\/?/, '');
+  const p = DONNEES.projets.find(x => x.cle === cle);
+  document.getElementById('barre').style.display = p ? 'none' : '';
+  if (p){ fiche(p); window.scrollTo(0,0); } else { liste(); }
+}
+addEventListener('hashchange', router);
+for (const id of ['ville','pieces','budget','q']){
+  const champ = document.getElementById('f-'+id);
+  champ.addEventListener('input', () => { F[id] = champ.value; liste(); });
+}
+router();
+</script>
+</body></html>
