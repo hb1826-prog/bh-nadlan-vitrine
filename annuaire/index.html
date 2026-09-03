@@ -893,6 +893,10 @@ tr.picked{background:var(--gold-wash)}
 @keyframes citycin{from{opacity:0;transform:translateY(12px) scale(.985)}
   to{opacity:1;transform:none}}
 .cityc:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(16,24,40,.24)}
+/* Une tuile sans ville ne mene nulle part : elle ne se souleve pas au survol,
+   pour ne pas promettre un clic qui n'existe pas. */
+.cityc.mute{cursor:default}
+.cityc.mute:hover{transform:none;box-shadow:var(--sh-1)}
 .cityc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   z-index:-1;transform:scale(1.03);transition:transform 3.2s var(--ease)}
 /* Le zoom est LENT — trois secondes. Une photo qui bondit fait cheap ; une
@@ -1077,12 +1081,13 @@ tr.picked{background:var(--gold-wash)}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px 72px}
 .pub-top{position:sticky;top:0;z-index:6;background:var(--bg);
  border-bottom:1px solid var(--line);padding:14px 20px 12px;margin-bottom:20px}
-.pub-top .pub-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;
- gap:14px;flex-wrap:wrap}
-.pub-top .pub-logo{font-weight:750;letter-spacing:.17em;font-size:16px;
- color:var(--ink);white-space:nowrap}
-.pub-top .pub-logo em{display:block;font-style:normal;font-size:10.5px;
- letter-spacing:.05em;color:var(--muted);font-weight:500;margin-top:2px}
+.pub-in{max-width:1180px;margin:0 auto}
+.pub-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pub-logo{display:block;flex:none;line-height:0;border-radius:var(--r-sm);
+ padding:4px 6px;margin-left:-6px;transition:background .16s var(--ease)}
+.pub-logo:hover{background:var(--raise)}
+.pub-logo svg{display:block;height:38px;width:auto}
+@media(max-width:860px){.pub-logo svg{height:30px}}
 .pub-top .grow{flex:1;min-width:0}   /* `.grow` du CRM impose 150px : ici,
    ce vide doit pouvoir disparaitre, sinon la barre deborde du telephone */
 .pub-filtres{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
@@ -1090,8 +1095,9 @@ tr.picked{background:var(--gold-wash)}
  border-radius:var(--r);padding:8px 12px;min-height:38px}
 .pub-filtres input{flex:1 1 210px;min-width:150px}
 .pub-count{color:var(--muted);font-size:12.5px;margin:14px 2px 12px}
-.progs{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
- align-items:start}
+.progs{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(232px,1fr))}
+.progs .tile{height:100%}
+.tile .price{margin-top:auto;padding-top:6px}
 .progs > *{animation:none}
 .tile .shot{height:150px}
 /* Le visuel de la vitrine porte son bandeau (typologie + prix) en bas du
@@ -1102,6 +1108,24 @@ tr.picked{background:var(--gold-wash)}
 .tile .shot .fallback{position:absolute;inset:0;display:grid;place-items:center;
  background:linear-gradient(140deg,var(--sunk),var(--gold-wash));
  color:var(--gold);font-size:24px;font-weight:700;letter-spacing:.08em}
+/* Le titre d'une fiche : le `.topbar` du CRM porte des marges negatives
+   calees sur les gouttieres de son `main` — repris ici, il decalait le titre
+   d'une trentaine de pixels a gauche de la carte qu'il annonce. */
+.pub-head{padding:20px 0 16px}
+.pub-head h1{margin:0;font-size:23px;font-weight:650;letter-spacing:-.02em;
+ line-height:1.25}
+.pub-head .sub{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.si-lab{font-size:12px;color:var(--muted);margin:18px 0 7px}
+.si-note{font-size:12px;margin:8px 0 0;line-height:1.55}
+.si-note.manque{color:var(--late)}
+.si-pied{font-size:11.5px;margin-top:20px;line-height:1.6}
+.si-titre{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;
+ color:var(--faint);font-weight:700;margin:22px 0 8px}
+.si-tr{font-size:11.5px;line-height:1.6;margin-top:3px;font-weight:400}
+.stats{margin-top:18px}
+.contact{margin-top:22px}
+.contact textarea{width:100%;min-height:62px}
+.jauge{margin-top:14px}
 .hero{position:relative;border-radius:var(--r-lg);overflow:hidden;
  border:1px solid var(--line);aspect-ratio:16/8;background:var(--sunk)}
 .hero img{width:100%;height:100%;object-fit:cover;display:block}
@@ -1132,8 +1156,26 @@ tr.picked{background:var(--gold-wash)}
 }
 </style>
 </head><body>
-<div class=pub-top><div class=pub-in>
-  <div class=pub-logo>BH NADLAN<em>L'immobilier autrement</em></div>
+<div class=pub-top><div class="pub-in pub-bar">
+  <a class=pub-logo href="#/" title="Retour à tous les programmes"
+     aria-label="BH Nadlan — retour à tous les programmes"><svg viewBox="0 0 306 64" height="38" role="img"
+ aria-label="BH Nadlan — l'immobilier autrement" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1.4" y="1.4" width="59.2" height="59.2" rx="16" fill="none"
+        stroke="#c9a227" stroke-width="2" opacity=".5"/>
+  <g fill="#c9a227">
+    <rect x="15.5" y="29" width="8" height="17" rx="1.5"/>
+    <rect x="27" y="19" width="8" height="27" rx="1.5"/>
+    <rect x="38.5" y="25" width="8" height="21" rx="1.5"/>
+  </g>
+  <rect x="13" y="48" width="36" height="2.8" rx="1.4" fill="#c9a227"/>
+  <text x="80" y="31" font-family="Helvetica,Arial,sans-serif" font-size="24"
+        font-weight="700" letter-spacing="1.2" fill="currentColor">BH</text>
+  <text x="126" y="31" font-family="Helvetica,Arial,sans-serif" font-size="24"
+        font-weight="300" letter-spacing="4.2" fill="currentColor">NADLAN</text>
+  <path d="M80 41 H296" stroke="#c9a227" stroke-width="1.3" opacity=".7"/>
+  <text x="80" y="56" font-family="Helvetica,Arial,sans-serif" font-size="10"
+        letter-spacing="2.9" fill="currentColor" opacity=".6">L’IMMOBILIER AUTREMENT</text>
+</svg></a>
   <div class=grow></div>
   <a class=chip href="#/simulateur">∑ Simulateur d'achat</a>
   <div class=theme><button data-t='light' title='Clair'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Comme le système'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Sombre'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
@@ -1159,23 +1201,27 @@ tr.picked{background:var(--gold-wash)}
   <small>Prix indicatifs, susceptibles d'évolution ; disponibilités sous
   réserve. Document non contractuel.</small>
 </div>
-<script>const DONNEES = {"projets": [{"cle": "harmony-ashdod", "nom": "Harmony", "ville": "Ashdod", "quartier": null, "livraison": "2031", "image": "../img/bh-harmony-2p.jpg", "prix_min": 1735000, "lots": 128, "typologies": [{"cle": "bh-harmony-2p", "pieces": 2.0, "libelle": "2", "prix_min": 1735000, "prix_max": 1975000, "surface_min": 54.0, "surface_max": 55.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2125000, "prix_max": 2185000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2495000, "prix_max": 2805000, "surface_min": 111.0, "surface_max": 113.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2975000, "prix_max": 3665000, "surface_min": 141.0, "surface_max": 191.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3885000, "prix_max": 4065000, "surface_min": 165.0, "surface_max": 165.0, "livraison": "2031", "parking": false, "cave": false}], "prix_max": 4065000}, {"cle": "ramot-ashkelon", "nom": "Ramot", "ville": "Ashkelon", "quartier": null, "livraison": "2029", "image": "../img/bh-ramot-3p.jpg", "prix_min": 1875000, "lots": 84, "typologies": [{"cle": "bh-ramot-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1875000, "prix_max": 2259000, "surface_min": 77.0, "surface_max": 110.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2181818, "prix_max": 2363636, "surface_min": 109.0, "surface_max": 111.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2454000, "prix_max": 3670455, "surface_min": 124.0, "surface_max": 167.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3545000, "prix_max": 3622000, "surface_min": 172.0, "surface_max": 181.0, "livraison": "2029", "parking": true, "cave": true}], "prix_max": 3670455}, {"cle": "island-bat-yam", "nom": "Island", "ville": "Bat Yam", "quartier": null, "livraison": null, "image": "../img/bh-island-3p.jpg", "prix_min": 3100000, "lots": 3, "typologies": [{"cle": "bh-island-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3100000, "prix_max": 3100000, "surface_min": 81.5, "surface_max": 81.5, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3800000, "prix_max": 3800000, "surface_min": 116.0, "surface_max": 116.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4300000, "prix_max": 4300000, "surface_min": 131.0, "surface_max": 131.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 4300000}, {"cle": "tours-u-bat-yam", "nom": "Tours U", "ville": "Bat Yam", "quartier": "Ramat Anassi", "livraison": "Juin 2030", "image": "../img/bh-tours-u-3p.jpg", "prix_min": 2700000, "lots": 3, "typologies": [{"cle": "bh-tours-u-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2700000, "prix_max": 2700000, "surface_min": 82.0, "surface_max": 82.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3450000, "prix_max": 3450000, "surface_min": 105.0, "surface_max": 105.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3890000, "prix_max": 3890000, "surface_min": 127.0, "surface_max": 127.0, "livraison": "Juin 2030", "parking": false, "cave": false}], "prix_max": 3890000}, {"cle": "quartier-du-parc-face-au-lac-beer-sheva", "nom": "Quartier du parc, face au lac", "ville": "Beer Sheva", "quartier": null, "livraison": "immédiate", "image": "../img/bh-quartier-du-parc-face-au-lac-3p.jpg", "prix_min": 1685000, "lots": 6, "typologies": [{"cle": "bh-quartier-du-parc-face-au-lac-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1685000, "prix_max": 1685000, "surface_min": 86.0, "surface_max": 86.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2200000, "prix_max": 2200000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2500000, "prix_max": 3000000, "surface_min": 125.0, "surface_max": 140.0, "livraison": "immédiate", "parking": false, "cave": false}], "prix_max": 3000000}, {"cle": "avital-3-jerusalem", "nom": "Avital 3", "ville": "Jerusalem", "quartier": "Makor Haim", "livraison": "décembre 2027 ou juin 2028", "image": "../img/bh-avital-3-2p.jpg", "prix_min": 2380000, "lots": 5, "typologies": [{"cle": "bh-avital-3-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2380000, "prix_max": 2850000, "surface_min": 52.0, "surface_max": 61.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3850000, "prix_max": 3850000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4600000, "prix_max": 4600000, "surface_min": 99.0, "surface_max": 99.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}], "prix_max": 4600000}, {"cle": "botanic-jerusalem", "nom": "Botanic", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": "fevrier 2030", "image": "../img/bh-botanic-3p.jpg", "prix_min": 2500000, "lots": 6, "typologies": [{"cle": "bh-botanic-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2500000, "prix_max": 2500000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "fevrier 2030", "parking": true, "cave": false}, {"cle": "bh-botanic-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3270000, "prix_max": 3436906, "surface_min": 91.0, "surface_max": 111.0, "livraison": "juillet 2029", "parking": true, "cave": true}, {"cle": "bh-botanic-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3277000, "prix_max": 4263651, "surface_min": 112.0, "surface_max": 128.0, "livraison": null, "parking": true, "cave": true}], "prix_max": 4263651}, {"cle": "hadassa-aktana-jerusalem", "nom": "Hadassa Aktana", "ville": "Jerusalem", "quartier": "Kiryat Yovel", "livraison": "immédiate", "image": "../img/bh-hadassa-aktana-2p.jpg", "prix_min": 2300000, "lots": 1, "typologies": [{"cle": "bh-hadassa-aktana-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2300000, "prix_max": 2300000, "surface_min": 50.0, "surface_max": 50.0, "livraison": "immédiate", "parking": true, "cave": true}], "prix_max": 2300000}, {"cle": "holyland-boutique-jerusalem", "nom": "Holyland Boutique", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Septembre 2030", "image": "../img/bh-holyland-boutique-3p.jpg", "prix_min": 3090000, "lots": 5, "typologies": [{"cle": "bh-holyland-boutique-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3090000, "prix_max": 3090000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4000000, "prix_max": 4000000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4616000, "prix_max": 4616000, "surface_min": 124.0, "surface_max": 124.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-6p", "pieces": 6.0, "libelle": "6", "prix_min": 5273000, "prix_max": 10000000, "surface_min": 143.0, "surface_max": 186.0, "livraison": "Septembre 2030", "parking": false, "cave": false}], "prix_max": 10000000}, {"cle": "holyland-tower-jerusalem", "nom": "Holyland Tower", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Mars 2028", "image": "../img/bh-holyland-tower-3p.jpg", "prix_min": 3505000, "lots": 4, "typologies": [{"cle": "bh-holyland-tower-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3505000, "prix_max": 3505000, "surface_min": 81.0, "surface_max": 81.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3960000, "prix_max": 3960000, "surface_min": 108.0, "surface_max": 108.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4525000, "prix_max": 4525000, "surface_min": 130.0, "surface_max": 130.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-6p", "pieces": 6.0, "libelle": "6", "prix_min": 14095000, "prix_max": 14095000, "surface_min": 186.0, "surface_max": 186.0, "livraison": "Mars 2028", "parking": false, "cave": false}], "prix_max": 14095000}, {"cle": "mexico-jerusalem", "nom": "Mexico", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": null, "image": "../img/bh-mexico-3p.jpg", "prix_min": 2755000, "lots": 2, "typologies": [{"cle": "bh-mexico-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2755000, "prix_max": 2755000, "surface_min": 83.0, "surface_max": 83.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-mexico-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2940000, "prix_max": 2940000, "surface_min": 97.0, "surface_max": 97.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2940000}, {"cle": "mexico-6-jerusalem", "nom": "Mexico 6", "ville": "Jerusalem", "quartier": "6 Mexico", "livraison": null, "image": "../img/bh-mexico-6-2p.jpg", "prix_min": 2065000, "lots": 1, "typologies": [{"cle": "bh-mexico-6-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2065000, "prix_max": 2065000, "surface_min": 49.0, "surface_max": 49.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2065000}, {"cle": "soho-jerusalem", "nom": "Soho", "ville": "Jerusalem", "quartier": "13 Bar Yohai - Katamonim", "livraison": null, "image": "../img/bh-soho-2p.jpg", "prix_min": 2330000, "lots": 3, "typologies": [{"cle": "bh-soho-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2330000, "prix_max": 2690000, "surface_min": 53.0, "surface_max": 61.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2690000}, {"cle": "uziel-48-jerusalem", "nom": "Uziel 48", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": null, "image": "../img/bh-uziel-48-3p.jpg", "prix_min": 3300000, "lots": 1, "typologies": [{"cle": "bh-uziel-48-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3300000, "prix_max": 3300000, "surface_min": 73.0, "surface_max": 73.0, "livraison": null, "parking": true, "cave": false}], "prix_max": 3300000}, {"cle": "villa-kedar-kedar", "nom": "Villa Kedar", "ville": "Kedar", "quartier": "Kedar (est de Jerusalem)", "livraison": null, "image": "../img/bh-villa-kedar-9-5p.jpg", "prix_min": 4900000, "lots": 1, "typologies": [{"cle": "bh-villa-kedar-9-5p", "pieces": 9.5, "libelle": "9,5", "prix_min": 4900000, "prix_max": 4900000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 4900000}, {"cle": "rova-kiryat-gat", "nom": "Rova", "ville": "Kiryat Gat", "quartier": "Carmey Gat", "livraison": "Octobre 2029", "image": "../img/bh-rova-3p.jpg", "prix_min": 1750000, "lots": 4, "typologies": [{"cle": "bh-rova-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1750000, "prix_max": 1750000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2080000, "prix_max": 2865000, "surface_min": 100.0, "surface_max": 103.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2210000, "prix_max": 2210000, "surface_min": 120.0, "surface_max": 120.0, "livraison": "Octobre 2029", "parking": false, "cave": false}], "prix_max": 2865000}, {"cle": "alive-netanya", "nom": "Alive", "ville": "Netanya", "quartier": "Park Hayam", "livraison": "Decembre 2029", "image": "../img/bh-alive-4p.jpg", "prix_min": 3495000, "lots": 3, "typologies": [{"cle": "bh-alive-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3495000, "prix_max": 3495000, "surface_min": 103.0, "surface_max": 103.0, "livraison": "Decembre 2029", "parking": false, "cave": false}, {"cle": "bh-alive-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3950000, "prix_max": 6875000, "surface_min": 135.0, "surface_max": 179.0, "livraison": "Decembre 2029", "parking": false, "cave": false}], "prix_max": 6875000}, {"cle": "nordau-netanya", "nom": "Nordau", "ville": "Netanya", "quartier": null, "livraison": "janvier 2031", "image": "../img/bh-nordau-2-5p.jpg", "prix_min": 2125000, "lots": 145, "typologies": [{"cle": "bh-nordau-2-5p", "pieces": 2.5, "libelle": "2,5", "prix_min": 2125000, "prix_max": 2642045, "surface_min": 61.0, "surface_max": 64.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2659091, "prix_max": 3454545, "surface_min": 77.0, "surface_max": 100.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3193182, "prix_max": 3784091, "surface_min": 111.0, "surface_max": 117.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3750000, "prix_max": 6306818, "surface_min": 133.0, "surface_max": 189.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-6p", "pieces": 6.0, "libelle": "6", "prix_min": 4375000, "prix_max": 4715909, "surface_min": 156.0, "surface_max": 156.0, "livraison": "janvier 2031", "parking": false, "cave": false}], "prix_max": 6306818}, {"cle": "up-life-netivot", "nom": "UP LIFE", "ville": "Netivot", "quartier": "Maalot HaNachal", "livraison": null, "image": "../img/bh-up-life-4p.jpg", "prix_min": 1520000, "lots": 1, "typologies": [{"cle": "bh-up-life-4p", "pieces": 4.0, "libelle": "4", "prix_min": 1520000, "prix_max": 1520000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 1520000}, {"cle": "uziel-13-15-ramat-gan", "nom": "Uziel 13-15", "ville": "Ramat Gan", "quartier": null, "livraison": "Juillet 2029", "image": "../img/bh-uziel-13-15-2p.jpg", "prix_min": 2640000, "lots": 4, "typologies": [{"cle": "bh-uziel-13-15-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2640000, "prix_max": 2640000, "surface_min": 60.0, "surface_max": 60.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3200000, "prix_max": 3200000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3460000, "prix_max": 5050000, "surface_min": 99.0, "surface_max": 100.0, "livraison": "Juillet 2029", "parking": false, "cave": false}], "prix_max": 5050000}, {"cle": "bavli-tel-aviv", "nom": "Bavli", "ville": "Tel Aviv", "quartier": null, "livraison": "février 2028", "image": "../img/bh-bavli-3p.jpg", "prix_min": 5422947, "lots": 206, "typologies": [{"cle": "bh-bavli-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5422947, "prix_max": 9031062, "surface_min": 77.0, "surface_max": 107.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-4p", "pieces": 4.0, "libelle": "4", "prix_min": 6223207, "prix_max": 9031062, "surface_min": 123.0, "surface_max": 133.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-5p", "pieces": 5.0, "libelle": "5", "prix_min": 11594816, "prix_max": 12056816, "surface_min": 173.0, "surface_max": 173.0, "livraison": "février 2028", "parking": false, "cave": false}], "prix_max": 12056816}, {"cle": "jomo-tel-aviv-tel-aviv", "nom": "JOMO Tel Aviv", "ville": "Tel Aviv", "quartier": "Kiryat Shalom", "livraison": null, "image": "../img/bh-jomo-tel-aviv-2p.jpg", "prix_min": 2204000, "lots": 3, "typologies": [{"cle": "bh-jomo-tel-aviv-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2204000, "prix_max": 3500000, "surface_min": 46.5, "surface_max": 54.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 3500000}, {"cle": "sde-dov-tel-aviv", "nom": "Sde Dov", "ville": "Tel Aviv", "quartier": null, "livraison": "décembre 2031", "image": "../img/bh-sde-dov-2p.jpg", "prix_min": 3764000, "lots": 118, "typologies": [{"cle": "bh-sde-dov-2p", "pieces": 2.0, "libelle": "2", "prix_min": 3764000, "prix_max": 4708002, "surface_min": 49.2, "surface_max": 62.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5748465, "prix_max": 6717517, "surface_min": 76.4, "surface_max": 78.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-4p", "pieces": 4.0, "libelle": "4", "prix_min": 8175442, "prix_max": 11270000, "surface_min": 112.7, "surface_max": 127.3, "livraison": "décembre 2031", "parking": false, "cave": false}], "prix_max": 11270000}], "wa": "972585678926", "profils": {"israelien_unique": "Israélien · 1er bien", "israelien_second": "Israélien · 2e bien", "oleh": "Nouvel immigrant", "etranger": "Résident étranger"}, "ltv": [25, 40, 50, 60, 70, 75], "durees": [10, 15, 20, 25, 30], "prix_libres": [1000000, 1250000, 1500000, 1750000, 2000000, 2250000, 2500000, 2750000, 3000000, 3250000, 3500000, 3750000, 4000000, 4250000, 4500000, 4750000, 5000000, 5250000, 5500000, 5750000, 6000000, 6250000, 6500000, 6750000, 7000000, 7250000, 7500000, 7750000, 8000000, 8250000, 8500000, 8750000, 9000000, 9250000, 9500000, 9750000, 10000000, 10250000, 10500000, 10750000, 11000000, 11250000, 11500000, 11750000, 12000000], "marche": {"date": "02/09/2026", "boi": 3.25, "boi_depuis": "01/09/2026", "prime": 4.75}};</script>
+<script>const DONNEES = {"projets": [{"cle": "harmony-ashdod", "nom": "Harmony", "ville": "Ashdod", "quartier": null, "livraison": "2031", "image": "../img/bh-harmony-2p.jpg", "prix_min": 1735000, "lots": 128, "typologies": [{"cle": "bh-harmony-2p", "pieces": 2.0, "libelle": "2", "prix_min": 1735000, "prix_max": 1975000, "surface_min": 54.0, "surface_max": 55.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2125000, "prix_max": 2185000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2495000, "prix_max": 2805000, "surface_min": 111.0, "surface_max": 113.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2975000, "prix_max": 3665000, "surface_min": 141.0, "surface_max": 191.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3885000, "prix_max": 4065000, "surface_min": 165.0, "surface_max": 165.0, "livraison": "2031", "parking": false, "cave": false}], "prix_max": 4065000}, {"cle": "ramot-ashkelon", "nom": "Ramot", "ville": "Ashkelon", "quartier": null, "livraison": "2029", "image": "../img/bh-ramot-3p.jpg", "prix_min": 1875000, "lots": 84, "typologies": [{"cle": "bh-ramot-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1875000, "prix_max": 2259000, "surface_min": 77.0, "surface_max": 110.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2181818, "prix_max": 2363636, "surface_min": 109.0, "surface_max": 111.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2454000, "prix_max": 3670455, "surface_min": 124.0, "surface_max": 167.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3545000, "prix_max": 3622000, "surface_min": 172.0, "surface_max": 181.0, "livraison": "2029", "parking": true, "cave": true}], "prix_max": 3670455}, {"cle": "island-bat-yam", "nom": "Island", "ville": "Bat Yam", "quartier": null, "livraison": null, "image": "../img/bh-island-3p.jpg", "prix_min": 3100000, "lots": 3, "typologies": [{"cle": "bh-island-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3100000, "prix_max": 3100000, "surface_min": 81.5, "surface_max": 81.5, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3800000, "prix_max": 3800000, "surface_min": 116.0, "surface_max": 116.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4300000, "prix_max": 4300000, "surface_min": 131.0, "surface_max": 131.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 4300000}, {"cle": "tours-u-bat-yam", "nom": "Tours U", "ville": "Bat Yam", "quartier": "Ramat Anassi", "livraison": "Juin 2030", "image": "../img/bh-tours-u-3p.jpg", "prix_min": 2700000, "lots": 3, "typologies": [{"cle": "bh-tours-u-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2700000, "prix_max": 2700000, "surface_min": 82.0, "surface_max": 82.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3450000, "prix_max": 3450000, "surface_min": 105.0, "surface_max": 105.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3890000, "prix_max": 3890000, "surface_min": 127.0, "surface_max": 127.0, "livraison": "Juin 2030", "parking": false, "cave": false}], "prix_max": 3890000}, {"cle": "quartier-du-parc-face-au-lac-beer-sheva", "nom": "Quartier du parc, face au lac", "ville": "Beer Sheva", "quartier": null, "livraison": "immédiate", "image": "../img/bh-quartier-du-parc-face-au-lac-3p.jpg", "prix_min": 1685000, "lots": 6, "typologies": [{"cle": "bh-quartier-du-parc-face-au-lac-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1685000, "prix_max": 1685000, "surface_min": 86.0, "surface_max": 86.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2200000, "prix_max": 2200000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2500000, "prix_max": 3000000, "surface_min": 125.0, "surface_max": 140.0, "livraison": "immédiate", "parking": false, "cave": false}], "prix_max": 3000000}, {"cle": "avital-3-jerusalem", "nom": "Avital 3", "ville": "Jerusalem", "quartier": "Makor Haim", "livraison": "décembre 2027 ou juin 2028", "image": "../img/bh-avital-3-2p.jpg", "prix_min": 2380000, "lots": 5, "typologies": [{"cle": "bh-avital-3-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2380000, "prix_max": 2850000, "surface_min": 52.0, "surface_max": 61.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3850000, "prix_max": 3850000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4600000, "prix_max": 4600000, "surface_min": 99.0, "surface_max": 99.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}], "prix_max": 4600000}, {"cle": "botanic-jerusalem", "nom": "Botanic", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": "fevrier 2030", "image": "../img/bh-botanic-3p.jpg", "prix_min": 2500000, "lots": 6, "typologies": [{"cle": "bh-botanic-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2500000, "prix_max": 2500000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "fevrier 2030", "parking": true, "cave": false}, {"cle": "bh-botanic-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3270000, "prix_max": 3436906, "surface_min": 91.0, "surface_max": 111.0, "livraison": "juillet 2029", "parking": true, "cave": true}, {"cle": "bh-botanic-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3277000, "prix_max": 4263651, "surface_min": 112.0, "surface_max": 128.0, "livraison": null, "parking": true, "cave": true}], "prix_max": 4263651}, {"cle": "hadassa-aktana-jerusalem", "nom": "Hadassa Aktana", "ville": "Jerusalem", "quartier": "Kiryat Yovel", "livraison": "immédiate", "image": "../img/bh-hadassa-aktana-2p.jpg", "prix_min": 2300000, "lots": 1, "typologies": [{"cle": "bh-hadassa-aktana-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2300000, "prix_max": 2300000, "surface_min": 50.0, "surface_max": 50.0, "livraison": "immédiate", "parking": true, "cave": true}], "prix_max": 2300000}, {"cle": "holyland-boutique-jerusalem", "nom": "Holyland Boutique", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Septembre 2030", "image": "../img/bh-holyland-boutique-3p.jpg", "prix_min": 3090000, "lots": 5, "typologies": [{"cle": "bh-holyland-boutique-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3090000, "prix_max": 3090000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4000000, "prix_max": 4000000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4616000, "prix_max": 4616000, "surface_min": 124.0, "surface_max": 124.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-6p", "pieces": 6.0, "libelle": "6", "prix_min": 5273000, "prix_max": 10000000, "surface_min": 143.0, "surface_max": 186.0, "livraison": "Septembre 2030", "parking": false, "cave": false}], "prix_max": 10000000}, {"cle": "holyland-tower-jerusalem", "nom": "Holyland Tower", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Mars 2028", "image": "../img/bh-holyland-tower-3p.jpg", "prix_min": 3505000, "lots": 4, "typologies": [{"cle": "bh-holyland-tower-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3505000, "prix_max": 3505000, "surface_min": 81.0, "surface_max": 81.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3960000, "prix_max": 3960000, "surface_min": 108.0, "surface_max": 108.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4525000, "prix_max": 4525000, "surface_min": 130.0, "surface_max": 130.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-6p", "pieces": 6.0, "libelle": "6", "prix_min": 14095000, "prix_max": 14095000, "surface_min": 186.0, "surface_max": 186.0, "livraison": "Mars 2028", "parking": false, "cave": false}], "prix_max": 14095000}, {"cle": "mexico-jerusalem", "nom": "Mexico", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": null, "image": "../img/bh-mexico-3p.jpg", "prix_min": 2755000, "lots": 2, "typologies": [{"cle": "bh-mexico-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2755000, "prix_max": 2755000, "surface_min": 83.0, "surface_max": 83.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-mexico-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2940000, "prix_max": 2940000, "surface_min": 97.0, "surface_max": 97.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2940000}, {"cle": "mexico-6-jerusalem", "nom": "Mexico 6", "ville": "Jerusalem", "quartier": "6 Mexico", "livraison": null, "image": "../img/bh-mexico-6-2p.jpg", "prix_min": 2065000, "lots": 1, "typologies": [{"cle": "bh-mexico-6-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2065000, "prix_max": 2065000, "surface_min": 49.0, "surface_max": 49.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2065000}, {"cle": "soho-jerusalem", "nom": "Soho", "ville": "Jerusalem", "quartier": "13 Bar Yohai - Katamonim", "livraison": null, "image": "../img/bh-soho-2p.jpg", "prix_min": 2330000, "lots": 3, "typologies": [{"cle": "bh-soho-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2330000, "prix_max": 2690000, "surface_min": 53.0, "surface_max": 61.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2690000}, {"cle": "uziel-48-jerusalem", "nom": "Uziel 48", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": null, "image": "../img/bh-uziel-48-3p.jpg", "prix_min": 3300000, "lots": 1, "typologies": [{"cle": "bh-uziel-48-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3300000, "prix_max": 3300000, "surface_min": 73.0, "surface_max": 73.0, "livraison": null, "parking": true, "cave": false}], "prix_max": 3300000}, {"cle": "villa-kedar-kedar", "nom": "Villa Kedar", "ville": "Kedar", "quartier": "Kedar (est de Jerusalem)", "livraison": null, "image": "../img/bh-villa-kedar-9-5p.jpg", "prix_min": 4900000, "lots": 1, "typologies": [{"cle": "bh-villa-kedar-9-5p", "pieces": 9.5, "libelle": "9,5", "prix_min": 4900000, "prix_max": 4900000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 4900000}, {"cle": "rova-kiryat-gat", "nom": "Rova", "ville": "Kiryat Gat", "quartier": "Carmey Gat", "livraison": "Octobre 2029", "image": "../img/bh-rova-3p.jpg", "prix_min": 1750000, "lots": 4, "typologies": [{"cle": "bh-rova-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1750000, "prix_max": 1750000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2080000, "prix_max": 2865000, "surface_min": 100.0, "surface_max": 103.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2210000, "prix_max": 2210000, "surface_min": 120.0, "surface_max": 120.0, "livraison": "Octobre 2029", "parking": false, "cave": false}], "prix_max": 2865000}, {"cle": "alive-netanya", "nom": "Alive", "ville": "Netanya", "quartier": "Park Hayam", "livraison": "Decembre 2029", "image": "../img/bh-alive-4p.jpg", "prix_min": 3495000, "lots": 3, "typologies": [{"cle": "bh-alive-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3495000, "prix_max": 3495000, "surface_min": 103.0, "surface_max": 103.0, "livraison": "Decembre 2029", "parking": false, "cave": false}, {"cle": "bh-alive-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3950000, "prix_max": 6875000, "surface_min": 135.0, "surface_max": 179.0, "livraison": "Decembre 2029", "parking": false, "cave": false}], "prix_max": 6875000}, {"cle": "nordau-netanya", "nom": "Nordau", "ville": "Netanya", "quartier": null, "livraison": "janvier 2031", "image": "../img/bh-nordau-2-5p.jpg", "prix_min": 2125000, "lots": 145, "typologies": [{"cle": "bh-nordau-2-5p", "pieces": 2.5, "libelle": "2,5", "prix_min": 2125000, "prix_max": 2642045, "surface_min": 61.0, "surface_max": 64.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2659091, "prix_max": 3454545, "surface_min": 77.0, "surface_max": 100.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3193182, "prix_max": 3784091, "surface_min": 111.0, "surface_max": 117.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3750000, "prix_max": 6306818, "surface_min": 133.0, "surface_max": 189.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-6p", "pieces": 6.0, "libelle": "6", "prix_min": 4375000, "prix_max": 4715909, "surface_min": 156.0, "surface_max": 156.0, "livraison": "janvier 2031", "parking": false, "cave": false}], "prix_max": 6306818}, {"cle": "up-life-netivot", "nom": "UP LIFE", "ville": "Netivot", "quartier": "Maalot HaNachal", "livraison": null, "image": "../img/bh-up-life-4p.jpg", "prix_min": 1520000, "lots": 1, "typologies": [{"cle": "bh-up-life-4p", "pieces": 4.0, "libelle": "4", "prix_min": 1520000, "prix_max": 1520000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 1520000}, {"cle": "uziel-13-15-ramat-gan", "nom": "Uziel 13-15", "ville": "Ramat Gan", "quartier": null, "livraison": "Juillet 2029", "image": "../img/bh-uziel-13-15-2p.jpg", "prix_min": 2640000, "lots": 4, "typologies": [{"cle": "bh-uziel-13-15-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2640000, "prix_max": 2640000, "surface_min": 60.0, "surface_max": 60.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3200000, "prix_max": 3200000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3460000, "prix_max": 5050000, "surface_min": 99.0, "surface_max": 100.0, "livraison": "Juillet 2029", "parking": false, "cave": false}], "prix_max": 5050000}, {"cle": "bavli-tel-aviv", "nom": "Bavli", "ville": "Tel Aviv", "quartier": null, "livraison": "février 2028", "image": "../img/bh-bavli-3p.jpg", "prix_min": 5422947, "lots": 206, "typologies": [{"cle": "bh-bavli-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5422947, "prix_max": 9031062, "surface_min": 77.0, "surface_max": 107.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-4p", "pieces": 4.0, "libelle": "4", "prix_min": 6223207, "prix_max": 9031062, "surface_min": 123.0, "surface_max": 133.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-5p", "pieces": 5.0, "libelle": "5", "prix_min": 11594816, "prix_max": 12056816, "surface_min": 173.0, "surface_max": 173.0, "livraison": "février 2028", "parking": false, "cave": false}], "prix_max": 12056816}, {"cle": "jomo-tel-aviv-tel-aviv", "nom": "JOMO Tel Aviv", "ville": "Tel Aviv", "quartier": "Kiryat Shalom", "livraison": null, "image": "../img/bh-jomo-tel-aviv-2p.jpg", "prix_min": 2204000, "lots": 3, "typologies": [{"cle": "bh-jomo-tel-aviv-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2204000, "prix_max": 3500000, "surface_min": 46.5, "surface_max": 54.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 3500000}, {"cle": "sde-dov-tel-aviv", "nom": "Sde Dov", "ville": "Tel Aviv", "quartier": null, "livraison": "décembre 2031", "image": "../img/bh-sde-dov-2p.jpg", "prix_min": 3764000, "lots": 118, "typologies": [{"cle": "bh-sde-dov-2p", "pieces": 2.0, "libelle": "2", "prix_min": 3764000, "prix_max": 4708002, "surface_min": 49.2, "surface_max": 62.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5748465, "prix_max": 6717517, "surface_min": 76.4, "surface_max": 78.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-4p", "pieces": 4.0, "libelle": "4", "prix_min": 8175442, "prix_max": 11270000, "surface_min": 112.7, "surface_max": 127.3, "livraison": "décembre 2031", "parking": false, "cave": false}], "prix_max": 11270000}], "wa": "972585678926", "profils": {"israelien_unique": "Israélien · 1er bien", "israelien_second": "Israélien · 2e bien", "oleh": "Nouvel immigrant", "etranger": "Résident étranger"}, "ltv": [25, 40, 50, 60, 70, 75], "durees": [10, 15, 20, 25, 30], "prix_libres": [1000000, 1250000, 1500000, 1750000, 2000000, 2250000, 2500000, 2750000, 3000000, 3250000, 3500000, 3750000, 4000000, 4250000, 4500000, 4750000, 5000000, 5250000, 5500000, 5750000, 6000000, 6250000, 6500000, 6750000, 7000000, 7250000, 7500000, 7750000, 8000000, 8250000, 8500000, 8750000, 9000000, 9250000, 9500000, 9750000, 10000000, 10250000, 10500000, 10750000, 11000000, 11250000, 11500000, 11750000, 12000000], "marche": {"date": "02/09/2026", "boi": 3.25, "boi_depuis": "01/09/2026", "prime": 4.75}, "tva": 0.18, "mail": "hb1826@gmail.com"};</script>
 <script>/* L'annuaire public — le CRM cote client.
 
-   Il affiche, il ne calcule pas : tout chiffre montre ici a ete produit a la
-   fabrication par fiscalite.py et credit.py, exactement comme dans le CRM et
-   sur la fiche A4. Aucun bareme, aucun taux, aucune formule ne vit ici. */
+   Il affiche, il ne calcule presque pas : impots, taux et credit ont ete
+   produits a la fabrication par fiscalite.py et credit.py, exactement comme
+   dans le CRM et sur la fiche A4. La page n'en refait que deux choses, parce
+   qu'elles dependent de ce que le visiteur saisit : un pourcentage du prix
+   pour les honoraires, et des additions. Aucun bareme, aucun taux de marche,
+   aucune tranche d'impot n'est ecrit ici. */
 
 const $ = (s, r) => (r || document).querySelector(s);
 const vue = $('#vue');
 const F = {ville: '', pieces: '', budget: '', q: ''};
 const E = {profil: 'israelien_unique', ltv: 70, duree: 25, typo: null,
-           prix: 2500000};
+           prix: 2500000, frais: null};
 let SIM = null;                       // sim.json, charge a la demande
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
   c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-const shek = n => Number(n).toLocaleString('fr-FR').replace(/ |,/g, ' ') + ' ₪';
+const shek = n => Math.round(Number(n) || 0).toLocaleString('fr-FR')
+  .replace(/ |,/g, ' ') + ' ₪';
 const pct = n => String(n).replace('.', ',') + ' %';
 
 /* ---------------- theme : clair / sombre / systeme, garde par appareil */
@@ -1208,31 +1254,29 @@ function liste() {
       + [...new Set(vus.map(p => p.ville))].length + ' villes · à partir de '
       + shek(Math.min(...vus.map(p => p.prix_min)))
     : '';
-  if (!vus.length) {
-    vue.innerHTML = '<div class="card"><div class="pad" style="text-align:center">'
-      + '<p>Aucun programme ne correspond à cette recherche.</p>'
-      + '<p class="dim">Dites-nous ce que vous cherchez : nous allons le chercher '
-      + 'pour vous chez les promoteurs.</p><div class="actions" '
-      + 'style="justify-content:center">'
-      + boutonWa('Bonjour, je cherche un bien en Israël.')
-      + '</div></div></div>';
-    return;
-  }
-  vue.innerHTML = '<div class="progs">' + vus.map(p => `
-    <a class="tile" href="#/${p.cle}">
-      <div class="shot">
-        <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
-        <img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">
-      </div>
-      <div class="body">
-        <div class="prj">${esc(p.nom)}</div>
-        <div class="meta">${esc(p.quartier ? p.quartier + ' · ' + p.ville : p.ville)}</div>
-        <div class="feats">${p.typologies.map(t =>
-          '<span class="feat">' + t.libelle + ' p.</span>').join('')}${
-          p.livraison ? '<span class="feat">' + esc(p.livraison) + '</span>' : ''}</div>
-        <div class="price"><small>à partir de</small>${shek(p.prix_min)}</div>
-      </div>
-    </a>`).join('') + '</div>';
+  const grille = vus.length
+    ? '<div class="progs">' + vus.map(p => `
+        <a class="tile" href="#/${p.cle}">
+          <div class="shot">
+            <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
+            <img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="body">
+            <div class="prj">${esc(p.nom)}</div>
+            <div class="meta">${esc(p.quartier ? p.quartier + ' · ' + p.ville
+                                                : p.ville)}</div>
+            <div class="feats">${p.typologies.map(t =>
+              '<span class="feat">' + t.libelle + ' p.</span>').join('')}${
+              p.livraison ? '<span class="feat">' + esc(p.livraison) + '</span>' : ''}</div>
+            <div class="price"><small>à partir de</small>${shek(p.prix_min)}</div>
+          </div>
+        </a>`).join('') + '</div>'
+    : `<div class="card"><div class="pad" style="text-align:center">
+        <p>Aucun programme ne correspond à cette recherche.</p>
+        <p class="dim">Dites-nous ce que vous cherchez : nous irons le chercher
+        pour vous chez les promoteurs.</p></div></div>`;
+  vue.innerHTML = grille + contactHTML();
+  wireContact();
 }
 
 /* ---------------- la fiche d'un programme */
@@ -1243,11 +1287,6 @@ function surface(t) {
   return (a === b ? a : a + ' à ' + b) + ' m²';
 }
 
-function boutonWa(message) {
-  return '<a class="wa" href="https://wa.me/' + DONNEES.wa + '?text='
-    + encodeURIComponent(message) + '">Parler à BH&nbsp;Nadlan</a>';
-}
-
 async function fiche(p) {
   $('#pub-filtres').style.display = 'none';
   E.typo = p.typologies[0].cle;
@@ -1255,15 +1294,12 @@ async function fiche(p) {
   vue.innerHTML = `
     <p><a href="#/" class="dim" style="font-size:13px">← Tous les programmes</a></p>
     <div class="hero"><img src="${esc(p.image)}" alt="" onerror="this.remove()"></div>
-    <div class="topbar" style="position:static;background:none;border:0;padding:18px 0 0">
-      <div>
-        <h1>${esc(p.nom)}</h1>
-        <p class="sub">${esc(p.quartier ? p.quartier + ' · ' + p.ville : p.ville)}${
-          p.livraison ? ' · Livraison ' + esc(p.livraison) : ''
-        } · Promoteur reconnu</p>
-      </div>
+    <div class="pub-head">
+      <h1>${esc(p.nom)}</h1>
+      <p class="sub">${esc(p.quartier ? p.quartier + ' · ' + p.ville : p.ville)}${
+        p.livraison ? ' · Livraison ' + esc(p.livraison) : ''} · Promoteur reconnu</p>
     </div>
-    <div class="card" style="margin-top:18px">
+    <div class="card">
       <div class="block">
         <div class="block-head"><span>Les appartements</span></div>
         <div class="scroll" style="max-height:none">
@@ -1285,38 +1321,59 @@ async function fiche(p) {
         d'évolution ; disponibilités sous réserve. Document non
         contractuel.</div>
     </div>
-    <div class="actions">${boutonWa(
-      'Bonjour, je suis intéressé par le programme ' + p.nom
-      + ' à ' + p.ville + '.')}</div>`;
+    ${contactHTML(p)}`;
+  wireContact(p);
   await simulateur($('#simu'), p);
 }
 
 /* ---------------- le simulateur
 
-   Les valeurs affichees sortent de sim.json, ecrit par fiscalite.py et
-   credit.py. La page choisit une case dans une grille ; elle n'en calcule
-   aucune. */
+   Le squelette (les choix) est dessine une fois ; seuls les chiffres sont
+   redessines quand on saisit des honoraires, pour ne pas perdre le curseur
+   du champ en cours de frappe. */
 async function charger() {
   if (SIM) return SIM;
   SIM = await fetch('sim.json').then(r => r.json()).catch(() => ({}));
   return SIM;
 }
 
+function blocCourant(p) {
+  const bloc = SIM[p ? E.typo : 'libre-' + E.prix];
+  return bloc ? bloc[E.profil] : null;
+}
+
+/* Les honoraires : ceux de fiscalite.py tant que le visiteur n'y touche pas.
+   Hillel les negocie au cas par cas — d'ou des champs, et non un chiffre. */
+function tauxCourants(f) {
+  return E.frais || {avocat: f.taux.avocat, agence: f.taux.agence,
+                     courtier: f.taux.courtier};
+}
+
+function fraisCalcules(f) {
+  const t = tauxCourants(f);
+  const tva = 1 + DONNEES.tva;
+  const avocat = Math.round(E.prix * (+t.avocat || 0) / 100 * tva);
+  const agence = Math.round(E.prix * (+t.agence || 0) / 100 * tva);
+  const courtier = Math.round((+t.courtier || 0) * tva);
+  const total = f.taxe + avocat + agence + courtier;
+  return {avocat, agence, courtier, total, cout: E.prix + total,
+          defaut: total === f.frais};
+}
+
 async function simulateur(zone, p) {
   await charger();
-  const bloc = SIM[p ? E.typo : 'libre-' + E.prix];
-  if (!bloc) { zone.innerHTML = ''; return; }
-  const f = bloc[E.profil];
+  const f = blocCourant(p);
+  if (!f) { zone.innerHTML = ''; return; }
   const plafond = f.plafond || 75;
   if (E.ltv > plafond) E.ltv = plafond;
   const ltvs = DONNEES.ltv.filter(v => v <= plafond);
-  const ligne = f.g[E.ltv + '|' + E.duree];
+  const t = tauxCourants(f);
 
   const choix = p
     ? `<div class="f"><label>Appartement</label><select id="s-typo">${
-        p.typologies.map(t => '<option value="' + t.cle + '"'
-          + (t.cle === E.typo ? ' selected' : '') + '>' + t.libelle
-          + ' pièces · ' + shek(t.prix_min) + '</option>').join('')
+        p.typologies.map(x => '<option value="' + x.cle + '"'
+          + (x.cle === E.typo ? ' selected' : '') + '>' + x.libelle
+          + ' pièces · ' + shek(x.prix_min) + '</option>').join('')
       }</select></div>`
     : `<div class="f"><label>Prix du bien</label><select id="s-prix">${
         DONNEES.prix_libres.map(v => '<option value="' + v + '"'
@@ -1334,35 +1391,49 @@ async function simulateur(zone, p) {
             + (k === E.profil ? ' selected' : '') + '>' + esc(l) + '</option>').join('')
         }</select></div>
       </div>
-      <div style="margin-top:16px">
-        <label class="dim" style="font-size:12px">Part financée par le prêt</label>
-        <div class="seg" style="margin-top:7px">${ltvs.map(v =>
-          '<button data-ltv="' + v + '" class="' + (v === E.ltv ? 'on' : '') + '">'
-          + v + ' %</button>').join('')}</div>
-        <p class="dim" style="font-size:12px;margin:8px 0 0">${esc(f.note_plafond || '')}</p>
+
+      <div class="si-lab">Part financée par le prêt</div>
+      <div class="seg">${ltvs.map(v =>
+        '<button data-ltv="' + v + '" class="' + (v === E.ltv ? 'on' : '') + '">'
+        + v + ' %</button>').join('')}</div>
+      <p class="dim si-note">${esc(f.note_plafond || '')}</p>
+
+      <div class="si-lab">Durée du prêt</div>
+      <div class="seg">${DONNEES.durees.map(v =>
+        '<button data-duree="' + v + '" class="' + (v === E.duree ? 'on' : '') + '">'
+        + v + ' ans</button>').join('')}</div>
+
+      <div class="si-lab">Frais annexes — les vôtres, si vous les connaissez</div>
+      <div class="fgrid">
+        <div class="f"><label>Avocat (% du prix)</label>
+          <input id="s-avocat" type="number" step="0.1" min="0" max="10"
+                 value="${t.avocat}"></div>
+        <div class="f"><label>Agence (% du prix)</label>
+          <input id="s-agence" type="number" step="0.1" min="0" max="10"
+                 value="${t.agence}"></div>
+        <div class="f"><label>Courtier (forfait ₪)</label>
+          <input id="s-courtier" type="number" step="500" min="0"
+                 value="${t.courtier}"></div>
       </div>
-      <div style="margin-top:14px">
-        <label class="dim" style="font-size:12px">Durée du prêt</label>
-        <div class="seg" style="margin-top:7px">${DONNEES.durees.map(v =>
-          '<button data-duree="' + v + '" class="' + (v === E.duree ? 'on' : '') + '">'
-          + v + ' ans</button>').join('')}</div>
-      </div>
-      ${ligne ? resultat(f, ligne)
-        : '<p class="dim" style="margin-top:18px">Ce montage n’est pas '
-          + 'finançable pour cette situation.</p>'}
-      <p class="dim" style="font-size:11.5px;margin-top:18px;line-height:1.6">
-        Taux du marché relevés le ${esc(DONNEES.marche.date)} — Banque
-        d'Israël ${pct(DONNEES.marche.boi)} depuis le
-        ${esc(DONNEES.marche.boi_depuis)}, prime ${pct(DONNEES.marche.prime)}.
-        Estimation indicative : le taux réel dépend de votre dossier et
-        de la banque. Elle ne vaut ni offre de prêt ni conseil fiscal.</p>
+      <p class="dim si-note">Honoraires hors TVA, ajoutée au calcul
+        (${pct(Math.round(DONNEES.tva * 1000) / 10)}). À zéro, ils sortent du
+        chiffrage.</p>
+
+      <div id="si-res"></div>
+
+      <p class="dim si-pied">Taux du marché relevés le
+        ${esc(DONNEES.marche.date)} — Banque d'Israël ${pct(DONNEES.marche.boi)}
+        depuis le ${esc(DONNEES.marche.boi_depuis)}, prime
+        ${pct(DONNEES.marche.prime)}. Estimation indicative : le taux réel
+        dépend de votre dossier et de la banque. Elle ne vaut ni offre de prêt,
+        ni conseil fiscal.</p>
     </div>`;
 
   const refaire = () => simulateur(zone, p);
   const typo = $('#s-typo', zone);
   if (typo) typo.onchange = e => {
     E.typo = e.target.value;
-    E.prix = p.typologies.find(t => t.cle === E.typo).prix_min;
+    E.prix = p.typologies.find(x => x.cle === E.typo).prix_min;
     refaire();
   };
   const prix = $('#s-prix', zone);
@@ -1374,37 +1445,92 @@ async function simulateur(zone, p) {
   zone.querySelectorAll('[data-duree]').forEach(b => {
     b.onclick = () => { E.duree = +b.dataset.duree; refaire(); };
   });
+  ['avocat', 'agence', 'courtier'].forEach(nom => {
+    $('#s-' + nom, zone).oninput = () => {
+      E.frais = {avocat: $('#s-avocat', zone).value,
+                 agence: $('#s-agence', zone).value,
+                 courtier: $('#s-courtier', zone).value};
+      resultats(zone, p);
+    };
+  });
+  resultats(zone, p);
 }
 
-function resultat(f, l) {
-  const comptant = l[0], mensualite = l[1], taux = l[2];
-  const interets = l[3], part = l[4], emprunt = l[5];
-  return `
-    <div class="stats" style="margin-top:20px">
-      <div class="stat"><b>${shek(comptant)}</b>
+function resultats(zone, p) {
+  const f = blocCourant(p);
+  const cible = $('#si-res', zone);
+  if (!f || !cible) return;
+  const l = f.g[E.ltv + '|' + E.duree];
+  if (!l) {
+    cible.innerHTML = '<p class="dim" style="margin-top:18px">Ce montage '
+      + 'n’est pas finançable pour cette situation.</p>';
+    return;
+  }
+  const apport = l[0], mensualite = l[1], taux = l[2], interets = l[3];
+  const part = l[4], emprunt = l[5], rembourse = l[6];
+  const fr = fraisCalcules(f);
+  const r = f.revente || {};
+
+  cible.innerHTML = `
+    <div class="stats">
+      <div class="stat"><b>${shek(apport + fr.total)}</b>
         <span>À sortir à la signature</span></div>
       <div class="stat"><b>${shek(mensualite)}</b>
         <span>Mensualité sur ${E.duree} ans</span></div>
-      <div class="stat"><b>${shek(f.cout)}</b>
+      <div class="stat"><b>${shek(fr.cout)}</b>
         <span>Coût total de l'acquisition</span></div>
     </div>
-    <table class="kv" style="margin-top:18px"><tbody>
-      <tr><th>Prix du bien</th><td class="strong">${shek(f.cout - f.frais)}</td></tr>
+
+    <div class="si-titre">Ce qu'on paie en plus du prix</div>
+    <table class="kv"><tbody>
+      <tr><th>Prix du bien</th><td class="strong">${shek(E.prix)}</td></tr>
       <tr><th>Taxe d'acquisition (mas rekhicha)</th>
-        <td>${shek(f.taxe)}</td></tr>
-      <tr><th>Avocat</th><td>${shek(f.avocat)}</td></tr>
-      <tr><th>Agence</th><td>${shek(f.agence)}</td></tr>
-      <tr><th>Emprunt (${E.ltv} % du prix, taux moyen ${pct(taux)})</th>
-        <td>${shek(emprunt)}</td></tr>
-      <tr><th>Intérêts payés sur toute la durée</th>
-        <td>${shek(interets)}</td></tr>
+        <td class="strong">${shek(f.taxe)}${f.tranches && f.tranches.length ? `
+          <div class="dim si-tr">${f.tranches.map(x =>
+            'sur ' + shek(x[0]) + ' à ' + pct(Math.round(x[1] * 10) / 10)
+            + ' = ' + shek(x[2])).join('<br>')}</div>` : ''}</td></tr>
+      <tr><th>Avocat</th><td>${shek(fr.avocat)}</td></tr>
+      <tr><th>Agence</th><td>${shek(fr.agence)}</td></tr>
+      <tr><th>Courtier</th><td>${shek(fr.courtier)}</td></tr>
+      <tr><th>Total des frais</th><td class="strong">${shek(fr.total)}
+        <span class="dim"> · ${pct(Math.round(fr.total / E.prix * 1000) / 10)}
+        du prix</span></td></tr>
+      <tr><th>Coût total</th><td class="strong">${shek(fr.cout)}</td></tr>
     </tbody></table>
-    <div style="margin-top:16px">
-      <div class="jauge"><i class="cap" style="width:${100 - part}%"></i>
-        <i class="int" style="width:${part}%"></i></div>
-      <p class="dim" style="font-size:12px;margin:7px 0 0">Sur tout ce que vous
-        rembourserez, <b>${pct(part)}</b> ne sont que des intérêts.</p>
-    </div>`;
+
+    <div class="si-titre">Le financement</div>
+    <table class="kv"><tbody>
+      <tr><th>Apport</th><td class="strong">${shek(apport)}</td></tr>
+      <tr><th>Emprunt (${E.ltv} % du prix)</th>
+        <td class="strong">${shek(emprunt)}</td></tr>
+      <tr><th>Taux moyen</th><td>${pct(taux)}${f.mix ? `
+        <div class="dim si-tr">${esc(f.mix)}<br>${(f.mesloulim || []).map(m =>
+          esc(m[0]) + ' · ' + m[1] + ' % · ' + pct(m[2])).join('<br>')}</div>`
+        : ''}</td></tr>
+      <tr><th>Mensualité</th><td class="strong">${shek(mensualite)}</td></tr>
+      <tr><th>Total remboursé</th><td>${shek(rembourse)}</td></tr>
+      <tr><th>Dont intérêts</th><td>${shek(interets)}</td></tr>
+    </tbody></table>
+    <div class="jauge"><i class="cap" style="width:${100 - part}%"></i>
+      <i class="int" style="width:${part}%"></i></div>
+    <p class="dim si-note">Sur tout ce que vous rembourserez,
+      <b>${pct(part)}</b> ne sont que des intérêts.</p>
+
+    ${r.prix ? `
+    <div class="si-titre">Si vous revendiez dans ${r.annees} ans</div>
+    <table class="kv"><tbody>
+      <tr><th>Hypothèse de marché</th><td>${pct(r.revalo)} par an</td></tr>
+      <tr><th>Prix de revente</th><td class="strong">${shek(r.prix)}</td></tr>
+      <tr><th>Plus-value</th><td>${shek(r.plus_value)}</td></tr>
+      <tr><th>Impôt sur la plus-value</th><td>${shek(r.impot)}${r.motif
+        ? '<div class="dim si-tr">' + esc(r.motif) + '</div>' : ''}</td></tr>
+      <tr><th>Gain net</th><td class="strong">${shek(r.net)}</td></tr>
+    </tbody></table>
+    <p class="dim si-note">${fr.defaut
+      ? 'Les frais d’acquisition sont déductibles de la plus-value.'
+      : 'Calculé sur les frais d’acquisition standard, qui sont déductibles '
+        + 'de la plus-value.'} Projection, pas une promesse : elle dépend du
+      marché au jour de la revente.</p>` : ''}`;
 }
 
 /* ---------------- le simulateur seul : un service du site, sans bien choisi */
@@ -1412,17 +1538,101 @@ async function vueSimulateur() {
   $('#pub-filtres').style.display = 'none';
   vue.innerHTML = `
     <p><a href="#/" class="dim" style="font-size:13px">← Tous les programmes</a></p>
-    <div class="topbar" style="position:static;background:none;border:0;padding:0">
-      <div><h1>Simulateur d'achat</h1>
-        <p class="sub">Un prix, votre situation, un crédit — et ce que le
-          bien coûte vraiment : à la signature, tous les mois, et en
-          intérêts.</p></div>
+    <div class="pub-head">
+      <h1>Simulateur d'achat</h1>
+      <p class="sub">Un prix, votre situation, vos frais, un crédit — et ce que
+        le bien coûte vraiment : à la signature, tous les mois, et à la
+        revente.</p>
     </div>
-    <div class="card" style="margin-top:18px"><div class="block" id="simu"></div></div>
-    <div class="actions">${boutonWa(
-      'Bonjour, je voudrais faire le point sur mon budget d’achat en Israël.'
-    )}</div>`;
+    <div class="card"><div class="block" id="simu"></div></div>
+    ${contactHTML()}`;
+  wireContact();
   await simulateur($('#simu'), null);
+}
+
+/* ---------------- le formulaire de contact, sur toutes les pages
+
+   Il n'y a pas de serveur derriere cette page : le formulaire compose le
+   message et l'ouvre dans WhatsApp ou dans la messagerie du visiteur, qui n'a
+   plus qu'a l'envoyer. Rien n'est stocke ici, rien ne part a un tiers. */
+function contactHTML(p) {
+  return `
+  <div class="card contact" id="contact">
+    <div class="block">
+      <div class="block-head"><span>${p ? 'Ce programme vous intéresse ?'
+        : 'Parlons de votre projet'}</span></div>
+      <div class="pad">
+        <p class="dim" style="margin:0 0 15px">${p
+          ? 'Laissez vos coordonnées : nous revenons vers vous avec les '
+            + 'disponibilités, les plans et les prix à jour de <b>'
+            + esc(p.nom) + '</b>.'
+          : 'Laissez vos coordonnées et ce que vous cherchez : nous revenons '
+            + 'vers vous avec une sélection — y compris des biens qui ne sont '
+            + 'pas encore en ligne.'}</p>
+        <div class="fgrid">
+          <div class="f"><label>Prénom</label><input id="c-prenom"
+            autocomplete="given-name" placeholder="Votre prénom"></div>
+          <div class="f"><label>Nom</label><input id="c-nom"
+            autocomplete="family-name" placeholder="Votre nom"></div>
+          <div class="f"><label>Téléphone</label><input id="c-tel" type="tel"
+            autocomplete="tel" placeholder="+33 6 …"></div>
+          <div class="f"><label>E-mail</label><input id="c-mail" type="email"
+            autocomplete="email" placeholder="vous@exemple.com"></div>
+        </div>
+        <div class="f" style="margin-top:12px">
+          <label>Votre projet (facultatif)</label>
+          <textarea id="c-mot" rows="2" placeholder="${p
+            ? 'Une question sur ce programme…'
+            : 'Ville, nombre de pièces, budget, échéance…'}"></textarea></div>
+        <div class="actions">
+          <button class="wa" id="c-wa" type="button">Envoyer sur WhatsApp</button>
+          <button class="ghost" id="c-mail-btn" type="button">Envoyer par e-mail</button>
+        </div>
+        <p class="dim si-note" id="c-note">Vos coordonnées ne servent qu'à vous
+          rappeler. Elles ne sont ni revendues, ni transmises à un promoteur.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wireContact(p) {
+  const val = id => (($('#' + id) || {}).value || '').trim();
+  const message = () => {
+    const lignes = ['Bonjour, je vous laisse mes coordonnées :'];
+    const nom = [val('c-prenom'), val('c-nom')].filter(Boolean).join(' ');
+    if (nom) lignes.push('Nom : ' + nom);
+    if (val('c-tel')) lignes.push('Téléphone : ' + val('c-tel'));
+    if (val('c-mail')) lignes.push('E-mail : ' + val('c-mail'));
+    if (p) lignes.push('Programme : ' + p.nom + ' (' + p.ville + ')');
+    if (val('c-mot')) lignes.push('Projet : ' + val('c-mot'));
+    return lignes.join('\n');
+  };
+  // Un nom sans facon de rappeler ne sert a rien : c'est la seule chose qu'on
+  // exige, et on le dit plutot que de laisser un bouton sans effet.
+  const manque = () => {
+    if (val('c-tel') || val('c-mail')) return false;
+    const note = $('#c-note');
+    if (note) {
+      note.textContent = 'Laissez au moins un téléphone ou un e-mail, sans '
+        + 'quoi nous ne pourrons pas vous répondre.';
+      note.classList.add('manque');
+    }
+    return true;
+  };
+  const wa = $('#c-wa');
+  if (wa) wa.onclick = () => {
+    if (manque()) return;
+    window.open('https://wa.me/' + DONNEES.wa + '?text='
+      + encodeURIComponent(message()), '_blank');
+  };
+  const mb = $('#c-mail-btn');
+  if (mb) mb.onclick = () => {
+    if (manque()) return;
+    const sujet = p ? 'Demande — ' + p.nom + ', ' + p.ville
+                    : 'Demande de contact — BH Nadlan';
+    location.href = 'mailto:' + DONNEES.mail + '?subject='
+      + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(message());
+  };
 }
 
 /* ---------------- routage */
