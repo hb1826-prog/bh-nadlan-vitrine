@@ -1094,6 +1094,11 @@ tr.picked{background:var(--gold-wash)}
  align-items:start}
 .progs > *{animation:none}
 .tile .shot{height:150px}
+/* Le visuel de la vitrine porte son bandeau (typologie + prix) en bas du
+   carre. Sur une tuile de programme, qui annonce toutes les typologies, ce
+   bandeau dirait le contraire de ce qu'on lit dessous : on cadre plus haut. */
+.tile .shot img{object-position:50% 30%}
+.tile .price small{display:block;margin:0 0 1px}
 .tile .shot .fallback{position:absolute;inset:0;display:grid;place-items:center;
  background:linear-gradient(140deg,var(--sunk),var(--gold-wash));
  color:var(--gold);font-size:24px;font-weight:700;letter-spacing:.08em}
@@ -1225,7 +1230,7 @@ function liste() {
         <div class="feats">${p.typologies.map(t =>
           '<span class="feat">' + t.libelle + ' p.</span>').join('')}${
           p.livraison ? '<span class="feat">' + esc(p.livraison) + '</span>' : ''}</div>
-        <div class="price">${shek(p.prix_min)}<small> à partir de</small></div>
+        <div class="price"><small>à partir de</small>${shek(p.prix_min)}</div>
       </div>
     </a>`).join('') + '</div>';
 }
