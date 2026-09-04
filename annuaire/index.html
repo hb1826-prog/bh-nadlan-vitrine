@@ -2,1230 +2,450 @@
 <meta name=viewport content='width=device-width,initial-scale=1'>
 <meta name=color-scheme content='light dark'>
 <title>BH Nadlan — Programmes neufs en Israël</title>
-<meta name=description content="L'annuaire des programmes neufs suivis par BH
- Nadlan : 23 programmes dans 11 villes, avec le
- simulateur d'achat (taxe, frais et crédit).">
-<style>
-/* ============================================================
-   SYSTÈME VISUEL — BH Nadlan CRM
-   Un CRM se lit toute la journée : la sobriété n'est pas un goût, c'est une
-   condition de lecture. Fond neutre, filets d'un pixel, densité constante.
-   L'or ne sert plus qu'à trois choses — la marque, l'élément actif, le lien.
-   Tout le reste est de l'encre sur du papier.
+<meta name=description content="23 programmes neufs en
+ Israël suivis par BH Nadlan, dans 11 villes : prix, typologies,
+ simulateur d'achat et accompagnement francophone.">
+<style>/* L'annuaire BH — la peau « portail immobilier ».
+   ============================================================
+   Hillel a demande le graphisme des grands portails francais (SeLoger et ses
+   pareils) : une banniere de recherche qui occupe le premier ecran, des
+   cartes ou la PHOTO commande et ou le prix se lit de loin, des pastilles sur
+   les visuels, beaucoup de blanc. Rien n'est repris de leur marque — ni leur
+   nom, ni leur rouge, ni leur logo : la couleur reste l'or BH Nadlan, et le
+   logo est le sien.
+
+   Ce fichier remplace, pour cette page seulement, la feuille de style du CRM.
+   Le CRM garde la sienne : un outil de travail dense ne se dessine pas comme
+   une vitrine.
    ============================================================ */
+
 :root{
- /* L'or du logo (#c9a227) reste celui des filets et des fonds ; le texte en
-    or est assombri à #8a6a14, qui atteint 4.9:1 sur blanc. Un lien illisible
-    n'est pas une élégance, c'est un lien qu'on ne clique pas. */
- --gold:#8a6a14; --gold-deco:#c9a227; --gold-hi:#b8912a;
- --gold-wash:#fbf6e8; --gold-line:#e6d9b0;
-
- /* Gris très légèrement bleutés : un blanc pur posé sur un gris pur donne une
-    image plate ; une pointe de bleu creuse la profondeur sans mettre de couleur. */
- --bg:#f6f7f9; --panel:#ffffff; --raise:#fafbfc; --sunk:#f1f3f6;
- --ink:#101828; --ink-2:#344054; --muted:#5a6474; --faint:#7b8494;
- --line:#e4e7ec; --line-soft:#eff1f5;
-
- --late:#b42318; --late-wash:#fef3f2; --late-line:#fecdc9;
- --ok:#067647; --ok-wash:#ecfdf3; --ok-line:#abefc6;
- --info:#175cd3; --info-wash:#eff6ff; --info-line:#b2ddff;
-
- --r-sm:6px; --r:10px; --r-lg:14px;
- --sh-1:0 1px 2px rgba(16,24,40,.05);
- --sh-2:0 1px 2px rgba(16,24,40,.06),0 8px 20px -8px rgba(16,24,40,.14);
- --sh-3:0 2px 4px rgba(16,24,40,.06),0 20px 44px -14px rgba(16,24,40,.22);
+ --or:#c9a227; --or-fonce:#a07d15; --or-clair:#f6efd8; --or-trait:#e8dcb4;
+ --encre:#0f172a; --encre-2:#334155; --gris:#64748b; --gris-clair:#94a3b8;
+ --fond:#ffffff; --fond-2:#f7f8fa; --carte:#ffffff;
+ --trait:#e5e8ee; --trait-fin:#eef0f4;
+ --vert:#0f7b46; --vert-fond:#e8f6ee;
+ --r:12px; --r-lg:18px; --r-xl:26px;
+ --ombre:0 1px 2px rgba(15,23,42,.05);
+ --ombre-2:0 4px 14px -4px rgba(15,23,42,.12),0 2px 5px -2px rgba(15,23,42,.06);
+ --ombre-3:0 18px 44px -12px rgba(15,23,42,.28);
  --ease:cubic-bezier(.4,0,.2,1);
 }
-/* Le sombre s'obtient de deux façons : le systeme le demande (et rien ne dit
-   « clair » explicitement), OU Hillel l'a choisi. Les deux blocs portent les
-   MEMES valeurs — d'ou le selecteur double plutot qu'une copie. */
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
- --gold:#e3c46c; --gold-deco:#d9b448; --gold-hi:#eccb6b;
- --gold-wash:#231e10; --gold-line:#453b1e;
- --bg:#0b0d11; --panel:#12151a; --raise:#171b21; --sunk:#1a1e25;
- --ink:#eaecf0; --ink-2:#cdd2da; --muted:#98a1b0; --faint:#6f7887;
- --line:#232830; --line-soft:#1a1e25;
- --late:#f97066; --late-wash:#22110f; --late-line:#42201c;
- --ok:#47cd89; --ok-wash:#0c1f16; --ok-line:#173d29;
- --info:#84adff; --info-wash:#0e1729; --info-line:#1d3363;
- --sh-1:0 1px 2px rgba(0,0,0,.45);
- --sh-2:0 1px 2px rgba(0,0,0,.5),0 8px 20px -8px rgba(0,0,0,.6);
- --sh-3:0 2px 4px rgba(0,0,0,.5),0 20px 44px -14px rgba(0,0,0,.7);
+ --or:#e0c163; --or-fonce:#d4b34a; --or-clair:#241f10; --or-trait:#463b1c;
+ --encre:#f1f5f9; --encre-2:#cbd5e1; --gris:#94a3b8; --gris-clair:#64748b;
+ --fond:#0c1017; --fond-2:#11161f; --carte:#151b25;
+ --trait:#232c39; --trait-fin:#1b222c;
+ --vert:#4ade80; --vert-fond:#0d2018;
+ --ombre:0 1px 2px rgba(0,0,0,.5);
+ --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
+ --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
 }}
-/* Le choix explicite « sombre », qui l'emporte sur le reglage du systeme :
-   c'est celui qui sert le soir, quand le telephone est reste en clair. */
 :root[data-theme=dark]{
- --gold:#e3c46c; --gold-deco:#d9b448; --gold-hi:#eccb6b;
- --gold-wash:#231e10; --gold-line:#453b1e;
- --bg:#0b0d11; --panel:#12151a; --raise:#171b21; --sunk:#1a1e25;
- --ink:#eaecf0; --ink-2:#cdd2da; --muted:#98a1b0; --faint:#6f7887;
- --line:#232830; --line-soft:#1a1e25;
- --late:#f97066; --late-wash:#22110f; --late-line:#42201c;
- --ok:#47cd89; --ok-wash:#0c1f16; --ok-line:#173d29;
- --info:#84adff; --info-wash:#0e1729; --info-line:#1d3363;
- --sh-1:0 1px 2px rgba(0,0,0,.45);
- --sh-2:0 1px 2px rgba(0,0,0,.5),0 8px 20px -8px rgba(0,0,0,.6);
- --sh-3:0 2px 4px rgba(0,0,0,.5),0 20px 44px -14px rgba(0,0,0,.7);
-}
-/* La nuit, une photo en pleine lumiere brule l'ecran : on la calme un peu.
-   Assez pour qu'elle ne fasse plus lampe, pas au point de la ternir. */
-:root[data-theme=dark] .cityc img,
-:root[data-theme=dark] .tile .shot img,
-:root[data-theme=dark] .doc .vig img{filter:brightness(.88) saturate(.96)}
-@media (prefers-color-scheme:dark){
- :root:not([data-theme=light]) .cityc img,
- :root:not([data-theme=light]) .tile .shot img,
- :root:not([data-theme=light]) .doc .vig img{filter:brightness(.88) saturate(.96)}
+ --or:#e0c163; --or-fonce:#d4b34a; --or-clair:#241f10; --or-trait:#463b1c;
+ --encre:#f1f5f9; --encre-2:#cbd5e1; --gris:#94a3b8; --gris-clair:#64748b;
+ --fond:#0c1017; --fond-2:#11161f; --carte:#151b25;
+ --trait:#232c39; --trait-fin:#1b222c;
+ --vert:#4ade80; --vert-fond:#0d2018;
+ --ombre:0 1px 2px rgba(0,0,0,.5);
+ --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
+ --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
 }
 
-/* Le bouton de theme, dans la barre du haut, a cote de la recherche. */
-.theme{display:inline-flex;align-items:center;gap:2px;flex:none;
- background:var(--sunk);border:1px solid var(--line);border-radius:var(--r);
- padding:3px}
-.theme button{border:0;background:none;color:var(--faint);cursor:pointer;
- border-radius:7px;padding:5px 8px;display:grid;place-items:center;
- transition:background .14s var(--ease),color .14s var(--ease)}
-.theme button:hover{color:var(--ink)}
-.theme button.on{background:var(--panel);color:var(--gold);
- box-shadow:var(--sh-1)}
-.theme svg{width:15px;height:15px;display:block}
-@media(max-width:860px){
- /* Au telephone il vit dans la barre du haut, a cote du logo : c'est le
-    soir et sur ce telephone-la que le mode nuit sert le plus. */
- .theme{padding:2px}
- .theme button{padding:6px 7px}
-}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);
- font:15px/1.55 Inter,"Segoe UI Variable Text","Segoe UI",system-ui,
+body{margin:0;background:var(--fond);color:var(--encre);
+ font:16px/1.5 Inter,"Segoe UI Variable Text","Segoe UI",system-ui,
       -apple-system,"Helvetica Neue",sans-serif;
- -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+ -webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-::selection{background:var(--gold-wash);color:var(--ink)}
-:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px;border-radius:4px}
-
-/* ============================================================
-   OSSATURE
-   ============================================================ */
-.shell{display:flex;min-height:100vh}
-aside{width:252px;flex:none;background:var(--panel);border-right:1px solid var(--line);
- padding:0 12px 22px;position:sticky;top:0;height:100vh;overflow-y:auto;
- display:flex;flex-direction:column;gap:2px}
-/* La marque tient une bande de la même hauteur que la barre du haut : les
-   deux filets se rejoignent, et l'écran se lit comme une seule application. */
-aside .brand{display:flex;justify-content:flex-start;align-items:center;
- height:62px;margin:0 -12px 12px;padding:0 12px 0 22px;
- border-bottom:1px solid var(--line);transition:background .16s var(--ease)}
-/* Le logo couché s'aligne sur le bord gauche des entrées du menu, pas au
-   centre de la colonne : centré, il flottait au-dessus d'une navigation
-   ferrée à gauche, et la colonne partait de travers. */
-aside .brand svg{display:block;max-width:100%}
-/* Le logo ramène au tableau de bord : c'est le geste que tout le monde tente
-   en premier. Il doit donc se voir cliquable, et l'être aussi au clavier. */
-aside .brand:hover{background:var(--raise)}
-aside .brand:focus-visible{outline:2px solid var(--gold-hi);outline-offset:-2px}
-
-.navlink{display:flex;align-items:center;gap:10px;padding:8px 10px;
- border-radius:var(--r-sm);color:var(--ink-2);font-size:14px;font-weight:500;
- transition:background .14s var(--ease),color .14s var(--ease);
- position:relative;min-height:36px}
-.navlink:hover{background:var(--sunk);color:var(--ink)}
-.navlink.on{background:var(--gold-wash);color:var(--ink);font-weight:600}
-/* Un filet d'or contre le bord : l'élément actif se repère du coin de l'oeil,
-   sans qu'un aplat noir vienne peser dans toute la colonne. */
-.navlink.on::before{content:"";position:absolute;left:-12px;top:6px;bottom:6px;
- width:3px;border-radius:0 3px 3px 0;background:var(--gold-deco)}
-.navlink.on .ico{color:var(--gold);opacity:1}
-.navlink .ico{width:18px;text-align:center;opacity:.8;flex:none;font-size:15px;
- color:var(--muted)}
-.navlink .lbl{flex:1;letter-spacing:-.005em}
-.navlink .n{font-size:11.5px;font-weight:600;padding:1px 7px;border-radius:5px;
- background:var(--sunk);color:var(--muted);font-variant-numeric:tabular-nums;
- border:1px solid var(--line)}
-.navlink.on .n{background:var(--panel);border-color:var(--gold-line);color:var(--gold)}
-.navlink .n.alert{background:var(--late-wash);border-color:var(--late-line);color:var(--late)}
-.sidesep{margin:20px 10px 6px;font-size:10.5px;text-transform:uppercase;
- letter-spacing:.09em;color:var(--faint);font-weight:600}
-aside .foot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--line-soft);
- font-size:11.5px;color:var(--faint);line-height:1.55}
-aside .foot code{background:var(--sunk);border-radius:4px;padding:1px 5px;
- font-size:11px;font-family:ui-monospace,"Cascadia Mono",Consolas,monospace}
-
-main{flex:1;padding:0 32px 90px;max-width:1360px;min-width:0}
-.topbar{position:sticky;top:0;z-index:6;
- background:color-mix(in srgb,var(--bg) 86%,transparent);
- backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);
- margin:0 -32px 24px;padding:0 32px;min-height:74px;
- display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.topbar h1{font-size:20px;margin:0;font-weight:650;letter-spacing:-.02em;line-height:1.25}
-.topbar .sub{color:var(--muted);font-size:13px;margin:2px 0 0;line-height:1.4}
-.topbar .grow{flex:1}
-.quick{display:flex;align-items:center;gap:9px;background:var(--panel);
- border:1px solid var(--line);border-radius:var(--r);padding:0 12px;height:38px;
- min-width:272px;transition:.15s var(--ease)}
-.quick:hover{border-color:var(--faint)}
-.quick:focus-within{border-color:var(--gold-hi);box-shadow:0 0 0 3px var(--gold-wash)}
-.quick input{border:0;background:none;outline:0;flex:1;font-size:14px;
- color:var(--ink);font-family:inherit;min-width:0}
-.quick input::placeholder{color:var(--faint)}
-.quick .ico{color:var(--faint);font-size:15px}
-
-.crumb{font-size:13px;color:var(--muted);margin:0 0 14px;
- display:flex;align-items:center;gap:6px}
-.crumb a{color:var(--muted);font-weight:500;border-radius:4px;padding:2px 6px;
- margin-left:-6px;transition:.14s var(--ease)}
-.crumb a:hover{background:var(--sunk);color:var(--ink)}
-.crumb span{color:var(--faint)}
-
-/* ============================================================
-   BRIQUES
-   ============================================================ */
-/* Cartes de chiffres : l'étiquette est écrite au-dessus dans le code et
-   remontée par flex, pour qu'un lecteur d'écran entende « clients : 128 »
-   pendant que l'oeil, lui, voit d'abord le nombre. */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));
- gap:12px;margin-bottom:26px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
- padding:15px 17px 16px;position:relative;overflow:hidden;
- display:flex;flex-direction:column-reverse;gap:6px;
- transition:border-color .16s var(--ease),box-shadow .16s var(--ease)}
-a.stat:hover{border-color:var(--gold-line);box-shadow:var(--sh-2)}
-a.stat:hover .go{opacity:1;transform:none}
-.stat b{display:block;font-size:29px;line-height:1.05;letter-spacing:-.035em;
- font-weight:650;font-variant-numeric:tabular-nums}
-.stat span{color:var(--muted);font-size:11.5px;display:block;font-weight:700;
- text-transform:uppercase;letter-spacing:.07em}
-.stat .go{position:absolute;right:14px;top:14px;color:var(--gold);font-size:14px;
- opacity:0;transform:translateX(-3px);transition:.16s var(--ease)}
-.stat.warn b{color:var(--late)}
-.stat.warn{border-color:var(--late-line);
- background:linear-gradient(180deg,var(--late-wash),var(--panel) 64%)}
-
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
- padding:20px 22px;margin-bottom:14px;box-shadow:var(--sh-1)}
-h2{font-size:14px;margin:28px 0 12px;font-weight:650;letter-spacing:-.005em;
- display:flex;align-items:center;gap:9px;color:var(--ink)}
-h2 .n{font-size:11.5px;padding:1px 7px;border-radius:5px;border:1px solid var(--line);
- background:var(--sunk);color:var(--muted);font-weight:600}
-.block{border-top:1px solid var(--line-soft);padding-top:18px;margin-top:18px}
-.block:first-of-type{border-top:0;margin-top:12px;padding-top:0}
-.block-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;
- color:var(--faint);font-weight:700;margin-bottom:12px;
- display:flex;align-items:center;gap:9px;justify-content:space-between}
-.block-head .n{font-size:10.5px;background:var(--sunk);color:var(--muted);
- border:1px solid var(--line);border-radius:5px;padding:1px 6px;letter-spacing:0}
-.empty{color:var(--faint);font-size:13.5px;margin:8px 0}
-
-/* Pastilles d'état — fond très pâle, filet de la même teinte, texte lisible.
-   C'est la grammaire de tous les CRM : on identifie l'état à la couleur,
-   on le confirme au mot. */
-.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:6px;
- background:var(--gold-wash);color:var(--gold);border:1px solid var(--gold-line);
- letter-spacing:.01em;font-weight:600;white-space:nowrap}
-.flag{font-size:11.5px;padding:2px 9px;border-radius:6px;background:var(--sunk);
- color:var(--muted);font-weight:600;border:1px solid var(--line)}
-.flag-late{background:var(--late-wash);color:var(--late);border-color:var(--late-line)}
-/* Entre « c'est grave » et « rien à signaler » : ce qu'un acheteur demandera
-   dans les deux minutes, sans que ça empêche d'envoyer. */
-.flag-soon{background:var(--gold-wash);color:var(--gold);
- border-color:var(--gold-line)}
-/* « C'est fait » — la seule couleur qui doit rassurer d'un coup d'oeil. */
-.flag-ok{background:var(--ok-wash);color:var(--ok);border-color:var(--ok-line)}
-.kind{display:inline-block;font-size:10.5px;color:var(--muted);
- border:1px solid var(--line);background:var(--raise);border-radius:5px;
- padding:1px 7px;margin-left:7px;white-space:nowrap;letter-spacing:.02em;
- font-weight:600;vertical-align:1px}
-.kind-interesse{border-color:var(--ok-line);color:var(--ok);background:var(--ok-wash)}
-.kind-refuse{border-color:var(--late-line);color:var(--late);background:var(--late-wash)}
-.kind-visite{border-color:var(--info-line);color:var(--info);background:var(--info-wash)}
-.kind-sans-reponse{border-color:var(--line);color:var(--faint);background:var(--sunk)}
-
-/* Pastille d'initiales : à hauteur de ligne dans un tableau, elle donne au
-   regard un point d'ancrage par ligne — on retrouve un nom sans le relire. */
-.avatar{width:28px;height:28px;flex:none;border-radius:50%;display:inline-flex;
- align-items:center;justify-content:center;font-size:11px;font-weight:700;
- letter-spacing:.02em;background:var(--gold-wash);color:var(--gold);
- border:1px solid var(--gold-line);text-transform:uppercase}
-.avatar.lg{width:48px;height:48px;font-size:17px}
-/* Un cabinet se reconnait a son logo avant son nom : la pastille le porte en
-   entier, sans le rogner. */
-.avatar.logo{background:var(--panel);border-color:var(--line);overflow:hidden;padding:0}
-.avatar.logo img{width:100%;height:100%;object-fit:contain;display:block}
-/* Le logo d'un promoteur se pose PAR-DESSUS ses initiales : pas de logo, pas
-   de trou — les initiales restent. */
-.avatar.logopho{position:relative;overflow:hidden}
-.avatar.logopho img{position:absolute;inset:0;width:100%;height:100%;
- object-fit:contain;background:var(--panel)}
-.avatar.anon{background:var(--sunk);color:var(--faint);border-color:var(--line);
- font-size:13px;font-weight:500}
-/* Photo de programme (ou a defaut de ville) posee sur la pastille : elle
-   s'efface silencieusement si l'image manque, et la pastille reste dessous. */
-.avatar-wrap{position:relative;display:inline-flex;flex:none}
-.avatar-wrap .avatar-photo{position:absolute;inset:0;width:100%;height:100%;
- border-radius:50%;object-fit:cover;border:1px solid var(--gold-line);
- animation:avatarin .35s ease both;transition:transform .2s ease}
-.avatar-wrap .avatar-photo:hover{transform:scale(1.07)}
-@keyframes avatarin{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-.who{display:flex;align-items:center;gap:10px;min-width:0}
-.who .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;
- letter-spacing:-.005em}
-
-/* En-tête de fiche : l'identité et les actions au-dessus du dossier, comme
-   dans tout CRM — on sait qui on a au téléphone sans faire défiler. */
-.rechead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
- margin-bottom:4px}
-.rechead h3{margin:0;font-size:21px;font-weight:650;letter-spacing:-.022em}
-.rechead .tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
-
-/* ============================================================
-   TABLEAUX — la vue de travail : densité régulière, tête figée,
-   chiffres alignés sur la virgule.
-   ============================================================ */
-/* overflow-x:auto seul rend l'axe vertical « auto » sans hauteur contrainte :
-   le conteneur ne défile jamais, et position:sticky sur les en-têtes reste
-   sans effet. Sur 692 biens, l'en-tête disparaissait dès le premier défilement. */
-.scroll{overflow:auto;max-height:calc(100vh - 232px);background:var(--panel);
- border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1)}
-.scroll th{z-index:2}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th{text-align:left;color:var(--muted);font-weight:600;font-size:11px;
- text-transform:uppercase;letter-spacing:.07em;padding:0 11px;height:40px;
- border-bottom:1px solid var(--line);white-space:nowrap;
- position:sticky;top:0;background:var(--raise);z-index:1}
-th.sortable{cursor:pointer;user-select:none}
-th.sortable:hover{color:var(--ink)}
-th .arrow{opacity:.5;font-size:9px;margin-left:3px}
-td{padding:11px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
-tbody tr{cursor:pointer;transition:background .12s var(--ease)}
-tbody tr:focus-visible,[data-go]:focus-visible,.day:focus-visible,
-th.sortable:focus-visible{outline:2px solid var(--gold-hi);outline-offset:-2px}
-tbody tr:hover{background:var(--raise)}
-tbody tr:hover .go-cell{opacity:1;color:var(--gold)}
-tbody tr:last-child td{border-bottom:0}
-tr.stretch{background:var(--gold-wash)}
-tr.stretch:hover{background:var(--gold-wash);filter:brightness(.985)}
+img{max-width:100%}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--or);outline-offset:2px;border-radius:6px}
+.dim{color:var(--gris)}
+.strong{font-weight:650}
 .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-.strong{font-weight:600;letter-spacing:-.005em}
-.dim{color:var(--muted)}
-.tick{color:var(--ok);font-weight:700}
-.dot{color:var(--faint)}
-.go-cell{opacity:.3;transition:.14s var(--ease)}
-/* Un intitulé de projet écrit comme une phrase (« Bien suivi par Yann,
-   projet à identifier ») faisait quadrupler la hauteur de sa ligne et cassait
-   la régularité du tableau. On coupe à la largeur de la colonne ; le texte
-   entier reste accessible en infobulle et sur la fiche. */
-.ell{display:block;max-width:186px;overflow:hidden;text-overflow:ellipsis;
- white-space:nowrap}
-.ell.sm{max-width:104px}
 
-ul.log{list-style:none;margin:0;padding:0;font-size:14px}
-ul.log li{padding:10px 0;border-bottom:1px solid var(--line-soft);
- display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
-ul.log li:last-child{border-bottom:0}
-/* Le formulaire de correction d'une ligne prend toute la largeur sous elle :
-   place dans le flux du <li>, il resterait coince dans une colonne de flex. */
-.rowform{flex-basis:100%;width:100%;padding:10px 0 2px;
- border-top:1px dashed var(--line-soft);margin-top:8px}
-.when{color:var(--muted);font-size:12.5px;min-width:96px;line-height:1.5;
- font-variant-numeric:tabular-nums;flex:none;padding-top:1px}
-.late{color:var(--late);font-weight:600}
-.today{color:var(--ok);font-weight:600}
-li.done{opacity:.45}
-li.done .txt{text-decoration:line-through}
-.txt{flex:1;min-width:190px;line-height:1.5}
-.txt a{color:var(--gold);font-weight:600}
-.txt a:hover{text-decoration:underline}
+/* ============================ la barre du haut ============================ */
+.pub-top{position:sticky;top:0;z-index:20;background:var(--fond);
+ border-bottom:1px solid var(--trait)}
+.pub-in{max-width:1240px;margin:0 auto;padding:0 22px}
+.pub-bar{display:flex;align-items:center;gap:20px;height:70px}
+.pub-logo{display:block;flex:none;line-height:0;border-radius:10px;
+ transition:transform .18s var(--ease)}
+.pub-logo:hover{transform:translateY(-1px)}
+.pub-logo svg{display:block;height:40px;width:auto}
+.nav{display:flex;align-items:center;gap:4px;margin-left:8px}
+.nav a{padding:9px 14px;border-radius:999px;font-size:14.5px;font-weight:550;
+ color:var(--encre-2);transition:background .16s var(--ease)}
+.nav a:hover{background:var(--fond-2);color:var(--encre)}
+.grow{flex:1;min-width:0}
+.cta{background:var(--encre);color:var(--fond);border:0;border-radius:999px;
+ padding:11px 20px;font-size:14.5px;font-weight:650;cursor:pointer;
+ white-space:nowrap;transition:transform .16s var(--ease),opacity .16s}
+.cta:hover{transform:translateY(-1px);opacity:.92}
+.cta.or{background:var(--or);color:#1a1405}
 
-/* ============================================================
-   FORMULAIRES
-   ============================================================ */
-.row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:9px;align-items:center}
-input,select,textarea,button{font-family:inherit;font-size:14px;color:var(--ink)}
-input,select,textarea{background:var(--panel);border:1px solid var(--line);
- border-radius:var(--r-sm);padding:8px 11px;transition:.14s var(--ease)}
-input:hover,select:hover,textarea:hover{border-color:var(--faint)}
-input:focus,select:focus,textarea:focus{outline:0;border-color:var(--gold-hi);
- box-shadow:0 0 0 3px var(--gold-wash)}
-input::placeholder,textarea::placeholder{color:var(--faint)}
-textarea{width:100%;min-height:78px;resize:vertical;line-height:1.55}
-.grow{flex:1;min-width:150px}
-/* Le texte du bouton est la couleur du FOND de la page, pas un blanc en dur :
-   en theme sombre, --ink devient presque blanc, et « color:#fff » donnait un
-   bouton blanc a texte blanc — le bouton « fait » d'un rappel etait illisible
-   la nuit. Un seul jeton, et les deux themes tombent juste. */
-button{background:var(--ink);color:var(--bg);border:1px solid var(--ink);
- border-radius:var(--r-sm);padding:8px 16px;cursor:pointer;font-weight:600;
- font-size:13.5px;transition:.14s var(--ease);box-shadow:var(--sh-1)}
-button:hover{background:var(--ink-2);border-color:var(--ink-2)}
-button:active{box-shadow:none}
-button.ghost{background:var(--panel);color:var(--ink-2);border-color:var(--line)}
-button.ghost:hover{background:var(--sunk);color:var(--ink);border-color:var(--faint)}
-/* 24 px de haut au minimum : ces boutons (« fait », « retirer ») se pressent
-   au téléphone, entre deux rendez-vous. */
-button.mini{padding:4px 11px;font-size:12px;border-radius:var(--r-sm);min-height:28px}
-.toggle{background:var(--panel);border:1px solid var(--line);color:var(--muted);
- border-radius:var(--r-sm);padding:4px 11px;font-size:12px;cursor:pointer;
- letter-spacing:0;text-transform:none;font-weight:600;box-shadow:none}
-.toggle:hover{background:var(--sunk);border-color:var(--faint);color:var(--ink)}
-.hidden{display:none}
-form.pad{background:var(--raise);border:1px solid var(--line);
- border-radius:var(--r);padding:16px;margin:6px 0 14px}
+/* le selecteur de theme, discret, a droite */
+.theme{display:inline-flex;gap:2px;flex:none;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:999px;padding:3px}
+.theme button{border:0;background:none;color:var(--gris-clair);cursor:pointer;
+ border-radius:999px;padding:5px 8px;display:grid;place-items:center}
+.theme button.on{background:var(--carte);color:var(--or);box-shadow:var(--ombre)}
+.theme svg{width:15px;height:15px;display:block}
 
-/* --- panneau de filtres --- */
-.filters{background:var(--panel);border:1px solid var(--line);
- border-radius:var(--r-lg);padding:16px 18px;margin-bottom:16px;box-shadow:var(--sh-1)}
-.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(162px,1fr));gap:12px}
-/* L'intitulé en haut, le champ en BAS. Sans `space-between`, un intitulé qui
-   passe sur deux lignes (« Revenu net du foyer (₪/mois) ») poussait son champ
-   plus bas que ses voisins : sur la grille du simulateur, les cases n'étaient
-   plus en face les unes des autres. La ligne fait la hauteur du plus long
-   intitulé, et tous les champs s'alignent sur son bas. */
-.f{display:flex;flex-direction:column;gap:5px;justify-content:space-between}
-/* `>` et pas un descendant quelconque : la case à cocher de la surtaxe porte
-   elle-même un <label> autour de son texte, qui héritait des petites
-   capitales grasses de l'intitulé et devenait illisible. */
-.f > label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;
- color:var(--faint);font-weight:700;line-height:1.35}
-.f input,.f select{padding:7px 10px;font-size:13.5px;width:100%}
-.pair{display:flex;gap:6px}
-.pair input{min-width:0}
-.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px;align-items:center}
-.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;
- border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer;
- color:var(--muted);user-select:none;transition:.14s var(--ease);
- background:var(--panel);font-weight:500}
-.chip:hover{background:var(--sunk);color:var(--ink);border-color:var(--faint)}
-/* Masquer la case sans la sortir de l'ordre de tabulation : display:none la
-   rendait inatteignable au clavier et invisible aux lecteurs d'écran. */
-.chip input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
-.chip:focus-within{outline:2px solid var(--gold-hi);outline-offset:2px}
-.chip.on{background:var(--gold-wash);border-color:var(--gold-line);
- color:var(--gold);font-weight:650}
-.factions{display:flex;gap:9px;margin-top:15px;padding-top:14px;
- border-top:1px solid var(--line-soft);align-items:center;flex-wrap:wrap}
-.count-line{font-size:13px;color:var(--muted);margin-left:auto;
- font-variant-numeric:tabular-nums}
+/* ============================== la banniere ============================== */
+.hero{position:relative;background:var(--fond-2);overflow:hidden;
+ border-bottom:1px solid var(--trait)}
+.hero .photo{position:absolute;inset:0}
+.hero .photo img{width:100%;height:100%;object-fit:cover;display:block}
+.hero .voile{position:absolute;inset:0;
+ background:linear-gradient(180deg,rgba(6,12,24,.72),rgba(6,12,24,.52) 45%,
+                            rgba(6,12,24,.78))}
+.hero .dedans{position:relative;max-width:1240px;margin:0 auto;
+ padding:64px 22px 78px;color:#fff}
+.hero h1{font-size:40px;line-height:1.12;font-weight:750;max-width:16em;
+ text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
+ color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 
-/* --- barre de selection multiple (ecran Clients) ---
-   Elle ne s'affiche qu'a partir d'une fiche cochee : une barre d'actions
-   toujours la, avec « Supprimer » dedans et rien de selectionne, se clique
-   par erreur. */
-.bulk{display:flex;gap:9px;align-items:center;flex-wrap:wrap;
- background:var(--gold-wash);border:1px solid var(--gold-line);
- border-radius:var(--r-lg);padding:10px 14px;margin-bottom:12px;
- position:sticky;top:6px;z-index:5}
-.bulk .n{font-weight:650;font-size:13.5px;margin-right:auto}
-.bulk button{font-size:13px;padding:6px 12px}
-.bulk .danger{border-color:#c2452f55;color:#b23b26}
-.bulk .danger:hover{background:#c2452f14;border-color:#c2452f}
-td.pick,th.pick{width:34px;text-align:center;padding-left:10px;padding-right:0}
-td.pick input,th.pick input{width:16px;height:16px;cursor:pointer;margin:0}
-tr.picked{background:var(--gold-wash)}
-/* La liste des destinataires d'un envoi groupe : une ligne par personne,
-   son bouton WhatsApp a elle. WhatsApp n'a pas d'envoi groupe depuis un
-   lien : on ouvre les conversations une par une, et la ligne se marque
-   des qu'elle est partie. */
-.dests{display:flex;flex-direction:column;gap:6px;max-height:250px;
- overflow:auto;border:1px solid var(--line);border-radius:var(--r);padding:8px}
-.dest{display:flex;gap:10px;align-items:center;font-size:13px}
-.dest .nm{font-weight:600}
-.dest .tel{color:var(--muted);font-size:12.5px;margin-left:auto}
-.dest button{font-size:12.5px;padding:5px 11px}
-.dest.sent{opacity:.5}
-.dest.sent .tel::after{content:' · envoyé'}
+/* la carte de recherche, posee sur la banniere */
+.cherche{position:relative;max-width:1240px;margin:-46px auto 0;
+ padding:0 22px;z-index:5}
+.cherche .boite{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-xl);box-shadow:var(--ombre-3);padding:16px}
+.onglets{display:flex;gap:6px;padding:0 4px 12px}
+.onglets button{background:none;border:0;padding:8px 14px;border-radius:999px;
+ font-size:14.5px;font-weight:650;color:var(--gris);cursor:pointer}
+.onglets button.on{background:var(--or-clair);color:var(--or-fonce)}
+.champs{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;
+ align-items:end}
+.champ{display:flex;flex-direction:column;gap:5px;min-width:0}
+.champ label{font-size:11.5px;font-weight:700;letter-spacing:.06em;
+ text-transform:uppercase;color:var(--gris);padding-left:2px}
+.champ input,.champ select{background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r);padding:12px 13px;font-size:15px;min-height:48px;
+ width:100%;transition:border-color .16s var(--ease)}
+.champ input:focus,.champ select:focus{border-color:var(--or)}
+.chercher{background:var(--or);color:#1a1405;border:0;border-radius:var(--r);
+ padding:0 26px;height:48px;font-size:15.5px;font-weight:700;cursor:pointer;
+ display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.chercher:hover{background:var(--or-fonce);color:#fff}
 
-/* ============================================================
-   PASTILLES DE BIENS — la grille de propositions d'une fiche client.
-   Un tableau demande de lire ligne à ligne ; une grille se compare d'un
-   coup d'oeil, ce qui est exactement le geste au téléphone avec un client.
-   ============================================================ */
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));
- gap:13px;margin-top:10px}
-.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
- overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
- transition:border-color .16s var(--ease),box-shadow .16s var(--ease);
- position:relative;box-shadow:var(--sh-1)}
-.tile:hover{box-shadow:var(--sh-2);border-color:var(--gold-line)}
-.tile .shot{height:118px;background:var(--sunk);position:relative;overflow:hidden;
- display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
-.tile .shot img{width:100%;height:100%;object-fit:cover;display:block;
- position:absolute;inset:0;animation:avatarin .35s ease both;transition:transform .25s ease}
-.tile .shot img:hover{transform:scale(1.05)}
-.tile .mono{font-size:27px;font-weight:700;letter-spacing:.08em;color:var(--gold);
- opacity:.42}
-.tile .rank{position:absolute;top:8px;left:8px;min-width:22px;height:22px;padding:0 6px;
- border-radius:6px;background:rgba(16,24,40,.82);color:#fff;font-size:12px;
- font-weight:700;display:flex;align-items:center;justify-content:center;
- backdrop-filter:blur(4px)}
-.tile .over-tag{position:absolute;top:8px;right:8px;background:rgba(16,24,40,.82);
- color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;
- letter-spacing:.03em;backdrop-filter:blur(4px)}
-/* « sous le budget » : rien dans la ville n'atteint ce que le client peut
-   mettre. Le dire vaut mieux qu'une page vide, mais il faut le dire. */
-.tile .over-tag.under{background:rgba(90,100,116,.85)}
-.tile .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:5px;flex:1}
-.tile .prj{font-weight:650;font-size:14px;line-height:1.3;letter-spacing:-.01em;
- overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tile .meta{font-size:12px;color:var(--muted);display:flex;gap:5px;flex-wrap:wrap}
-.tile .price{font-size:17px;font-weight:650;letter-spacing:-.025em;margin-top:3px;
- font-variant-numeric:tabular-nums}
-.tile .price small{font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:0}
-.tile .feats{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
-.tile .feat{font-size:10.5px;border:1px solid var(--line);border-radius:5px;
- padding:1px 7px;color:var(--muted);background:var(--raise);font-weight:600}
-.tile .feat.yes{border-color:var(--ok-line);color:var(--ok);background:var(--ok-wash)}
-.tile .act{margin-top:auto;padding-top:11px}
-.tile .act button{width:100%;padding:6px 0;font-size:12.5px}
+/* =============================== la liste =============================== */
+.wrap{max-width:1240px;margin:0 auto;padding:30px 22px 80px}
+.entete{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+ margin-bottom:18px}
+.entete h2{font-size:23px;font-weight:700}
+.pub-count{color:var(--gris);font-size:14.5px}
+.elargi{background:var(--or-clair);border:1px solid var(--or-trait);
+ border-radius:var(--r);padding:14px 16px;margin-bottom:20px;font-size:14.5px;
+ line-height:1.55;color:var(--encre-2)}
+.elargi b{color:var(--encre)}
 
-/* ============================================================
-   AGENDA
-   ============================================================ */
-.calbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.calbar .month{font-size:17px;font-weight:650;letter-spacing:-.02em;
- text-transform:capitalize;min-width:172px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;
- background:var(--line);border:1px solid var(--line);
- border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-1)}
-.cal .dow{background:var(--raise);padding:9px 10px;font-size:10.5px;font-weight:700;
- text-transform:uppercase;letter-spacing:.08em;color:var(--faint);text-align:center}
-.day{background:var(--panel);min-height:108px;padding:7px 8px;position:relative;
- transition:background .14s var(--ease);cursor:pointer}
-.day:hover{background:var(--raise)}
-.day.out{background:var(--sunk)}
-.day.out .d{opacity:.45}
-.day .d{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
- display:flex;align-items:center;justify-content:space-between;font-weight:600}
-.day.now{background:var(--gold-wash)}
-.day.now .d{color:#fff;background:var(--gold-hi);width:22px;height:22px;
- border-radius:50%;display:flex;align-items:center;justify-content:center;
- font-weight:700;margin:-2px 0 2px}
-.ev{display:block;font-size:11.5px;line-height:1.35;margin-top:4px;padding:3px 7px;
- border-radius:5px;background:var(--sunk);color:var(--ink-2);
- border-left:2px solid var(--muted);overflow:hidden;text-overflow:ellipsis;
- white-space:nowrap;transition:.14s var(--ease)}
-.ev:hover{filter:brightness(.96)}
-.ev.late{background:var(--late-wash);border-left-color:var(--late);color:var(--late)}
-.ev.rdv{background:var(--ok-wash);border-left-color:var(--ok);color:var(--ok)}
-.ev b{font-weight:650}
+.progs{display:grid;gap:22px;
+ grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.tile{display:flex;flex-direction:column;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);overflow:hidden;
+ height:100%;transition:transform .2s var(--ease),box-shadow .2s var(--ease),
+ border-color .2s var(--ease)}
+.tile:hover{transform:translateY(-3px);box-shadow:var(--ombre-2);
+ border-color:var(--or-trait)}
+.tile .shot{position:relative;aspect-ratio:4/3;background:var(--fond-2);
+ overflow:hidden}
+/* La photo se pose PAR-DESSUS le monogramme de repli : un element positionne
+   passe devant un element qui ne l'est pas, quel que soit l'ordre du HTML —
+   sans cela le repli masque la photo qui a bien ete chargee. */
+.tile .shot img{position:absolute;inset:0;z-index:1;width:100%;height:100%;
+ object-fit:cover;display:block;object-position:50% 30%;
+ transition:transform .45s var(--ease)}
+.tile:hover .shot img{transform:scale(1.04)}
+.tile .fallback{position:absolute;inset:0;z-index:0;display:grid;
+ place-items:center;
+ background:linear-gradient(140deg,var(--fond-2),var(--or-clair));
+ color:var(--or);font-size:30px;font-weight:800;letter-spacing:.1em}
+.badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;
+ flex-wrap:wrap;max-width:calc(100% - 24px);z-index:2}
+.badge{background:rgba(9,14,26,.82);color:#fff;font-size:11.5px;font-weight:650;
+ padding:5px 10px;border-radius:999px;backdrop-filter:blur(6px)}
+.badge.or{background:var(--or);color:#1a1405}
+.badge.blanc{background:rgba(255,255,255,.94);color:var(--encre)}
+.tile .corps{padding:15px 16px 17px;display:flex;flex-direction:column;
+ gap:6px;flex:1}
+.tile .prix{font-size:24px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.1}
+.tile .prix small{display:block;font-size:11.5px;font-weight:600;
+ color:var(--gris);letter-spacing:.03em;text-transform:uppercase;
+ margin-bottom:2px}
+.tile .titre{font-size:16.5px;font-weight:650;line-height:1.3}
+.tile .carac{color:var(--encre-2);font-size:14px}
+.tile .lieu{color:var(--gris);font-size:13.5px;display:flex;align-items:center;
+ gap:5px}
+.tile .bas{margin-top:auto;padding-top:11px;border-top:1px solid var(--trait-fin);
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+ font-size:12px;color:var(--gris-clair)}
+.preuve{color:var(--or-fonce);font-weight:650;font-size:12px}
 
-/* ============================================================
-   DIVERS
-   ============================================================ */
-/* ---- documents : des tuiles, pas des liens -------------------------------
-   Une liste de liens bleus oblige a LIRE pour savoir ce qu'on ouvre. Une
-   grille de vignettes se reconnait d'un coup d'oeil : la photo montre le
-   bien, la video porte son bouton de lecture, le PDF affiche son pictogramme
-   et son type. Les vignettes sont fabriquees et gardees par le serveur
-   (`/vignettes/`) : jamais l'image d'origine, qui pese cent fois plus. */
-/* ---- contacter le promoteur ----------------------------------------------
-   Le but de ce bloc est un geste, pas une lecture : un client dit oui, Hillel
-   clique « WhatsApp » et le message part, deja adresse a la bonne personne et
-   deja rempli du projet et du lot. Le numero reste visible a cote, parce que
-   le telephone du bureau ne suit pas toujours le clic. */
-.who{display:grid;gap:10px}
-.who .card-p{background:var(--panel);border:1px solid var(--line);
- border-radius:var(--r-lg);padding:11px 13px;box-shadow:var(--sh-1)}
-.who .card-p.main{border-color:var(--gold-line)}
-.who .nom{font-weight:700;font-size:14px}
-.who .nom .star{color:var(--gold);margin-right:5px}
-.who .meta{color:var(--faint);font-size:12.5px;margin:2px 0 9px}
-.who .scope{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;
- padding:2px 7px;border-radius:var(--r-sm);background:var(--sunk);
- border:1px solid var(--line);color:var(--faint);margin-left:6px}
-.who .scope.proj{border-color:var(--gold-line);color:var(--gold)}
-.who .acts{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
-.who .acts a{display:inline-flex;align-items:center;gap:5px;text-decoration:none;
- font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:var(--r-sm);
- border:1px solid var(--line);background:var(--sunk);color:var(--ink-2)}
-.who .acts a:hover{border-color:var(--gold-line);color:var(--gold)}
-.who .acts a.wa{border-color:#25d36655;color:#128c4b}
-.who .acts a.wa:hover{background:#25d3661a;color:#0e6b3a}
-.docs{display:grid;gap:12px;
- grid-template-columns:repeat(auto-fill,minmax(164px,1fr))}
-.doc{display:flex;flex-direction:column;background:var(--panel);
- border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;
- box-shadow:var(--sh-1);position:relative;
- transition:border-color .16s var(--ease),box-shadow .16s var(--ease)}
-.doc:hover{box-shadow:var(--sh-2);border-color:var(--gold-line)}
-.doc .vig{height:108px;background:var(--sunk);position:relative;overflow:hidden;
- display:flex;align-items:center;justify-content:center;cursor:pointer;
- border-bottom:1px solid var(--line)}
-.doc .vig img,.doc .vig video{width:100%;height:100%;object-fit:cover;display:block;
- background:var(--sunk)}
-/* Une tuile sans vignette ne doit pas etre un rectangle vide : le pictogramme
-   du type remplit la place, et l'extension est annoncee dans le coin. */
-.doc .vig.pictogram{background:linear-gradient(160deg,var(--gold-wash),var(--sunk))}
-.doc .pict{font-size:36px;line-height:1;color:var(--gold);opacity:.5}
-.doc .ext{position:absolute;bottom:7px;right:8px;font-size:9.5px;font-weight:800;
- letter-spacing:.08em;color:var(--muted);background:var(--panel);
- border:1px solid var(--line);border-radius:4px;padding:1px 5px}
-/* Le bouton de lecture, au centre de la vignette : le seul endroit ou l'oeil
-   le cherche. Il ne s'affiche que sur une video. */
-.doc .play{position:absolute;inset:0;display:flex;align-items:center;
- justify-content:center;pointer-events:none}
-.doc .play b{width:42px;height:42px;border-radius:50%;background:rgba(16,24,40,.72);
- color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;
- padding-left:3px;backdrop-filter:blur(4px);box-shadow:0 2px 10px rgba(0,0,0,.3);
- transition:transform .16s var(--ease)}
-.doc:hover .play b{transform:scale(1.09)}
-.doc .lbl{padding:10px 11px 0;font-size:12.5px;font-weight:600;line-height:1.32;
- display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
- overflow:hidden;word-break:break-word;cursor:pointer}
-.doc .lbl:hover{color:var(--gold)}
-.doc .foot{padding:8px 11px 10px;margin-top:auto;display:flex;gap:6px;
- align-items:center;flex-wrap:wrap}
-/* La visionneuse : la video et la photo s'ouvrent PAR-DESSUS le CRM, sans
-   quitter la fiche. Un onglet de plus, c'est une fiche perdue. */
-.viewer{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.88);
- display:flex;align-items:center;justify-content:center;padding:26px;
- backdrop-filter:blur(3px)}
-.viewer video,.viewer img{max-width:100%;max-height:calc(100vh - 118px);
- border-radius:var(--r-lg);box-shadow:0 18px 60px rgba(0,0,0,.55);background:#000}
-.viewer .vname{position:absolute;top:20px;left:24px;right:76px;color:#fff;
- font-size:13.5px;font-weight:600;opacity:.92}
-.viewer .vclose{position:absolute;top:14px;right:18px;width:38px;height:38px;
- border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;
- font-size:17px;cursor:pointer}
-.viewer .vclose:hover{background:rgba(255,255,255,.26)}
-.kv{width:100%;font-size:14px}
-.kv th{text-transform:none;font-size:12.5px;font-weight:500;color:var(--muted);
- letter-spacing:0;width:196px;position:static;background:none;height:auto;
- padding:11px 14px 11px 0;border-bottom:1px solid var(--line-soft)}
-.toast{position:fixed;right:22px;bottom:22px;background:var(--ink);color:var(--bg);
- padding:12px 20px;border-radius:var(--r);box-shadow:var(--sh-3);font-size:14px;
- font-weight:500;opacity:0;transform:translateY(10px);transition:.2s var(--ease);
- pointer-events:none;z-index:20;max-width:340px}
-.toast.on{opacity:1;transform:none}
-.toast.bad{background:var(--late)}
-.skel{color:var(--faint);font-size:14px;padding:44px 0;text-align:center}
-/* Deux libellés pour un même bouton : le long sur écran large, la flèche
-   seule au téléphone. Sans ces règles, les deux s'affichaient à la suite. */
-.narrow{display:none}
-/* Le prix est la donnée qu'on cherche en premier sur une fiche de bien :
-   il a droit à sa propre taille, au-dessus du reste du dossier. */
-.bigprice{font-size:24px;font-weight:650;letter-spacing:-.03em;margin-top:8px;
- font-variant-numeric:tabular-nums}
-.bigprice small{font-size:13.5px;font-weight:500;color:var(--muted);letter-spacing:0}
-/* Le brief d'un client est un paragraphe dense qu'on relit au téléphone.
-   Étalé sur toute la largeur de l'écran, l'oeil perd la ligne suivante : on
-   le ramène à une largeur de lecture et on le marque d'un filet, comme une
-   citation — c'est la parole du client, pas une donnée de la base. */
-.brief{font-size:14px;line-height:1.62;color:var(--ink-2);white-space:pre-wrap;
- max-width:74ch;margin:9px 0 12px;padding:2px 0 2px 14px;
- border-left:2px solid var(--gold-line)}
+/* ============================== la fiche ============================== */
+.fil{font-size:13.5px;color:var(--gris);padding:22px 0 0}
+.fil a:hover{color:var(--or-fonce)}
+/* La photo est posee EN ABSOLU dans son cadre : en flux, sa hauteur propre
+   commande, le rapport de forme du cadre ne s'applique plus, et un rendu de
+   1200x900 occupe tout l'ecran. */
+.grande{position:relative;border-radius:var(--r-lg);overflow:hidden;
+ border:1px solid var(--trait);aspect-ratio:16/7;background:var(--fond-2);
+ margin-top:12px}
+.grande img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+ display:block}
+.pub-head{padding:22px 0 18px;display:flex;align-items:flex-start;gap:20px;
+ flex-wrap:wrap}
+.pub-head h1{font-size:30px;font-weight:750}
+.pub-head .sub{margin:7px 0 0;color:var(--gris);font-size:15px}
+.pub-head .apd{margin-left:auto;text-align:right}
+.pub-head .apd b{display:block;font-size:28px;font-weight:750;
+ letter-spacing:-.03em}
+.pub-head .apd span{font-size:12px;color:var(--gris);text-transform:uppercase;
+ letter-spacing:.06em;font-weight:650}
 
-@media(max-width:1000px){
- .shell{flex-direction:column}
- aside{width:auto;height:auto;position:static;border-right:0;
-  border-bottom:1px solid var(--line);flex-direction:row;flex-wrap:wrap;
-  align-items:center;padding:10px 12px;gap:4px}
- aside .brand{border:0;height:auto;padding:0 14px 0 0;margin:0}
- aside .brand svg{height:40px}
- aside .foot,.sidesep{display:none}
- .navlink.on::before{display:none}
- main{padding:0 18px 70px}
- .topbar{margin:0 -18px 20px;padding:12px 18px;min-height:0}
- .when{min-width:0}
- .day{min-height:76px}
-}
+.card{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre);margin-bottom:22px}
+.block{border-top:1px solid var(--trait-fin)}
+.block:first-child{border-top:0}
+.block-head{padding:18px 22px 0;font-size:12px;font-weight:750;
+ letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.pad{padding:14px 22px 22px}
+/* Le tableau des typologies n'est pas dans un `.pad` : il porte sa propre
+   marge, sinon il se colle a l'intitule du bloc. */
+.block .scroll{padding:14px 22px 20px}
 
-/* ============================================================
-   TÉLÉPHONE — le CRM entre deux rendez-vous.
-   Sous 860 px : plus de colonne latérale, une barre d'onglets en bas
-   (le pouce arrive en bas de l'écran, pas en haut), et les tableaux
-   deviennent des fiches empilées — un tableau de quatorze colonnes ne se
-   lit pas sur 390 px de large, il se fait balayer de gauche à droite.
-   Rien n'est rendu deux fois : c'est le même HTML, replié par le CSS.
-   ============================================================ */
-.mbrand,.tabbar,.sheet,.foldbtn{display:none}
+table{width:100%;border-collapse:collapse;font-size:15px}
+thead th{text-align:left;font-size:11.5px;text-transform:uppercase;
+ letter-spacing:.06em;color:var(--gris);font-weight:700;padding:0 12px 9px}
+tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
+.kv{width:100%}
+.kv th{text-align:left;font-weight:500;color:var(--gris);padding:11px 12px;
+ vertical-align:top;font-size:14.5px;width:46%}
+.kv td{padding:11px 12px;vertical-align:top}
+.kv tr+tr th,.kv tr+tr td{border-top:1px solid var(--trait-fin)}
 
-@media(max-width:860px){
- .shell{display:block}
- aside{display:none}
- main{padding:0 13px calc(88px + env(safe-area-inset-bottom));max-width:none}
-
- /* --- en-tête --- */
- .topbar{margin:0 -13px 16px;gap:10px;min-height:0;
-  padding:calc(9px + env(safe-area-inset-top)) 13px 10px}
- .mbrand{display:block;flex:none;line-height:0}
- .mbrand svg{height:30px;width:auto;display:block}
- .topbar h1{font-size:17px}
- .topbar .sub{display:none}
- .topbar .grow{display:none}
- .quick{order:3;flex-basis:100%;min-width:0;height:40px}
-
- /* --- barre d'onglets --- */
- .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:14;
-  background:color-mix(in srgb,var(--panel) 94%,transparent);
-  backdrop-filter:saturate(180%) blur(12px);border-top:1px solid var(--line);
-  padding:5px 4px calc(5px + env(safe-area-inset-bottom))}
- .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:7px 2px;border-radius:10px;background:none;border:0;color:var(--muted);
-  font:inherit;font-size:10.5px;font-weight:600;cursor:pointer;position:relative;
-  min-height:48px;box-shadow:none}
- .tab:hover,.tab:active{background:none;color:var(--ink)}
- .tab .ico{font-size:18px;line-height:1}
- .tab.on{color:var(--gold)}
- .tab.on .ico{opacity:1}
- .tab .dot-alert{position:absolute;top:5px;right:calc(50% - 15px);
-  width:7px;height:7px;border-radius:50%;background:var(--late)}
-
- /* --- feuille « Recherche » --- */
- .sheet{display:block;position:fixed;left:9px;right:9px;z-index:15;
-  bottom:calc(68px + env(safe-area-inset-bottom));
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
-  box-shadow:var(--sh-3);padding:7px;
-  opacity:0;transform:translateY(8px);pointer-events:none;transition:.18s var(--ease)}
- .sheet.on{opacity:1;transform:none;pointer-events:auto}
- .sheet .navlink.on::before{display:none}
-
- /* --- tableaux → fiches empilées --- */
- .scroll{max-height:none;overflow:visible;background:none;border:0;
-  box-shadow:none;border-radius:0}
- .scroll table,.scroll thead,.scroll tbody,.scroll tr,.scroll td{display:block;width:auto}
- .scroll thead{display:none}
- .scroll table{font-size:14px}
- .scroll tr{background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--r);box-shadow:var(--sh-1);padding:13px 15px;margin-bottom:10px;
-  display:flex;flex-direction:column}
- .scroll tr.stretch{border-color:var(--gold-line)}
- .scroll td{border:0;padding:3px 0;display:flex;gap:10px;align-items:baseline;
-  text-align:left;white-space:normal}
- .scroll td::before{content:attr(data-label);flex:none;width:98px;line-height:1.75;
-  font-size:10px;text-transform:uppercase;letter-spacing:.07em;
-  color:var(--faint);font-weight:700}
- .scroll td.opt,.scroll td.mempty{display:none}
- /* Le titre de la fiche est la cellule qui nomme la chose — le client, le
-    projet — pas forcement la premiere colonne du tableau : dans le stock, la
-    premiere colonne est la ville, et elle est parfois vide. */
- .scroll td.mtitle{order:-1;font-size:16.5px;font-weight:650;padding:0 0 9px;
-  margin-bottom:7px;border-bottom:1px solid var(--line-soft)}
- .scroll td.mtitle::before{display:none}
- .scroll td.mtitle .who{align-items:center}
- /* Une fiche a toute la largeur : le nom du projet n'a plus a etre tronque. */
- .scroll td .ell{max-width:none;white-space:normal}
- .scroll td:last-child{padding-top:8px}
-
- /* --- selection multiple au telephone ---
-    La fiche empilee n'a pas de colonne : la case se pose en haut a droite de
-    la carte, avec une cible de 44 px — au doigt, une case de 16 px se rate. */
- .scroll tr{position:relative}
- .scroll td.pick{position:absolute;top:4px;right:6px;padding:0;margin:0;
-  min-width:44px;min-height:44px;display:flex;align-items:center;
-  justify-content:center;z-index:1}
- .scroll td.pick::before{display:none}
- .scroll td.pick input{width:22px;height:22px}
- /* Le titre de la fiche ne passe pas sous la case. */
- .scroll td.mtitle{padding-right:46px}
- /* La barre d'actions : sous l'en-tete, et des boutons qui tiennent au doigt.
-    L'en-tete du tableau etant masquee au telephone, « Tout selectionner » y
-    est un bouton — sinon il n'existerait pas sur telephone. */
- .bulk{top:0;padding:10px 12px;gap:7px}
- .bulk .n{flex-basis:100%;margin-right:0}
- .bulk button{flex:1;min-height:38px}
-
- /* --- fiche programme : table clé/valeur, et son repli --- */
- table.kv{width:100%;border-collapse:collapse;margin:0}
- table.kv th{width:150px;text-align:left;vertical-align:top;padding:8px 14px;
-   font-weight:600;color:var(--dim);font-size:12.5px}
- table.kv td{padding:8px 14px 8px 0;vertical-align:top;line-height:1.5}
- table.kv tr+tr th,table.kv tr+tr td{border-top:1px solid var(--line)}
- details.prog{margin:0 0 10px}
- details.prog>summary{cursor:pointer;font-size:13px;color:var(--gold);padding:2px 0}
- details.prog .block{margin:8px 0 0}
- @media(max-width:860px){
-   table.kv th{width:auto;display:block;padding:9px 12px 0}
-   table.kv td{display:block;padding:2px 12px 9px}
-   table.kv tr+tr th{border-top:1px solid var(--line)}
-   table.kv tr+tr td{border-top:0}
- }
-
- /* --- fiches clé / valeur --- */
- .kv,.kv tbody,.kv tr,.kv th,.kv td{display:block;width:auto}
- .kv tr{padding:9px 0;border-bottom:1px solid var(--line-soft)}
- .kv tr:last-child{border-bottom:0}
- .kv th{border:0;padding:0 0 2px;width:auto}
- .kv td{padding:0;font-size:15px}
-
- /* --- formulaires ---
-    16 px au minimum sur un champ : en dessous, iOS zoome à chaque clic
-    dans le champ et ne dézoome jamais. */
- input,select,textarea,.quick input,.f input,.f select{font-size:16px}
- .fgrid{grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px}
- .filters{padding:14px}
- .filters.folded{display:none}
- .foldbtn{display:flex;width:100%;justify-content:center;margin-bottom:13px}
- button{min-height:42px;padding:10px 18px}
- button.mini{min-height:32px;padding:6px 13px}
- .toggle{min-height:34px;padding:6px 13px}
- .factions button{flex:1}
- .count-line{flex-basis:100%;margin-left:0;text-align:center;margin-top:2px}
- textarea{min-height:88px}
-
- /* --- pastilles de biens : deux par ligne --- */
- .tiles{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
- .tile .shot{height:94px}
- .tile .prj{font-size:13px}
- .tile .price{font-size:15px}
-
- /* --- agenda : le mois garde ses sept colonnes, on le balaie --- */
- .calwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;
-  margin:0 -13px;padding:0 13px}
- .cal{min-width:540px}
- .day{min-height:78px}
- .calbar{gap:8px}
- .calbar .month{min-width:0;flex:1;font-size:16px;text-align:center;order:-1;
-  flex-basis:100%}
- .calbar button{flex:1;min-height:38px;padding:8px 10px;font-size:12.5px}
- .calbar .wide{display:none}
- .calbar .narrow{display:inline}
- .calbar .count-line{display:none}
-
- /* --- divers --- */
- h2{margin:22px 0 11px}
- .card{padding:16px;border-radius:var(--r)}
- .rechead h3{font-size:19px}
- .stats{grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:10px}
- .stat{padding:13px 14px;border-radius:var(--r)}
- .stat b{font-size:25px}
- .toast{left:12px;right:12px;max-width:none;text-align:center;
-  bottom:calc(76px + env(safe-area-inset-bottom))}
- .when{min-width:0}
- .txt{min-width:0}
- .docs{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
- .doc .vig{height:88px}
- .viewer{padding:12px}
-}
-@media(max-width:400px){
- .stats{grid-template-columns:1fr 1fr}
- .scroll td::before{width:88px}
-}
-
-/* ---- tuiles d'entree : villes et promoteurs -------------------------------
-   Avant la liste brute, deux rangees ou l'on choisit d'un clic. Le compte est
-   sur la tuile : une porte qui n'annonce pas ce qu'il y a derriere oblige a
-   l'ouvrir pour rien. */
-.facets{margin:0 0 18px}
-.facets h3{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--muted);margin:0 0 8px;font-weight:600}
-.facets + .facets{margin-top:4px}
-.tiles{display:flex;flex-wrap:wrap;gap:8px}
-
-/* Les tuiles arrivent l'une apres l'autre plutot que toutes d'un coup : le
-   decalage guide l'oeil de gauche a droite, et rend perceptible qu'il y a une
-   rangee a parcourir. 40 ms par tuile — assez pour se voir, trop court pour
-   qu'on attende. */
-@keyframes tilein{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-.tiles > *{animation:tilein .34s var(--ease) backwards}
-
-/* ---- tuiles promoteur : le logo, et le nom dessous --------------------- */
-.tile-f{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;
-  border:1px solid var(--line);border-radius:12px;background:var(--panel);
-  cursor:pointer;text-decoration:none;color:inherit;font:inherit;text-align:left;
-  transition:transform .16s var(--ease),border-color .16s,box-shadow .16s}
-.tile-f:hover{border-color:var(--gold-deco);transform:translateY(-2px);
-  box-shadow:var(--sh-1)}
-.tile-f.on{border-color:var(--gold-deco);background:var(--gold-wash);
-  box-shadow:inset 0 0 0 1px var(--gold-deco)}
-/* Fond blanc sous le logo, toujours : un logo dessine en fonce disparait sur
-   le theme sombre, et la plaque blanche est aussi la facon dont ces logos
-   apparaissent partout ailleurs — sur du papier. */
-.tile-f .mono{position:relative;width:66px;height:40px;border-radius:9px;flex:0 0 66px;
-  display:grid;place-items:center;font-size:.8rem;font-weight:700;
-  color:#fff;letter-spacing:.02em;overflow:hidden}
-.tile-f .mono img{position:absolute;inset:0;width:100%;height:100%;
-  object-fit:contain;background:#fff;padding:5px 6px}
-.tile-f .tl{display:flex;flex-direction:column;line-height:1.3;min-width:0}
-.tile-f .tn{font-weight:600;font-size:.87rem}
-.tile-f .tc{font-size:.74rem;color:var(--muted)}
-.tile-f.all .mono{background:var(--muted)}
-.facet-note{font-size:.76rem;color:var(--muted);margin:8px 0 0}
-
-/* ---- tuiles ville : la photo tient lieu d'etiquette ---------------------
-   Une ville se reconnait a sa silhouette avant de se lire. La photo vient de
-   Wikimedia Commons (`data/sources/city_photos.py`) ; quand elle manque, le
-   degrade colore reste et la tuile fonctionne exactement pareil. */
-.tile-v{position:relative;display:block;width:176px;height:106px;flex:0 0 176px;
-  border-radius:14px;overflow:hidden;text-decoration:none;color:#fff;
-  border:1px solid var(--line);isolation:isolate;
-  transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
-.tile-v:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(16,24,40,.22)}
-.tile-v img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  transform:scale(1.02);transition:transform 1.1s var(--ease);z-index:-1}
-/* Le lent zoom au survol : la photo respire, la tuile ne bouge pas de place. */
-.tile-v:hover img{transform:scale(1.13)}
-.tile-v .veil{position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(180deg,rgba(12,18,32,.05) 0%,rgba(12,18,32,.28) 48%,
-    rgba(12,18,32,.82) 100%);transition:background .2s}
-.tile-v:hover .veil{background:linear-gradient(180deg,rgba(12,18,32,.02) 0%,
-    rgba(12,18,32,.22) 46%,rgba(12,18,32,.78) 100%)}
-.tile-v .vt{position:absolute;left:11px;right:11px;bottom:9px}
-.tile-v .vt{display:flex;flex-direction:column;align-items:flex-start}
-.tile-v .vn{font-weight:700;font-size:.95rem;line-height:1.2;
-  text-shadow:0 1px 3px rgba(0,0,0,.55)}
-.tile-v .vc{font-size:.74rem;opacity:.92;line-height:1.3;
-  text-shadow:0 1px 3px rgba(0,0,0,.55)}
-/* Le trait dore se deroule sous le nom au survol : le seul mouvement qui dit
-   « cliquable » sans ajouter un mot. */
-.tile-v .vr{height:2px;width:22px;background:var(--gold-deco);border-radius:2px;
-  margin-top:6px;transition:width .28s var(--ease)}
-.tile-v:hover .vr,.tile-v.on .vr{width:54px}
-.tile-v.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-deco)}
-.tile-v.on .vn::after{content:' ✓';color:var(--gold-hi);font-size:.85em}
-.tile-v.all{display:grid;place-items:center;background:var(--raise);color:var(--ink);
-  border-style:dashed}
-.tile-v.all .vt{position:static;align-items:center;text-align:center}
-.tile-v.all .vn,.tile-v.all .vc{text-shadow:none}
-.tile-v.all .vr{margin:5px auto 0}
-
-
-/* ---- dashboard : les villes en photo, et ce qui bouge ---------------------
-   Le stock ville par ville etait un tableau de chiffres. Or les photos etaient
-   deja la, telechargees pour l'ecran Biens, et elles ne servaient nulle part
-   ailleurs. Une ville se reconnait a son image avant de se lire : la galerie
-   remplace le tableau, la barre dit la part de chaque ville dans le stock. */
-.cities{display:grid;gap:14px;margin-top:4px;
-  grid-template-columns:repeat(auto-fill,minmax(232px,1fr))}
-.cityc{position:relative;display:block;height:166px;border-radius:var(--r-lg);
-  overflow:hidden;text-decoration:none;color:#fff;border:1px solid var(--line);
-  isolation:isolate;box-shadow:var(--sh-1);
-  animation:citycin .46s var(--ease) backwards;
-  transition:transform .22s var(--ease),box-shadow .22s var(--ease)}
-@keyframes citycin{from{opacity:0;transform:translateY(12px) scale(.985)}
-  to{opacity:1;transform:none}}
-.cityc:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(16,24,40,.24)}
-/* Une tuile sans ville ne mene nulle part : elle ne se souleve pas au survol,
-   pour ne pas promettre un clic qui n'existe pas. */
-.cityc.mute{cursor:default}
-.cityc.mute:hover{transform:none;box-shadow:var(--sh-1)}
-.cityc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  z-index:-1;transform:scale(1.03);transition:transform 3.2s var(--ease)}
-/* Le zoom est LENT — trois secondes. Une photo qui bondit fait cheap ; une
-   photo qui derive donne l'impression que la page respire. */
-.cityc:hover img{transform:scale(1.11)}
-.cityc .veil{position:absolute;inset:0;z-index:-1;transition:opacity .22s;
-  background:linear-gradient(180deg,rgba(12,18,32,.08) 0%,rgba(12,18,32,.34) 46%,
-    rgba(12,18,32,.86) 100%)}
-.cityc:hover .veil{opacity:.86}
-.cityc .in{position:absolute;left:15px;right:15px;bottom:13px;
-  display:flex;flex-direction:column;align-items:stretch}
-.cityc .nm{font-weight:700;font-size:1.12rem;letter-spacing:-.015em;
-  text-shadow:0 1px 4px rgba(0,0,0,.6)}
-.cityc .ct{font-size:.78rem;opacity:.94;margin-top:2px;
-  text-shadow:0 1px 3px rgba(0,0,0,.6);font-variant-numeric:tabular-nums}
-.cityc .pr{font-size:.72rem;opacity:.82;margin-top:1px;
-  text-shadow:0 1px 3px rgba(0,0,0,.6);font-variant-numeric:tabular-nums}
-/* La part de la ville dans le stock, en une barre qui se remplit a l'arrivee.
-   Trois cent vingt-huit biens a Tel Aviv contre douze a Jerusalem : la barre
-   le dit avant que le chiffre soit lu. */
-.cityc .bar{height:3px;border-radius:2px;margin-top:9px;
-  background:rgba(255,255,255,.26);overflow:hidden}
-.cityc .bar i{display:block;height:100%;width:0;border-radius:2px;
-  background:var(--gold-deco);animation:barfill .85s var(--ease) forwards;
-  animation-delay:inherit}
-@keyframes barfill{to{width:var(--part)}}
-.cityc .go{position:absolute;top:12px;right:14px;opacity:0;color:#fff;
-  font-size:1rem;transform:translateX(-5px);
-  transition:opacity .2s var(--ease),transform .2s var(--ease)}
-.cityc:hover .go{opacity:.95;transform:none}
-
-/* Les chiffres du haut montent au lieu d'apparaitre : on voit le compteur
-   arriver a 695, et l'oeil retient mieux un nombre qu'il a vu se poser. */
-.stat b{font-variant-numeric:tabular-nums}
-.stats > *{animation:citycin .4s var(--ease) backwards}
-
-@media(max-width:860px){
-  .cities{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-  .cityc{height:126px}
-  .cityc .nm{font-size:.98rem}
-}
-@media(prefers-reduced-motion:reduce){
-  .cityc,.stats > *{animation:none}
-  .cityc img,.cityc,.cityc .go{transition:none}
-  .cityc .bar i{animation:none;width:var(--part)}
-}
-
-
-/* ---- pastilles de compteur ------------------------------------------------
-   Deux questions qu'on se pose devant une tuile, et auxquelles rien ne
-   repondait : « ce bien, je l'ai montre a combien de monde ? » et « cette
-   brochure, je l'ai deja envoyee ? ». La pastille ne s'affiche QUE lorsque le
-   compte est superieur a zero : un « 0 » sur chaque tuile serait du bruit sur
-   toute la page, et le silence dit deja « jamais ». */
-.count{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;
- font-weight:700;border-radius:6px;padding:2px 7px;line-height:1.35;
- background:var(--gold-wash);color:var(--gold);border:1px solid var(--gold-line);
- font-variant-numeric:tabular-nums;white-space:nowrap}
-.count svg{width:11px;height:11px;flex:none}
-/* Sur une tuile a photo, la pastille se pose PAR-DESSUS l'image, en haut a
-   gauche - le coin qui reste libre (le rang et le prix occupent les autres). */
-.tile .shot .count{position:absolute;top:8px;left:8px;z-index:2;
- background:rgba(16,24,40,.82);color:#fff;border-color:transparent;
- backdrop-filter:blur(4px)}
-.tile .shot .rank ~ .count{left:38px}
-.doc .vig .count{position:absolute;top:7px;left:7px;z-index:2;
- background:rgba(16,24,40,.82);color:#fff;border-color:transparent;
- backdrop-filter:blur(4px)}
-
-
-/* ---- envoyer un bien : la feuille de destinataire ------------------------- */
-.envback{position:fixed;inset:0;z-index:70;background:rgba(8,10,14,.5);
- backdrop-filter:blur(2px);animation:aptfade .18s var(--ease)}
-.envoi{position:fixed;z-index:71;left:50%;top:50%;transform:translate(-50%,-50%);
- width:min(560px,calc(100vw - 28px));max-height:min(84vh,720px);overflow:auto;
- background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);
- box-shadow:var(--sh-3);animation:envin .2s var(--ease)}
-@keyframes envin{from{opacity:0;transform:translate(-50%,-46%) scale(.98)}
- to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-.envoi header{display:flex;align-items:flex-start;gap:12px;padding:15px 18px;
- border-bottom:1px solid var(--line)}
-.envoi header h3{margin:0;font-size:15px;line-height:1.35}
-.envoi header .dim{font-size:12.5px;color:var(--muted);margin-top:2px}
-.envoi .body{padding:15px 18px;display:flex;flex-direction:column;gap:13px}
-/* L'apercu EXACT de ce qui partira. On n'envoie pas un message qu'on n'a pas
-   lu : c'est le client qui le recevra, pas nous. */
-.envoi textarea{width:100%;font:13px/1.6 inherit;background:var(--sunk);
- border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;
- min-height:190px;resize:vertical}
-.envoi .who{display:flex;flex-direction:column;gap:6px;align-items:stretch}
-/* Sans largeur explicite, un input garde sa taille naturelle de vingt
-   caracteres : le champ apparaissait riquiqui et centre au milieu de la
-   feuille, et le texte d'exemple etait coupe. */
-.envoi .who input,.envoi .who select,.envoi .who label{width:100%;text-align:left}
-.envoi .acts{display:flex;gap:9px;flex-wrap:wrap;padding:13px 18px;
- border-top:1px solid var(--line);background:var(--raise);
- border-radius:0 0 var(--r-lg) var(--r-lg)}
-.envoi .wa{background:#1c7c4a;border-color:#1c7c4a;color:#fff}
-.envoi .wa:hover{background:#166339;border-color:#166339}
-.envoi .close{margin-left:auto;flex:none;border:1px solid var(--line);
- background:var(--raise);color:var(--muted);border-radius:8px;width:30px;height:30px;
- display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:none}
-/* Au telephone, la feuille d'envoi doit montrer le texte ET la liste des
-   destinataires sans que l'un chasse l'autre hors de l'ecran. */
-@media(max-width:860px){
- .envoi{width:calc(100vw - 18px);max-height:88vh}
- .envoi textarea{min-height:118px}
- .dests{max-height:180px}
- .envoi .acts button{flex:1;min-height:40px}
- .dest button{min-height:34px}
-}
-
-
-/* ---- choisir les visuels d'un programme ---------------------------------
-   Le classement automatique est bon, pas infaillible. Ici on voit toutes les
-   images de la brochure et on designe celles qui representent le programme —
-   une fois pour ses 206 lots, jamais lot par lot. */
-.vgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}
-.vcase{position:relative;border-radius:var(--r);overflow:hidden;cursor:pointer;
- border:2px solid var(--line);background:var(--sunk);aspect-ratio:16/10;
- transition:border-color .14s var(--ease),transform .14s var(--ease)}
-.vcase:hover{transform:translateY(-2px);border-color:var(--faint)}
-.vcase img{width:100%;height:100%;object-fit:cover;display:block}
-.vcase.on{border-color:var(--gold-deco);box-shadow:0 0 0 3px var(--gold-wash)}
-/* Le rang dit l'ORDRE : la premiere image choisie occupe le grand cadre de la
-   fiche, les suivantes la bande de vignettes. */
-.vcase .rg{position:absolute;top:7px;left:7px;min-width:24px;height:24px;
- padding:0 7px;border-radius:7px;background:var(--gold-deco);color:#1a1200;
- font-size:12.5px;font-weight:800;display:none;align-items:center;
- justify-content:center}
-.vcase.on .rg{display:flex}
-.vhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-
-@media(max-width:860px){
-  .tiles{gap:6px}
-  .tile-f{padding:7px 11px 7px 7px}
-  .tile-f .mono{width:56px;height:34px;flex:0 0 56px;font-size:.7rem}
-  .tile-v{width:144px;height:92px;flex:0 0 144px}
-  .tile-v .vn{font-size:.87rem}
-}
-/* Une animation qu'on n'a pas demandee ne doit pas s'imposer a qui a coche
-   « reduire les animations » dans son systeme. */
-@media(prefers-reduced-motion:reduce){
-  .tiles > *{animation:none}
-  .tile-v img,.tile-v .vr,.tile-v,.tile-f{transition:none}
-  .tile-v:hover img{transform:scale(1.02)}
-}
-
-/* ---- panneau bien, ouvert depuis une fiche client -------------------------
-   Cliquer un bien propose depuis la fiche d'un client ouvrait la page du bien
-   et faisait sortir du client. On reste : le bien s'ouvre par-dessus, on le
-   referme, on est toujours au meme endroit de la meme fiche. */
-.aptwrap{position:fixed;inset:0;z-index:60;display:none}
-.aptwrap.on{display:block}
-.aptback{position:absolute;inset:0;background:rgba(16,24,40,.42);
-  backdrop-filter:blur(2px);animation:aptfade .16s var(--ease)}
-.aptpanel{position:absolute;top:0;right:0;bottom:0;width:min(560px,100%);
-  background:var(--panel);border-left:1px solid var(--line);box-shadow:var(--sh-3);
-  display:flex;flex-direction:column;animation:aptin .2s var(--ease)}
-@keyframes aptfade{from{opacity:0}to{opacity:1}}
-@keyframes aptin{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
-.apthead{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;
-  border-bottom:1px solid var(--line);flex:none}
-.apthead .t{flex:1;min-width:0}
-.apthead h2{margin:0;font-size:1.02rem;line-height:1.3}
-.apthead .sub{font-size:.8rem;color:var(--muted);margin-top:3px}
-.aptclose{flex:none;border:1px solid var(--line);background:var(--raise);
-  width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;
-  color:var(--muted);line-height:1}
-.aptclose:hover{color:var(--ink);border-color:var(--muted)}
-.aptbody{overflow-y:auto;padding:16px 18px;flex:1}
-.aptfoot{border-top:1px solid var(--line);padding:12px 18px;flex:none;
-  display:flex;gap:9px;flex-wrap:wrap;align-items:center}
-.aptctx{font-size:.76rem;color:var(--muted);margin-right:auto}
-@media(max-width:860px){
-  .aptpanel{top:auto;left:0;height:88vh;width:100%;border-left:none;
-    border-top:1px solid var(--line);border-radius:16px 16px 0 0;
-    animation:aptup .22s var(--ease)}
-  @keyframes aptup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
-}
-
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px 72px}
-.pub-top{position:sticky;top:0;z-index:6;background:var(--bg);
- border-bottom:1px solid var(--line);padding:14px 20px 12px;margin-bottom:20px}
-.pub-in{max-width:1180px;margin:0 auto}
-.pub-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.pub-logo{display:block;flex:none;line-height:0;border-radius:var(--r-sm);
- padding:4px 6px;margin-left:-6px;transition:background .16s var(--ease)}
-.pub-logo:hover{background:var(--raise)}
-.pub-logo svg{display:block;height:38px;width:auto}
-@media(max-width:860px){.pub-logo svg{height:30px}}
-.pub-top .grow{flex:1;min-width:0}   /* `.grow` du CRM impose 150px : ici,
-   ce vide doit pouvoir disparaitre, sinon la barre deborde du telephone */
-.pub-filtres{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.pub-filtres input,.pub-filtres select{background:var(--panel);border:1px solid var(--line);
- border-radius:var(--r);padding:8px 12px;min-height:38px}
-.pub-filtres input{flex:1 1 210px;min-width:150px}
-.pub-count{color:var(--muted);font-size:12.5px;margin:14px 2px 12px}
-.progs{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(232px,1fr))}
-.progs .tile{height:100%}
-.tile .price{margin-top:auto;padding-top:6px}
-.progs > *{animation:none}
-.tile .shot{height:150px}
-/* Le visuel de la vitrine porte son bandeau (typologie + prix) en bas du
-   carre. Sur une tuile de programme, qui annonce toutes les typologies, ce
-   bandeau dirait le contraire de ce qu'on lit dessous : on cadre plus haut. */
-.tile .shot img{object-position:50% 30%}
-.tile .price small{display:block;margin:0 0 1px}
-.tile .shot .fallback{position:absolute;inset:0;display:grid;place-items:center;
- background:linear-gradient(140deg,var(--sunk),var(--gold-wash));
- color:var(--gold);font-size:24px;font-weight:700;letter-spacing:.08em}
-/* Le titre d'une fiche : le `.topbar` du CRM porte des marges negatives
-   calees sur les gouttieres de son `main` — repris ici, il decalait le titre
-   d'une trentaine de pixels a gauche de la carte qu'il annonce. */
-.pub-head{padding:20px 0 16px}
-.pub-head h1{margin:0;font-size:23px;font-weight:650;letter-spacing:-.02em;
- line-height:1.25}
-.pub-head .sub{margin:4px 0 0;color:var(--muted);font-size:13.5px}
-/* Le piege a robots : un champ que personne ne voit et que les robots
-   remplissent. `display:none` est repere par les meilleurs d'entre eux ; on
-   le sort du cadre. */
-.pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.merci{text-align:center;padding:26px 18px}
-.merci .coche{width:46px;height:46px;margin:0 auto 12px;border-radius:50%;
- display:grid;place-items:center;background:var(--ok-wash);color:var(--ok);
- border:1px solid var(--ok-line);font-size:22px;font-weight:700}
-.merci h3{margin:0 0 6px;font-size:19px}
-.merci p{margin:0 0 8px}
-.merci a{color:var(--gold);text-decoration:underline}
-.elargi{background:var(--gold-wash);border:1px solid var(--gold-line);
- border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:13.5px;
- line-height:1.55;color:var(--ink-2)}
-.elargi b{color:var(--ink)}
-.tile .maj{font-size:11px;color:var(--faint);margin-top:5px}
-.demande{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;
- color:var(--gold);background:var(--gold-wash);border:1px solid var(--gold-line);
- border-radius:6px;padding:2px 8px;margin-top:7px;line-height:1.45}
-.pub-head .demande{font-size:12.5px;margin-top:10px;padding:5px 11px}
-.si-lab{font-size:12px;color:var(--muted);margin:18px 0 7px}
-.si-note{font-size:12px;margin:8px 0 0;line-height:1.55}
-.si-note.manque{color:var(--late)}
-.si-pied{font-size:11.5px;margin-top:20px;line-height:1.6}
-.si-titre{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;
- color:var(--faint);font-weight:700;margin:22px 0 8px}
-.si-tr{font-size:11.5px;line-height:1.6;margin-top:3px;font-weight:400}
-.stats{margin-top:18px}
-.contact{margin-top:22px}
-.contact textarea{width:100%;min-height:62px}
-.jauge{margin-top:14px}
-.hero{position:relative;border-radius:var(--r-lg);overflow:hidden;
- border:1px solid var(--line);aspect-ratio:16/8;background:var(--sunk)}
-.hero img{width:100%;height:100%;object-fit:cover;display:block}
-.seg{display:flex;gap:6px;flex-wrap:wrap}
-.seg button{background:var(--panel);color:var(--ink-2);border:1px solid var(--line);
- border-radius:999px;padding:7px 14px;font-size:13px;min-height:34px}
-.seg button.on{background:var(--gold-wash);border-color:var(--gold-line);
- color:var(--gold);font-weight:650}
-.jauge{height:10px;border-radius:999px;background:var(--sunk);overflow:hidden;
- display:flex;border:1px solid var(--line)}
+/* ============================ le simulateur ============================ */
+.si-lab{font-size:12px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris);margin:20px 0 8px}
+.si-note{font-size:13px;color:var(--gris);margin:9px 0 0;line-height:1.55}
+.si-note.manque{color:#b42318}
+.si-pied{font-size:12px;color:var(--gris-clair);margin-top:22px;line-height:1.6}
+.si-titre{font-size:12px;font-weight:750;letter-spacing:.08em;
+ text-transform:uppercase;color:var(--gris);margin:26px 0 10px}
+.si-tr{font-size:12.5px;color:var(--gris);line-height:1.6;margin-top:4px;
+ font-weight:400}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+ gap:14px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font-size:11.5px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris)}
+.f input,.f select,.f textarea{background:var(--fond);
+ border:1px solid var(--trait);border-radius:var(--r);padding:11px 12px;
+ font-size:15px;min-height:46px;width:100%}
+.f textarea{min-height:70px;resize:vertical}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--or)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{background:var(--fond);border:1px solid var(--trait);
+ border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;
+ color:var(--encre-2);cursor:pointer;min-height:42px}
+.seg button:hover{border-color:var(--gris-clair)}
+.seg button.on{background:var(--or);border-color:var(--or);color:#1a1405}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:14px;margin-top:22px}
+.stat{background:var(--fond-2);border:1px solid var(--trait);
+ border-radius:var(--r);padding:16px 18px}
+.stat b{display:block;font-size:26px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.1}
+.stat span{display:block;font-size:11.5px;font-weight:700;color:var(--gris);
+ text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+.jauge{height:12px;border-radius:999px;background:var(--fond-2);overflow:hidden;
+ display:flex;border:1px solid var(--trait);margin-top:16px}
 .jauge i{display:block;height:100%}
-.jauge .cap{background:var(--gold-deco)}
-.jauge .int{background:var(--muted);opacity:.45}
-.wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;
- background:#25d366;color:#052e16;border:0;border-radius:999px;padding:13px 22px;
- font-weight:700;font-size:14.5px;min-height:46px}
-.wa:hover{background:#1eb85a}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-.pub-foot{border-top:1px solid var(--line);margin-top:44px;padding:26px 20px 40px;
- text-align:center;color:var(--muted);font-size:12.5px;line-height:1.7}
-.pub-foot b{color:var(--ink);letter-spacing:.16em}
-@media(max-width:860px){
- .wrap{padding:0 14px 80px}
- .pub-top{padding:12px 14px 10px}
- .progs{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px}
- .tile .shot{height:104px}
- .stats{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.jauge .cap{background:var(--or)}
+.jauge .int{background:var(--gris-clair);opacity:.5}
+
+/* ============================== le contact ============================== */
+.contact{border:1px solid var(--or-trait);background:linear-gradient(
+ 180deg,var(--or-clair),var(--carte) 62%)}
+.contact .block-head{color:var(--or-fonce)}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.actions button{border:0;border-radius:999px;padding:14px 26px;font-size:15px;
+ font-weight:700;cursor:pointer;min-height:50px;background:var(--encre);
+ color:var(--fond)}
+.actions button:hover{opacity:.92}
+.actions .wa{background:#25d366;color:#052e16}
+.actions .ghost{background:var(--fond);color:var(--encre);
+ border:1px solid var(--trait)}
+.pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.merci{text-align:center;padding:30px 20px}
+.merci .coche{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;
+ display:grid;place-items:center;background:var(--vert-fond);color:var(--vert);
+ font-size:25px;font-weight:800}
+.merci h3{font-size:21px;margin-bottom:8px}
+.merci p{margin:0 0 9px}
+.merci a{color:var(--or-fonce);font-weight:650;text-decoration:underline}
+
+/* =============================== le pied =============================== */
+.pub-foot{background:var(--fond-2);border-top:1px solid var(--trait);
+ padding:38px 22px 46px;text-align:center;color:var(--gris);font-size:13.5px;
+ line-height:1.75}
+.pub-foot .marque{margin-bottom:12px}
+.pub-foot .marque svg{height:38px}
+.pub-foot a{color:var(--encre-2);font-weight:600}
+
+/* =============================== telephone =============================== */
+@media(max-width:900px){
+ .pub-bar{height:62px;gap:12px}
+ .pub-logo svg{height:32px}
+ .nav{display:none}
+ .hero .dedans{padding:38px 20px 62px}
+ .hero h1{font-size:28px}
+ .hero p.chapeau{font-size:15.5px}
+ .champs{grid-template-columns:1fr 1fr;gap:9px}
+ .champs .champ:first-child{grid-column:1 / -1}
+ .chercher{grid-column:1 / -1;width:100%;justify-content:center}
+ .cherche{margin-top:-38px;padding:0 14px}
+ .cherche .boite{padding:13px;border-radius:20px}
+ .wrap{padding:24px 14px 70px}
+ .progs{grid-template-columns:1fr;gap:16px}
+ .pub-in{padding:0 14px}
+ .pub-head{padding:18px 0 14px}
+ .pub-head h1{font-size:23px}
+ .pub-head .apd{margin-left:0;text-align:left}
+ .pub-head .apd b{font-size:23px}
+ .grande{aspect-ratio:16/10}
+ .block-head,.pad{padding-left:16px;padding-right:16px}
+ .block .scroll{padding:12px 16px 16px}
+ /* Les tableaux deviennent des fiches empilees : quatorze colonnes ne se
+    lisent pas sur 390 pixels, et un tableau qu'on balaie cache toujours la
+    colonne qu'on cherchait. */
+ .scroll table,.scroll thead,.scroll tbody,.scroll tr,.scroll td{display:block;
+  width:auto}
+ .scroll thead{display:none}
+ .scroll tr{background:var(--fond-2);border:1px solid var(--trait);
+  border-radius:var(--r);padding:13px 15px;margin-bottom:10px}
+ .scroll td{border:0;padding:4px 0;display:flex;gap:10px;align-items:baseline}
+ .scroll td::before{content:attr(data-label);flex:none;width:96px;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--gris-clair);font-weight:700;line-height:1.7}
+ .scroll td.mtitle{font-size:17px;font-weight:700;padding:0 0 9px;
+  margin-bottom:7px;border-bottom:1px solid var(--trait)}
+ .scroll td.mtitle::before{display:none}
+ .kv th,.kv td{display:block;width:auto}
+ .kv th{padding:11px 12px 0}
+ .kv td{padding:2px 12px 11px}
+ .kv tr+tr td{border-top:0}
 }
 </style>
 </head><body>
-<div class=pub-top><div class="pub-in pub-bar">
-  <a class=pub-logo href="#/" title="Retour à tous les programmes"
-     aria-label="BH Nadlan — retour à tous les programmes"><svg viewBox="0 0 306 64" height="38" role="img"
+
+<header class=pub-top><div class="pub-in pub-bar">
+  <a class=pub-logo href="#/" title="Retour à l'accueil"
+     aria-label="BH Nadlan — retour à l'accueil"><svg viewBox="0 0 300 64" height="40" role="img"
  aria-label="BH Nadlan — l'immobilier autrement" xmlns="http://www.w3.org/2000/svg">
-  <rect x="1.4" y="1.4" width="59.2" height="59.2" rx="16" fill="none"
-        stroke="#c9a227" stroke-width="2" opacity=".5"/>
+  <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
   <g fill="#c9a227">
-    <rect x="15.5" y="29" width="8" height="17" rx="1.5"/>
-    <rect x="27" y="19" width="8" height="27" rx="1.5"/>
-    <rect x="38.5" y="25" width="8" height="21" rx="1.5"/>
+    <rect x="14" y="30" width="8.5" height="16" rx="2"/>
+    <rect x="25.8" y="19" width="8.5" height="27" rx="2"/>
+    <rect x="37.6" y="25" width="8.5" height="21" rx="2"/>
+    <rect x="12" y="49" width="36" height="3.4" rx="1.7"/>
   </g>
-  <rect x="13" y="48" width="36" height="2.8" rx="1.4" fill="#c9a227"/>
-  <text x="80" y="31" font-family="Helvetica,Arial,sans-serif" font-size="24"
-        font-weight="700" letter-spacing="1.2" fill="currentColor">BH</text>
-  <text x="126" y="31" font-family="Helvetica,Arial,sans-serif" font-size="24"
-        font-weight="300" letter-spacing="4.2" fill="currentColor">NADLAN</text>
-  <path d="M80 41 H296" stroke="#c9a227" stroke-width="1.3" opacity=".7"/>
-  <text x="80" y="56" font-family="Helvetica,Arial,sans-serif" font-size="10"
-        letter-spacing="2.9" fill="currentColor" opacity=".6">L’IMMOBILIER AUTREMENT</text>
+  <text x="74" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="800" letter-spacing="-.5" fill="currentColor">BH</text>
+  <text x="112" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="300" letter-spacing="3.4" fill="currentColor">NADLAN</text>
+  <text x="75" y="52" font-family="Helvetica,Arial,sans-serif" font-size="9.5"
+        letter-spacing="2.6" font-weight="600" fill="#c9a227"
+        >L’IMMOBILIER AUTREMENT</text>
 </svg></a>
+  <nav class=nav>
+    <a href="#/">Programmes neufs</a>
+    <a href="#/simulateur">Simulateur d'achat</a>
+    <a href="#contact">Nous contacter</a>
+  </nav>
   <div class=grow></div>
-  <a class=chip href="#/simulateur">∑ Simulateur d'achat</a>
   <div class=theme><button data-t='light' title='Clair'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Comme le système'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Sombre'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
-</div>
-<div class=pub-in><div class=pub-filtres id=pub-filtres>
-  <input id=f-q placeholder="Chercher un programme, une ville…">
-  <select id=f-ville><option value="">Toutes les villes</option>
-    <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Jerusalem'>Jerusalem</option><option value='Kedar'>Kedar</option><option value='Kiryat Gat'>Kiryat Gat</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Ramat Gan'>Ramat Gan</option><option value='Tel Aviv'>Tel Aviv</option></select>
-  <select id=f-pmin><option value="">Pièces : minimum</option>
-    <option value='2.0'>à partir de 2 pièces</option><option value='2.5'>à partir de 2,5 pièces</option><option value='3.0'>à partir de 3 pièces</option><option value='4.0'>à partir de 4 pièces</option><option value='5.0'>à partir de 5 pièces</option><option value='6.0'>à partir de 6 pièces</option><option value='9.5'>à partir de 9,5 pièces</option></select>
-  <select id=f-pmax><option value="">Pièces : maximum</option>
-    <option value='2.0'>jusqu'à 2 pièces</option><option value='2.5'>jusqu'à 2,5 pièces</option><option value='3.0'>jusqu'à 3 pièces</option><option value='4.0'>jusqu'à 4 pièces</option><option value='5.0'>jusqu'à 5 pièces</option><option value='6.0'>jusqu'à 6 pièces</option><option value='9.5'>jusqu'à 9,5 pièces</option></select>
-  <select id=f-budget><option value="">Tous les budgets</option>
-    <option value='1500000'>jusqu'à 1 500 000 ₪</option><option value='2000000'>jusqu'à 2 000 000 ₪</option><option value='2500000'>jusqu'à 2 500 000 ₪</option><option value='3000000'>jusqu'à 3 000 000 ₪</option><option value='4000000'>jusqu'à 4 000 000 ₪</option><option value='5000000'>jusqu'à 5 000 000 ₪</option><option value='5422947'>jusqu'à 5 422 947 ₪</option></select>
-</div></div></div>
-<div class=wrap>
-  <div class=pub-count id=pub-count></div>
+  <a class="cta" href="#contact">Être rappelé</a>
+</div></header>
+
+<section class=hero id=hero>
+  <div class=photo><img src="img/bavli-tel-aviv.jpg" alt=""
+       onerror="this.remove()"></div>
+  <div class=voile></div>
+  <div class=dedans>
+    <h1>Votre appartement neuf en Israël,<br>accompagné en français</h1>
+    <p class=chapeau>23 programmes suivis dans
+      11 villes — du premier contact jusqu'à la remise des clés :
+      sélection, négociation, avocat, banque et suivi du chantier.</p>
+  </div>
+</section>
+
+<div class=cherche id=cherche><div class=boite>
+  <div class=onglets>
+    <button class=on type=button>Acheter</button>
+    <button type=button onclick="location.hash='#/simulateur'">Simuler mon
+      budget</button>
+  </div>
+  <div class=champs id=pub-filtres>
+    <div class=champ><label for=f-q>Programme ou quartier</label>
+      <input id=f-q placeholder="Ex. Bat Yam, Harmony, bord de mer…"></div>
+    <div class=champ><label for=f-ville>Ville</label>
+      <select id=f-ville><option value="">Toutes les villes</option>
+        <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Jerusalem'>Jerusalem</option><option value='Kedar'>Kedar</option><option value='Kiryat Gat'>Kiryat Gat</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Ramat Gan'>Ramat Gan</option><option value='Tel Aviv'>Tel Aviv</option></select></div>
+    <div class=champ><label for=f-pmin>Pièces (min.)</label>
+      <select id=f-pmin><option value="">Indifférent</option>
+        <option value='2.0'>à partir de 2 pièces</option><option value='2.5'>à partir de 2,5 pièces</option><option value='3.0'>à partir de 3 pièces</option><option value='4.0'>à partir de 4 pièces</option><option value='5.0'>à partir de 5 pièces</option><option value='6.0'>à partir de 6 pièces</option><option value='9.5'>à partir de 9,5 pièces</option></select></div>
+    <div class=champ><label for=f-budget>Budget maximum</label>
+      <select id=f-budget><option value="">Indifférent</option>
+        <option value='1500000'>jusqu'à 1 500 000 ₪</option><option value='2000000'>jusqu'à 2 000 000 ₪</option><option value='2500000'>jusqu'à 2 500 000 ₪</option><option value='3000000'>jusqu'à 3 000 000 ₪</option><option value='4000000'>jusqu'à 4 000 000 ₪</option><option value='5000000'>jusqu'à 5 000 000 ₪</option><option value='5422947'>jusqu'à 5 422 947 ₪</option></select></div>
+    <button class=chercher type=button onclick="document.querySelector('.wrap')
+      .scrollIntoView({behavior:'smooth'})">Rechercher</button>
+    <select id=f-pmax hidden><option value="">Indifférent</option>
+      <option value='2.0'>jusqu'à 2 pièces</option><option value='2.5'>jusqu'à 2,5 pièces</option><option value='3.0'>jusqu'à 3 pièces</option><option value='4.0'>jusqu'à 4 pièces</option><option value='5.0'>jusqu'à 5 pièces</option><option value='6.0'>jusqu'à 6 pièces</option><option value='9.5'>jusqu'à 9,5 pièces</option></select>
+  </div>
+</div></div>
+
+<main class=wrap>
+  <div class=entete id=entete>
+    <h2 id=pub-titre>Nos programmes</h2>
+    <div class=pub-count id=pub-count></div>
+  </div>
   <div id=vue></div>
-</div>
-<div class=pub-foot>
-  <b>BH NADLAN</b><br>
-  +972(0)58.56789.26 · +33(0)7.67.28.47.10<br>
+</main>
+
+<footer class=pub-foot>
+  <div class=marque><svg viewBox="0 0 300 64" height="38" role="img"
+ aria-label="BH Nadlan — l'immobilier autrement" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
+  <g fill="#c9a227">
+    <rect x="14" y="30" width="8.5" height="16" rx="2"/>
+    <rect x="25.8" y="19" width="8.5" height="27" rx="2"/>
+    <rect x="37.6" y="25" width="8.5" height="21" rx="2"/>
+    <rect x="12" y="49" width="36" height="3.4" rx="1.7"/>
+  </g>
+  <text x="74" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="800" letter-spacing="-.5" fill="currentColor">BH</text>
+  <text x="112" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="300" letter-spacing="3.4" fill="currentColor">NADLAN</text>
+  <text x="75" y="52" font-family="Helvetica,Arial,sans-serif" font-size="9.5"
+        letter-spacing="2.6" font-weight="600" fill="#c9a227"
+        >L’IMMOBILIER AUTREMENT</text>
+</svg></div>
+  <a href="tel:972585678926">+972(0)58.56789.26</a> ·
+  <a href="tel:+33(0)7.67.28.47.10"
+     >+33(0)7.67.28.47.10</a><br>
   Accompagnement des acheteurs francophones, du premier contact à la remise
-  des clés : sélection, négociation, avocat, banque et suivi du chantier.<br>
+  des clés.<br>
   <small>Prix indicatifs, susceptibles d'évolution ; disponibilités sous
   réserve. Document non contractuel.</small>
-</div>
-<script>const DONNEES = {"projets": [{"cle": "harmony-ashdod", "nom": "Harmony", "ville": "Ashdod", "quartier": null, "livraison": "2031", "image": "../img/bh-harmony-2p.jpg", "prix_min": 1735000, "lots": 128, "maj": "2026-08-25", "typologies": [{"cle": "bh-harmony-2p", "pieces": 2.0, "libelle": "2", "prix_min": 1735000, "prix_max": 1975000, "surface_min": 54.0, "surface_max": 55.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2125000, "prix_max": 2185000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2495000, "prix_max": 2805000, "surface_min": 111.0, "surface_max": 113.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2975000, "prix_max": 3665000, "surface_min": 141.0, "surface_max": 191.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3885000, "prix_max": 4065000, "surface_min": 165.0, "surface_max": 165.0, "livraison": "2031", "parking": false, "cave": false}], "prix_max": 4065000}, {"cle": "ramot-ashkelon", "nom": "Ramot", "ville": "Ashkelon", "quartier": null, "livraison": "2029", "image": "../img/bh-ramot-3p.jpg", "prix_min": 1875000, "lots": 84, "maj": "2026-08-25", "typologies": [{"cle": "bh-ramot-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1875000, "prix_max": 2259000, "surface_min": 77.0, "surface_max": 110.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2181818, "prix_max": 2363636, "surface_min": 109.0, "surface_max": 111.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2454000, "prix_max": 3670455, "surface_min": 124.0, "surface_max": 167.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3545000, "prix_max": 3622000, "surface_min": 172.0, "surface_max": 181.0, "livraison": "2029", "parking": true, "cave": true}], "prix_max": 3670455}, {"cle": "island-bat-yam", "nom": "Island", "ville": "Bat Yam", "quartier": null, "livraison": null, "image": "../img/bh-island-3p.jpg", "prix_min": 3100000, "lots": 3, "maj": "2026-06-16", "typologies": [{"cle": "bh-island-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3100000, "prix_max": 3100000, "surface_min": 81.5, "surface_max": 81.5, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3800000, "prix_max": 3800000, "surface_min": 116.0, "surface_max": 116.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4300000, "prix_max": 4300000, "surface_min": 131.0, "surface_max": 131.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 4300000}, {"cle": "tours-u-bat-yam", "nom": "Tours U", "ville": "Bat Yam", "quartier": "Ramat Anassi", "livraison": "Juin 2030", "image": "../img/bh-tours-u-3p.jpg", "prix_min": 2700000, "lots": 3, "maj": "2026-09-03", "typologies": [{"cle": "bh-tours-u-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2700000, "prix_max": 2700000, "surface_min": 82.0, "surface_max": 82.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3450000, "prix_max": 3450000, "surface_min": 105.0, "surface_max": 105.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3890000, "prix_max": 3890000, "surface_min": 127.0, "surface_max": 127.0, "livraison": "Juin 2030", "parking": false, "cave": false}], "prix_max": 3890000}, {"cle": "quartier-du-parc-face-au-lac-beer-sheva", "nom": "Quartier du parc, face au lac", "ville": "Beer Sheva", "quartier": null, "livraison": "immédiate", "image": "../img/bh-quartier-du-parc-face-au-lac-3p.jpg", "prix_min": 1685000, "lots": 6, "maj": "2026-09-01", "typologies": [{"cle": "bh-quartier-du-parc-face-au-lac-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1685000, "prix_max": 1685000, "surface_min": 86.0, "surface_max": 86.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2200000, "prix_max": 2200000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2500000, "prix_max": 3000000, "surface_min": 125.0, "surface_max": 140.0, "livraison": "immédiate", "parking": false, "cave": false}], "prix_max": 3000000}, {"cle": "avital-3-jerusalem", "nom": "Avital 3", "ville": "Jerusalem", "quartier": "Makor Haim", "livraison": "décembre 2027 ou juin 2028", "image": "../img/bh-avital-3-2p.jpg", "prix_min": 2380000, "lots": 5, "maj": "2026-08-25", "typologies": [{"cle": "bh-avital-3-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2380000, "prix_max": 2850000, "surface_min": 52.0, "surface_max": 61.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3850000, "prix_max": 3850000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4600000, "prix_max": 4600000, "surface_min": 99.0, "surface_max": 99.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}], "prix_max": 4600000}, {"cle": "botanic-jerusalem", "nom": "Botanic", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": "fevrier 2030", "image": "../img/bh-botanic-3p.jpg", "prix_min": 2500000, "lots": 6, "maj": "2026-09-01", "typologies": [{"cle": "bh-botanic-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2500000, "prix_max": 2500000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "fevrier 2030", "parking": true, "cave": false}, {"cle": "bh-botanic-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3270000, "prix_max": 3436906, "surface_min": 91.0, "surface_max": 111.0, "livraison": "juillet 2029", "parking": true, "cave": true}, {"cle": "bh-botanic-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3277000, "prix_max": 4263651, "surface_min": 112.0, "surface_max": 128.0, "livraison": null, "parking": true, "cave": true}], "prix_max": 4263651}, {"cle": "hadassa-aktana-jerusalem", "nom": "Hadassa Aktana", "ville": "Jerusalem", "quartier": "Kiryat Yovel", "livraison": "immédiate", "image": "../img/bh-hadassa-aktana-2p.jpg", "prix_min": 2300000, "lots": 1, "maj": "2026-08-31", "typologies": [{"cle": "bh-hadassa-aktana-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2300000, "prix_max": 2300000, "surface_min": 50.0, "surface_max": 50.0, "livraison": "immédiate", "parking": true, "cave": true}], "prix_max": 2300000}, {"cle": "holyland-boutique-jerusalem", "nom": "Holyland Boutique", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Septembre 2030", "image": "../img/bh-holyland-boutique-3p.jpg", "prix_min": 3090000, "lots": 5, "maj": "2026-09-03", "typologies": [{"cle": "bh-holyland-boutique-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3090000, "prix_max": 3090000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4000000, "prix_max": 4000000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4616000, "prix_max": 4616000, "surface_min": 124.0, "surface_max": 124.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-6p", "pieces": 6.0, "libelle": "6", "prix_min": 5273000, "prix_max": 10000000, "surface_min": 143.0, "surface_max": 186.0, "livraison": "Septembre 2030", "parking": false, "cave": false}], "prix_max": 10000000}, {"cle": "holyland-tower-jerusalem", "nom": "Holyland Tower", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Mars 2028", "image": "../img/bh-holyland-tower-3p.jpg", "prix_min": 3505000, "lots": 4, "maj": "2026-09-03", "typologies": [{"cle": "bh-holyland-tower-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3505000, "prix_max": 3505000, "surface_min": 81.0, "surface_max": 81.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3960000, "prix_max": 3960000, "surface_min": 108.0, "surface_max": 108.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4525000, "prix_max": 4525000, "surface_min": 130.0, "surface_max": 130.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-6p", "pieces": 6.0, "libelle": "6", "prix_min": 14095000, "prix_max": 14095000, "surface_min": 186.0, "surface_max": 186.0, "livraison": "Mars 2028", "parking": false, "cave": false}], "prix_max": 14095000}, {"cle": "mexico-jerusalem", "nom": "Mexico", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": null, "image": "../img/bh-mexico-3p.jpg", "prix_min": 2755000, "lots": 2, "maj": "2026-08-30", "typologies": [{"cle": "bh-mexico-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2755000, "prix_max": 2755000, "surface_min": 83.0, "surface_max": 83.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-mexico-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2940000, "prix_max": 2940000, "surface_min": 97.0, "surface_max": 97.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2940000}, {"cle": "mexico-6-jerusalem", "nom": "Mexico 6", "ville": "Jerusalem", "quartier": "6 Mexico", "livraison": null, "image": "../img/bh-mexico-6-2p.jpg", "prix_min": 2065000, "lots": 1, "maj": "2026-08-20", "typologies": [{"cle": "bh-mexico-6-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2065000, "prix_max": 2065000, "surface_min": 49.0, "surface_max": 49.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2065000}, {"cle": "soho-jerusalem", "nom": "Soho", "ville": "Jerusalem", "quartier": "13 Bar Yohai - Katamonim", "livraison": null, "image": "../img/bh-soho-2p.jpg", "prix_min": 2330000, "lots": 3, "maj": "2026-08-20", "typologies": [{"cle": "bh-soho-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2330000, "prix_max": 2690000, "surface_min": 53.0, "surface_max": 61.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2690000}, {"cle": "uziel-48-jerusalem", "nom": "Uziel 48", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": null, "image": "../img/bh-uziel-48-3p.jpg", "prix_min": 3300000, "lots": 1, "maj": "2026-08-27", "typologies": [{"cle": "bh-uziel-48-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3300000, "prix_max": 3300000, "surface_min": 73.0, "surface_max": 73.0, "livraison": null, "parking": true, "cave": false}], "prix_max": 3300000}, {"cle": "villa-kedar-kedar", "nom": "Villa Kedar", "ville": "Kedar", "quartier": "Kedar (est de Jerusalem)", "livraison": null, "image": "../img/bh-villa-kedar-9-5p.jpg", "prix_min": 4900000, "lots": 1, "maj": "2026-08-25", "typologies": [{"cle": "bh-villa-kedar-9-5p", "pieces": 9.5, "libelle": "9,5", "prix_min": 4900000, "prix_max": 4900000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 4900000}, {"cle": "rova-kiryat-gat", "nom": "Rova", "ville": "Kiryat Gat", "quartier": "Carmey Gat", "livraison": "Octobre 2029", "image": "../img/bh-rova-3p.jpg", "prix_min": 1750000, "lots": 4, "maj": "2026-09-03", "typologies": [{"cle": "bh-rova-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1750000, "prix_max": 1750000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2080000, "prix_max": 2865000, "surface_min": 100.0, "surface_max": 103.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2210000, "prix_max": 2210000, "surface_min": 120.0, "surface_max": 120.0, "livraison": "Octobre 2029", "parking": false, "cave": false}], "prix_max": 2865000}, {"cle": "alive-netanya", "nom": "Alive", "ville": "Netanya", "quartier": "Park Hayam", "livraison": "Decembre 2029", "image": "../img/bh-alive-4p.jpg", "prix_min": 3495000, "lots": 3, "maj": "2026-09-03", "typologies": [{"cle": "bh-alive-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3495000, "prix_max": 3495000, "surface_min": 103.0, "surface_max": 103.0, "livraison": "Decembre 2029", "parking": false, "cave": false}, {"cle": "bh-alive-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3950000, "prix_max": 6875000, "surface_min": 135.0, "surface_max": 179.0, "livraison": "Decembre 2029", "parking": false, "cave": false}], "prix_max": 6875000}, {"cle": "nordau-netanya", "nom": "Nordau", "ville": "Netanya", "quartier": null, "livraison": "janvier 2031", "image": "../img/bh-nordau-2-5p.jpg", "prix_min": 2125000, "lots": 145, "maj": "2026-08-25", "typologies": [{"cle": "bh-nordau-2-5p", "pieces": 2.5, "libelle": "2,5", "prix_min": 2125000, "prix_max": 2642045, "surface_min": 61.0, "surface_max": 64.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2659091, "prix_max": 3454545, "surface_min": 77.0, "surface_max": 100.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3193182, "prix_max": 3784091, "surface_min": 111.0, "surface_max": 117.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3750000, "prix_max": 6306818, "surface_min": 133.0, "surface_max": 189.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-6p", "pieces": 6.0, "libelle": "6", "prix_min": 4375000, "prix_max": 4715909, "surface_min": 156.0, "surface_max": 156.0, "livraison": "janvier 2031", "parking": false, "cave": false}], "prix_max": 6306818}, {"cle": "up-life-netivot", "nom": "UP LIFE", "ville": "Netivot", "quartier": "Maalot HaNachal", "livraison": null, "image": "../img/bh-up-life-4p.jpg", "prix_min": 1520000, "lots": 1, "maj": "2026-09-01", "typologies": [{"cle": "bh-up-life-4p", "pieces": 4.0, "libelle": "4", "prix_min": 1520000, "prix_max": 1520000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 1520000}, {"cle": "uziel-13-15-ramat-gan", "nom": "Uziel 13-15", "ville": "Ramat Gan", "quartier": null, "livraison": "Juillet 2029", "image": "../img/bh-uziel-13-15-2p.jpg", "prix_min": 2640000, "lots": 4, "maj": "2026-09-03", "typologies": [{"cle": "bh-uziel-13-15-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2640000, "prix_max": 2640000, "surface_min": 60.0, "surface_max": 60.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3200000, "prix_max": 3200000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3460000, "prix_max": 5050000, "surface_min": 99.0, "surface_max": 100.0, "livraison": "Juillet 2029", "parking": false, "cave": false}], "prix_max": 5050000}, {"cle": "bavli-tel-aviv", "nom": "Bavli", "ville": "Tel Aviv", "quartier": null, "livraison": "février 2028", "image": "../img/bh-bavli-3p.jpg", "prix_min": 5422947, "lots": 206, "maj": "2026-08-25", "typologies": [{"cle": "bh-bavli-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5422947, "prix_max": 9031062, "surface_min": 77.0, "surface_max": 107.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-4p", "pieces": 4.0, "libelle": "4", "prix_min": 6223207, "prix_max": 9031062, "surface_min": 123.0, "surface_max": 133.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-5p", "pieces": 5.0, "libelle": "5", "prix_min": 11594816, "prix_max": 12056816, "surface_min": 173.0, "surface_max": 173.0, "livraison": "février 2028", "parking": false, "cave": false}], "prix_max": 12056816}, {"cle": "jomo-tel-aviv-tel-aviv", "nom": "JOMO Tel Aviv", "ville": "Tel Aviv", "quartier": "Kiryat Shalom", "livraison": null, "image": "../img/bh-jomo-tel-aviv-2p.jpg", "prix_min": 2204000, "lots": 3, "maj": "2026-08-24", "typologies": [{"cle": "bh-jomo-tel-aviv-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2204000, "prix_max": 3500000, "surface_min": 46.5, "surface_max": 54.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 3500000}, {"cle": "sde-dov-tel-aviv", "nom": "Sde Dov", "ville": "Tel Aviv", "quartier": null, "livraison": "décembre 2031", "image": "../img/bh-sde-dov-2p.jpg", "prix_min": 3764000, "lots": 118, "maj": "2026-08-25", "typologies": [{"cle": "bh-sde-dov-2p", "pieces": 2.0, "libelle": "2", "prix_min": 3764000, "prix_max": 4708002, "surface_min": 49.2, "surface_max": 62.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5748465, "prix_max": 6717517, "surface_min": 76.4, "surface_max": 78.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-4p", "pieces": 4.0, "libelle": "4", "prix_min": 8175442, "prix_max": 11270000, "surface_min": 112.7, "surface_max": 127.3, "livraison": "décembre 2031", "parking": false, "cave": false}], "prix_max": 11270000}], "wa": "972585678926", "profils": {"israelien_unique": "Israélien · 1er bien", "israelien_second": "Israélien · 2e bien", "oleh": "Nouvel immigrant", "etranger": "Résident étranger"}, "ltv": [25, 40, 50, 60, 70, 75], "durees": [10, 15, 20, 25, 30], "prix_libres": [1000000, 1250000, 1500000, 1750000, 2000000, 2250000, 2500000, 2750000, 3000000, 3250000, 3500000, 3750000, 4000000, 4250000, 4500000, 4750000, 5000000, 5250000, 5500000, 5750000, 6000000, 6250000, 6500000, 6750000, 7000000, 7250000, 7500000, 7750000, 8000000, 8250000, 8500000, 8750000, 9000000, 9250000, 9500000, 9750000, 10000000, 10250000, 10500000, 10750000, 11000000, 11250000, 11500000, 11750000, 12000000], "marche": {"date": "02/09/2026", "boi": 3.25, "boi_depuis": "01/09/2026", "prime": 4.75}, "voisins": {"Ashdod": [["Ashkelon", 16], ["Kiryat Gat", 24], ["Bat Yam", 26], ["Ramat Gan", 34], ["Tel Aviv", 34], ["Netivot", 42], ["Jerusalem", 54], ["Netanya", 61], ["Beer Sheva", 63], ["Kedar", 64]], "Ashkelon": [["Ashdod", 16], ["Kiryat Gat", 19], ["Netivot", 27], ["Bat Yam", 42], ["Ramat Gan", 50], ["Tel Aviv", 50], ["Beer Sheva", 51], ["Jerusalem", 61], ["Kedar", 71], ["Netanya", 77]], "Bat Yam": [["Tel Aviv", 8], ["Ramat Gan", 9], ["Ashdod", 26], ["Netanya", 35], ["Ashkelon", 42], ["Kiryat Gat", 45], ["Jerusalem", 52], ["Kedar", 62], ["Netivot", 68], ["Beer Sheva", 85]], "Beer Sheva": [["Netivot", 27], ["Kiryat Gat", 40], ["Ashkelon", 51], ["Ashdod", 63], ["Jerusalem", 70], ["Kedar", 75], ["Bat Yam", 85], ["Ramat Gan", 91], ["Tel Aviv", 93], ["Netanya", 119]], "Jerusalem": [["Kedar", 10], ["Kiryat Gat", 46], ["Ramat Gan", 50], ["Bat Yam", 52], ["Ashdod", 54], ["Tel Aviv", 54], ["Ashkelon", 61], ["Beer Sheva", 70], ["Netanya", 70], ["Netivot", 71]], "Kedar": [["Jerusalem", 10], ["Kiryat Gat", 55], ["Ramat Gan", 59], ["Bat Yam", 62], ["Tel Aviv", 63], ["Ashdod", 64], ["Ashkelon", 71], ["Beer Sheva", 75], ["Netanya", 77], ["Netivot", 78]], "Kiryat Gat": [["Ashkelon", 19], ["Ashdod", 24], ["Netivot", 27], ["Beer Sheva", 40], ["Bat Yam", 45], ["Jerusalem", 46], ["Ramat Gan", 51], ["Tel Aviv", 53], ["Kedar", 55], ["Netanya", 80]], "Netanya": [["Tel Aviv", 27], ["Ramat Gan", 28], ["Bat Yam", 35], ["Ashdod", 61], ["Jerusalem", 70], ["Ashkelon", 77], ["Kedar", 77], ["Kiryat Gat", 80], ["Netivot", 103], ["Beer Sheva", 119]], "Netivot": [["Ashkelon", 27], ["Beer Sheva", 27], ["Kiryat Gat", 27], ["Ashdod", 42], ["Bat Yam", 68], ["Jerusalem", 71], ["Ramat Gan", 75], ["Tel Aviv", 76], ["Kedar", 78], ["Netanya", 103]], "Ramat Gan": [["Tel Aviv", 4], ["Bat Yam", 9], ["Netanya", 28], ["Ashdod", 34], ["Ashkelon", 50], ["Jerusalem", 50], ["Kiryat Gat", 51], ["Kedar", 59], ["Netivot", 75], ["Beer Sheva", 91]], "Tel Aviv": [["Ramat Gan", 4], ["Bat Yam", 8], ["Netanya", 27], ["Ashdod", 34], ["Ashkelon", 50], ["Kiryat Gat", 53], ["Jerusalem", 54], ["Kedar", 63], ["Netivot", 76], ["Beer Sheva", 93]]}, "demandes": {"Bat Yam": 7, "Jerusalem": 20, "Tel Aviv": 10}, "vues": {}, "pieces": [2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 9.5], "tva": 0.18, "mail": "hb1826@gmail.com", "tel": "+972(0)58.56789.26", "guichet": "https://62-238-114-208.sslip.io"};</script>
+</footer>
+
+<script>const DONNEES = {"projets": [{"cle": "harmony-ashdod", "nom": "Harmony", "ville": "Ashdod", "quartier": null, "livraison": "2031", "image": "img/harmony-ashdod.jpg", "prix_min": 1735000, "lots": 128, "maj": "2026-08-25", "typologies": [{"cle": "bh-harmony-2p", "pieces": 2.0, "libelle": "2", "prix_min": 1735000, "prix_max": 1975000, "surface_min": 54.0, "surface_max": 55.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2125000, "prix_max": 2185000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2495000, "prix_max": 2805000, "surface_min": 111.0, "surface_max": 113.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2975000, "prix_max": 3665000, "surface_min": 141.0, "surface_max": 191.0, "livraison": "2031", "parking": false, "cave": false}, {"cle": "bh-harmony-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3885000, "prix_max": 4065000, "surface_min": 165.0, "surface_max": 165.0, "livraison": "2031", "parking": false, "cave": false}], "prix_max": 4065000}, {"cle": "ramot-ashkelon", "nom": "Ramot", "ville": "Ashkelon", "quartier": null, "livraison": "2029", "image": "img/ramot-ashkelon.jpg", "prix_min": 1875000, "lots": 84, "maj": "2026-08-25", "typologies": [{"cle": "bh-ramot-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1875000, "prix_max": 2259000, "surface_min": 77.0, "surface_max": 110.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2181818, "prix_max": 2363636, "surface_min": 109.0, "surface_max": 111.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2454000, "prix_max": 3670455, "surface_min": 124.0, "surface_max": 167.0, "livraison": "2029", "parking": true, "cave": true}, {"cle": "bh-ramot-6p", "pieces": 6.0, "libelle": "6", "prix_min": 3545000, "prix_max": 3622000, "surface_min": 172.0, "surface_max": 181.0, "livraison": "2029", "parking": true, "cave": true}], "prix_max": 3670455}, {"cle": "island-bat-yam", "nom": "Island", "ville": "Bat Yam", "quartier": null, "livraison": null, "image": "img/island-bat-yam.jpg", "prix_min": 3100000, "lots": 3, "maj": "2026-06-16", "typologies": [{"cle": "bh-island-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3100000, "prix_max": 3100000, "surface_min": 81.5, "surface_max": 81.5, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3800000, "prix_max": 3800000, "surface_min": 116.0, "surface_max": 116.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-island-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4300000, "prix_max": 4300000, "surface_min": 131.0, "surface_max": 131.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 4300000}, {"cle": "tours-u-bat-yam", "nom": "Tours U", "ville": "Bat Yam", "quartier": "Ramat Anassi", "livraison": "Juin 2030", "image": "img/tours-u-bat-yam.jpg", "prix_min": 2700000, "lots": 3, "maj": "2026-09-03", "typologies": [{"cle": "bh-tours-u-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2700000, "prix_max": 2700000, "surface_min": 82.0, "surface_max": 82.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3450000, "prix_max": 3450000, "surface_min": 105.0, "surface_max": 105.0, "livraison": "Juin 2030", "parking": false, "cave": false}, {"cle": "bh-tours-u-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3890000, "prix_max": 3890000, "surface_min": 127.0, "surface_max": 127.0, "livraison": "Juin 2030", "parking": false, "cave": false}], "prix_max": 3890000}, {"cle": "quartier-du-parc-face-au-lac-beer-sheva", "nom": "Quartier du parc, face au lac", "ville": "Beer Sheva", "quartier": null, "livraison": "immédiate", "image": "img/quartier-du-parc-face-au-lac-beer-sheva.jpg", "prix_min": 1685000, "lots": 6, "maj": "2026-09-01", "typologies": [{"cle": "bh-quartier-du-parc-face-au-lac-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1685000, "prix_max": 1685000, "surface_min": 86.0, "surface_max": 86.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2200000, "prix_max": 2200000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "immédiate", "parking": false, "cave": false}, {"cle": "bh-quartier-du-parc-face-au-lac-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2500000, "prix_max": 3000000, "surface_min": 125.0, "surface_max": 140.0, "livraison": "immédiate", "parking": false, "cave": false}], "prix_max": 3000000}, {"cle": "avital-3-jerusalem", "nom": "Avital 3", "ville": "Jerusalem", "quartier": "Makor Haim", "livraison": "décembre 2027 ou juin 2028", "image": "img/avital-3-jerusalem.jpg", "prix_min": 2380000, "lots": 5, "maj": "2026-08-25", "typologies": [{"cle": "bh-avital-3-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2380000, "prix_max": 2850000, "surface_min": 52.0, "surface_max": 61.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3850000, "prix_max": 3850000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}, {"cle": "bh-avital-3-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4600000, "prix_max": 4600000, "surface_min": 99.0, "surface_max": 99.0, "livraison": "décembre 2027 ou juin 2028", "parking": false, "cave": false}], "prix_max": 4600000}, {"cle": "botanic-jerusalem", "nom": "Botanic", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": "fevrier 2030", "image": "img/botanic-jerusalem.jpg", "prix_min": 2500000, "lots": 6, "maj": "2026-09-01", "typologies": [{"cle": "bh-botanic-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2500000, "prix_max": 2500000, "surface_min": 83.0, "surface_max": 83.0, "livraison": "fevrier 2030", "parking": true, "cave": false}, {"cle": "bh-botanic-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3270000, "prix_max": 3436906, "surface_min": 91.0, "surface_max": 111.0, "livraison": "juillet 2029", "parking": true, "cave": true}, {"cle": "bh-botanic-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3277000, "prix_max": 4263651, "surface_min": 112.0, "surface_max": 128.0, "livraison": null, "parking": true, "cave": true}], "prix_max": 4263651}, {"cle": "hadassa-aktana-jerusalem", "nom": "Hadassa Aktana", "ville": "Jerusalem", "quartier": "Kiryat Yovel", "livraison": "immédiate", "image": "img/hadassa-aktana-jerusalem.jpg", "prix_min": 2300000, "lots": 1, "maj": "2026-08-31", "typologies": [{"cle": "bh-hadassa-aktana-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2300000, "prix_max": 2300000, "surface_min": 50.0, "surface_max": 50.0, "livraison": "immédiate", "parking": true, "cave": true}], "prix_max": 2300000}, {"cle": "holyland-boutique-jerusalem", "nom": "Holyland Boutique", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Septembre 2030", "image": "img/holyland-boutique-jerusalem.jpg", "prix_min": 3090000, "lots": 5, "maj": "2026-09-03", "typologies": [{"cle": "bh-holyland-boutique-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3090000, "prix_max": 3090000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-4p", "pieces": 4.0, "libelle": "4", "prix_min": 4000000, "prix_max": 4000000, "surface_min": 109.0, "surface_max": 109.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4616000, "prix_max": 4616000, "surface_min": 124.0, "surface_max": 124.0, "livraison": "Septembre 2030", "parking": false, "cave": false}, {"cle": "bh-holyland-boutique-6p", "pieces": 6.0, "libelle": "6", "prix_min": 5273000, "prix_max": 10000000, "surface_min": 143.0, "surface_max": 186.0, "livraison": "Septembre 2030", "parking": false, "cave": false}], "prix_max": 10000000}, {"cle": "holyland-tower-jerusalem", "nom": "Holyland Tower", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": "Mars 2028", "image": "img/holyland-tower-jerusalem.jpg", "prix_min": 3505000, "lots": 4, "maj": "2026-09-03", "typologies": [{"cle": "bh-holyland-tower-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3505000, "prix_max": 3505000, "surface_min": 81.0, "surface_max": 81.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3960000, "prix_max": 3960000, "surface_min": 108.0, "surface_max": 108.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-5p", "pieces": 5.0, "libelle": "5", "prix_min": 4525000, "prix_max": 4525000, "surface_min": 130.0, "surface_max": 130.0, "livraison": "Mars 2028", "parking": false, "cave": false}, {"cle": "bh-holyland-tower-6p", "pieces": 6.0, "libelle": "6", "prix_min": 14095000, "prix_max": 14095000, "surface_min": 186.0, "surface_max": 186.0, "livraison": "Mars 2028", "parking": false, "cave": false}], "prix_max": 14095000}, {"cle": "mexico-jerusalem", "nom": "Mexico", "ville": "Jerusalem", "quartier": "Kiryat Menahem", "livraison": null, "image": "img/mexico-jerusalem.jpg", "prix_min": 2755000, "lots": 2, "maj": "2026-08-30", "typologies": [{"cle": "bh-mexico-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2755000, "prix_max": 2755000, "surface_min": 83.0, "surface_max": 83.0, "livraison": null, "parking": false, "cave": false}, {"cle": "bh-mexico-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2940000, "prix_max": 2940000, "surface_min": 97.0, "surface_max": 97.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2940000}, {"cle": "mexico-6-jerusalem", "nom": "Mexico 6", "ville": "Jerusalem", "quartier": "6 Mexico", "livraison": null, "image": "img/mexico-6-jerusalem.jpg", "prix_min": 2065000, "lots": 1, "maj": "2026-08-20", "typologies": [{"cle": "bh-mexico-6-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2065000, "prix_max": 2065000, "surface_min": 49.0, "surface_max": 49.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2065000}, {"cle": "soho-jerusalem", "nom": "Soho", "ville": "Jerusalem", "quartier": "13 Bar Yohai - Katamonim", "livraison": null, "image": "img/soho-jerusalem.jpg", "prix_min": 2330000, "lots": 3, "maj": "2026-08-20", "typologies": [{"cle": "bh-soho-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2330000, "prix_max": 2690000, "surface_min": 53.0, "surface_max": 61.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 2690000}, {"cle": "uziel-48-jerusalem", "nom": "Uziel 48", "ville": "Jerusalem", "quartier": "Bayit VeGan", "livraison": null, "image": "img/uziel-48-jerusalem.jpg", "prix_min": 3300000, "lots": 1, "maj": "2026-08-27", "typologies": [{"cle": "bh-uziel-48-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3300000, "prix_max": 3300000, "surface_min": 73.0, "surface_max": 73.0, "livraison": null, "parking": true, "cave": false}], "prix_max": 3300000}, {"cle": "villa-kedar-kedar", "nom": "Villa Kedar", "ville": "Kedar", "quartier": "Kedar (est de Jerusalem)", "livraison": null, "image": "img/villa-kedar-kedar.jpg", "prix_min": 4900000, "lots": 1, "maj": "2026-08-25", "typologies": [{"cle": "bh-villa-kedar-9-5p", "pieces": 9.5, "libelle": "9,5", "prix_min": 4900000, "prix_max": 4900000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 4900000}, {"cle": "rova-kiryat-gat", "nom": "Rova", "ville": "Kiryat Gat", "quartier": "Carmey Gat", "livraison": "Octobre 2029", "image": "img/rova-kiryat-gat.jpg", "prix_min": 1750000, "lots": 4, "maj": "2026-09-03", "typologies": [{"cle": "bh-rova-3p", "pieces": 3.0, "libelle": "3", "prix_min": 1750000, "prix_max": 1750000, "surface_min": 80.0, "surface_max": 80.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-4p", "pieces": 4.0, "libelle": "4", "prix_min": 2080000, "prix_max": 2865000, "surface_min": 100.0, "surface_max": 103.0, "livraison": "Octobre 2029", "parking": false, "cave": false}, {"cle": "bh-rova-5p", "pieces": 5.0, "libelle": "5", "prix_min": 2210000, "prix_max": 2210000, "surface_min": 120.0, "surface_max": 120.0, "livraison": "Octobre 2029", "parking": false, "cave": false}], "prix_max": 2865000}, {"cle": "alive-netanya", "nom": "Alive", "ville": "Netanya", "quartier": "Park Hayam", "livraison": "Decembre 2029", "image": "img/alive-netanya.jpg", "prix_min": 3495000, "lots": 3, "maj": "2026-09-03", "typologies": [{"cle": "bh-alive-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3495000, "prix_max": 3495000, "surface_min": 103.0, "surface_max": 103.0, "livraison": "Decembre 2029", "parking": false, "cave": false}, {"cle": "bh-alive-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3950000, "prix_max": 6875000, "surface_min": 135.0, "surface_max": 179.0, "livraison": "Decembre 2029", "parking": false, "cave": false}], "prix_max": 6875000}, {"cle": "nordau-netanya", "nom": "Nordau", "ville": "Netanya", "quartier": null, "livraison": "janvier 2031", "image": "img/nordau-netanya.jpg", "prix_min": 2125000, "lots": 145, "maj": "2026-08-25", "typologies": [{"cle": "bh-nordau-2-5p", "pieces": 2.5, "libelle": "2,5", "prix_min": 2125000, "prix_max": 2642045, "surface_min": 61.0, "surface_max": 64.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-3p", "pieces": 3.0, "libelle": "3", "prix_min": 2659091, "prix_max": 3454545, "surface_min": 77.0, "surface_max": 100.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3193182, "prix_max": 3784091, "surface_min": 111.0, "surface_max": 117.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-5p", "pieces": 5.0, "libelle": "5", "prix_min": 3750000, "prix_max": 6306818, "surface_min": 133.0, "surface_max": 189.0, "livraison": "janvier 2031", "parking": false, "cave": false}, {"cle": "bh-nordau-6p", "pieces": 6.0, "libelle": "6", "prix_min": 4375000, "prix_max": 4715909, "surface_min": 156.0, "surface_max": 156.0, "livraison": "janvier 2031", "parking": false, "cave": false}], "prix_max": 6306818}, {"cle": "up-life-netivot", "nom": "UP LIFE", "ville": "Netivot", "quartier": "Maalot HaNachal", "livraison": null, "image": "img/up-life-netivot.jpg", "prix_min": 1520000, "lots": 1, "maj": "2026-09-01", "typologies": [{"cle": "bh-up-life-4p", "pieces": 4.0, "libelle": "4", "prix_min": 1520000, "prix_max": 1520000, "surface_min": null, "surface_max": null, "livraison": null, "parking": false, "cave": false}], "prix_max": 1520000}, {"cle": "uziel-13-15-ramat-gan", "nom": "Uziel 13-15", "ville": "Ramat Gan", "quartier": null, "livraison": "Juillet 2029", "image": "img/uziel-13-15-ramat-gan.jpg", "prix_min": 2640000, "lots": 4, "maj": "2026-09-03", "typologies": [{"cle": "bh-uziel-13-15-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2640000, "prix_max": 2640000, "surface_min": 60.0, "surface_max": 60.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-3p", "pieces": 3.0, "libelle": "3", "prix_min": 3200000, "prix_max": 3200000, "surface_min": 85.0, "surface_max": 85.0, "livraison": "Juillet 2029", "parking": false, "cave": false}, {"cle": "bh-uziel-13-15-4p", "pieces": 4.0, "libelle": "4", "prix_min": 3460000, "prix_max": 5050000, "surface_min": 99.0, "surface_max": 100.0, "livraison": "Juillet 2029", "parking": false, "cave": false}], "prix_max": 5050000}, {"cle": "bavli-tel-aviv", "nom": "Bavli", "ville": "Tel Aviv", "quartier": null, "livraison": "février 2028", "image": "img/bavli-tel-aviv.jpg", "prix_min": 5422947, "lots": 206, "maj": "2026-08-25", "typologies": [{"cle": "bh-bavli-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5422947, "prix_max": 9031062, "surface_min": 77.0, "surface_max": 107.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-4p", "pieces": 4.0, "libelle": "4", "prix_min": 6223207, "prix_max": 9031062, "surface_min": 123.0, "surface_max": 133.0, "livraison": "février 2028", "parking": false, "cave": false}, {"cle": "bh-bavli-5p", "pieces": 5.0, "libelle": "5", "prix_min": 11594816, "prix_max": 12056816, "surface_min": 173.0, "surface_max": 173.0, "livraison": "février 2028", "parking": false, "cave": false}], "prix_max": 12056816}, {"cle": "jomo-tel-aviv-tel-aviv", "nom": "JOMO Tel Aviv", "ville": "Tel Aviv", "quartier": "Kiryat Shalom", "livraison": null, "image": "img/jomo-tel-aviv-tel-aviv.jpg", "prix_min": 2204000, "lots": 3, "maj": "2026-08-24", "typologies": [{"cle": "bh-jomo-tel-aviv-2p", "pieces": 2.0, "libelle": "2", "prix_min": 2204000, "prix_max": 3500000, "surface_min": 46.5, "surface_max": 54.0, "livraison": null, "parking": false, "cave": false}], "prix_max": 3500000}, {"cle": "sde-dov-tel-aviv", "nom": "Sde Dov", "ville": "Tel Aviv", "quartier": null, "livraison": "décembre 2031", "image": "img/sde-dov-tel-aviv.jpg", "prix_min": 3764000, "lots": 118, "maj": "2026-08-25", "typologies": [{"cle": "bh-sde-dov-2p", "pieces": 2.0, "libelle": "2", "prix_min": 3764000, "prix_max": 4708002, "surface_min": 49.2, "surface_max": 62.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-3p", "pieces": 3.0, "libelle": "3", "prix_min": 5748465, "prix_max": 6717517, "surface_min": 76.4, "surface_max": 78.3, "livraison": "décembre 2031", "parking": false, "cave": false}, {"cle": "bh-sde-dov-4p", "pieces": 4.0, "libelle": "4", "prix_min": 8175442, "prix_max": 11270000, "surface_min": 112.7, "surface_max": 127.3, "livraison": "décembre 2031", "parking": false, "cave": false}], "prix_max": 11270000}], "wa": "972585678926", "profils": {"israelien_unique": "Israélien · 1er bien", "israelien_second": "Israélien · 2e bien", "oleh": "Nouvel immigrant", "etranger": "Résident étranger"}, "ltv": [25, 40, 50, 60, 70, 75], "durees": [10, 15, 20, 25, 30], "prix_libres": [1000000, 1250000, 1500000, 1750000, 2000000, 2250000, 2500000, 2750000, 3000000, 3250000, 3500000, 3750000, 4000000, 4250000, 4500000, 4750000, 5000000, 5250000, 5500000, 5750000, 6000000, 6250000, 6500000, 6750000, 7000000, 7250000, 7500000, 7750000, 8000000, 8250000, 8500000, 8750000, 9000000, 9250000, 9500000, 9750000, 10000000, 10250000, 10500000, 10750000, 11000000, 11250000, 11500000, 11750000, 12000000], "marche": {"date": "02/09/2026", "boi": 3.25, "boi_depuis": "01/09/2026", "prime": 4.75}, "voisins": {"Ashdod": [["Ashkelon", 16], ["Kiryat Gat", 24], ["Bat Yam", 26], ["Ramat Gan", 34], ["Tel Aviv", 34], ["Netivot", 42], ["Jerusalem", 54], ["Netanya", 61], ["Beer Sheva", 63], ["Kedar", 64]], "Ashkelon": [["Ashdod", 16], ["Kiryat Gat", 19], ["Netivot", 27], ["Bat Yam", 42], ["Ramat Gan", 50], ["Tel Aviv", 50], ["Beer Sheva", 51], ["Jerusalem", 61], ["Kedar", 71], ["Netanya", 77]], "Bat Yam": [["Tel Aviv", 8], ["Ramat Gan", 9], ["Ashdod", 26], ["Netanya", 35], ["Ashkelon", 42], ["Kiryat Gat", 45], ["Jerusalem", 52], ["Kedar", 62], ["Netivot", 68], ["Beer Sheva", 85]], "Beer Sheva": [["Netivot", 27], ["Kiryat Gat", 40], ["Ashkelon", 51], ["Ashdod", 63], ["Jerusalem", 70], ["Kedar", 75], ["Bat Yam", 85], ["Ramat Gan", 91], ["Tel Aviv", 93], ["Netanya", 119]], "Jerusalem": [["Kedar", 10], ["Kiryat Gat", 46], ["Ramat Gan", 50], ["Bat Yam", 52], ["Ashdod", 54], ["Tel Aviv", 54], ["Ashkelon", 61], ["Beer Sheva", 70], ["Netanya", 70], ["Netivot", 71]], "Kedar": [["Jerusalem", 10], ["Kiryat Gat", 55], ["Ramat Gan", 59], ["Bat Yam", 62], ["Tel Aviv", 63], ["Ashdod", 64], ["Ashkelon", 71], ["Beer Sheva", 75], ["Netanya", 77], ["Netivot", 78]], "Kiryat Gat": [["Ashkelon", 19], ["Ashdod", 24], ["Netivot", 27], ["Beer Sheva", 40], ["Bat Yam", 45], ["Jerusalem", 46], ["Ramat Gan", 51], ["Tel Aviv", 53], ["Kedar", 55], ["Netanya", 80]], "Netanya": [["Tel Aviv", 27], ["Ramat Gan", 28], ["Bat Yam", 35], ["Ashdod", 61], ["Jerusalem", 70], ["Ashkelon", 77], ["Kedar", 77], ["Kiryat Gat", 80], ["Netivot", 103], ["Beer Sheva", 119]], "Netivot": [["Ashkelon", 27], ["Beer Sheva", 27], ["Kiryat Gat", 27], ["Ashdod", 42], ["Bat Yam", 68], ["Jerusalem", 71], ["Ramat Gan", 75], ["Tel Aviv", 76], ["Kedar", 78], ["Netanya", 103]], "Ramat Gan": [["Tel Aviv", 4], ["Bat Yam", 9], ["Netanya", 28], ["Ashdod", 34], ["Ashkelon", 50], ["Jerusalem", 50], ["Kiryat Gat", 51], ["Kedar", 59], ["Netivot", 75], ["Beer Sheva", 91]], "Tel Aviv": [["Ramat Gan", 4], ["Bat Yam", 8], ["Netanya", 27], ["Ashdod", 34], ["Ashkelon", 50], ["Kiryat Gat", 53], ["Jerusalem", 54], ["Kedar", 63], ["Netivot", 76], ["Beer Sheva", 93]]}, "demandes": {"Bat Yam": 7, "Jerusalem": 20, "Tel Aviv": 10}, "vues": {}, "pieces": [2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 9.5], "tva": 0.18, "mail": "hb1826@gmail.com", "tel": "+972(0)58.56789.26", "guichet": "https://62-238-114-208.sslip.io"};</script>
 <script>/* L'annuaire public — le CRM cote client.
 
    Il affiche, il ne calcule presque pas : impots, taux et credit ont ete
@@ -1255,8 +475,8 @@ const pct = n => String(n).replace('.', ',') + ' %';
 function demande(ville) {
   const n = (DONNEES.demandes || {})[ville];
   if (!n) return '';
-  return '<div class="demande">● ' + n + ' acheteurs nous ont demandé un bien à '
-    + esc(ville) + '</div>';
+  return '<div class="preuve" style="margin-top:8px">● ' + n
+    + ' acheteurs nous ont demandé un bien à ' + esc(ville) + '</div>';
 }
 
 /* Combien de fois cette fiche a ete ouverte cette semaine — un vrai
@@ -1264,7 +484,8 @@ function demande(ville) {
 function vues(cle) {
   const n = (DONNEES.vues || {})[cle];
   if (!n) return '';
-  return '<div class="demande">◉ vue ' + n + ' fois cette semaine</div>';
+  return '<div class="preuve" style="margin-top:8px">◉ vue ' + n
+    + ' fois cette semaine</div>';
 }
 
 const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
@@ -1383,9 +604,11 @@ function chercher() {
 }
 
 function liste() {
-  $('#pub-filtres').style.display = '';
+  basculer(true);
   const r = chercher();
   const vus = r.vus;
+  $('#pub-titre').textContent = F.ville ? 'Programmes à ' + F.ville
+                                        : 'Nos programmes neufs';
   $('#pub-count').textContent = vus.length
     ? vus.length + ' programme' + (vus.length > 1 ? 's' : '') + ' · '
       + [...new Set(vus.map(p => p.ville))].length + ' villes · à partir de '
@@ -1395,25 +618,62 @@ function liste() {
     ? '<div class="elargi"><b>Nous avons élargi la recherche.</b> '
       + r.note + '</div>'
     : '';
-  vue.innerHTML = bandeau + '<div class="progs">' + vus.map(p => `
-      <a class="tile" href="#/${p.cle}">
-        <div class="shot">
-          <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
-          <img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-        <div class="body">
-          <div class="prj">${esc(p.nom)}</div>
-          <div class="meta">${esc(p.quartier ? p.quartier + ' · ' + p.ville
-                                              : p.ville)}</div>
-          <div class="feats">${p.typologies.map(t =>
-            '<span class="feat">' + t.libelle + ' p.</span>').join('')}${
-            p.livraison ? '<span class="feat">' + esc(p.livraison) + '</span>' : ''}</div>
-          <div class="price"><small>à partir de</small>${shek(p.prix_min)}</div>
-          ${vues(p.cle) || demande(p.ville)}
-          ${p.maj ? '<div class="maj">Prix relevés le ' + jour(p.maj) + '</div>' : ''}
-        </div>
-      </a>`).join('') + '</div>' + contactHTML();
+  vue.innerHTML = bandeau + '<div class="progs">' + vus.map(carte).join('')
+    + '</div>' + contactHTML();
   wireContact();
+}
+
+/* La carte d'un programme. La photo commande, le prix se lit de loin, et les
+   pastilles disent en un coup d'oeil ce qui distingue ce programme : la
+   livraison, et ce que d'autres acheteurs en font. */
+function carte(p) {
+  const pieces = p.typologies.map(t => t.libelle);
+  const typo = pieces.length > 1
+    ? pieces[0] + ' à ' + pieces[pieces.length - 1] + ' pièces'
+    : pieces[0] + ' pièces';
+  const surfaces = p.typologies.map(t => t.surface_min).filter(Boolean);
+  const surf = surfaces.length
+    ? ' · ' + Math.round(Math.min.apply(null, surfaces)) + ' à '
+      + Math.round(Math.max.apply(null,
+          p.typologies.map(t => t.surface_max || t.surface_min).filter(Boolean)))
+      + ' m²'
+    : '';
+  const badges = ['<span class="badge or">Neuf</span>'];
+  if (p.livraison) {
+    badges.push('<span class="badge">Livraison ' + esc(p.livraison) + '</span>');
+  }
+  const n = (DONNEES.vues || {})[p.cle];
+  const d = (DONNEES.demandes || {})[p.ville];
+  const preuve = n ? 'Vue ' + n + ' fois cette semaine'
+    : (d ? d + ' acheteurs cherchent à ' + esc(p.ville) : '');
+  return `
+    <a class="tile" href="#/${p.cle}">
+      <div class="shot">
+        <div class="badges">${badges.join('')}</div>
+        <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
+        <img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">
+      </div>
+      <div class="corps">
+        <div class="prix"><small>à partir de</small>${shek(p.prix_min)}</div>
+        <div class="titre">${esc(p.nom)}</div>
+        <div class="carac">${typo}${surf}</div>
+        <div class="lieu">◎ ${esc(p.quartier ? p.quartier + ' · ' + p.ville
+                                              : p.ville)}</div>
+        <div class="bas">
+          <span class="preuve">${preuve}</span>
+          <span>${p.maj ? 'Prix du ' + jour(p.maj) : ''}</span>
+        </div>
+      </div>
+    </a>`;
+}
+
+/* La banniere et la recherche n'existent que sur la liste : une fiche ou le
+   simulateur se lisent en pleine page, comme sur un portail. */
+function basculer(surLaListe) {
+  ['hero', 'cherche', 'entete'].forEach(id => {
+    const bloc = document.getElementById(id);
+    if (bloc) bloc.style.display = surLaListe ? '' : 'none';
+  });
 }
 
 /* ---------------- la fiche d'un programme */
@@ -1441,18 +701,26 @@ function compterVue(cle) {
 }
 
 async function fiche(p) {
-  $('#pub-filtres').style.display = 'none';
+  basculer(false);
   compterVue(p.cle);
   E.typo = p.typologies[0].cle;
   E.prix = p.typologies[0].prix_min;
   vue.innerHTML = `
-    <p><a href="#/" class="dim" style="font-size:13px">← Tous les programmes</a></p>
-    <div class="hero"><img src="${esc(p.image)}" alt="" onerror="this.remove()"></div>
+    <p class="fil"><a href="#/">Programmes neufs</a> › ${esc(p.ville)} ›
+      ${esc(p.nom)}</p>
+    <div class="grande"><img src="${esc(p.image)}" alt=""
+         onerror="this.remove()"></div>
     <div class="pub-head">
-      <h1>${esc(p.nom)}</h1>
-      <p class="sub">${esc(p.quartier ? p.quartier + ' · ' + p.ville : p.ville)}${
-        p.livraison ? ' · Livraison ' + esc(p.livraison) : ''} · Promoteur reconnu${
-        p.maj ? ' · Prix relevés le ' + jour(p.maj) : ''}</p>
+      <div>
+        <h1>${esc(p.nom)}</h1>
+        <p class="sub">◎ ${esc(p.quartier ? p.quartier + ' · ' + p.ville
+                                          : p.ville)}${
+          p.livraison ? ' · Livraison ' + esc(p.livraison) : ''
+          } · Promoteur reconnu${
+          p.maj ? ' · prix relevés le ' + jour(p.maj) : ''}</p>
+        ${vues(p.cle)}${demande(p.ville)}
+      </div>
+      <div class="apd"><span>à partir de</span><b>${shek(p.prix_min)}</b></div>
     </div>
     <div class="card">
       <div class="block">
@@ -1690,14 +958,16 @@ function resultats(zone, p) {
 
 /* ---------------- le simulateur seul : un service du site, sans bien choisi */
 async function vueSimulateur() {
-  $('#pub-filtres').style.display = 'none';
+  basculer(false);
   vue.innerHTML = `
-    <p><a href="#/" class="dim" style="font-size:13px">← Tous les programmes</a></p>
+    <p class="fil"><a href="#/">Programmes neufs</a> › Simulateur d'achat</p>
     <div class="pub-head">
+      <div>
       <h1>Simulateur d'achat</h1>
       <p class="sub">Un prix, votre situation, vos frais, un crédit — et ce que
         le bien coûte vraiment : à la signature, tous les mois, et à la
         revente.</p>
+      </div>
     </div>
     <div class="card"><div class="block" id="simu"></div></div>
     ${contactHTML()}`;
