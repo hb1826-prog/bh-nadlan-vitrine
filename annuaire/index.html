@@ -121,8 +121,25 @@ button,input,select,textarea{font:inherit;color:inherit}
 .onglets button{background:none;border:0;padding:8px 14px;border-radius:999px;
  font-size:14.5px;font-weight:650;color:var(--gris);cursor:pointer}
 .onglets button.on{background:var(--or-clair);color:var(--or-fonce)}
+/* Le panneau de recherche/filtres se replie : ferme au premier chargement,
+   un clic sur ce bouton l'ouvre ou le referme. */
+.filtres-toggle{display:flex;align-items:center;gap:7px;background:none;
+ border:1px solid var(--trait);border-radius:999px;padding:9px 16px;
+ margin:0 4px 12px;font-size:14px;font-weight:650;color:var(--gris);
+ cursor:pointer;transition:.14s var(--ease)}
+.filtres-toggle:hover{border-color:var(--or)}
+.filtres-toggle .chev{transition:transform .15s var(--ease)}
+.filtres-toggle.open .chev{transform:rotate(180deg)}
+.champs[hidden]{display:none}
 .champs{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;
  align-items:end}
+.qwrap{position:relative;display:flex;align-items:center}
+.qwrap input{width:100%;padding-right:30px}
+.q-clear{position:absolute;right:4px;border:0;background:none;color:var(--gris);
+ font-size:18px;line-height:1;cursor:pointer;padding:4px 7px;border-radius:6px;
+ display:none}
+.qwrap.has-val .q-clear{display:block}
+.q-clear:hover{color:var(--or-fonce);background:var(--or-clair)}
 .champ{display:flex;flex-direction:column;gap:5px;min-width:0}
 .champ label{font-size:11.5px;font-weight:700;letter-spacing:.06em;
  text-transform:uppercase;color:var(--gris);padding-left:2px}
@@ -479,9 +496,11 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
     <button type=button onclick="location.hash='#/simulateur'">Simuler mon
       budget</button>
   </div>
-  <div class=champs id=pub-filtres>
+  <button type=button class=filtres-toggle id=filtres-toggle>⚙ Filtres <span class=chev>▾</span></button>
+  <div class=champs id=pub-filtres hidden>
     <div class=champ><label for=f-q>Programme ou quartier</label>
-      <input id=f-q placeholder="Ex. Bat Yam, Harmony, bord de mer…"></div>
+      <div class=qwrap><input id=f-q placeholder="Ex. Bat Yam, Harmony, bord de mer…">
+        <button type=button class=q-clear id=f-q-clear aria-label="Effacer la recherche">×</button></div></div>
     <div class=champ><label for=f-ville>Ville</label>
       <select id=f-ville><option value="">Toutes les villes</option>
         <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Jerusalem'>Jerusalem</option><option value='Kedar'>Kedar</option><option value='Kiryat Gat'>Kiryat Gat</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Ramat Gan'>Ramat Gan</option><option value='Tel Aviv'>Tel Aviv</option></select></div>
@@ -1470,6 +1489,7 @@ function accueil() {
     F[id] = '';
     const champ = document.getElementById('f-' + id);
     if (champ) champ.value = '';
+    if (id === 'q' && champ) champ.closest('.qwrap').classList.remove('has-val');
   });
   if (location.hash && location.hash !== '#/') location.hash = '#/';
   else liste();
@@ -1482,8 +1502,28 @@ if (LOGO) LOGO.onclick = e => { e.preventDefault(); accueil(); };
 addEventListener('hashchange', router);
 ['ville', 'pmin', 'pmax', 'budget', 'q'].forEach(id => {
   const champ = document.getElementById('f-' + id);
-  champ.addEventListener('input', () => { F[id] = champ.value; liste(); });
+  champ.addEventListener('input', () => {
+    F[id] = champ.value;
+    if (id === 'q') champ.closest('.qwrap').classList.toggle('has-val', !!champ.value);
+    liste();
+  });
 });
+const FTOG = document.getElementById('filtres-toggle');
+const FPAN = document.getElementById('pub-filtres');
+if (FTOG && FPAN) FTOG.onclick = () => {
+  const open = FPAN.hasAttribute('hidden');
+  if (open) FPAN.removeAttribute('hidden'); else FPAN.setAttribute('hidden', '');
+  FTOG.classList.toggle('open', open);
+};
+const FQCLEAR = document.getElementById('f-q-clear');
+if (FQCLEAR) FQCLEAR.onclick = () => {
+  const champ = document.getElementById('f-q');
+  champ.value = '';
+  F.q = '';
+  champ.closest('.qwrap').classList.remove('has-val');
+  champ.focus();
+  liste();
+};
 document.querySelectorAll('.theme button').forEach(b => {
   b.onclick = () => theme(b.dataset.t);
 });
