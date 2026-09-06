@@ -766,6 +766,31 @@ td.num small.eu{text-align:right}
 .f-eur{display:block;margin-top:5px;font-size:13px;font-weight:650;
  color:var(--or-fonce)}
 
+/* ==================== l'agenda des paiements =============================
+   Ce que le client veut vraiment savoir : combien maintenant, combien
+   ensuite. Les deux chiffres qui commandent sont sortis du tableau. */
+.ag-clefs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+ gap:14px;margin:14px 0 18px}
+.ag-clefs > div{background:var(--fond-2);border:1px solid var(--trait);
+ border-left:3px solid var(--or);border-radius:var(--r);padding:16px 18px}
+.ag-clefs span{display:block;font-size:11.5px;font-weight:700;
+ letter-spacing:.05em;text-transform:uppercase;color:var(--gris)}
+.ag-clefs b{display:block;font-size:24px;font-weight:750;letter-spacing:-.03em;
+ margin-top:6px;line-height:1.15}
+.ag-clefs em{display:block;font-style:normal;font-size:12.5px;
+ color:var(--gris);margin-top:6px}
+table.ag th{width:64%}
+.ag-note{display:block;font-weight:400;color:var(--gris);font-size:12.5px;
+ line-height:1.55;margin-top:3px}
+.si-note.avert{background:var(--or-clair);border:1px solid var(--or-trait);
+ border-radius:var(--r);padding:13px 15px;color:var(--encre-2);
+ margin-top:16px}
+.si-note.indexation{background:var(--fond-2);border:1px solid var(--trait);
+ border-radius:var(--r);padding:13px 15px;color:var(--encre-2);margin-top:14px}
+.coche{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14.5px;
+ color:var(--encre-2);cursor:pointer}
+.coche input{width:20px;height:20px;accent-color:var(--or);cursor:pointer}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
