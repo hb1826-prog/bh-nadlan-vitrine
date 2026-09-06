@@ -713,6 +713,44 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
  .avis h3{font-size:19px}
 }
 
+/* ===================== les pastilles de typologie ========================
+   « À partir de 2 pièces » etait un filtre ecrit pour une base de donnees :
+   personne ne cherche un minimum, on cherche un trois-pieces. On coche donc
+   les typologies reellement en stock, plusieurs a la fois, au pouce. */
+.pastilles{display:flex;gap:8px;flex-wrap:wrap}
+.pastilles button{background:var(--fond);border:1px solid var(--trait);
+ border-radius:999px;min-width:52px;height:48px;padding:0 16px;font-size:15px;
+ font-weight:650;color:var(--encre-2);cursor:pointer;
+ transition:.14s var(--ease)}
+.pastilles button:hover{border-color:var(--or)}
+.pastilles button.on{background:var(--or);border-color:var(--or);color:#1a1405}
+.pastilles button::after{content:" p.";font-weight:500;opacity:.65;
+ font-size:13px}
+
+/* ======================== « Je veux ce bien » ============================
+   Hillel voulait l'energie du commerce en ligne sur les tuiles. Le mot ne
+   peut pas etre « Acheter » ni « Reserver » : il ne peut pas bloquer un lot,
+   et la page dit elle-meme qu'aucune information n'y est une offre de vente.
+   « Je veux ce bien » dit l'intention de l'acheteur et n'engage personne. */
+.tile .veux{display:block;margin-top:10px;text-align:center;
+ background:var(--or-clair);color:var(--or-fonce);border:1px solid var(--or-trait);
+ border-radius:999px;padding:11px 14px;font-size:14.5px;font-weight:750;
+ cursor:pointer;transition:.16s var(--ease)}
+.tile .veux:hover,.tile:hover .veux{background:var(--or);border-color:var(--or);
+ color:#1a1405}
+
+/* ===================== la conversion en euros ============================
+   Les clients gagnent en euros et achetent en shekels ; dans le neuf, une
+   grosse part du prix se paie trois ans plus tard, donc reste exposee au
+   change. L'euro se lit sous le shekel, jamais a sa place. */
+small.eu{display:block;font-size:12.5px;font-weight:600;color:var(--gris);
+ letter-spacing:0;margin-top:2px;text-transform:none}
+small.eu.big{font-size:13.5px}
+.tile .prix small.eu{margin-bottom:0}
+.offre-eur{display:block;font-style:normal;font-size:15px;font-weight:650;
+ color:var(--gris);margin-top:2px}
+td.num small.eu{text-align:right}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
