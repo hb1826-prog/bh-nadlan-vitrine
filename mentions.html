@@ -1,0 +1,764 @@
+<!doctype html><html lang=fr><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Conditions d'utilisation — BH Nadlan</title>
+<style>/* L'annuaire BH — la peau « portail immobilier ».
+   ============================================================
+   Hillel a demande le graphisme des grands portails francais (SeLoger et ses
+   pareils) : une banniere de recherche qui occupe le premier ecran, des
+   cartes ou la PHOTO commande et ou le prix se lit de loin, des pastilles sur
+   les visuels, beaucoup de blanc. Rien n'est repris de leur marque — ni leur
+   nom, ni leur rouge, ni leur logo : la couleur reste l'or de la maison, et
+   le logo est le sien. En public, l'annuaire ne porte que les initiales de
+   Hillel — « BH », sans « Nadlan », qui reste le nom de l'activite qui traite
+   avec les promoteurs et suit les clients.
+
+   Ce fichier remplace, pour cette page seulement, la feuille de style du CRM.
+   Le CRM garde la sienne : un outil de travail dense ne se dessine pas comme
+   une vitrine.
+   ============================================================ */
+
+:root{
+ --or:#c9a227; --or-fonce:#a07d15; --or-clair:#f6efd8; --or-trait:#e8dcb4;
+ --encre:#0f172a; --encre-2:#334155; --gris:#64748b; --gris-clair:#94a3b8;
+ --fond:#ffffff; --fond-2:#f7f8fa; --carte:#ffffff;
+ --trait:#e5e8ee; --trait-fin:#eef0f4;
+ --vert:#0f7b46; --vert-fond:#e8f6ee;
+ --r:12px; --r-lg:18px; --r-xl:26px;
+ --ombre:0 1px 2px rgba(15,23,42,.05);
+ --ombre-2:0 4px 14px -4px rgba(15,23,42,.12),0 2px 5px -2px rgba(15,23,42,.06);
+ --ombre-3:0 18px 44px -12px rgba(15,23,42,.28);
+ --ease:cubic-bezier(.4,0,.2,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+ --or:#e0c163; --or-fonce:#d4b34a; --or-clair:#241f10; --or-trait:#463b1c;
+ --encre:#f1f5f9; --encre-2:#cbd5e1; --gris:#94a3b8; --gris-clair:#64748b;
+ --fond:#0c1017; --fond-2:#11161f; --carte:#151b25;
+ --trait:#232c39; --trait-fin:#1b222c;
+ --vert:#4ade80; --vert-fond:#0d2018;
+ --ombre:0 1px 2px rgba(0,0,0,.5);
+ --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
+ --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
+}}
+:root[data-theme=dark]{
+ --or:#e0c163; --or-fonce:#d4b34a; --or-clair:#241f10; --or-trait:#463b1c;
+ --encre:#f1f5f9; --encre-2:#cbd5e1; --gris:#94a3b8; --gris-clair:#64748b;
+ --fond:#0c1017; --fond-2:#11161f; --carte:#151b25;
+ --trait:#232c39; --trait-fin:#1b222c;
+ --vert:#4ade80; --vert-fond:#0d2018;
+ --ombre:0 1px 2px rgba(0,0,0,.5);
+ --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
+ --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--fond);color:var(--encre);
+ font:16px/1.5 Inter,"Segoe UI Variable Text","Segoe UI",system-ui,
+      -apple-system,"Helvetica Neue",sans-serif;
+ -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--or);outline-offset:2px;border-radius:6px}
+.dim{color:var(--gris)}
+.strong{font-weight:650}
+.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ============================ la barre du haut ============================ */
+.pub-top{position:sticky;top:0;z-index:20;background:var(--fond);
+ border-bottom:1px solid var(--trait)}
+.pub-in{max-width:1240px;margin:0 auto;padding:0 22px}
+.pub-bar{display:flex;align-items:center;gap:20px;height:70px}
+.pub-logo{display:block;flex:none;line-height:0;border-radius:10px;
+ transition:transform .18s var(--ease)}
+.pub-logo:hover{transform:translateY(-1px)}
+.pub-logo svg{display:block;height:40px;width:auto}
+.nav{display:flex;align-items:center;gap:4px;margin-left:8px}
+.nav a{padding:9px 14px;border-radius:999px;font-size:14.5px;font-weight:550;
+ color:var(--encre-2);transition:background .16s var(--ease)}
+.nav a:hover{background:var(--fond-2);color:var(--encre)}
+.grow{flex:1;min-width:0}
+.cta{background:var(--encre);color:var(--fond);border:0;border-radius:999px;
+ padding:11px 20px;font-size:14.5px;font-weight:650;cursor:pointer;
+ white-space:nowrap;transition:transform .16s var(--ease),opacity .16s}
+.cta:hover{transform:translateY(-1px);opacity:.92}
+.cta.or{background:var(--or);color:#1a1405}
+
+/* le selecteur de theme, discret, a droite */
+.theme{display:inline-flex;gap:2px;flex:none;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:999px;padding:3px}
+.theme button{border:0;background:none;color:var(--gris-clair);cursor:pointer;
+ border-radius:999px;padding:5px 8px;display:grid;place-items:center}
+.theme button.on{background:var(--carte);color:var(--or);box-shadow:var(--ombre)}
+.theme svg{width:15px;height:15px;display:block}
+
+/* ============================== la banniere ============================== */
+.hero{position:relative;background:var(--fond-2);overflow:hidden;
+ border-bottom:1px solid var(--trait)}
+.hero .photo{position:absolute;inset:0}
+.hero .photo img{width:100%;height:100%;object-fit:cover;display:block}
+.hero .voile{position:absolute;inset:0;
+ background:linear-gradient(180deg,rgba(6,12,24,.72),rgba(6,12,24,.52) 45%,
+                            rgba(6,12,24,.78))}
+.hero .dedans{position:relative;max-width:1240px;margin:0 auto;
+ padding:64px 22px 78px;color:#fff}
+.hero h1{font-size:40px;line-height:1.12;font-weight:750;max-width:16em;
+ text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
+ color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
+
+/* la carte de recherche, posee sur la banniere */
+.cherche{position:relative;max-width:1240px;margin:-46px auto 0;
+ padding:0 22px;z-index:5}
+.cherche .boite{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-xl);box-shadow:var(--ombre-3);padding:16px}
+.onglets{display:flex;gap:6px;padding:0 4px 12px}
+.onglets button{background:none;border:0;padding:8px 14px;border-radius:999px;
+ font-size:14.5px;font-weight:650;color:var(--gris);cursor:pointer}
+.onglets button.on{background:var(--or-clair);color:var(--or-fonce)}
+/* Le panneau de recherche/filtres se replie : ferme au premier chargement,
+   un clic sur ce bouton l'ouvre ou le referme. */
+.filtres-toggle{display:flex;align-items:center;gap:7px;background:none;
+ border:1px solid var(--trait);border-radius:999px;padding:9px 16px;
+ margin:0 4px 12px;font-size:14px;font-weight:650;color:var(--gris);
+ cursor:pointer;transition:.14s var(--ease)}
+.filtres-toggle:hover{border-color:var(--or)}
+.filtres-toggle .chev{transition:transform .15s var(--ease)}
+.filtres-toggle.open .chev{transform:rotate(180deg)}
+.champs[hidden]{display:none}
+.champs{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;
+ align-items:end}
+.qwrap{position:relative;display:flex;align-items:center}
+.qwrap input{width:100%;padding-right:30px}
+.q-clear{position:absolute;right:4px;border:0;background:none;color:var(--gris);
+ font-size:18px;line-height:1;cursor:pointer;padding:4px 7px;border-radius:6px;
+ display:none}
+.qwrap.has-val .q-clear{display:block}
+.q-clear:hover{color:var(--or-fonce);background:var(--or-clair)}
+.champ{display:flex;flex-direction:column;gap:5px;min-width:0}
+.champ label{font-size:11.5px;font-weight:700;letter-spacing:.06em;
+ text-transform:uppercase;color:var(--gris);padding-left:2px}
+.champ input,.champ select{background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r);padding:12px 13px;font-size:15px;min-height:48px;
+ width:100%;transition:border-color .16s var(--ease)}
+.champ input:focus,.champ select:focus{border-color:var(--or)}
+.chercher{background:var(--or);color:#1a1405;border:0;border-radius:var(--r);
+ padding:0 26px;height:48px;font-size:15.5px;font-weight:700;cursor:pointer;
+ display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.chercher:hover{background:var(--or-fonce);color:#fff}
+
+/* la promesse, en tete de banniere */
+.promesse{display:inline-block;background:var(--or);color:#1a1405;
+ font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+ padding:7px 14px;border-radius:999px;margin-bottom:16px;
+ box-shadow:0 6px 18px -6px rgba(0,0,0,.5)}
+
+/* ===================== le modele economique, sous la recherche =========== */
+.modele{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+ padding:26px 0 30px;border-bottom:1px solid var(--trait);margin-bottom:26px}
+/* Fils direct seulement : sans cela, un gras a l'interieur d'une phrase
+   (« 0 frais d'agence ») passait a la ligne avec sa propre coche. */
+.modele > div > b{display:block;font-size:16.5px;font-weight:700;
+ margin-bottom:6px;line-height:1.3}
+.modele > div > b::before{content:"✓";display:inline-block;color:var(--or);
+ font-weight:900;margin-right:8px}
+.modele span b{font-weight:750;color:var(--encre)}
+.modele span{font-size:14.5px;color:var(--gris);line-height:1.6}
+
+/* ========================== qui vous accompagne ========================== */
+.qui{display:flex;gap:24px;align-items:flex-start;margin-top:34px;
+ padding:28px 26px;background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre)}
+.qui img{width:132px;height:132px;border-radius:50%;object-fit:cover;
+ flex:none;border:3px solid var(--or)}
+/* Seul le NOM est un titre. Sans ce fils-direct, le gras d'une phrase
+   (« chez les promoteurs ») passait a la ligne en corps 19. */
+.qui > div > b{display:block;font-size:19px;font-weight:750;margin-bottom:8px}
+.qui p b{font-weight:750;color:var(--encre)}
+.qui p{margin:0 0 9px;font-size:15px;line-height:1.65;color:var(--encre-2)}
+.qui .liens{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+.qui .liens a{color:var(--or-fonce);font-weight:700;font-size:15px;
+ display:inline-flex;align-items:center;gap:7px}
+.qui .liens svg{flex:none;border-radius:2px;
+ box-shadow:0 0 0 1px rgba(15,23,42,.12)}
+@media(max-width:900px){
+ .qui{flex-direction:column;align-items:center;text-align:center;gap:16px;
+  padding:24px 18px}
+ .qui .liens{justify-content:center}
+ .modele{gap:16px;padding:20px 0 22px}
+}
+
+/* =============================== la liste =============================== */
+.wrap{max-width:1240px;margin:0 auto;padding:30px 22px 80px}
+.entete{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+ margin-bottom:18px}
+.entete h2{font-size:23px;font-weight:700}
+.pub-count{color:var(--gris);font-size:14.5px}
+.elargi{background:var(--or-clair);border:1px solid var(--or-trait);
+ border-radius:var(--r);padding:14px 16px;margin-bottom:20px;font-size:14.5px;
+ line-height:1.55;color:var(--encre-2)}
+.elargi b{color:var(--encre)}
+
+.progs{display:grid;gap:22px;
+ grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.tile{display:flex;flex-direction:column;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);overflow:hidden;
+ height:100%;transition:transform .2s var(--ease),box-shadow .2s var(--ease),
+ border-color .2s var(--ease)}
+.tile:hover{transform:translateY(-3px);box-shadow:var(--ombre-2);
+ border-color:var(--or-trait)}
+.tile .shot{position:relative;aspect-ratio:4/3;background:var(--fond-2);
+ overflow:hidden}
+/* La photo se pose PAR-DESSUS le monogramme de repli : un element positionne
+   passe devant un element qui ne l'est pas, quel que soit l'ordre du HTML —
+   sans cela le repli masque la photo qui a bien ete chargee. */
+.tile .shot img{position:absolute;inset:0;z-index:1;width:100%;height:100%;
+ object-fit:cover;display:block;object-position:50% 30%;
+ transition:transform .45s var(--ease)}
+.tile:hover .shot img{transform:scale(1.04)}
+.tile .fallback{position:absolute;inset:0;z-index:0;display:grid;
+ place-items:center;
+ background:linear-gradient(140deg,var(--fond-2),var(--or-clair));
+ color:var(--or);font-size:30px;font-weight:800;letter-spacing:.1em}
+.badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;
+ flex-wrap:wrap;max-width:calc(100% - 24px);z-index:2}
+.badge{background:rgba(9,14,26,.82);color:#fff;font-size:11.5px;font-weight:650;
+ padding:5px 10px;border-radius:999px;backdrop-filter:blur(6px)}
+.badge.or{background:var(--or);color:#1a1405}
+.badge.blanc{background:rgba(255,255,255,.94);color:var(--encre)}
+.tile .corps{padding:15px 16px 17px;display:flex;flex-direction:column;
+ gap:6px;flex:1}
+.tile .prix{font-size:24px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.1}
+.tile .prix small{display:block;font-size:11.5px;font-weight:600;
+ color:var(--gris);letter-spacing:.03em;text-transform:uppercase;
+ margin-bottom:2px}
+.tile .titre{font-size:16.5px;font-weight:650;line-height:1.3}
+.tile .carac{color:var(--encre-2);font-size:14px}
+.tile .lieu{color:var(--gris);font-size:13.5px;display:flex;align-items:center;
+ gap:5px}
+.tile .bas{margin-top:auto;padding-top:11px;border-top:1px solid var(--trait-fin);
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+ font-size:12px;color:var(--gris-clair)}
+.preuve{color:var(--or-fonce);font-weight:650;font-size:12px}
+
+/* ============================== la fiche ============================== */
+.fil{font-size:13.5px;color:var(--gris);padding:22px 0 0}
+.fil a:hover{color:var(--or-fonce)}
+/* La photo est posee EN ABSOLU dans son cadre : en flux, sa hauteur propre
+   commande, le rapport de forme du cadre ne s'applique plus, et un rendu de
+   1200x900 occupe tout l'ecran. */
+.grande{position:relative;border-radius:var(--r-lg);overflow:hidden;
+ border:1px solid var(--trait);aspect-ratio:16/7;background:var(--fond-2);
+ margin-top:12px}
+.grande img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+ display:block}
+.pub-head{padding:22px 0 18px;display:flex;align-items:flex-start;gap:20px;
+ flex-wrap:wrap}
+.pub-head h1{font-size:30px;font-weight:750}
+.pub-head .sub{margin:7px 0 0;color:var(--gris);font-size:15px}
+.pub-head .apd{margin-left:auto;text-align:right}
+.pub-head .apd b{display:block;font-size:28px;font-weight:750;
+ letter-spacing:-.03em}
+.pub-head .apd span{font-size:12px;color:var(--gris);text-transform:uppercase;
+ letter-spacing:.06em;font-weight:650}
+.pub-head .apd em{display:block;font-style:normal;font-size:12.5px;
+ font-weight:700;color:var(--or-fonce);margin-top:4px}
+
+.card{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre);margin-bottom:22px}
+.block{border-top:1px solid var(--trait-fin)}
+.block:first-child{border-top:0}
+.block-head{padding:18px 22px 0;font-size:12px;font-weight:750;
+ letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.pad{padding:14px 22px 22px}
+/* Le tableau des typologies n'est pas dans un `.pad` : il porte sa propre
+   marge, sinon il se colle a l'intitule du bloc. */
+.block .scroll{padding:14px 22px 20px}
+
+table{width:100%;border-collapse:collapse;font-size:15px}
+thead th{text-align:left;font-size:11.5px;text-transform:uppercase;
+ letter-spacing:.06em;color:var(--gris);font-weight:700;padding:0 12px 9px}
+tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
+.kv{width:100%}
+.kv th{text-align:left;font-weight:500;color:var(--gris);padding:11px 12px;
+ vertical-align:top;font-size:14.5px;width:46%}
+.kv td{padding:11px 12px;vertical-align:top}
+.kv tr+tr th,.kv tr+tr td{border-top:1px solid var(--trait-fin)}
+
+/* ============================ le simulateur ============================ */
+.si-lab{font-size:12px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris);margin:20px 0 8px}
+.si-note{font-size:13px;color:var(--gris);margin:9px 0 0;line-height:1.55}
+.si-note.manque{color:#b42318}
+.si-pied{font-size:12px;color:var(--gris-clair);margin-top:22px;line-height:1.6}
+.si-titre{font-size:12px;font-weight:750;letter-spacing:.08em;
+ text-transform:uppercase;color:var(--gris);margin:26px 0 10px}
+.si-tr{font-size:12.5px;color:var(--gris);line-height:1.6;margin-top:4px;
+ font-weight:400}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+ gap:14px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font-size:11.5px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris)}
+.f input,.f select,.f textarea{background:var(--fond);
+ border:1px solid var(--trait);border-radius:var(--r);padding:11px 12px;
+ font-size:15px;min-height:46px;width:100%}
+.f textarea{min-height:70px;resize:vertical}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--or)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{background:var(--fond);border:1px solid var(--trait);
+ border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;
+ color:var(--encre-2);cursor:pointer;min-height:42px}
+.seg button:hover{border-color:var(--gris-clair)}
+.seg button.on{background:var(--or);border-color:var(--or);color:#1a1405}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:14px;margin-top:22px}
+.stat{background:var(--fond-2);border:1px solid var(--trait);
+ border-radius:var(--r);padding:16px 18px}
+.stat b{display:block;font-size:26px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.1}
+.stat span{display:block;font-size:11.5px;font-weight:700;color:var(--gris);
+ text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+.jauge{height:12px;border-radius:999px;background:var(--fond-2);overflow:hidden;
+ display:flex;border:1px solid var(--trait);margin-top:16px}
+.jauge i{display:block;height:100%}
+.jauge .cap{background:var(--or)}
+.jauge .int{background:var(--gris-clair);opacity:.5}
+
+/* ===================== la carte d'appel dans la grille ==================== */
+.tile.appel{display:flex;flex-direction:column;gap:9px;justify-content:center;
+ text-align:left;padding:26px 24px;cursor:pointer;
+ background:linear-gradient(160deg,var(--encre),#1e293b);color:#fff;
+ border-color:var(--encre);font:inherit}
+.tile.appel .pastille{align-self:flex-start;background:var(--or);color:#1a1405;
+ font-size:11.5px;font-weight:750;padding:5px 11px;border-radius:999px}
+.tile.appel b{font-size:21px;font-weight:750;line-height:1.25;letter-spacing:-.02em}
+.tile.appel span{font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.82)}
+.tile.appel .lien{color:var(--or);font-weight:700;margin-top:4px}
+.tile.appel:hover{transform:translateY(-3px);box-shadow:var(--ombre-2)}
+
+/* ========================= la reassurance, sous la liste ================== */
+.rassure{margin-top:34px;padding:30px 26px;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:var(--r-lg)}
+.rassure h3{font-size:21px;font-weight:750;margin-bottom:18px}
+.rassure .points{display:grid;gap:20px;
+ grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.rassure .points b{display:block;font-size:15.5px;margin-bottom:5px}
+.rassure .points span{font-size:14.5px;color:var(--gris);line-height:1.6}
+.rassure .appelez{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.rassure .appelez .cta{display:inline-flex;align-items:center}
+
+/* ====================== la barre d'action du telephone =================== */
+.barre-mobile{display:none}
+@media(max-width:900px){
+ .barre-mobile{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
+  gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:var(--fond);border-top:1px solid var(--trait);
+  box-shadow:0 -6px 20px -8px rgba(15,23,42,.22)}
+ .barre-mobile button,.barre-mobile a{flex:1;border:0;border-radius:999px;
+  padding:14px 10px;font-size:15px;font-weight:700;text-align:center;
+  background:var(--encre);color:var(--fond);cursor:pointer}
+ .barre-mobile .wa{background:#25d366;color:#052e16}
+ body{padding-bottom:78px}
+}
+
+/* ============================== le contact ============================== */
+.contact{border:1px solid var(--or-trait);background:linear-gradient(
+ 180deg,var(--or-clair),var(--carte) 62%)}
+.contact .block-head{color:var(--or-fonce)}
+.contact .intro{margin:0 0 18px;font-size:15px;line-height:1.6;
+ color:var(--encre-2)}
+/* Deux champs, pas cinq : chaque champ de plus coute des remplissages. Le
+   reste s'obtient dans la conversation, ou derriere « ajouter un e-mail ». */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.plus{background:none;border:0;color:var(--or-fonce);font-size:13.5px;
+ font-weight:650;cursor:pointer;padding:12px 0 0;text-decoration:underline}
+@media(max-width:560px){.duo{grid-template-columns:1fr}}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.actions button{border:0;border-radius:999px;padding:14px 26px;font-size:15px;
+ font-weight:700;cursor:pointer;min-height:50px;background:var(--encre);
+ color:var(--fond)}
+.actions button:hover{opacity:.92}
+.actions .wa{background:#25d366;color:#052e16}
+.actions .ghost{background:var(--fond);color:var(--encre);
+ border:1px solid var(--trait)}
+.pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.merci{text-align:center;padding:30px 20px}
+.merci .coche{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;
+ display:grid;place-items:center;background:var(--vert-fond);color:var(--vert);
+ font-size:25px;font-weight:800}
+.merci h3{font-size:21px;margin-bottom:8px}
+.merci p{margin:0 0 9px}
+.merci a{color:var(--or-fonce);font-weight:650;text-decoration:underline}
+
+/* =============================== le pied =============================== */
+.pub-foot{background:var(--fond-2);border-top:1px solid var(--trait);
+ padding:38px 22px 46px;text-align:center;color:var(--gris);font-size:13.5px;
+ line-height:1.75}
+.pub-foot .marque{margin-bottom:12px}
+.pub-foot .marque svg{height:38px}
+.pub-foot a{color:var(--encre-2);font-weight:600}
+
+/* =============================== telephone =============================== */
+@media(max-width:900px){
+ .pub-bar{height:62px;gap:12px}
+ .pub-logo svg{height:32px}
+ .nav{display:none}
+ .hero .dedans{padding:38px 20px 62px}
+ .hero h1{font-size:28px}
+ .hero p.chapeau{font-size:15.5px}
+ .champs{grid-template-columns:1fr 1fr;gap:9px}
+ .champs .champ:first-child{grid-column:1 / -1}
+ .chercher{grid-column:1 / -1;width:100%;justify-content:center}
+ .cherche{margin-top:-38px;padding:0 14px}
+ .cherche .boite{padding:13px;border-radius:20px}
+ .wrap{padding:24px 14px 70px}
+ .progs{grid-template-columns:1fr;gap:16px}
+ .pub-in{padding:0 14px}
+ .pub-head{padding:18px 0 14px}
+ .pub-head h1{font-size:23px}
+ .pub-head .apd{margin-left:0;text-align:left}
+ .pub-head .apd b{font-size:23px}
+ .grande{aspect-ratio:16/10}
+ .block-head,.pad{padding-left:16px;padding-right:16px}
+ .block .scroll{padding:12px 16px 16px}
+ /* Les tableaux deviennent des fiches empilees : quatorze colonnes ne se
+    lisent pas sur 390 pixels, et un tableau qu'on balaie cache toujours la
+    colonne qu'on cherchait. */
+ .scroll table,.scroll thead,.scroll tbody,.scroll tr,.scroll td{display:block;
+  width:auto}
+ .scroll thead{display:none}
+ .scroll tr{background:var(--fond-2);border:1px solid var(--trait);
+  border-radius:var(--r);padding:13px 15px;margin-bottom:10px}
+ .scroll td{border:0;padding:4px 0;display:flex;gap:10px;align-items:baseline}
+ .scroll td::before{content:attr(data-label);flex:none;width:96px;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--gris-clair);font-weight:700;line-height:1.7}
+ .scroll td.mtitle{font-size:17px;font-weight:700;padding:0 0 9px;
+  margin-bottom:7px;border-bottom:1px solid var(--trait)}
+ .scroll td.mtitle::before{display:none}
+ .kv th,.kv td{display:block;width:auto}
+ .kv th{padding:11px 12px 0}
+ .kv td{padding:2px 12px 11px}
+ .kv tr+tr td{border-top:0}
+}
+
+
+/* ======================= les raccourcis de recherche =====================
+   Le premier ecran ne doit jamais se terminer sur une carte blanche. Ces
+   puces sont la premiere chose cliquable de la page. */
+.raccourcis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+ padding:0 4px 12px}
+.rac-lab{font-size:11.5px;font-weight:700;letter-spacing:.06em;
+ text-transform:uppercase;color:var(--gris);margin-right:2px}
+.raccourcis button{background:var(--fond);border:1px solid var(--trait);
+ border-radius:999px;padding:9px 15px;font-size:14px;font-weight:600;
+ color:var(--encre-2);cursor:pointer;transition:.14s var(--ease)}
+.raccourcis button:hover{border-color:var(--or);color:var(--encre)}
+.raccourcis button.on{background:var(--or);border-color:var(--or);
+ color:#1a1405}
+.raccourcis .rac-tout{color:var(--gris);border-style:dashed}
+
+/* ========================= la fiche : tete de page =======================
+   Une fiche commence par le bien : le visuel a gauche, le prix et le bouton a
+   droite, tous deux dans le premier ecran. C'est la seule disposition qui
+   evite qu'un visiteur venu d'un lien WhatsApp doive faire defiler mille
+   pixels d'argumentaire avant de voir ce qu'il est venu voir. */
+.fiche-tete{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
+ gap:26px;align-items:start;padding-top:14px}
+
+.galerie{min-width:0}
+.galerie .grand{position:relative;border-radius:var(--r-lg);overflow:hidden;
+ border:1px solid var(--trait);aspect-ratio:4/3;background:var(--fond-2)}
+.galerie .grand img{position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;display:block;cursor:zoom-in}
+.galerie .grand.vide{display:grid;place-items:center;font-size:44px;
+ font-weight:800;letter-spacing:.1em;color:var(--or);
+ background:linear-gradient(140deg,var(--fond-2),var(--or-clair))}
+.g-compte{position:absolute;right:12px;bottom:12px;background:rgba(9,14,26,.78);
+ color:#fff;font-size:12px;font-weight:650;padding:5px 11px;border-radius:999px;
+ backdrop-filter:blur(6px)}
+.g-fleche{position:absolute;top:50%;transform:translateY(-50%);width:42px;
+ height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.9);
+ color:var(--encre);font-size:26px;line-height:1;cursor:pointer;
+ display:grid;place-items:center;box-shadow:var(--ombre-2);
+ transition:.14s var(--ease)}
+.g-fleche:hover{background:#fff;transform:translateY(-50%) scale(1.06)}
+.g-prec{left:12px} .g-suiv{right:12px}
+.vignettes{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));
+ gap:8px;margin-top:10px}
+.vignettes .vg{padding:0;border:2px solid transparent;border-radius:10px;
+ overflow:hidden;background:var(--fond-2);cursor:pointer;aspect-ratio:4/3;
+ transition:border-color .14s var(--ease)}
+.vignettes .vg img{width:100%;height:100%;object-fit:cover;display:block}
+.vignettes .vg.on{border-color:var(--or)}
+.vignettes .vg:hover{border-color:var(--or-trait)}
+.g-note{margin:10px 2px 0;font-size:11.5px;color:var(--gris-clair)}
+
+/* le plein ecran */
+.plein{position:fixed;inset:0;z-index:60;background:rgba(6,10,18,.94);
+ display:grid;place-items:center;padding:32px}
+.plein img{max-width:100%;max-height:100%;object-fit:contain;
+ border-radius:10px}
+.p-fermer{position:absolute;top:18px;right:20px;width:44px;height:44px;
+ border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;
+ font-size:26px;line-height:1;cursor:pointer}
+.p-fleche{position:absolute;top:50%;transform:translateY(-50%);width:48px;
+ height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.14);
+ color:#fff;font-size:30px;line-height:1;cursor:pointer}
+.p-prec{left:20px} .p-suiv{right:20px}
+.p-fermer:hover,.p-fleche:hover{background:rgba(255,255,255,.26)}
+
+/* le bloc d'offre */
+.offre{min-width:0}
+.offre-in{position:sticky;top:88px;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);padding:22px 22px 20px;
+ box-shadow:var(--ombre-2)}
+.offre-in h1{font-size:27px;font-weight:750;line-height:1.2}
+.offre-lieu{margin:7px 0 0;color:var(--gris);font-size:14.5px}
+.offre-prix{margin-top:16px;padding-top:16px;border-top:1px solid var(--trait-fin)}
+.offre-prix span{display:block;font-size:11.5px;font-weight:700;
+ letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+.offre-prix b{display:block;font-size:32px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.15;margin-top:3px}
+.offre-prix em{display:block;font-style:normal;font-size:12.5px;font-weight:700;
+ color:var(--or-fonce);margin-top:5px}
+.offre-faits{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--trait-fin);
+ display:grid;gap:9px}
+.offre-faits div{display:flex;gap:12px;justify-content:space-between;
+ align-items:baseline;font-size:14px}
+.offre-faits dt{color:var(--gris);flex:none}
+.offre-faits dd{margin:0;text-align:right;font-weight:600;color:var(--encre)}
+.offre-actions{margin-top:18px;display:grid;gap:9px}
+.offre-actions .b-or{background:var(--or);color:#1a1405;border:0;
+ border-radius:999px;padding:15px 18px;font-size:15px;font-weight:750;
+ cursor:pointer;line-height:1.3;transition:.16s var(--ease)}
+.offre-actions .b-or:hover{background:var(--or-fonce);color:#fff}
+.offre-duo{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.offre-duo a{text-align:center;border-radius:999px;padding:13px 12px;
+ font-size:14.5px;font-weight:700}
+.offre-duo .b-wa{background:#25d366;color:#052e16}
+.offre-duo .b-ghost{background:var(--fond);color:var(--encre);
+ border:1px solid var(--trait)}
+.offre-note{margin:14px 0 0;font-size:12.5px;line-height:1.55;color:var(--gris)}
+.offre-in .preuve{margin-top:12px !important}
+
+/* la bande de reassurance des fiches : trois lignes, pas l'accueil entier */
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+ gap:18px;margin:26px 0 24px;padding:20px 22px;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:var(--r-lg)}
+.mini b{display:block;font-size:15px;margin-bottom:3px}
+.mini b::before{content:"✓";color:var(--or);font-weight:900;margin-right:7px}
+.mini span{font-size:13.5px;color:var(--gris);line-height:1.55}
+
+/* ============================= les villes ==============================
+   Ce que Hillel sait et que la page taisait : ou l'on est, qui y vit, a
+   quelle distance du reste du pays. */
+.ville-bloc{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);
+ gap:28px;margin:26px 0;padding:26px;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);box-shadow:var(--ombre)}
+.ville-bloc.large{margin-top:18px}
+.ville-texte h2{font-size:20px;font-weight:750;margin-bottom:10px;
+ line-height:1.3}
+.ville-texte p{margin:0;font-size:15px;line-height:1.7;color:var(--encre-2)}
+.ville-lien{display:inline-block;margin-top:14px;color:var(--or-fonce);
+ font-weight:700;font-size:14.5px}
+.ville-lien:hover{text-decoration:underline}
+.ville-reperes{margin:0;display:grid;gap:0;align-content:start;
+ background:var(--fond-2);border:1px solid var(--trait-fin);
+ border-radius:var(--r);padding:4px 16px}
+.ville-reperes div{padding:12px 0;border-top:1px solid var(--trait-fin)}
+.ville-reperes div:first-child{border-top:0}
+.ville-reperes dt{font-size:11.5px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris)}
+.ville-reperes dd{margin:4px 0 0;font-size:14.5px;color:var(--encre);
+ font-weight:600;line-height:1.45}
+.ville-tete{padding:22px 0 6px}
+.ville-tete h1{font-size:30px;font-weight:750;line-height:1.2}
+.ville-tete .sub{margin:8px 0 0;color:var(--gris);font-size:15.5px}
+.ville-h2{font-size:21px;font-weight:750;margin:30px 0 16px}
+
+/* ce qu'il y a d'autre, en bas d'une fiche : jamais un cul-de-sac */
+.ailleurs{margin-top:34px}
+.ailleurs h2{font-size:21px;font-weight:750;margin-bottom:16px}
+
+/* ===================== les pages ecrites (qui, legal) ==================== */
+.texte{max-width:44em;padding:22px 0 10px}
+.texte h1{font-size:31px;font-weight:750;margin-bottom:18px;line-height:1.2}
+.texte h3{font-size:17px;font-weight:750;margin:26px 0 8px}
+.texte p{margin:0 0 13px;font-size:15.5px;line-height:1.75;color:var(--encre-2)}
+.texte b{color:var(--encre);font-weight:700}
+.texte a{color:var(--or-fonce);font-weight:650;text-decoration:underline}
+
+/* ==================== la reponse du simulateur, d'abord ==================
+   Quinze lignes de tableau avant de dire ce qu'on venait chercher : c'etait
+   une feuille de comptable. On repond par une phrase, le detail se deplie. */
+.reponse{margin-top:22px;padding:22px 24px;border-radius:var(--r-lg);
+ background:linear-gradient(160deg,var(--or-clair),var(--carte) 78%);
+ border:1px solid var(--or-trait)}
+.rep-phrase{margin:0;font-size:21px;line-height:1.5;font-weight:500;
+ color:var(--encre);letter-spacing:-.01em}
+.rep-phrase b{font-weight:800;letter-spacing:-.02em}
+.rep-sous{margin:12px 0 0;font-size:14.5px;line-height:1.65;color:var(--encre-2)}
+.rep-sous b{font-weight:750;color:var(--encre)}
+.detail{margin-top:18px}
+.detail summary{cursor:pointer;font-size:14.5px;font-weight:700;
+ color:var(--or-fonce);padding:11px 0;list-style:none;
+ display:flex;align-items:center;gap:8px}
+.detail summary::-webkit-details-marker{display:none}
+.detail summary::before{content:"›";display:inline-block;font-size:19px;
+ transition:transform .16s var(--ease)}
+.detail[open] summary::before{transform:rotate(90deg)}
+.detail summary:hover{text-decoration:underline}
+
+/* ============================== le pied ================================
+   Un acheteur qui va virer deux millions de shekels a l'etranger cherche des
+   signaux : un nom, une adresse, ce qu'on fait de ses coordonnees. */
+.pub-foot{background:var(--fond-2);border-top:1px solid var(--trait);
+ padding:44px 22px 30px;text-align:left;color:var(--gris);font-size:13.5px;
+ line-height:1.7}
+.pied-haut{max-width:1240px;margin:0 auto;display:grid;
+ grid-template-columns:minmax(0,2fr) repeat(3,minmax(140px,1fr));gap:32px}
+.pied-marque svg{height:36px;width:auto;display:block;margin-bottom:14px}
+.pied-marque p{margin:0;max-width:34em;line-height:1.7}
+.pied-tel{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+.pied-tel a{display:inline-flex;align-items:center;gap:7px;
+ color:var(--encre-2);font-weight:700;font-size:14.5px}
+.pied-tel svg{flex:none;border-radius:2px;
+ box-shadow:0 0 0 1px rgba(15,23,42,.12)}
+.pied-col{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+.pied-col b{font-size:12px;font-weight:750;letter-spacing:.07em;
+ text-transform:uppercase;color:var(--encre);margin-bottom:2px}
+.pied-col a{color:var(--gris);font-size:14px}
+.pied-col a:hover{color:var(--or-fonce)}
+.pied-bas{max-width:1240px;margin:34px auto 0;padding-top:20px;
+ border-top:1px solid var(--trait);display:flex;gap:24px;flex-wrap:wrap;
+ justify-content:space-between;font-size:12px;color:var(--gris-clair)}
+.pied-bas span:last-child{max-width:56em}
+
+/* ============================== telephone =============================== */
+@media(max-width:980px){
+ .fiche-tete{grid-template-columns:1fr;gap:18px}
+ .offre-in{position:static;box-shadow:var(--ombre)}
+ .ville-bloc{grid-template-columns:1fr;gap:20px;padding:22px 18px}
+}
+@media(max-width:900px){
+ .galerie .grand{aspect-ratio:4/3;border-radius:var(--r)}
+ .g-fleche{width:36px;height:36px;font-size:22px}
+ .vignettes{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+ .offre-in{padding:18px 16px 16px}
+ .offre-in h1{font-size:23px}
+ .offre-prix b{font-size:28px}
+ .raccourcis{gap:6px;padding-bottom:10px}
+ .raccourcis button{padding:8px 13px;font-size:13.5px}
+ .rac-lab{width:100%;margin-bottom:2px}
+ .mini{grid-template-columns:1fr;gap:14px;padding:18px}
+ .ville-tete h1{font-size:24px}
+ .texte h1{font-size:25px}
+ .rep-phrase{font-size:18px}
+ .reponse{padding:18px 16px}
+ .pied-haut{grid-template-columns:1fr 1fr;gap:24px}
+ .pied-marque{grid-column:1 / -1}
+ .plein{padding:14px}
+ .p-fleche{width:40px;height:40px}
+}
+@media(max-width:520px){
+ .pied-haut{grid-template-columns:1fr}
+}
+
+
+/* ==================== l'espace perdu en haut des sous-pages ===============
+   Sur une fiche, la banniere et la recherche sont masquees : il ne restait
+   que la somme des marges hautes du `.wrap` et du fil d'Ariane, soit une
+   bande blanche de soixante-dix pixels avant la premiere ligne. Sur un
+   telephone, c'est un dixieme du premier ecran donne a rien. */
+.fil{padding-top:6px}
+.wrap:has(.fil){padding-top:14px}
+.texte,.ville-tete{padding-top:12px}
+
+/* Sur un telephone, le prix doit arriver le plus haut possible : l'image
+   passe en 3/2 plutot qu'en 4/3, ce qui remonte le bloc d'offre d'une
+   centaine de pixels sans rien lui enlever. */
+@media(max-width:900px){
+ .galerie .grand{aspect-ratio:3/2}
+ .vignettes{grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}
+ .g-note{font-size:11px;margin-top:8px}
+ .wrap{padding-top:14px}
+}
+
+.legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
+.legal h1{font-size:30px;margin:24px 0 8px}
+.legal h2{font-size:19px;margin:34px 0 10px}
+.legal p,.legal li{font-size:15px}
+.legal ul{padding-left:22px}
+.legal .maj{opacity:.65;font-size:13px}
+.legal a.retour{display:inline-block;margin-top:40px;font-weight:600}
+.legal .marque{display:block;width:132px;margin:0 auto 8px}
+</style></head><body>
+<main class=legal>
+<a href="index.html" class=marque><svg viewBox="0 0 152 64" height="40" role="img"
+ aria-label="BH" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
+  <g fill="#c9a227">
+    <rect x="14" y="30" width="8.5" height="16" rx="2"/>
+    <rect x="25.8" y="19" width="8.5" height="27" rx="2"/>
+    <rect x="37.6" y="25" width="8.5" height="21" rx="2"/>
+    <rect x="12" y="49" width="36" height="3.4" rx="1.7"/>
+  </g>
+  <text x="74" y="47" font-family="Helvetica,Arial,sans-serif" font-size="40"
+        font-weight="800" letter-spacing="-1.5" fill="currentColor">BH</text>
+</svg></a>
+<h1>Conditions d'utilisation</h1>
+<p class=maj>Derniere mise a jour : 06/09/2026</p>
+
+<h2>1. Objet du site</h2>
+<p>Ce site presente des programmes immobiliers situes en Israel et met a
+disposition des outils de simulation (taxe d'acquisition, frais annexes,
+financement). Il s'adresse a des personnes, principalement francophones, qui
+envisagent d'acheter un bien en Israel.</p>
+
+<h2>2. Ce que ce site n'est pas</h2>
+<p>Les informations publiees ici sont donnees a titre indicatif et ne
+constituent ni une offre de vente, ni un conseil juridique, fiscal ou
+financier personnalise. Une acquisition immobiliere en Israel suppose
+l'intervention d'un avocat ; les simulations proposees ne remplacent ni son
+analyse, ni celle d'un etablissement bancaire.</p>
+
+<h2>3. Prix et disponibilites</h2>
+<p>Les prix affiches sont ceux communiques par les promoteurs a la date de
+publication. Ils peuvent varier, notamment du fait de l'indexation legale des
+ventes sur plan, et un lot presente peut avoir ete vendu depuis. Seul un
+document signe avec le vendeur engage les parties.</p>
+
+<h2>4. Simulations</h2>
+<p>Les montants calcules par le simulateur reposent sur les baremes fiscaux et
+les taux de marche en vigueur a la date indiquee sur la page. Ils sont des
+estimations. Le taux reellement accorde par une banque depend du dossier de
+l'emprunteur et n'est connu qu'apres son examen.</p>
+
+<h2>5. Honoraires</h2>
+<p>BH Nadlan ne facture aucun honoraire d'agence a l'acquereur : l'achat se
+fait directement aupres du promoteur, au prix negocie. Un accompagnement
+apres la signature peut faire l'objet d'une remuneration distincte, annoncee
+a l'avance et acceptee par ecrit.</p>
+
+<h2>6. Propriete intellectuelle</h2>
+<p>Les textes et l'habillage de ce site appartiennent a son editeur. Les
+visuels des programmes sont la propriete des promoteurs concernes et sont
+publies dans le cadre de leur commercialisation. Les photographies de villes
+proviennent de Wikimedia Commons et restent soumises a leurs licences
+respectives.</p>
+
+<h2>7. Liens et services tiers</h2>
+<p>Le site propose des liens vers WhatsApp et vers des messageries afin de
+faciliter la prise de contact. L'usage de ces services releve de leurs propres
+conditions.</p>
+
+<h2>8. Droit applicable</h2>
+<p>Les presentes conditions sont soumises au droit israelien. Tout differend
+sera porte devant les juridictions competentes d'Israel.</p>
+<h2>9. Editeur</h2><ul><li><strong>Responsable :</strong> Hillel Bijaoui</li><li><strong>Enseigne :</strong> BH Nadlan</li><li><strong>Activite :</strong> Conseil en acquisition immobiliere en Israel</li><li><strong>Courriel :</strong> <a href='mailto:hb1826@gmail.com'>hb1826@gmail.com</a></li><li><strong>Telephone :</strong> +972(0)58.56789.26 (Israel) — +33(0)7.67.28.47.10 (France)</li></ul>
+<a class=retour href="index.html">&larr; Retour a l'accueil</a>
+</main></body></html>
