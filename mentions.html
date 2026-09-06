@@ -870,6 +870,80 @@ table.ag th{width:64%}
  .theme{display:none}
 }
 
+/* ============================== la carte =================================
+   Dessinee a la fabrication : aucune tuile a telecharger, aucun traceur
+   tiers sur une page qui promet de n'en poser aucun, et un dessin aux
+   couleurs de la maison plutot qu'une carte qui ressemble aux autres. */
+.carte{margin-top:38px;padding-top:30px;border-top:1px solid var(--trait)}
+.carte-tete h2{font-size:21px;font-weight:750;margin-bottom:6px}
+.carte-tete p{margin:0 0 18px;font-size:14.5px;color:var(--gris);
+ line-height:1.6}
+.carte-cadre{background:var(--fond-2);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:18px;display:grid;place-items:center;
+ overflow:hidden}
+.carte-fond{width:100%;max-width:420px;height:auto;display:block}
+.carte-fond .terre{fill:var(--carte);stroke:var(--trait);stroke-width:1.5}
+.carte-fond .eau{fill:#bcd7ea;stroke:#9dc2dc;stroke-width:1}
+.carte-fond .repere circle{fill:var(--gris-clair)}
+.carte-fond .repere text{font-size:11px;fill:var(--gris);font-weight:600}
+.carte-fond .pin{cursor:pointer}
+.carte-fond .pin .halo{fill:var(--or);opacity:.16;transition:opacity .16s}
+.carte-fond .pin .rond{fill:var(--or);stroke:#fff;stroke-width:2.5}
+.carte-fond .pin .nb{fill:#1a1405;font-size:12px;font-weight:800;
+ text-anchor:middle}
+.carte-fond .pin:hover .halo{opacity:.34}
+/* La bulle ne s'affiche qu'au survol : cinq bulles ouvertes en meme temps
+   cachent la carte qu'elles decrivent. */
+.carte-fond .bulle{opacity:0;pointer-events:none;transition:opacity .14s}
+.carte-fond .pin:hover .bulle,.carte-fond .pin:focus .bulle{opacity:1}
+.carte-fond .bulle rect{fill:var(--encre);opacity:.95}
+.carte-fond .bulle text{text-anchor:middle;fill:#fff}
+.carte-fond .bulle .v{font-size:12.5px;font-weight:700}
+.carte-fond .bulle .p{font-size:11.5px;fill:#e0c163}
+.carte-note{margin:12px 2px 0;font-size:11.5px;color:var(--gris-clair)}
+
+/* ==================== ce qu'il y a autour d'un programme ================= */
+.autour-bloc{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,1fr);
+ gap:26px;margin:26px 0;padding:26px;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);box-shadow:var(--ombre)}
+.autour-texte h2{font-size:20px;font-weight:750;margin-bottom:8px}
+.autour-texte .dim{font-size:13px;line-height:1.6;margin:0 0 16px}
+.cm-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+ gap:12px}
+.cm{background:var(--fond-2);border:1px solid var(--trait-fin);
+ border-radius:var(--r);padding:12px 14px}
+.cm b{display:block;font-size:22px;font-weight:750;line-height:1;
+ color:var(--or-fonce)}
+.cm span{display:block;font-size:13.5px;font-weight:600;margin-top:4px}
+.cm em{display:block;font-style:normal;font-size:12px;color:var(--gris);
+ margin-top:3px;line-height:1.45}
+.autour-carte{display:grid;place-items:center}
+.autour-carte .carte-fond{max-width:190px}
+.autour-carte .pin.ici .halo{fill:var(--or);opacity:.25}
+.autour-carte .pin.ici .rond{fill:var(--or);stroke:#fff;stroke-width:3}
+@media(max-width:900px){
+ .autour-bloc{grid-template-columns:1fr;padding:20px 16px}
+ .autour-carte{order:-1}
+ .autour-carte .carte-fond{max-width:150px}
+ .carte-cadre{padding:12px}
+ .carte-fond{max-width:320px}
+}
+
+/* La carte ne doit pas avaler la page : le pays est haut et etroit, on borne
+   donc sa hauteur plutot que sa largeur. */
+.carte-fond{max-height:560px;width:auto;max-width:100%}
+.autour-carte .carte-fond{max-height:240px}
+@media(max-width:900px){
+ .carte-fond{max-height:420px}
+ .autour-carte .carte-fond{max-height:190px}
+}
+
+/* La mini-carte d'une fiche : un point seul dans un pays entier ne dit rien,
+   on nomme donc la ville a cote. */
+.autour-carte .carte-fond{max-height:320px}
+.autour-carte .pin.ici .ou{font-size:20px;font-weight:750;fill:var(--encre)}
+@media(max-width:900px){.autour-carte .carte-fond{max-height:230px}}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
