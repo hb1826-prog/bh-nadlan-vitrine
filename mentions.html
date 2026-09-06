@@ -944,6 +944,19 @@ table.ag th{width:64%}
 .autour-carte .pin.ici .ou{font-size:20px;font-weight:750;fill:var(--encre)}
 @media(max-width:900px){.autour-carte .carte-fond{max-height:230px}}
 
+/* ================== l'en-tete sur un telephone ==========================
+   Le selecteur de langue a ajoute cinq boutons dans une barre deja pleine :
+   sur 390 pixels, « Être rappelé » se retrouvait coupe hors de l'ecran. Les
+   langues passent donc sur leur propre ligne — elles doivent rester visibles
+   (c'est par la qu'un anglophone ou un promoteur israelien entre), mais elles
+   ne peuvent pas voler sa place au bouton qui rapporte les contacts. */
+@media(max-width:900px){
+ .pub-bar{flex-wrap:wrap;height:auto;padding:10px 0 8px;row-gap:8px}
+ .pub-bar .cta{margin-left:auto}
+ .langues{order:5;flex-basis:100%;justify-content:center}
+ .langues a{padding:6px 12px;font-size:12px}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}

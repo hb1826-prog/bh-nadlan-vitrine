@@ -953,6 +953,19 @@ table.ag th{width:64%}
 .autour-carte .carte-fond{max-height:320px}
 .autour-carte .pin.ici .ou{font-size:20px;font-weight:750;fill:var(--encre)}
 @media(max-width:900px){.autour-carte .carte-fond{max-height:230px}}
+
+/* ================== l'en-tete sur un telephone ==========================
+   Le selecteur de langue a ajoute cinq boutons dans une barre deja pleine :
+   sur 390 pixels, « Être rappelé » se retrouvait coupe hors de l'ecran. Les
+   langues passent donc sur leur propre ligne — elles doivent rester visibles
+   (c'est par la qu'un anglophone ou un promoteur israelien entre), mais elles
+   ne peuvent pas voler sa place au bouton qui rapporte les contacts. */
+@media(max-width:900px){
+ .pub-bar{flex-wrap:wrap;height:auto;padding:10px 0 8px;row-gap:8px}
+ .pub-bar .cta{margin-left:auto}
+ .langues{order:5;flex-basis:100%;justify-content:center}
+ .langues a{padding:6px 12px;font-size:12px}
+}
 </style>
 </head><body>
 
@@ -1000,14 +1013,13 @@ table.ag th{width:64%}
     <button class=on type=button>Acheter</button>
     <button type=button onclick="location.hash='#/simulateur'">Simuler mon budget</button>
   </div>
-  <div class=raccourcis id=raccourcis></div>
   <button type=button class=filtres-toggle id=filtres-toggle>Affiner ma recherche <span class=chev>▾</span></button>
   <div class=champs id=pub-filtres hidden>
     <div class=champ><label for=f-ville>Ville</label>
       <select id=f-ville><option value="">Toutes les villes</option>
         <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Givat Shmuel'>Givat Shmuel</option><option value='Givatayim'>Givatayim</option><option value='Jerusalem'>Jerusalem</option><option value='Kedar'>Kedar</option><option value='Kiryat Bialik'>Kiryat Bialik</option><option value='Kiryat Gat'>Kiryat Gat</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Ofakim'>Ofakim</option><option value='Or Yehuda'>Or Yehuda</option><option value='Petah Tikva'>Petah Tikva</option><option value='Ramat Gan'>Ramat Gan</option><option value='Tel Aviv'>Tel Aviv</option></select></div>
     <div class=champ style="grid-column:1 / -1"><label>Nombre de pièces</label>
-      <div class=pastilles id=f-pieces><button type=button data-p='2.0'>2</button><button type=button data-p='2.5'>2,5</button><button type=button data-p='3.0'>3</button><button type=button data-p='3.5'>3,5</button><button type=button data-p='4.0'>4</button><button type=button data-p='4.5'>4,5</button><button type=button data-p='5.0'>5</button><button type=button data-p='6.0'>6</button><button type=button data-p='9.5'>9,5</button></div></div>
+      <div class=pastilles id=f-pieces><button type=button data-p='2.0'>2</button><button type=button data-p='2.5'>2,5</button><button type=button data-p='3.0'>3</button><button type=button data-p='3.5'>3,5</button><button type=button data-p='4.0'>4</button><button type=button data-p='4.5'>4,5</button><button type=button data-p='5.0'>5</button><button type=button data-p='6' data-et-plus='1'>6+</button></div></div>
     <div class=champ><label for=f-budget>Budget maximum</label>
       <select id=f-budget><option value="">Indifférent</option>
         <option value='1500000'>jusqu'à 1 500 000 ₪</option><option value='2000000'>jusqu'à 2 000 000 ₪</option><option value='2500000'>jusqu'à 2 500 000 ₪</option><option value='3000000'>jusqu'à 3 000 000 ₪</option><option value='4000000'>jusqu'à 4 000 000 ₪</option><option value='5000000'>jusqu'à 5 000 000 ₪</option><option value='7000000'>jusqu'à 7 000 000 ₪</option><option value='8700000'>jusqu'à 8 700 000 ₪</option></select></div>
@@ -1309,7 +1321,12 @@ function filtre(p, c) {
   // « au moins deux pieces ». Un programme convient s'il propose l'une des
   // typologies cochees.
   if (c.pieces && c.pieces.length) {
-    if (!p.typologies.some(t => c.pieces.indexOf(t.pieces) >= 0)) return false;
+    // « 6+ » couvre tout ce qui depasse : sans cela, la villa a neuf pieces
+    // et demie deviendrait introuvable le jour ou l'on retire son chiffre de
+    // la liste.
+    const ok = p.typologies.some(t => c.pieces.some(
+      v => (v >= 6 ? t.pieces >= 6 : t.pieces === v)));
+    if (!ok) return false;
   }
   return true;
 }
@@ -1411,8 +1428,10 @@ function liste() {
   // c'est un bloc de plus a lire, jamais une fenetre qui barre l'ecran.
   const cartes = vus.map(carte);
   if (cartes.length > 6) cartes.splice(6, 0, appel());
-  vue.innerHTML = bandeau + '<div class="progs">' + cartes.join('')
-    + '</div>' + carteHTML(vus) + propositions(vus)
+  // La carte AVANT les annonces : elle sert a choisir ou chercher, pas a
+  // illustrer ce qu'on a deja lu.
+  vue.innerHTML = bandeau + carteHTML(vus) + '<div class="progs">'
+    + cartes.join('') + '</div>' + propositions(vus)
     + contactHTML(null, 'liste');
   wireContact(null, 'liste');
 }
@@ -1909,10 +1928,10 @@ function carteHTML(vus) {
   return `
   <section class="carte" id="carte">
     <div class="carte-tete">
-      <h2>Où sont nos programmes</h2>
-      <p>${groupes.length} ville${groupes.length > 1 ? 's' : ''} ·
-        ${vus.length} programme${vus.length > 1 ? 's' : ''} —
-        la carte suit vos filtres. Cliquez sur une ville.</p>
+      <h2>${T('Choisissez une ville')}</h2>
+      <p>${groupes.length} ${groupes.length > 1 ? T('villes') : T('ville')} ·
+        ${vus.length} ${vus.length > 1 ? T('programmes') : T('programme')} —
+        ${T('touchez une ville pour voir ce que nous y suivons.')}</p>
     </div>
     <div class="carte-cadre">
       ${c.fond.replace('</svg>', reperes + pastilles + '</svg>')}
@@ -2468,12 +2487,18 @@ function agendaHTML(p, f, fr) {
     + '(' + c.signature + ' / ' + (100 - c.signature) + '), à confirmer.</p>'
     : ''}
   <div class="ag-clefs">
-    <div><span>${T('Vous sortez le premier mois')}</span>
-      <b>${prixDouble(immediat, 'eu big')}</b></div>
-    <div><span>À trouver ${c.jours} jours avant la livraison</span>
+    <div><span>${T('Premier paiement')}</span>
+      <b>${prixDouble(immediat, 'eu big')}</b>
+      <em>${T('Versement à la signature')} ${shek(signature)}
+        + ${T('honoraires d’avocat')} ${shek(Math.round(fr.avocat))}${
+        Math.round(f.taxe)
+          ? ' + ' + T('taxe d’acquisition') + ' ' + shek(Math.round(f.taxe))
+          : ''}</em></div>
+    <div><span>${T('Dernier paiement')} — ${c.jours}
+      ${T('jours avant la livraison')}</span>
       <b>${aTrouver ? prixDouble(aTrouver, 'eu big')
-                    : (A.creditUtile ? 'Rien de votre poche'
-                                     : 'Rien — tout est déjà payé')}</b>
+                    : (A.creditUtile ? T('Couvert par le crédit')
+                                     : T('Déjà soldé'))}</b>
       <em>${aTrouver
         ? 'le crédit couvre ' + shek(A.creditUtile) + ' (plafond ' + plafond
           + ' % du prix)'
@@ -2565,8 +2590,12 @@ function reglagesEcheancier(p) {
       || '<p class="dim si-note">Aucune échéance : ajoutez-en une.</p>'}</div>
     <button type="button" class="ech-plus" id="s-ech-plus">${T('+ ajouter une échéance')}</button>` : ''}
 
-  <label class="coche"><input type="checkbox" id="s-indexation"${
-    E.indexation ? ' checked' : ''}> ${T('Indexation du solde à ma charge')}</label>`;
+  <div class="si-lab">${T('Indexation au cours de la construction')}
+    (madad)</div>
+  <div class="seg" id="s-madad">
+    <button data-madad="0" class="${E.indexation ? '' : 'on'}">${T('Non')}</button>
+    <button data-madad="1" class="${E.indexation ? 'on' : ''}">${T('Oui')}</button>
+  </div>`;
 }
 
 /* ---------------- le simulateur
@@ -2801,9 +2830,9 @@ async function simulateur(zone, p) {
     E.promoteur = isNaN(v) ? 0 : Math.min(60, Math.max(0, v));
     resultats(zone, p);
   };
-  const idx = $('#s-indexation', zone);
-  if (idx) idx.onchange = () => { E.indexation = idx.checked;
-                                  resultats(zone, p); };
+  zone.querySelectorAll('#s-madad button').forEach(b => {
+    b.onclick = () => { E.indexation = b.dataset.madad === '1'; refaire(); };
+  });
 
   // Changer de mode redessine le formulaire (les champs ne sont pas les
   // memes) ; changer un chiffre ne redessine que les resultats, pour ne pas
@@ -2884,13 +2913,14 @@ function resultats(zone, p) {
 
   cible.innerHTML = `
     <div class="reponse">
-      <p class="rep-phrase">Vous sortez <b>${shek(AG.immediat)}</b>${
+      <p class="rep-phrase">${T('Premier paiement')} :
+        <b>${shek(AG.immediat)}</b>${
         eur(AG.immediat) ? ' (' + eur(AG.immediat) + ')' : ''
-        } le premier mois${AG.aTrouver
-        ? ', puis <b>' + shek(AG.aTrouver) + '</b>'
+        }${AG.aTrouver
+        ? '. ' + T('Dernier paiement') + ' : <b>' + shek(AG.aTrouver) + '</b>'
           + (eur(AG.aTrouver) ? ' (' + eur(AG.aTrouver) + ')' : '')
-          + ' ' + AG.c.jours + ' jours avant la livraison'
-        : ' — le crédit couvre ensuite tout le solde'} — et
+          + ', ' + AG.c.jours + ' ' + T('jours avant la livraison')
+        : '. ' + T('Le crédit couvre ensuite tout le solde')} —
         <b>${shek(mensualite)} par mois</b>${
         eur(mensualite) ? ' (' + eur(mensualite) + ')' : ''
         } pendant ${E.duree} ans, une fois le crédit en place.</p>
