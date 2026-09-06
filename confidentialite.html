@@ -751,6 +751,21 @@ small.eu.big{font-size:13.5px}
  color:var(--gris);margin-top:2px}
 td.num small.eu{text-align:right}
 
+
+/* ==================== l'equilibre des lignes de la banniere ==============
+   « 0 frais d'agence » se coupait entre le zero et le mot : la ligne se
+   terminait sur un « 0 » solitaire, et la promesse se lisait en deux temps.
+   La rendre insecable suffit — mais tant qu'a faire, on laisse aussi le
+   navigateur equilibrer les lignes plutot que de les remplir une a une, ce
+   qui evite les dernieres lignes de trois mots. */
+.insec{white-space:nowrap}
+.hero h1{text-wrap:balance}
+.hero p.chapeau{text-wrap:pretty;max-width:32em}
+
+/* Le champ de prix du simulateur, avec sa conversion a cote. */
+.f-eur{display:block;margin-top:5px;font-size:13px;font-weight:650;
+ color:var(--or-fonce)}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
