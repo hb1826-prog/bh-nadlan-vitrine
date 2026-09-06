@@ -799,6 +799,16 @@ table.ag th{width:64%}
 .coche{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14.5px;
  color:var(--encre-2);cursor:pointer}
 .coche input{width:20px;height:20px;accent-color:var(--or);cursor:pointer}
+
+
+/* ================== ce qu'on propose en plus de ce qu'on trouve ==========
+   Sous les resultats, jamais melange avec eux : c'est une proposition, pas
+   une reponse, et le visiteur doit le voir avant de cliquer. */
+.autour{margin-top:38px;padding-top:30px;border-top:1px solid var(--trait)}
+.autour h2{font-size:21px;font-weight:750;margin-bottom:6px}
+.autour-note{margin:0 0 18px;font-size:14.5px;line-height:1.6;
+ color:var(--gris);max-width:56em}
+.autour-note b{color:var(--encre);font-weight:750}
 </style>
 </head><body>
 
@@ -1232,8 +1242,66 @@ function liste() {
   const cartes = vus.map(carte);
   if (cartes.length > 6) cartes.splice(6, 0, appel());
   vue.innerHTML = bandeau + '<div class="progs">' + cartes.join('')
-    + '</div>' + contactHTML(null, 'liste');
+    + '</div>' + propositions(vus) + contactHTML(null, 'liste');
   wireContact(null, 'liste');
+}
+
+
+/* ---------------- proposer, et pas seulement repondre
+
+   L'elargissement automatique etait une REPARATION : il ne se declenchait que
+   lorsque la recherche ne rendait rien. Hillel a demande l'inverse — « pas
+   parce qu'il n'y a rien a proximite qu'on peut lui dire : meme dans une
+   autre ville, en peripherie, on peut trouver des choses interessantes ».
+
+   Un acheteur francophone ne connait pas la geographie israelienne. Il tape
+   « Netanya » parce que c'est le seul nom qu'il connait, et il ignore qu'a
+   vingt kilometres le meme budget achete vingt metres carres de plus. Le lui
+   dire est exactement le metier du conseiller — et c'est ce qui transforme
+   une liste en conversation.
+
+   On ne melange jamais les deux : ce bloc est SOUS les resultats demandes, il
+   s'annonce comme autre chose, et il dit pourquoi il est la. */
+function propositions(vus) {
+  // Rien a proposer si l'on n'a pas dit ou l'on cherchait : sur une liste
+  // sans ville, tout est deja affiche.
+  if (!F.ville) return '';
+  const dedans = vus.map(p => p.cle);
+  const budget = +F.budget || 0;
+
+  // D'abord les villes voisines, dans l'ordre ou elles s'eloignent.
+  const proches = voisines(F.ville, 50).filter(v => v !== F.ville);
+  const candidats = DONNEES.projets.filter(p =>
+    dedans.indexOf(p.cle) < 0
+    && proches.indexOf(p.ville) >= 0
+    && (!budget || p.prix_min <= budget)
+    && (!F.pieces.length
+        || p.typologies.some(t => F.pieces.indexOf(t.pieces) >= 0)));
+
+  if (!candidats.length) return '';
+
+  // Le plus interessant d'abord : a budget egal, le plus grand. C'est
+  // l'argument qu'on veut faire passer.
+  const surface = p => Math.max.apply(null,
+    p.typologies.map(t => t.surface_max || t.surface_min || 0));
+  candidats.sort((x, y) => surface(y) - surface(x));
+  const choix = candidats.slice(0, 3);
+
+  const gainMax = Math.round(Math.max.apply(null, choix.map(surface)));
+  const ici = vus.length
+    ? Math.round(Math.max.apply(null, vus.map(surface))) : 0;
+  const argument = (ici && gainMax > ici + 5)
+    ? ' À budget égal, on y trouve jusqu’à <b>' + gainMax + ' m²</b> contre '
+      + ici + ' m² à ' + esc(F.ville) + '.'
+    : '';
+
+  return `
+  <section class="autour">
+    <h2>À moins de 50 km de ${esc(F.ville)}</h2>
+    <p class="autour-note">Ces programmes ne sont pas à ${esc(F.ville)}, mais
+      ils correspondent à ce que vous cherchez.${argument}</p>
+    <div class="progs">${choix.map(carte).join('')}</div>
+  </section>`;
 }
 
 /* La carte d'un programme. La photo commande, le prix se lit de loin, et les
