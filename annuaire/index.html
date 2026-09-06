@@ -809,6 +809,51 @@ table.ag th{width:64%}
 .autour-note{margin:0 0 18px;font-size:14.5px;line-height:1.6;
  color:var(--gris);max-width:56em}
 .autour-note b{color:var(--encre);font-weight:750}
+
+
+/* ========================== remonter en haut =============================
+   Sur un telephone, la barre du bas porte deja « Être rappelé ». Sur un
+   ordinateur, arrive en bas d'une fiche, il fallait remonter tout l'ecran
+   pour retrouver le bouton de l'en-tete — et personne ne devine que le logo
+   ramene en haut. */
+.remonter{position:fixed;right:22px;bottom:26px;z-index:25;
+ display:inline-flex;align-items:center;gap:8px;
+ background:var(--encre);color:var(--fond);border:0;border-radius:999px;
+ padding:13px 20px;font-size:14px;font-weight:700;cursor:pointer;
+ box-shadow:var(--ombre-3);transition:transform .16s var(--ease),opacity .16s}
+.remonter:hover{transform:translateY(-2px)}
+.remonter span{font-size:16px;line-height:1}
+@media(max-width:900px){
+ /* Au-dessus de la barre d'action, jamais dessous, et sans son libelle :
+    la place manque. */
+ .remonter{right:14px;bottom:calc(86px + env(safe-area-inset-bottom));
+  padding:12px;font-size:0;gap:0;width:46px;height:46px;
+  justify-content:center}
+ .remonter span{font-size:19px}
+}
+
+/* ===================== l'echeancier sur mesure ===========================
+   Hillel negocie l'echelonnement autant que le prix : il doit pouvoir poser
+   ses propres echeances, avec leur pourcentage et leur date. */
+.ech-liste{display:grid;gap:9px;margin-top:14px}
+.ech-ligne{display:grid;grid-template-columns:1fr 84px auto 84px auto auto;
+ gap:8px;align-items:center}
+.ech-ligne input{background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r);padding:10px 11px;font-size:14.5px;min-height:44px;
+ width:100%}
+.ech-ligne input:focus{border-color:var(--or)}
+.ech-u{font-size:13px;color:var(--gris);white-space:nowrap}
+.ech-moins{border:1px solid var(--trait);background:var(--fond);
+ color:var(--gris);border-radius:50%;width:34px;height:34px;font-size:17px;
+ line-height:1;cursor:pointer}
+.ech-moins:hover{border-color:#b42318;color:#b42318}
+.ech-plus{background:none;border:0;color:var(--or-fonce);font-size:14px;
+ font-weight:700;cursor:pointer;padding:12px 0 0;text-decoration:underline}
+@media(max-width:700px){
+ .ech-ligne{grid-template-columns:1fr auto;gap:7px}
+ .ech-ligne .ech-lib{grid-column:1 / -1}
+ .ech-ligne .ech-pct,.ech-ligne .ech-mois{width:80px}
+}
 </style>
 </head><body>
 
@@ -956,6 +1001,11 @@ table.ag th{width:64%}
   </section>
 </main>
 
+<button class=remonter id=remonter type=button
+        aria-label="Remonter en haut de la page" hidden>
+  <span aria-hidden="true">↑</span> Haut de page
+</button>
+
 <div class=barre-mobile>
   <button type=button onclick="versContact()">Être rappelé</button>
   <a class=wa href="https://wa.me/972585678926">WhatsApp</a>
@@ -1041,7 +1091,14 @@ const E = {profil: 'israelien_unique', cadre: 'nom_propre',
            // partenaire du promoteur (le halvaat kablan), qui ne reduit rien
            // mais decale ; `indexation` dit si elle est a la charge de
            // l'acheteur.
-           signature: null, promoteur: 0, indexation: false};
+           signature: null, promoteur: 0, indexation: false,
+           // Comment se paie le solde entre la signature et la livraison :
+           //   'fin'    — tout d'un coup, 120 jours avant (le plus courant) ;
+           //   'lineaire' — reparti en versements egaux pendant le chantier ;
+           //   'sur-mesure' — les echeances que Hillel saisit lui-meme.
+           // Un promoteur ne propose jamais deux fois le meme montage, et
+           // Hillel negocie l'echelonnement autant que le prix.
+           mode: 'fin', tranches: 4, echeances: []};
 let SIM = null;                       // sim.json, charge a la demande
 const DEPART = Date.now();            // sert a reconnaitre un robot
 
@@ -1986,6 +2043,67 @@ function conditionsCourantes(p) {
   };
 }
 
+
+/* Les versements intermediaires, entre la signature et le solde.
+
+   Hillel : « je veux vraiment avoir un programme sur 15 % : si c'est lineaire
+   ou pas lineaire, que je puisse rajouter les autres pourcentages a payer
+   avec les dates ». C'est ce qu'il negocie avec le promoteur, et c'est ce qui
+   decide de la tresorerie du client — deux montages qui totalisent 100 % ne
+   se ressemblent pas du tout quand on doit changer des euros.
+
+   Rend une liste de {pct, mois, libelle}, `mois` comptes depuis la signature.
+   Le solde final n'en fait pas partie : il se deduit de ce qui reste. */
+function echeancesIntermediaires(p) {
+  const c = conditionsCourantes(p);
+  const restant = Math.max(0, 100 - c.signature - c.retenue);
+  const moisTotal = moisAvantSolde(p, c);
+
+  if (E.mode === 'lineaire') {
+    const n = Math.max(1, Math.min(24, E.tranches || 4));
+    // Reparti en parts egales, la derniere absorbant l'arrondi pour que le
+    // total retombe exactement sur le pourcentage attendu.
+    const part = Math.round((restant / n) * 100) / 100;
+    const liste = [];
+    for (let i = 1; i <= n; i++) {
+      const pct = (i === n) ? Math.round((restant - part * (n - 1)) * 100) / 100
+                            : part;
+      liste.push({pct: pct, mois: Math.round(moisTotal * i / n),
+                  libelle: 'Versement ' + i + ' / ' + n});
+    }
+    return liste;
+  }
+  if (E.mode === 'sur-mesure') {
+    return (E.echeances || []).filter(e => e.pct > 0).map((e, i) => ({
+      pct: e.pct, mois: e.mois,
+      libelle: e.libelle || ('Échéance ' + (i + 1))}));
+  }
+  return [];                      // 'fin' : rien entre les deux
+}
+
+/* Combien de mois separent la signature du solde.
+
+   Le solde tombe 120 jours avant la livraison contractuelle ; la livraison
+   est annoncee en annees. A defaut d'information, trois ans — la duree d'un
+   chantier courant — et l'ecran le dit. */
+function moisAvantSolde(p, c) {
+  const annees = (p && p.annees_livraison != null) ? p.annees_livraison : 3;
+  return Math.max(1, Math.round(annees * 12 - (c.jours || 120) / 30));
+}
+
+/* Une echeance en clair : « dans 18 mois (mars 2028) ». Une date reelle vaut
+   mieux qu'un delai, parce que c'est elle qu'on inscrit dans un agenda. */
+const MOIS_COURT = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+                    'juillet', 'août', 'septembre', 'octobre', 'novembre',
+                    'décembre'];
+function quandEnClair(mois) {
+  const d = new Date();
+  d.setMonth(d.getMonth() + (mois || 0));
+  const date = MOIS_COURT[d.getMonth()] + ' ' + d.getFullYear();
+  if (!mois) return 'à la signature';
+  return 'dans ' + mois + ' mois — ' + date;
+}
+
 /* Ce qu'il faudra trouver a la livraison.
 
    Une seule formule couvre tous les cas :
@@ -2001,18 +2119,42 @@ function chiffresAgenda(p, f, fr) {
   const signature = part(c.signature);
   const retenue = part(c.retenue);
   const creditMax = part(plafond);
+
+  // Les versements poses entre la signature et le solde. Ils sortent de la
+  // poche de l'acheteur pendant le chantier, donc ils reduisent d'autant ce
+  // qu'il restera a trouver a la fin — c'est tout l'interet de les etaler.
+  const inter = echeancesIntermediaires(p);
+  const interPct = inter.reduce((t, e) => t + e.pct, 0);
+  const interIls = part(interPct);
+  const dejaPaye = c.signature + interPct;
+  const soldePct = Math.max(0, 100 - dejaPaye - c.retenue);
+
   return {
     c: c, prix: prix, plafond: plafond,
     signature: signature,
     avance: part(E.promoteur || 0),
     retenue: retenue,
     creditMax: creditMax,
-    // La formule qui commande tout : ce qu'il restera a trouver de sa poche.
-    aTrouver: Math.max(0, Math.round(prix - signature - creditMax)),
+    intermediaires: inter,
+    interPct: interPct,
+    interIls: interIls,
+    // La formule qui commande tout : ce qu'il restera a trouver de sa poche,
+    // une fois deduit tout ce qu'on a deja verse et le credit maximum.
+    aTrouver: Math.max(0, Math.round(prix * (100 - dejaPaye - plafond) / 100)),
+    // Ce qu'on emprunte VRAIMENT : jamais plus que ce qui reste du. Sans
+    // cela, un echeancier bien etale affichait « a trouver : 0 » a cote d'un
+    // solde de 400 000, ce qui se lit comme une erreur alors que c'est une
+    // bonne nouvelle.
+    creditUtile: Math.min(part(plafond),
+                          part(Math.max(0, 100 - dejaPaye - c.retenue))),
     // Ce qu'on sort vraiment le premier mois : le versement, l'avocat, et la
     // taxe d'acquisition qui tombe soixante jours plus tard.
     immediat: signature + Math.round(fr.avocat) + Math.round(f.taxe),
-    solde: Math.round(prix - signature - retenue),
+    solde: part(soldePct),
+    soldePct: soldePct,
+    // Depasser 100 % est une erreur de saisie : on le dit plutot que
+    // d'afficher un solde negatif.
+    trop: dejaPaye + c.retenue > 100.001,
   };
 }
 
@@ -2027,6 +2169,10 @@ function agendaHTML(p, f, fr) {
   const ligne = (quand, detail, montant, fort) => `
     <tr><th><b>${quand}</b><span class="ag-note">${detail}</span></th>
       <td class="num ${fort ? 'strong' : ''}">${montant}</td></tr>`;
+  // Une etape a zero shekel n'apprend rien et se lit comme un oubli : on
+  // l'omet plutot que d'afficher un trou.
+  const ligneSiUtile = (quand, detail, montant, valeur, fort) =>
+    (valeur ? ligne(quand, detail, montant, fort) : '');
 
   const lignes = [
     ligne('À la réservation',
@@ -2035,9 +2181,9 @@ function agendaHTML(p, f, fr) {
     ligne('Le jour de la signature',
       c.signature + ' % du prix, plus les honoraires d’avocat.',
       prixDouble(signature + Math.round(fr.avocat)), true),
-    ligne('Dans les ' + jt + ' jours suivant la signature',
+    ligneSiUtile('Dans les ' + jt + ' jours suivant la signature',
       'Taxe d’acquisition (mas rekhicha), due à l’État.',
-      prixDouble(Math.round(f.taxe)), true),
+      prixDouble(Math.round(f.taxe)), Math.round(f.taxe), true),
   ];
   if (avance) {
     lignes.push(ligne('Peu après la signature',
@@ -2047,10 +2193,21 @@ function agendaHTML(p, f, fr) {
       + 'd’ouverture.', '<span class="dim">' + shek(avance)
       + ' avancés</span>'));
   }
+  A.intermediaires.forEach(e => {
+    lignes.push(ligne(esc(e.libelle),
+      quandEnClair(e.mois) + ' · ' + pct(Math.round(e.pct * 10) / 10)
+      + ' du prix.', prixDouble(Math.round(prix * e.pct / 100))));
+  });
+  // Le courtier se paie quand le credit se met en place, pas a la signature.
+  lignes.push(ligneSiUtile('À la mise en place du crédit',
+    'Honoraires du courtier, s’il y en a un.',
+    prixDouble(Math.round(fr.courtier)), Math.round(fr.courtier)));
   lignes.push(ligne(c.jours + ' jours avant la livraison contractuelle',
     'Le solde doit être intégralement payé, retard de chantier ou non — '
     + 'c’est une clause standard des contrats de vente israéliens.',
-    prixDouble(A.solde), true));
+    A.solde ? prixDouble(A.solde)
+            : '<span class="dim">soldé par les versements ci-dessus</span>',
+    true));
   lignes.push(ligne('À la livraison réelle',
     'Les ' + c.retenue + ' % retenus, versés à la remise des clés — votre '
     + 'seule prise en cas de retard.', prixDouble(retenue)));
@@ -2065,10 +2222,25 @@ function agendaHTML(p, f, fr) {
     <div><span>Vous sortez le premier mois</span>
       <b>${prixDouble(immediat, 'eu big')}</b></div>
     <div><span>À trouver ${c.jours} jours avant la livraison</span>
-      <b>${prixDouble(aTrouver, 'eu big')}</b>
-      <em>le crédit couvre ${shek(creditMax)} (${plafond} % du prix)</em></div>
+      <b>${aTrouver ? prixDouble(aTrouver, 'eu big')
+                    : (A.creditUtile ? 'Rien de votre poche'
+                                     : 'Rien — tout est déjà payé')}</b>
+      <em>${aTrouver
+        ? 'le crédit couvre ' + shek(A.creditUtile) + ' (plafond ' + plafond
+          + ' % du prix)'
+        : (A.creditUtile
+          ? 'le crédit couvre le solde entier — ' + shek(A.creditUtile)
+            + ', sous votre plafond de ' + plafond + ' %'
+          : 'cet échéancier ne laisse rien à financer')}</em></div>
   </div>
   <table class="kv ag"><tbody>${lignes.join('')}</tbody></table>
+  ${(!aTrouver && !A.creditUtile && A.intermediaires.length)
+    ? '<p class="si-note avert"><b>Cet échéancier se paie comptant.</b> Les '
+      + 'versements étalés couvrent la totalité du prix avant la livraison, '
+      + 'et le crédit immobilier ne se met en place qu’à la fin du chantier : '
+      + 'il n’a donc plus rien à financer. Il faut sortir '
+      + shek(A.signature + A.interIls) + ' de sa poche pendant les travaux.</p>'
+    : ''}
   ${avance ? '<p class="si-note avert"><b>Le prêt promoteur ne réduit '
     + 'rien.</b> Il décale. Vous sortez moins aujourd’hui, mais l’avance sera '
     + 'remboursée à la livraison comme le reste — et comme vous avez moins '
@@ -2100,6 +2272,24 @@ function indexationHTML(p, c) {
 /* Les reglages de l'echeancier : ce que le visiteur peut bouger. */
 function reglagesEcheancier(p) {
   const c = conditionsCourantes(p);
+  const modes = [
+    ['fin', 'Tout le solde à la fin'],
+    ['lineaire', 'Échelonné régulier'],
+    ['sur-mesure', 'Échéances sur mesure'],
+  ];
+  const lignesSurMesure = (E.echeances || []).map((e, i) => `
+    <div class="ech-ligne" data-i="${i}">
+      <input type="text" class="ech-lib" value="${esc(e.libelle || '')}"
+             placeholder="Ex. fin du gros œuvre">
+      <input type="number" class="ech-pct" step="0.5" min="0" max="100"
+             value="${e.pct}" aria-label="Pourcentage">
+      <span class="ech-u">%</span>
+      <input type="number" class="ech-mois" step="1" min="0" max="120"
+             value="${e.mois}" aria-label="Mois après la signature">
+      <span class="ech-u">mois</span>
+      <button type="button" class="ech-moins" aria-label="Retirer">×</button>
+    </div>`).join('');
+
   return `
   <div class="si-lab">L’échéancier du promoteur</div>
   <div class="fgrid">
@@ -2110,6 +2300,23 @@ function reglagesEcheancier(p) {
       <input id="s-promoteur" type="number" step="5" min="0" max="60"
              value="${E.promoteur || 0}"></div>
   </div>
+
+  <div class="si-lab">Comment se paie le reste</div>
+  <div class="seg" id="s-mode">${modes.map(m =>
+    '<button data-mode="' + m[0] + '" class="'
+    + (E.mode === m[0] ? 'on' : '') + '">' + m[1] + '</button>').join('')}</div>
+  ${E.mode === 'lineaire' ? `
+    <div class="fgrid" style="margin-top:14px">
+      <div class="f"><label>Nombre de versements</label>
+        <input id="s-tranches" type="number" step="1" min="1" max="24"
+               value="${E.tranches || 4}"></div>
+    </div>` : ''}
+  ${E.mode === 'sur-mesure' ? `
+    <div class="ech-liste">${lignesSurMesure
+      || '<p class="dim si-note">Aucune échéance : ajoutez-en une.</p>'}</div>
+    <button type="button" class="ech-plus" id="s-ech-plus">+ ajouter une
+      échéance</button>` : ''}
+
   <label class="coche"><input type="checkbox" id="s-indexation"${
     E.indexation ? ' checked' : ''}> Indexation du solde à ma charge</label>`;
 }
@@ -2349,6 +2556,56 @@ async function simulateur(zone, p) {
   if (idx) idx.onchange = () => { E.indexation = idx.checked;
                                   resultats(zone, p); };
 
+  // Changer de mode redessine le formulaire (les champs ne sont pas les
+  // memes) ; changer un chiffre ne redessine que les resultats, pour ne pas
+  // perdre le curseur en pleine frappe.
+  zone.querySelectorAll('#s-mode button').forEach(b => {
+    b.onclick = () => {
+      E.mode = b.dataset.mode;
+      if (E.mode === 'sur-mesure' && !(E.echeances || []).length) {
+        const c = conditionsCourantes(p);
+        const total = Math.max(0, 100 - c.signature - c.retenue);
+        E.echeances = [{pct: Math.round(total / 2),
+                        mois: Math.round(moisAvantSolde(p, c) / 2),
+                        libelle: 'Versement intermédiaire'}];
+      }
+      refaire();
+    };
+  });
+  const tr = $('#s-tranches', zone);
+  if (tr) tr.oninput = () => {
+    E.tranches = Math.max(1, Math.min(24, parseInt(tr.value, 10) || 1));
+    resultats(zone, p);
+  };
+  const plus = $('#s-ech-plus', zone);
+  if (plus) plus.onclick = () => {
+    const c = conditionsCourantes(p);
+    E.echeances = (E.echeances || []).concat([{
+      pct: 10, mois: Math.round(moisAvantSolde(p, c) / 2),
+      libelle: 'Versement intermédiaire'}]);
+    refaire();
+  };
+  zone.querySelectorAll('.ech-ligne').forEach(ligne => {
+    const i = +ligne.dataset.i;
+    const maj = () => {
+      const e = E.echeances[i];
+      if (!e) return;
+      e.libelle = $('.ech-lib', ligne).value;
+      e.pct = Math.max(0, parseFloat($('.ech-pct', ligne).value) || 0);
+      e.mois = Math.max(0, parseInt($('.ech-mois', ligne).value, 10) || 0);
+      resultats(zone, p);
+    };
+    ['.ech-lib', '.ech-pct', '.ech-mois'].forEach(sel => {
+      const champ = $(sel, ligne);
+      if (champ) champ.oninput = maj;
+    });
+    const moins = $('.ech-moins', ligne);
+    if (moins) moins.onclick = () => {
+      E.echeances.splice(i, 1);
+      refaire();
+    };
+  });
+
   ['avocat', 'agence', 'courtier'].forEach(nom => {
     $('#s-' + nom, zone).oninput = () => {
       E.frais = {avocat: $('#s-avocat', zone).value,
@@ -2380,9 +2637,11 @@ function resultats(zone, p) {
     <div class="reponse">
       <p class="rep-phrase">Vous sortez <b>${shek(AG.immediat)}</b>${
         eur(AG.immediat) ? ' (' + eur(AG.immediat) + ')' : ''
-        } le premier mois, puis <b>${shek(AG.aTrouver)}</b>${
-        eur(AG.aTrouver) ? ' (' + eur(AG.aTrouver) + ')' : ''
-        } ${AG.c.jours} jours avant la livraison — et
+        } le premier mois${AG.aTrouver
+        ? ', puis <b>' + shek(AG.aTrouver) + '</b>'
+          + (eur(AG.aTrouver) ? ' (' + eur(AG.aTrouver) + ')' : '')
+          + ' ' + AG.c.jours + ' jours avant la livraison'
+        : ' — le crédit couvre ensuite tout le solde'} — et
         <b>${shek(mensualite)} par mois</b>${
         eur(mensualite) ? ' (' + eur(mensualite) + ')' : ''
         } pendant ${E.duree} ans, une fois le crédit en place.</p>
@@ -2819,6 +3078,19 @@ if (FTOG && FPAN) FTOG.onclick = () => {
   if (open) FPAN.removeAttribute('hidden'); else FPAN.setAttribute('hidden', '');
   FTOG.classList.toggle('open', open);
 };
+/* Remonter en haut.
+
+   Le bouton n'apparait qu'une fois qu'on a vraiment descendu — sinon il
+   encombre un premier ecran ou il ne sert a rien. Il emmene aussi au
+   formulaire quand on clique longtemps ? Non : un bouton fait une chose. */
+const HAUT = document.getElementById('remonter');
+if (HAUT) {
+  const voir = () => { HAUT.hidden = (window.scrollY || 0) < 700; };
+  addEventListener('scroll', voir, {passive: true});
+  voir();
+  HAUT.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
 document.querySelectorAll('.theme button').forEach(b => {
   b.onclick = () => theme(b.dataset.t);
 });
