@@ -957,6 +957,37 @@ table.ag th{width:64%}
  .langues a{padding:6px 12px;font-size:12px}
 }
 
+
+/* Le type d'appartement, a la suite des nombres de pieces : deux questions
+   differentes, un seul geste pour choisir. Le trait les separe sans les
+   couper. */
+.pastilles-sep{display:inline-block;width:1px;align-self:stretch;
+ background:var(--trait);margin:2px 4px}
+.pastilles button[data-type]{padding:0 18px}
+.pastilles button[data-type]::after{content:""}
+@media(max-width:600px){
+ .pastilles-sep{width:100%;height:1px;margin:4px 0}
+}
+
+
+/* ================= le bloc de recherche, rempli ==========================
+   Les deux questions qu'un acheteur pose en premier — ou, et combien de
+   pieces — sont posees sur le bloc, sans rien deplier. Cachees derriere
+   « Affiner ma recherche », elles laissaient une carte a moitie vide, et
+   demandaient un clic pour exister. */
+.ligne-pieces{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+ padding:0 4px 12px}
+.ligne-pieces .rac-lab{margin-right:2px}
+.ligne-pieces .pastilles{gap:7px}
+.ligne-pieces .pastilles button{height:42px;min-width:46px;padding:0 14px;
+ font-size:14.5px}
+@media(max-width:900px){
+ .ligne-pieces{gap:7px;padding-bottom:10px}
+ .ligne-pieces .rac-lab{width:100%;margin-bottom:2px}
+ .ligne-pieces .pastilles button{height:40px;min-width:42px;padding:0 12px;
+  font-size:14px}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
