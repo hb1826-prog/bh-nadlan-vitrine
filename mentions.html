@@ -581,6 +581,27 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
  text-transform:uppercase;color:var(--gris)}
 .ville-reperes dd{margin:4px 0 0;font-size:14.5px;color:var(--encre);
  font-weight:600;line-height:1.45}
+/* La photo de la ville. Partout ailleurs sur le site une tuile porte une
+   image ; les pages de ville n'avaient que du texte, alors que ce sont elles
+   qui recoivent les visiteurs venus de Google. La photo situe le lieu — elle
+   ne remplace jamais le rendu d'un programme. Pas de photo -> la grille
+   revient a deux colonnes et rien ne bouge. */
+.ville-bloc.avec-photo{grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr)
+ minmax(220px,.9fr)}
+.ville-photo{margin:0;position:relative;border-radius:var(--r);overflow:hidden;
+ background:var(--fond-2);aspect-ratio:4/3}
+.ville-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.ville-banniere{margin:14px 0 0;position:relative;border-radius:var(--r-lg);
+ overflow:hidden;aspect-ratio:21/9;background:var(--fond-2);
+ border:1px solid var(--trait)}
+.ville-banniere img{width:100%;height:100%;object-fit:cover;display:block}
+/* Certains auteurs Wikimedia signent en hebreu : le credit est isole,
+   sinon un nom en hebreu retournerait la ligne autour de lui. */
+.ville-credit{unicode-bidi:isolate;position:absolute;right:0;bottom:0;padding:3px 8px;
+ font-size:10.5px;line-height:1.4;color:#fff;background:rgba(0,0,0,.42);
+ border-top-left-radius:6px;max-width:100%;overflow:hidden;
+ text-overflow:ellipsis;white-space:nowrap}
+.ville-credit a{color:#fff;text-decoration:underline}
 .ville-tete{padding:22px 0 6px}
 .ville-tete h1{font-size:30px;font-weight:750;line-height:1.2}
 .ville-tete .sub{margin:8px 0 0;color:var(--gris);font-size:15.5px}
@@ -648,7 +669,10 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 @media(max-width:980px){
  .fiche-tete{grid-template-columns:1fr;gap:18px}
  .offre-in{position:static;box-shadow:var(--ombre)}
- .ville-bloc{grid-template-columns:1fr;gap:20px;padding:22px 18px}
+ .ville-bloc,.ville-bloc.avec-photo{grid-template-columns:1fr;gap:20px;
+  padding:22px 18px}
+ .ville-photo{aspect-ratio:16/9}
+ .ville-banniere{aspect-ratio:16/9;border-radius:var(--r)}
 }
 @media(max-width:900px){
  .galerie .grand{aspect-ratio:4/3;border-radius:var(--r)}
