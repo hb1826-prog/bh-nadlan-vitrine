@@ -17,12 +17,35 @@
    une vitrine.
    ============================================================ */
 
+/* La police de la marque. Servie en woff2 (110 Ko au lieu de 351) parce que
+   cette page s'ouvre depuis un lien WhatsApp, souvent en 4G : le poids se paie
+   en secondes d'attente avant le premier ecran.
+
+   Rubik est VARIABLE — un seul fichier porte les graisses de 300 a 900, d'ou
+   la plage dans `font-weight`. Sans elle le navigateur figerait une graisse
+   unique et tous les titres sortiraient maigres.
+
+   Avant, aucune police n'etait declaree : chaque telephone affichait la sienne,
+   et le site n'avait pas deux fois le meme visage. */
+@font-face{
+ font-family:'Rubik';
+ src:url('rubik.woff2') format('woff2');
+ font-weight:300 900;
+ font-style:normal;
+ font-display:swap;
+}
+
 :root{
  --or:#c9a227; --or-fonce:#a07d15; --or-clair:#f6efd8; --or-trait:#e8dcb4;
  --encre:#0f172a; --encre-2:#334155; --gris:#64748b; --gris-clair:#94a3b8;
  --fond:#ffffff; --fond-2:#f7f8fa; --carte:#ffffff;
  --trait:#e5e8ee; --trait-fin:#eef0f4;
  --vert:#0f7b46; --vert-fond:#e8f6ee;
+ /* Le tekhelet, le bleu du drapeau : la SEULE couleur d'action. L'or reste
+    celle de la marque et des badges, mais il ne peut pas porter un bouton
+    lisible - 2,4:1 sur blanc - alors que le tekhelet tient 9,3:1 en blanc
+    sur bleu. Chacun son metier : l'or se regarde, le bleu se clique. */
+ --action:#0038b8; --action-vive:#2e63e8; --action-lavis:#eef3ff;
  --r:12px; --r-lg:18px; --r-xl:26px;
  --ombre:0 1px 2px rgba(15,23,42,.05);
  --ombre-2:0 4px 14px -4px rgba(15,23,42,.12),0 2px 5px -2px rgba(15,23,42,.06);
@@ -35,6 +58,7 @@
  --fond:#0c1017; --fond-2:#11161f; --carte:#151b25;
  --trait:#232c39; --trait-fin:#1b222c;
  --vert:#4ade80; --vert-fond:#0d2018;
+ --action:#7ba2ff; --action-vive:#9dbaff; --action-lavis:#111a2e;
  --ombre:0 1px 2px rgba(0,0,0,.5);
  --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
  --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
@@ -45,6 +69,7 @@
  --fond:#0c1017; --fond-2:#11161f; --carte:#151b25;
  --trait:#232c39; --trait-fin:#1b222c;
  --vert:#4ade80; --vert-fond:#0d2018;
+ --action:#7ba2ff; --action-vive:#9dbaff; --action-lavis:#111a2e;
  --ombre:0 1px 2px rgba(0,0,0,.5);
  --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
  --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
@@ -52,7 +77,7 @@
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--fond);color:var(--encre);
+body{font-family:'Rubik',system-ui,-apple-system,'Segoe UI',sans-serif;margin:0;background:var(--fond);color:var(--encre);
  font:16px/1.5 Inter,"Segoe UI Variable Text","Segoe UI",system-ui,
       -apple-system,"Helvetica Neue",sans-serif;
  -webkit-font-smoothing:antialiased}
@@ -146,7 +171,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .chercher{background:var(--or);color:#1a1405;border:0;border-radius:var(--r);
  padding:0 26px;height:48px;font-size:15.5px;font-weight:700;cursor:pointer;
  display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.chercher:hover{background:var(--or-fonce);color:#fff}
+.chercher:hover{background:var(--or-fonce);color:#1a1405}
 
 /* la promesse, en tete de banniere */
 .promesse{display:inline-block;background:var(--or);color:#1a1405;
@@ -1025,12 +1050,7 @@ table.ag th{width:64%}
 <a href="index.html" class=marque><svg viewBox="0 0 152 64" height="40" role="img"
  aria-label="BH" xmlns="http://www.w3.org/2000/svg">
   <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
-  <g fill="#c9a227">
-    <rect x="14" y="30" width="8.5" height="16" rx="2"/>
-    <rect x="25.8" y="19" width="8.5" height="27" rx="2"/>
-    <rect x="37.6" y="25" width="8.5" height="21" rx="2"/>
-    <rect x="12" y="49" width="36" height="3.4" rx="1.7"/>
-  </g>
+  <g transform="translate(13.25 12) scale(0.5)" fill="#c9a227"><path d="M5 76 V32 L19 22 V76 Z"/><path d="M25 76 V12 L42 0 V76 Z"/><path d="M48 76 V30 L62 40 V76 Z"/><rect x="0" y="75.5" width="67" height="4.5" rx="2.2"/></g>
   <text x="74" y="47" font-family="Helvetica,Arial,sans-serif" font-size="40"
         font-weight="800" letter-spacing="-1.5" fill="currentColor">BH</text>
 </svg></a>
