@@ -1111,6 +1111,46 @@ table.ag th{width:64%}
  .ligne-pieces .pastilles button{height:40px;min-width:42px;padding:0 12px;
   font-size:14px}
 }
+
+/* ---------------- « Être rappelé », sur place
+
+   Hillel (09/09/2026) : le bouton ne doit pas emmener au bas de la page, mais
+   ouvrir une petite fenêtre juste au-dessus de lui. Chaque pas entre l'envie
+   et l'envoi coûte des contacts, et faire perdre au visiteur ce qu'il était en
+   train de regarder est le plus cher de tous.
+
+   Deux champs seulement — un prénom, un numéro. Le bloc complet reste en bas
+   de page pour qui veut en dire plus : il n'est pas remplacé, il est doublé
+   par un chemin plus court. */
+.rappel{position:fixed;z-index:60;width:min(320px,calc(100vw - 20px));
+  background:var(--surface);border:1px solid var(--trait);border-radius:14px;
+  padding:16px 16px 12px;box-shadow:0 18px 44px rgba(0,0,0,.22);
+  animation:rappel-entre .16s ease-out}
+@keyframes rappel-entre{from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}}
+.rappel b{display:block;font-size:15px;margin-bottom:3px}
+.rappel p{margin:0 0 10px;font-size:12.5px;color:var(--muted);line-height:1.45}
+.rappel label{display:block;font-size:12px;font-weight:600;margin:9px 0 4px}
+.rappel input{width:100%;padding:11px;border:1px solid var(--trait);
+  border-radius:9px;font:inherit;font-size:16px;background:var(--bg)}
+.rappel input:focus{outline:2px solid var(--action);outline-offset:1px;
+  border-color:var(--action)}
+.rappel-ok{width:100%;margin-top:13px;padding:12px;border:0;border-radius:10px;
+  background:var(--action);color:#fff;font:inherit;font-weight:700;
+  font-size:15px;cursor:pointer}
+.rappel-ok:disabled{opacity:.6;cursor:default}
+.rappel-note{margin:9px 0 0;font-size:11.5px;color:var(--muted)}
+.rappel-note.manque{color:var(--alerte,#b91c1c);font-weight:600}
+.rappel-x{position:absolute;top:6px;right:8px;width:30px;height:30px;border:0;
+  background:none;color:var(--muted);font-size:20px;line-height:1;
+  cursor:pointer;border-radius:8px}
+.rappel-x:hover{background:var(--or-clair)}
+.rappel-ok-fait{text-align:center;padding:6px 0}
+.rappel-ok-fait span{display:inline-flex;align-items:center;
+  justify-content:center;width:38px;height:38px;border-radius:50%;
+  background:var(--action);color:#fff;font-size:20px;margin-bottom:8px}
+/* Le piege a robots : present dans le DOM, invisible pour un humain. */
+.rappel .pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 </style>
 </head><body>
 
@@ -1126,12 +1166,12 @@ table.ag th{width:64%}
   <nav class=nav>
     <a href="#/">New developments</a>
     <a href="#/simulateur">Purchase simulator</a>
-    <a href="#/" onclick="versContact();return false">Contact us</a>
+    <a href="#/" onclick="versContact(this);return false">Contact us</a>
   </nav>
   <div class=grow></div>
   <div class=langues><a href='../' hreflang='fr' lang='fr' title='Français'>FR</a><a href='../en/' hreflang='en' lang='en' class=on title='English'>EN</a><a href='../es/' hreflang='es' lang='es' title='Español'>ES</a><a href='../pt/' hreflang='pt' lang='pt' title='Português'>PT</a><a href='../he/' hreflang='he' lang='he' title='עברית'>IL</a></div>
   <div class=theme><button data-t='light' title='Clair'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Comme le système'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Sombre'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
-  <button class="cta" type="button" onclick="versContact()">Request a call</button>
+  <button class="cta" type="button" onclick="versContact(this)">Request a call</button>
 </div></header>
 
 <section class=hero id=hero>
@@ -1246,7 +1286,7 @@ table.ag th{width:64%}
     <div class=appelez>
       <a class=cta href="tel:972585678926">Appeler
         +972(0)58.56789.26</a>
-      <button class="cta or" type=button onclick="versContact()">Être rappelé
+      <button class="cta or" type=button onclick="versContact(this)">Être rappelé
         aujourd'hui</button>
     </div>
   </section>
@@ -1258,7 +1298,7 @@ table.ag th{width:64%}
 </button>
 
 <div class=barre-mobile>
-  <button type=button onclick="versContact()">Request a call</button>
+  <button type=button onclick="versContact(this)">Request a call</button>
   <a class=wa href="https://wa.me/972585678926">WhatsApp</a>
 </div>
 
@@ -1297,7 +1337,7 @@ table.ag th{width:64%}
       <b>Buy</b>
       <a href="#/">All developments</a>
       <a href="#/simulateur">Purchase simulator</a>
-      <a href="#/" onclick="versContact();return false">Request a call</a>
+      <a href="#/" onclick="versContact(this);return false">Request a call</a>
     </div>
     <div class=pied-col id=pied-villes><b>Where to buy</b></div>
     <div class=pied-col>
@@ -1748,7 +1788,7 @@ document.addEventListener('click', e => {
 /* La carte d'appel, au milieu des annonces : ce que le site ne montre pas. */
 function appel() {
   return `
-    <button class="tile appel" type="button" onclick="versContact()">
+    <button class="tile appel" type="button" onclick="versContact(this)">
       <span class="pastille">Hors ligne</span>
       <b>Tout n'est pas publié ici</b>
       <span>Certains programmes ne sont pas affichés — prix négociés, lots
@@ -1948,7 +1988,7 @@ function offre(p) {
       '<div><dt>' + l[0] + '</dt><dd>' + esc(l[1]) + '</dd></div>').join('')}</dl>
     ${vues(p.cle)}${demande(p.ville)}
     <div class="offre-actions">
-      <button class="b-or" type="button" onclick="versContact()">${T('Recevoir les prix réels et les lots disponibles')}</button>
+      <button class="b-or" type="button" onclick="versContact(this)">${T('Recevoir les prix réels et les lots disponibles')}</button>
       <div class="offre-duo">
         <a class="b-wa" href="https://wa.me/${DONNEES.wa}?text=${bonjour}"
            >WhatsApp</a>
@@ -2699,9 +2739,18 @@ function chiffresAgenda(p, f, fr) {
     // bonne nouvelle.
     creditUtile: Math.min(part(plafond),
                           part(Math.max(0, 100 - dejaPaye - c.retenue))),
-    // Ce qu'on sort vraiment le premier mois : le versement, l'avocat, et la
-    // taxe d'acquisition qui tombe soixante jours plus tard.
-    immediat: signature + Math.round(fr.avocat) + Math.round(f.taxe),
+    // Ce qu'on sort vraiment le premier mois : le versement, l'avocat, les
+    // frais d'accompagnement, et la taxe d'acquisition qui tombe soixante
+    // jours plus tard.
+    //
+    // Les frais d'accompagnement (« agence » dans le chiffrage, pour des
+    // raisons historiques) se paient LE JOUR DE LA SIGNATURE. Regle posee par
+    // Hillel le 09/09/2026 et valable dans tout calendrier de paiement : ce
+    // que l'acheteur regarde en premier est ce qu'il sort ce jour-la, et une
+    // ligne payable alors mais absente du calendrier lui donne un chiffre
+    // faux au moment ou il decide.
+    immediat: signature + Math.round(fr.avocat) + Math.round(fr.agence || 0)
+              + Math.round(f.taxe),
     solde: part(soldePct),
     soldePct: soldePct,
     // Depasser 100 % est une erreur de saisie : on le dit plutot que
@@ -2731,8 +2780,11 @@ function agendaHTML(p, f, fr) {
       'Souvent un chèque non encaissé, imputé sur le premier versement.',
       shek(res[0]) + ' à ' + shek(res[1])),
     ligne(T('Le jour de la signature'),
-      c.signature + ' % du prix, plus les honoraires d’avocat.',
-      prixDouble(signature + Math.round(fr.avocat)), true),
+      c.signature + ' % du prix, plus les honoraires d’avocat'
+      + (Math.round(fr.agence || 0) ? ' et les frais d’accompagnement' : '')
+      + '.',
+      prixDouble(signature + Math.round(fr.avocat)
+                 + Math.round(fr.agence || 0)), true),
     ligneSiUtile('Dans les ' + jt + ' jours suivant la signature',
       'Taxe d’acquisition (mas rekhicha), due à l’État.',
       prixDouble(Math.round(f.taxe)), Math.round(f.taxe), true),
@@ -2775,6 +2827,10 @@ function agendaHTML(p, f, fr) {
       <b>${prixDouble(immediat, 'eu big')}</b>
       <em>${T('Versement à la signature')} ${shek(signature)}
         + ${T('honoraires d’avocat')} ${shek(Math.round(fr.avocat))}${
+        Math.round(fr.agence || 0)
+          ? ' + ' + T('frais d’accompagnement') + ' '
+            + shek(Math.round(fr.agence))
+          : ''}${
         Math.round(f.taxe)
           ? ' + ' + T('taxe d’acquisition') + ' ' + shek(Math.round(f.taxe))
           : ''}</em></div>
@@ -3459,6 +3515,40 @@ const OBJETS = {
   liste: 'Demande : une sélection de biens',
 };
 
+/* L'envoi d'un contact au guichet. Ecrit UNE fois.
+
+   Deux formulaires s'en servent : le bloc en bas de page, et la petite
+   fenetre qui s'ouvre au-dessus de chaque bouton « Etre rappele ». Le jour ou
+   le guichet change, ou qu'un champ s'ajoute, il n'y a qu'un endroit a
+   reprendre — deux copies auraient diverge des le premier correctif, et un
+   lead perdu ne se signale jamais.
+
+   Leve si le guichet refuse : l'appelant retombe alors sur WhatsApp, qui est
+   le filet et n'est jamais casse. */
+async function envoyerLead(champs, p, I) {
+  const r = await fetch(DONNEES.guichet + '/lead', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      prenom: champs.prenom || '', nom: champs.nom || '',
+      tel: champs.tel || '', mail: champs.mail || '',
+      mot: [OBJETS[I], champs.mot].filter(Boolean).join(' — '),
+      societe: champs.societe || '',
+      projet: p ? p.nom + ' — ' + p.ville : '',
+      ville: p ? p.ville : (F.ville || ''),
+      budget: F.budget || '', page: I,
+      // De qui vient ce contact. Vide sur l'annuaire de Hillel, la cle du
+      // partenaire sur sa page en marque blanche — c'est elle qui fait que le
+      // lead lui revient dans le CRM. Elle est posee a la fabrication, jamais
+      // saisie ici, et le guichet la verifie contre les fiches reelles avant
+      // de s'en servir.
+      partenaire: DONNEES.partenaire || '',
+      t: Date.now() - DEPART
+    })
+  });
+  if (!r.ok) throw new Error('refus ' + r.status);
+  return true;
+}
+
 function wireContact(p, intention) {
   const I = intention || (p ? 'fiche' : 'liste');
   const val = id => (($('#' + id) || {}).value || '').trim();
@@ -3501,26 +3591,10 @@ function wireContact(p, intention) {
     envoi.disabled = true;
     envoi.textContent = 'Envoi…';
     try {
-      const r = await fetch(DONNEES.guichet + '/lead', {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          prenom: val('c-prenom'), nom: val('c-nom'), tel: val('c-tel'),
-          mail: val('c-mail'),
-          mot: [OBJETS[I], val('c-mot')].filter(Boolean).join(' — '),
-          societe: val('c-societe'),
-          projet: p ? p.nom + ' — ' + p.ville : '',
-          ville: p ? p.ville : (F.ville || ''),
-          budget: F.budget || '', page: I,
-          // De qui vient ce contact. Vide sur l'annuaire de Hillel, la cle
-          // du partenaire sur sa page en marque blanche — c'est elle qui
-          // fait que le lead lui revient dans le CRM. Elle est posee a la
-          // fabrication, jamais saisie ici, et le guichet la verifie contre
-          // les fiches reelles avant de s'en servir.
-          partenaire: DONNEES.partenaire || '',
-          t: Date.now() - DEPART
-        })
-      });
-      if (!r.ok) throw new Error('refus ' + r.status);
+      await envoyerLead({
+        prenom: val('c-prenom'), nom: val('c-nom'), tel: val('c-tel'),
+        mail: val('c-mail'), mot: val('c-mot'), societe: val('c-societe'),
+      }, p, I);
       merci(p, I);
     } catch (e) {
       envoi.disabled = false;
@@ -3565,7 +3639,159 @@ function merci(p, I) {
    disparaissait pendant ce rendu, et il fallait cliquer une seconde fois. On
    ne passe donc plus par l'ancre : on s'assure qu'un formulaire existe, puis
    on y descend et on met le curseur dans le premier champ. */
-function versContact() {
+/* « Etre rappele » ouvre une fenetre SUR PLACE, pas un voyage en bas de page.
+
+   Hillel, le 09/09/2026 : « j'ai besoin que ce bouton ouvre une petite fenetre
+   ou, la-bas, on met le numero de telephone et le prenom. Pas que ca m'emmene
+   tout en bas de la page. Je veux qu'il reste toujours la ou il y a marque
+   "etre rappele". »
+
+   La raison est la meme que celle qui a fait construire le guichet : chaque
+   pas supplementaire entre l'envie et l'envoi coute des contacts. Emmener
+   quelqu'un a l'autre bout de la page lui fait perdre ce qu'il regardait, et
+   lui laisse une occasion de refermer l'onglet.
+
+   Deux champs, pas six : un prenom et un numero. Le bloc complet reste en bas
+   de page pour qui veut en dire plus — il n'est pas remplace, il est double
+   par un chemin plus court. */
+let POP = null;
+
+function fermerRappel() {
+  if (POP) { POP.remove(); POP = null; }
+}
+
+function versContact(bouton) {
+  // Sans bouton (un vieil appel, ou le clavier), on retombe sur l'ancien
+  // comportement : mieux vaut descendre au formulaire que ne rien faire.
+  const ancre = bouton || (window.event && window.event.currentTarget);
+  if (!ancre || !ancre.getBoundingClientRect) return versContactBas();
+  if (POP && POP.dataset.pour === ancreId(ancre)) return fermerRappel();
+  fermerRappel();
+  ouvrirRappel(ancre);
+}
+
+let N_ANCRE = 0;
+function ancreId(el) {
+  if (!el.dataset.rappelId) el.dataset.rappelId = 'r' + (++N_ANCRE);
+  return el.dataset.rappelId;
+}
+
+function ouvrirRappel(ancre) {
+  const p = projetCourant();
+  const I = intentionCourante();
+  POP = document.createElement('div');
+  POP.className = 'rappel';
+  POP.dataset.pour = ancreId(ancre);
+  POP.innerHTML = `
+    <button class="rappel-x" type="button" aria-label="Fermer">×</button>
+    <b>${T('Être rappelé')}</b>
+    <p>Laissez votre prénom et votre numéro : on vous rappelle
+      <b>aujourd’hui</b>.</p>
+    <label for="r-prenom">${T('Prénom')}</label>
+    <input id="r-prenom" autocomplete="given-name" placeholder="Votre prénom">
+    <label for="r-tel">${T('Téléphone')}</label>
+    <input id="r-tel" type="tel" autocomplete="tel" placeholder="+33 6 …">
+    <div class="pot"><label>Société</label>
+      <input id="r-societe" tabindex="-1" autocomplete="off"></div>
+    <button class="rappel-ok" type="button">${T('Être rappelé')}</button>
+    <p class="rappel-note" id="r-note">Vos coordonnées ne sont ni revendues,
+      ni transmises à un promoteur.</p>`;
+  document.body.appendChild(POP);
+  placerRappel(ancre);
+
+  const note = POP.querySelector('#r-note');
+  const tel = POP.querySelector('#r-tel');
+  POP.querySelector('.rappel-x').onclick = fermerRappel;
+  POP.querySelector('.rappel-ok').onclick = async (e) => {
+    const bouton = e.currentTarget;
+    if (!tel.value.trim()) {
+      note.textContent = 'Il nous faut votre téléphone pour vous rappeler.';
+      note.classList.add('manque');
+      tel.focus();
+      return;
+    }
+    const etiquette = bouton.textContent;
+    bouton.disabled = true;
+    bouton.textContent = 'Envoi…';
+    try {
+      await envoyerLead({
+        prenom: POP.querySelector('#r-prenom').value.trim(),
+        tel: tel.value.trim(),
+        societe: POP.querySelector('#r-societe').value.trim(),
+      }, p, I);
+      POP.innerHTML = `<div class="rappel-ok-fait"><span>✓</span>
+        <b>C’est noté.</b>
+        <p>${DONNEES.marque ? 'Nous vous rappelons' : 'Hillel vous rappelle'}
+          aujourd’hui au ${esc(tel.value.trim())}.</p></div>`;
+      setTimeout(fermerRappel, 4000);
+    } catch (err) {
+      // Le guichet ne repond pas : on ne perd pas le contact, on bascule sur
+      // WhatsApp — exactement comme le formulaire du bas.
+      bouton.disabled = false;
+      bouton.textContent = etiquette;
+      const lignes = [OBJETS[I]];
+      const pr = POP.querySelector('#r-prenom').value.trim();
+      if (pr) lignes.push('Nom : ' + pr);
+      lignes.push('Téléphone : ' + tel.value.trim());
+      if (p) lignes.push('Programme : ' + p.nom + ' (' + p.ville + ')');
+      window.open('https://wa.me/' + DONNEES.wa + '?text='
+        + encodeURIComponent(lignes.join('\n')), '_blank');
+    }
+  };
+  setTimeout(() => POP.querySelector('#r-prenom').focus(), 30);
+}
+
+/* Placer la fenetre au-dessus du bouton, et la ramener dans l'ecran.
+
+   Sur un telephone tenu en portrait — la facon dont ces pages sont ouvertes,
+   puisqu'elles arrivent par WhatsApp — un panneau ancre a un bouton pres du
+   bord sortirait de l'ecran. On le recadre donc toujours, et on le pose
+   AU-DESSOUS quand il n'y a pas la place au-dessus. */
+function placerRappel(ancre) {
+  if (!POP) return;
+  const r = ancre.getBoundingClientRect();
+  const marge = 10;
+  const l = POP.offsetWidth;
+  const h = POP.offsetHeight;
+  let x = r.left + r.width / 2 - l / 2;
+  x = Math.max(marge, Math.min(x, window.innerWidth - l - marge));
+  let y = r.top - h - 8;
+  if (y < marge) y = Math.min(r.bottom + 8, window.innerHeight - h - marge);
+  POP.style.left = Math.round(x) + 'px';
+  POP.style.top = Math.round(Math.max(marge, y)) + 'px';
+}
+
+/* Un clic ailleurs, la touche Echap, un defilement : la fenetre se referme.
+   Une petite fenetre qui reste collee a l'ecran pendant qu'on fait autre
+   chose est percue comme une publicite. */
+document.addEventListener('click', (e) => {
+  if (!POP) return;
+  if (POP.contains(e.target)) return;
+  if (e.target.closest && e.target.closest('[data-rappel-id]')) return;
+  fermerRappel();
+}, true);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') fermerRappel();
+});
+window.addEventListener('resize', fermerRappel);
+window.addEventListener('scroll', fermerRappel, true);
+
+/* De quel programme parle-t-on quand on clique ? De celui qu'on regarde. */
+function projetCourant() {
+  const cle = location.hash.replace(/^#\/?/, '');
+  return DONNEES.projets.find(x => x.cle === cle) || null;
+}
+
+function intentionCourante() {
+  const cle = location.hash.replace(/^#\/?/, '');
+  if (cle === 'simulateur') return 'simulateur';
+  if (cle.indexOf('ville/') === 0) return 'ville';
+  return projetCourant() ? 'fiche' : 'liste';
+}
+
+/* Descendre au formulaire complet. C'est ce que fait le bouton du bas, et le
+   repli quand on ne sait pas a quel bouton s'accrocher. */
+function versContactBas() {
   const aller = () => {
     const zone = document.getElementById('contact');
     if (!zone) return;

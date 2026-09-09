@@ -1102,6 +1102,46 @@ table.ag th{width:64%}
   font-size:14px}
 }
 
+/* ---------------- « Être rappelé », sur place
+
+   Hillel (09/09/2026) : le bouton ne doit pas emmener au bas de la page, mais
+   ouvrir une petite fenêtre juste au-dessus de lui. Chaque pas entre l'envie
+   et l'envoi coûte des contacts, et faire perdre au visiteur ce qu'il était en
+   train de regarder est le plus cher de tous.
+
+   Deux champs seulement — un prénom, un numéro. Le bloc complet reste en bas
+   de page pour qui veut en dire plus : il n'est pas remplacé, il est doublé
+   par un chemin plus court. */
+.rappel{position:fixed;z-index:60;width:min(320px,calc(100vw - 20px));
+  background:var(--surface);border:1px solid var(--trait);border-radius:14px;
+  padding:16px 16px 12px;box-shadow:0 18px 44px rgba(0,0,0,.22);
+  animation:rappel-entre .16s ease-out}
+@keyframes rappel-entre{from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}}
+.rappel b{display:block;font-size:15px;margin-bottom:3px}
+.rappel p{margin:0 0 10px;font-size:12.5px;color:var(--muted);line-height:1.45}
+.rappel label{display:block;font-size:12px;font-weight:600;margin:9px 0 4px}
+.rappel input{width:100%;padding:11px;border:1px solid var(--trait);
+  border-radius:9px;font:inherit;font-size:16px;background:var(--bg)}
+.rappel input:focus{outline:2px solid var(--action);outline-offset:1px;
+  border-color:var(--action)}
+.rappel-ok{width:100%;margin-top:13px;padding:12px;border:0;border-radius:10px;
+  background:var(--action);color:#fff;font:inherit;font-weight:700;
+  font-size:15px;cursor:pointer}
+.rappel-ok:disabled{opacity:.6;cursor:default}
+.rappel-note{margin:9px 0 0;font-size:11.5px;color:var(--muted)}
+.rappel-note.manque{color:var(--alerte,#b91c1c);font-weight:600}
+.rappel-x{position:absolute;top:6px;right:8px;width:30px;height:30px;border:0;
+  background:none;color:var(--muted);font-size:20px;line-height:1;
+  cursor:pointer;border-radius:8px}
+.rappel-x:hover{background:var(--or-clair)}
+.rappel-ok-fait{text-align:center;padding:6px 0}
+.rappel-ok-fait span{display:inline-flex;align-items:center;
+  justify-content:center;width:38px;height:38px;border-radius:50%;
+  background:var(--action);color:#fff;font-size:20px;margin-bottom:8px}
+/* Le piege a robots : present dans le DOM, invisible pour un humain. */
+.rappel .pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
