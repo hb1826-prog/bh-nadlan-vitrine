@@ -1135,11 +1135,19 @@ table.ag th{width:64%}
   border:1px solid var(--trait,#E7E2D8);border-radius:14px;
   padding:16px 16px 12px;
   box-shadow:var(--ombre-3,0 18px 44px -12px rgba(15,23,42,.28));
-  animation:rappel-entre .16s ease-out}
-@keyframes rappel-entre{from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:none}}
-.rappel b{display:block;font-size:15px;margin-bottom:3px;
-  color:var(--encre,#0F172A)}
+  opacity:1;animation:rappel-entre .16s ease-out}
+/* L'animation ne touche QUE la position. Elle partait aussi de `opacity:0`,
+   et une fenetre dont la visibilite depend d'une animation est une fenetre
+   qu'on retrouve invisible des qu'elle ne joue pas — capture d'ecran, onglet
+   en arriere-plan, « animations reduites » dans les reglages du telephone.
+   On ne fait donc jamais dependre le fait de VOIR quelque chose du bon
+   deroulement d'une animation. */
+@keyframes rappel-entre{from{transform:translateY(6px)}
+  to{transform:none}}
+@media (prefers-reduced-motion:reduce){.rappel{animation:none}}
+.rappel-titre{display:block;font-size:15px;margin-bottom:3px;
+  color:var(--encre,#0F172A);font-weight:800}
+.rappel p b{color:var(--encre,#0F172A)}
 .rappel p{margin:0 0 10px;font-size:12.5px;color:var(--gris,#5A6172);
   line-height:1.45}
 .rappel label{display:block;font-size:12px;font-weight:600;margin:9px 0 4px;
@@ -3613,9 +3621,11 @@ function merci(p, I) {
    de page pour qui veut en dire plus — il n'est pas remplace, il est double
    par un chemin plus court. */
 let POP = null;
+let POP_ANCRE = null;
 
 function fermerRappel() {
   if (POP) { POP.remove(); POP = null; }
+  POP_ANCRE = null;
 }
 
 function versContact(bouton) {
@@ -3642,7 +3652,7 @@ function ouvrirRappel(ancre) {
   POP.dataset.pour = ancreId(ancre);
   POP.innerHTML = `
     <button class="rappel-x" type="button" aria-label="Fermer">×</button>
-    <b>${T('Être rappelé')}</b>
+    <b class="rappel-titre">${T('Être rappelé')}</b>
     <p>Laissez votre prénom et votre numéro : on vous rappelle
       <b>aujourd’hui</b>.</p>
     <label for="r-prenom">${T('Prénom')}</label>
@@ -3655,6 +3665,7 @@ function ouvrirRappel(ancre) {
     <p class="rappel-note" id="r-note">Vos coordonnées ne sont ni revendues,
       ni transmises à un promoteur.</p>`;
   document.body.appendChild(POP);
+  POP_ANCRE = ancre;
   placerRappel(ancre);
 
   const note = POP.querySelector('#r-note');
@@ -3678,7 +3689,7 @@ function ouvrirRappel(ancre) {
         societe: POP.querySelector('#r-societe').value.trim(),
       }, p, I);
       POP.innerHTML = `<div class="rappel-ok-fait"><span>✓</span>
-        <b>C’est noté.</b>
+        <b class="rappel-titre">C’est noté.</b>
         <p>${DONNEES.marque ? 'Nous vous rappelons' : 'Hillel vous rappelle'}
           aujourd’hui au ${esc(tel.value.trim())}.</p></div>`;
       setTimeout(fermerRappel, 4000);
@@ -3696,7 +3707,13 @@ function ouvrirRappel(ancre) {
         + encodeURIComponent(lignes.join('\n')), '_blank');
     }
   };
-  setTimeout(() => POP.querySelector('#r-prenom').focus(), 30);
+  // `preventScroll` : sans lui, la prise de focus fait defiler la page vers
+  // le champ, ce qui deplaçait la fenetre au moment meme ou elle s'ouvrait.
+  setTimeout(() => {
+    const champ = POP && POP.querySelector('#r-prenom');
+    if (champ) { try { champ.focus({preventScroll: true}); }
+                 catch (e) { champ.focus(); } }
+  }, 30);
 }
 
 /* Placer la fenetre au-dessus du bouton, et la ramener dans l'ecran.
@@ -3731,8 +3748,15 @@ document.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') fermerRappel();
 });
-window.addEventListener('resize', fermerRappel);
-window.addEventListener('scroll', fermerRappel, true);
+function suivreRappel() {
+  if (!POP || !POP_ANCRE) return;
+  const r = POP_ANCRE.getBoundingClientRect();
+  // Le bouton est sorti de l'ecran : la fenetre n'a plus d'ancre, elle part.
+  if (r.bottom < 0 || r.top > window.innerHeight) return fermerRappel();
+  placerRappel(POP_ANCRE);
+}
+window.addEventListener('resize', suivreRappel);
+window.addEventListener('scroll', suivreRappel, true);
 
 /* De quel programme parle-t-on quand on clique ? De celui qu'on regarde. */
 function projetCourant() {

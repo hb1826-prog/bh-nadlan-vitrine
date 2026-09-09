@@ -1125,11 +1125,19 @@ table.ag th{width:64%}
   border:1px solid var(--trait,#E7E2D8);border-radius:14px;
   padding:16px 16px 12px;
   box-shadow:var(--ombre-3,0 18px 44px -12px rgba(15,23,42,.28));
-  animation:rappel-entre .16s ease-out}
-@keyframes rappel-entre{from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:none}}
-.rappel b{display:block;font-size:15px;margin-bottom:3px;
-  color:var(--encre,#0F172A)}
+  opacity:1;animation:rappel-entre .16s ease-out}
+/* L'animation ne touche QUE la position. Elle partait aussi de `opacity:0`,
+   et une fenetre dont la visibilite depend d'une animation est une fenetre
+   qu'on retrouve invisible des qu'elle ne joue pas — capture d'ecran, onglet
+   en arriere-plan, « animations reduites » dans les reglages du telephone.
+   On ne fait donc jamais dependre le fait de VOIR quelque chose du bon
+   deroulement d'une animation. */
+@keyframes rappel-entre{from{transform:translateY(6px)}
+  to{transform:none}}
+@media (prefers-reduced-motion:reduce){.rappel{animation:none}}
+.rappel-titre{display:block;font-size:15px;margin-bottom:3px;
+  color:var(--encre,#0F172A);font-weight:800}
+.rappel p b{color:var(--encre,#0F172A)}
 .rappel p{margin:0 0 10px;font-size:12.5px;color:var(--gris,#5A6172);
   line-height:1.45}
 .rappel label{display:block;font-size:12px;font-weight:600;margin:9px 0 4px;
