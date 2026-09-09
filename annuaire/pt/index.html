@@ -428,30 +428,35 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .jauge .int{background:var(--gris-clair);opacity:.5}
 
 /* ==================== le tunnel du simulateur autonome ==================== */
-/* La jauge de progression du formulaire par etapes (budget -> profil ->
-   coordonnees). Pas de pourcentage ecrit : trois segments du meme bleu
-   tekhelet de la marque (`--action`), du plus clair au plus fonce a mesure
-   qu'on avance — jamais une nouvelle couleur, jamais un chiffre. */
+/* La jauge de progression du formulaire par etapes (prix -> profil ->
+   financement -> frais annexes -> coordonnees). Pas de pourcentage ecrit :
+   cinq segments du meme bleu tekhelet de la marque (`--action`), du plus
+   clair au plus fonce a mesure qu'on avance — jamais une nouvelle couleur,
+   jamais un chiffre. */
 .tunnel-jauge{display:flex;gap:6px;margin:0 0 22px}
 .tunnel-jauge .seg{flex:1;height:7px;border-radius:999px;
  background:var(--fond-2);border:1px solid var(--trait)}
 .tunnel-jauge .seg.fait{border-color:transparent;background:var(--action)}
-.tunnel-jauge .seg.fait:nth-child(1){opacity:.35}
-.tunnel-jauge .seg.fait:nth-child(2){opacity:.6}
-.tunnel-jauge .seg.fait:nth-child(3){opacity:.85}
-.tunnel-jauge .seg.fait:nth-child(4){opacity:1}
+.tunnel-jauge .seg.fait:nth-child(1){opacity:.3}
+.tunnel-jauge .seg.fait:nth-child(2){opacity:.48}
+.tunnel-jauge .seg.fait:nth-child(3){opacity:.66}
+.tunnel-jauge .seg.fait:nth-child(4){opacity:.84}
+.tunnel-jauge .seg.fait:nth-child(5){opacity:1}
 
-/* Les cartes de profil fiscal, cliquables, une phrase d'explication sous
-   chacune — jamais un menu deroulant nu pour une decision qui pese autant. */
+/* Les cartes de profil fiscal, cliquables. L'explication de chacune reste
+   repliee derriere un petit « + » (demande par Hillel le 10/09/2026) : la
+   liste tient sur moins de hauteur et le bouton Suivant reste visible sans
+   avoir a faire defiler. */
 .etape-carte{display:block;width:100%;text-align:left;cursor:pointer;
  background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
  padding:16px 18px;margin-bottom:10px}
 .etape-carte:hover{border-color:var(--gris-clair)}
 .etape-carte.on{border-color:var(--action);background:var(--fond-2)}
-.etape-carte b{display:block;font-size:15.5px;font-weight:750;
- margin-bottom:4px}
+.etape-carte b{display:block;font-size:15.5px;font-weight:750}
 .etape-carte span{display:block;font-size:13.5px;color:var(--gris);
- line-height:1.5}
+ line-height:1.5;margin-top:4px}
+.etape-carte .plus{color:var(--action);font-weight:700}
+.etape-carte .note{margin-top:8px}
 
 .etape-nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
 .etape-nav button{border:0;border-radius:999px;padding:14px 26px;
@@ -497,7 +502,19 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
   background:var(--encre);color:var(--fond);cursor:pointer}
  .barre-mobile .wa{background:#25d366;color:#052e16}
  body{padding-bottom:78px}
+ body.tunnel-plein{padding-bottom:0}
 }
+
+/* Le tunnel du simulateur, seul a l'ecran : plus rien qui puisse detourner
+   un tap pendant qu'on remplit les etapes — ni la barre fixe du bas (son
+   WhatsApp a ete appuye par erreur a la place de « Suivant », signale par
+   Hillel le 10/09/2026), ni le bouton « Etre rappele » ni les liens du
+   haut, ni le pied de page. Le logo reste : il ne gene jamais un tap et
+   c'est la seule sortie du tunnel. */
+body.tunnel-plein .barre-mobile{display:none}
+body.tunnel-plein .pub-top .nav{display:none}
+body.tunnel-plein .pub-top .cta{display:none}
+body.tunnel-plein .pub-foot{display:none}
 
 /* ============================== le contact ============================== */
 .contact{border:1px solid var(--or-trait);background:linear-gradient(
@@ -1463,9 +1480,17 @@ let TUNNEL = {
   prix: 2500000,
   comptant: false,
   ltv: 70,
+  // La duree du pret : `null` tant que le visiteur n'y touche pas, pour
+  // repartir de la duree la plus longue autorisee par le cadre choisi
+  // (voir `etapeFinancement`) plutot que d'une valeur figee ici.
+  duree: null,
   // Pas de profil par defaut : Hillel veut que ce soit un choix explicite,
   // pas une case deja cochee qu'on ne remarque pas.
   profil: null,
+  // Quelle carte de profil affiche son explication depliee (etape 2) — une
+  // seule a la fois, pour que la liste reste courte et le bouton Suivant
+  // visible sans avoir a faire defiler (demande par Hillel le 10/09/2026).
+  aideProfil: null,
   // Le cadre d'acquisition n'est pas une etape a part (decide le 09/09/2026,
   // question ouverte tranchee) : nom propre pre-coche, modifiable plus tard
   // dans le mini-site lui-meme.
@@ -3713,6 +3738,11 @@ async function etapeFinancement(zone) {
   const plafond = f.plafond || 75;
   if (!TUNNEL.comptant && TUNNEL.ltv > plafond) TUNNEL.ltv = plafond;
   const ltvs = (DONNEES.ltv || []).filter(v => v <= plafond);
+  // Meme regle que le simulateur classique : les durees offertes viennent du
+  // cadre d'acquisition (une societe n'emprunte pas sur trente ans), jamais
+  // d'une liste unique.
+  const durees = (DONNEES.durees_par_cadre || {})[TUNNEL.cadre] || DONNEES.durees || [10, 15, 20, 25, 30];
+  if (!TUNNEL.duree || !durees.includes(TUNNEL.duree)) TUNNEL.duree = durees[durees.length - 1];
   zone.innerHTML = `
     ${jaugeHTML(3)}
     <div class="si-lab">${T('Part financée par le prêt')}</div>
@@ -3729,6 +3759,12 @@ async function etapeFinancement(zone) {
       : esc(f.note_plafond || ('Votre situation permet de financer jusqu’à '
         + plafond + ' %.'))}</p>
 
+    ${TUNNEL.comptant ? '' : `
+    <div class="si-lab" style="margin-top:14px">${T('Durée du prêt')}</div>
+    <div class="seg">${durees.map(v =>
+      '<button type="button" data-duree="' + v + '" class="'
+      + (v === TUNNEL.duree ? 'on' : '') + '">' + v + ' ' + T('ans') + '</button>').join('')}</div>`}
+
     <div class="etape-nav">
       <button type="button" class="precedent" id="t-precedent">Précédent</button>
       <button type="button" class="suivant" id="t-suivant">Suivant</button>
@@ -3741,6 +3777,9 @@ async function etapeFinancement(zone) {
     b.onclick = () => {
       TUNNEL.comptant = false; TUNNEL.ltv = +b.dataset.ltv; etapeFinancement(zone);
     };
+  });
+  zone.querySelectorAll('[data-duree]').forEach(b => {
+    b.onclick = () => { TUNNEL.duree = +b.dataset.duree; etapeFinancement(zone); };
   });
   $('#t-precedent', zone).onclick = () => dessinerEtape(2);
   $('#t-suivant', zone).onclick = () => dessinerEtape(4);
@@ -3823,7 +3862,10 @@ function etapeProfil(zone) {
       <button type="button" class="etape-carte ${TUNNEL.profil === cle ? 'on' : ''}"
               data-profil="${cle}">
         <b>${esc(libelle)}</b>
-        <span>${esc(notes[cle] || '')}</span>
+        ${notes[cle] ? `<span class="plus" data-aide="${cle}">${
+          TUNNEL.aideProfil === cle ? 'Voir moins −' : 'En savoir plus +'}</span>` : ''}
+        ${notes[cle] && TUNNEL.aideProfil === cle
+          ? `<span class="note">${esc(notes[cle])}</span>` : ''}
       </button>`).join('')}
 
     <div class="etape-nav">
@@ -3834,6 +3876,16 @@ function etapeProfil(zone) {
 
   zone.querySelectorAll('[data-profil]').forEach(b => {
     b.onclick = () => { TUNNEL.profil = b.dataset.profil; etapeProfil(zone); };
+  });
+  // Le petit « + » ouvre l'explication SANS choisir la carte — d'ou le
+  // `stopPropagation`, sinon le clic remonterait au bouton qui l'entoure.
+  zone.querySelectorAll('[data-aide]').forEach(b => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      const cle = b.dataset.aide;
+      TUNNEL.aideProfil = TUNNEL.aideProfil === cle ? null : cle;
+      etapeProfil(zone);
+    };
   });
   $('#t-precedent', zone).onclick = () => dessinerEtape(1);
   $('#t-suivant', zone).onclick = () => { if (TUNNEL.profil) dessinerEtape(3); };
@@ -3901,7 +3953,8 @@ function etapeCoordonnees(zone) {
     const canal = TUNNEL.canal === 'mail' ? 'mail' : 'whatsapp';
     const profilLabel = (DONNEES.profils || {})[TUNNEL.profil] || '';
     const mot = 'Simulation par étapes — Budget : ' + shek(TUNNEL.prix)
-      + (TUNNEL.comptant ? ' (achat comptant)' : ' (crédit jusqu’à ' + TUNNEL.ltv + ' %)')
+      + (TUNNEL.comptant ? ' (achat comptant)'
+        : ' (crédit jusqu’à ' + TUNNEL.ltv + ' % sur ' + TUNNEL.duree + ' ans)')
       + ' — Profil : ' + profilLabel
       + ' — Reçue par : ' + (canal === 'mail' ? 'mail' : 'WhatsApp');
     const etiquette = bouton.textContent;
@@ -3915,6 +3968,7 @@ function etapeCoordonnees(zone) {
         budget: TUNNEL.prix, canal: canal,
         profil: TUNNEL.profil, cadre: TUNNEL.cadre,
         emprunt_pct: TUNNEL.comptant ? 0 : TUNNEL.ltv,
+        emprunt_duree: TUNNEL.comptant ? null : TUNNEL.duree,
       });
       etapeConfirmation(zone, canal);
     } catch (err) {
@@ -4074,6 +4128,7 @@ async function envoyerLead(champs, p, I, extra) {
       // 0 est une vraie reponse (achat comptant) : `!= null` seul l'exclut,
       // jamais `||` qui la confondrait avec une case vide.
       emprunt_pct: extra.emprunt_pct != null ? extra.emprunt_pct : '',
+      emprunt_duree: extra.emprunt_duree != null ? extra.emprunt_duree : '',
       // De qui vient ce contact. Vide sur l'annuaire de Hillel, la cle du
       // partenaire sur sa page en marque blanche — c'est elle qui fait que le
       // lead lui revient dans le CRM. Elle est posee a la fabrication, jamais
@@ -4365,6 +4420,13 @@ function versContactBas() {
 /* ---------------- routage */
 async function router() {
   const cle = location.hash.replace(/^#\/?/, '');
+  // Le tunnel du simulateur ne traite QUE la simulation — demande par Hillel
+  // le 10/09/2026 apres avoir appuye par erreur sur le WhatsApp de la barre
+  // fixe du bas en voulant appuyer sur « Suivant ». Cette classe masque tout
+  // ce qui pourrait detourner un tap pendant qu'on remplit les etapes : la
+  // barre mobile, le bouton « Etre rappele » et les liens du haut, le pied de
+  // page — voir les regles `body.tunnel-plein` de `portail.css`.
+  document.body.classList.toggle('tunnel-plein', cle === 'simulateur');
   // Sans bien choisi, le simulateur autonome est un tunnel par etapes
   // (budget -> profil -> coordonnees) depuis le 09/09/2026 — voir
   // `vueSimulateurEtapes()`. `vueSimulateur()` (tout affiche d'un coup) reste
