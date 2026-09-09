@@ -436,9 +436,10 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .tunnel-jauge .seg{flex:1;height:7px;border-radius:999px;
  background:var(--fond-2);border:1px solid var(--trait)}
 .tunnel-jauge .seg.fait{border-color:transparent;background:var(--action)}
-.tunnel-jauge .seg.fait:nth-child(1){opacity:.4}
-.tunnel-jauge .seg.fait:nth-child(2){opacity:.7}
-.tunnel-jauge .seg.fait:nth-child(3){opacity:1}
+.tunnel-jauge .seg.fait:nth-child(1){opacity:.35}
+.tunnel-jauge .seg.fait:nth-child(2){opacity:.6}
+.tunnel-jauge .seg.fait:nth-child(3){opacity:.85}
+.tunnel-jauge .seg.fait:nth-child(4){opacity:1}
 
 /* Les cartes de profil fiscal, cliquables, une phrase d'explication sous
    chacune — jamais un menu deroulant nu pour une decision qui pese autant. */
@@ -1450,7 +1451,11 @@ const DEPART = Date.now();            // sert a reconnaitre un robot
 
 /* L'etat du tunnel du simulateur AUTONOME (#/simulateur, sans bien choisi) —
    separe de `E`, qui reste la memoire du simulateur "classique" integre a une
-   fiche. Trois ecrans, un a la fois : budget, profil fiscal, coordonnees.
+   fiche. Cinq ecrans, un a la fois : prix, profil fiscal, montant finance,
+   frais annexes, coordonnees — dans cet ordre precis (demande par Hillel le
+   09/09/2026) pour que le financement propose tienne compte du plafond du
+   profil deja choisi, et que les frais annexes se proposent une fois qu'on
+   sait s'il y a un courtier a chiffrer (achat comptant ou non).
    Aucun chiffre ne se calcule ni ne s'affiche avant l'envoi reussi des
    coordonnees — voir `vueSimulateurEtapes()`. */
 let TUNNEL = {
@@ -1465,6 +1470,10 @@ let TUNNEL = {
   // question ouverte tranchee) : nom propre pre-coche, modifiable plus tard
   // dans le mini-site lui-meme.
   cadre: 'nom_propre',
+  // Les frais annexes (avocat, accompagnement, courtier) : `null` tant que
+  // le visiteur n'y touche pas, pour que l'etape parte des propositions de
+  // Hillel (`f.taux`, voir `etapeFrais`) plutot que d'un chiffre fige ici.
+  frais: null,
   canal: 'whatsapp',
 };
 
@@ -3620,8 +3629,9 @@ async function vueSimulateur() {
    integre a une fiche precise (`simulateur(zone, p)` avec un `p` non nul)
    n'est pas concerne et reste inchange.
 
-   Budget -> profil fiscal -> coordonnees, un ecran a la fois, une jauge de
-   progression sans pourcentage ecrit (3 segments du tekhelet de la marque).
+   Prix -> profil fiscal -> montant finance -> frais annexes -> coordonnees,
+   un ecran a la fois, une jauge de progression sans pourcentage ecrit
+   (5 segments du tekhelet de la marque).
    Aucun chiffre ne s'affiche avant l'envoi reussi des coordonnees : le
    chiffrage complet part dans un mini-site que le guichet fabrique et envoie
    lui-meme, sur le canal choisi — jamais affiche dans cette page. */
@@ -3640,10 +3650,10 @@ async function vueSimulateurEtapes() {
   dessinerEtape(TUNNEL.etape || 1);
 }
 
-/* La jauge : trois segments, jamais un chiffre. `n` est l'etape ATTEINTE
-   (1, 2 ou 3) — les segments jusqu'a `n` sont pleins. */
+/* La jauge : cinq segments, jamais un chiffre. `n` est l'etape ATTEINTE
+   (1 a 5) — les segments jusqu'a `n` sont pleins. */
 function jaugeHTML(n) {
-  return '<div class="tunnel-jauge">' + [1, 2, 3].map(i =>
+  return '<div class="tunnel-jauge">' + [1, 2, 3, 4, 5].map(i =>
     '<i class="seg' + (i <= n ? ' fait' : '') + '"></i>').join('') + '</div>';
 }
 
@@ -3651,18 +3661,18 @@ function dessinerEtape(n) {
   TUNNEL.etape = n;
   const zone = $('#tunnel');
   if (!zone) return;
-  if (n === 1) return etapeBudget(zone);
+  if (n === 1) return etapePrix(zone);
   if (n === 2) return etapeProfil(zone);
+  if (n === 3) return etapeFinancement(zone);
+  if (n === 4) return etapeFrais(zone);
   return etapeCoordonnees(zone);
 }
 
-/* Etape 1 : le budget. Reprend le champ prix et le bouton segmente LTV du
-   simulateur existant (achat comptant compris), mais SANS afficher le
-   moindre resultat — juste de quoi passer a l'etape suivante. Le plafond de
-   financement depend du profil, pas encore choisi a ce stade : on propose
-   donc toute la grille `DONNEES.ltv`, sans la restreindre. */
-function etapeBudget(zone) {
-  const ltvs = DONNEES.ltv || [];
+/* Etape 1 : le prix du bien, seul — rien d'autre. Demande par Hillel le
+   09/09/2026 : le prix doit venir avant le profil, et le financement doit
+   passer APRES le profil (pour connaitre le vrai plafond de credit avant de
+   le proposer), plutot que les deux ensemble comme au premier jet. */
+function etapePrix(zone) {
   zone.innerHTML = `
     ${jaugeHTML(1)}
     <div class="si-lab">Le prix du bien</div>
@@ -3672,20 +3682,6 @@ function etapeBudget(zone) {
              max="${DONNEES.prix_max || 20000000}"
              value="${Math.round(TUNNEL.prix)}">
       <span class="f-eur" id="t-prix-eur">${eur(TUNNEL.prix)}</span></div>
-
-    <div class="si-lab">${T('Part financée par le prêt')}</div>
-    <div class="seg">
-      <button type="button" data-comptant="1" class="${TUNNEL.comptant ? 'on' : ''}">Achat
-        comptant — sans crédit</button>
-      ${ltvs.map(v =>
-        '<button type="button" data-ltv="' + v + '" class="'
-        + (!TUNNEL.comptant && v === TUNNEL.ltv ? 'on' : '') + '">'
-        + v + ' %</button>').join('')}
-    </div>
-    <p class="dim si-note">${TUNNEL.comptant
-      ? 'Aucun crédit : le prix, les frais et la taxe se paient de votre poche.'
-      : 'Le pourcentage réellement finançable dépend de votre situation — vu '
-        + 'à l’étape suivante.'}</p>
 
     <div class="etape-nav">
       <button type="button" class="suivant" id="t-suivant">Suivant</button>
@@ -3698,19 +3694,119 @@ function etapeBudget(zone) {
     const cote = $('#t-prix-eur', zone);
     if (cote) cote.textContent = eur(v);
   };
-  zone.querySelector('[data-comptant]').onclick = () => {
-    TUNNEL.comptant = true; etapeBudget(zone);
-  };
-  zone.querySelectorAll('[data-ltv]').forEach(b => {
-    b.onclick = () => {
-      TUNNEL.comptant = false; TUNNEL.ltv = +b.dataset.ltv; etapeBudget(zone);
-    };
-  });
   $('#t-suivant', zone).onclick = () => {
     TUNNEL.prix = Math.max(0, +prix.value || 0);
     if (!TUNNEL.prix) { prix.focus(); return; }
     dessinerEtape(2);
   };
+}
+
+/* Etape 3 : le montant financé, APRES le profil — on connait donc le vrai
+   plafond de credit de sa situation (`f.plafond`, meme donnee que le
+   simulateur classique via `blocAuPrix`) et on ne propose jamais un
+   pourcentage que sa situation interdirait. */
+async function etapeFinancement(zone) {
+  zone.innerHTML = jaugeHTML(3) + '<p class="dim si-note">Chargement…</p>';
+  await charger();
+  const cle = TUNNEL.profil + '|' + TUNNEL.cadre;
+  const f = blocAuPrix(TUNNEL.prix, cle) || {};
+  const plafond = f.plafond || 75;
+  if (!TUNNEL.comptant && TUNNEL.ltv > plafond) TUNNEL.ltv = plafond;
+  const ltvs = (DONNEES.ltv || []).filter(v => v <= plafond);
+  zone.innerHTML = `
+    ${jaugeHTML(3)}
+    <div class="si-lab">${T('Part financée par le prêt')}</div>
+    <div class="seg">
+      <button type="button" data-comptant="1" class="${TUNNEL.comptant ? 'on' : ''}">Achat
+        comptant — sans crédit</button>
+      ${ltvs.map(v =>
+        '<button type="button" data-ltv="' + v + '" class="'
+        + (!TUNNEL.comptant && v === TUNNEL.ltv ? 'on' : '') + '">'
+        + v + ' %</button>').join('')}
+    </div>
+    <p class="dim si-note">${TUNNEL.comptant
+      ? 'Aucun crédit : le prix, les frais et la taxe se paient de votre poche.'
+      : esc(f.note_plafond || ('Votre situation permet de financer jusqu’à '
+        + plafond + ' %.'))}</p>
+
+    <div class="etape-nav">
+      <button type="button" class="precedent" id="t-precedent">Précédent</button>
+      <button type="button" class="suivant" id="t-suivant">Suivant</button>
+    </div>`;
+
+  zone.querySelector('[data-comptant]').onclick = () => {
+    TUNNEL.comptant = true; etapeFinancement(zone);
+  };
+  zone.querySelectorAll('[data-ltv]').forEach(b => {
+    b.onclick = () => {
+      TUNNEL.comptant = false; TUNNEL.ltv = +b.dataset.ltv; etapeFinancement(zone);
+    };
+  });
+  $('#t-precedent', zone).onclick = () => dessinerEtape(2);
+  $('#t-suivant', zone).onclick = () => dessinerEtape(4);
+}
+
+/* Etape 4 : les frais annexes (avocat, accompagnement, courtier). Hillel
+   l'a demande le 09/09/2026, dans la continuite de ce qui existe deja sur le
+   mini-site et le simulateur classique : chaque poste part de sa proposition
+   par defaut (`f.taux`, calcule pour ce prix et ce profil), avec l'explication
+   qu'il a dictee pour ce poste (`DONNEES.frais_notes`, ecrite une seule fois
+   dans `fiscalite.FRAIS_NOTES`) — et le visiteur reste libre de la changer.
+   Le courtier ne se propose pas en achat comptant : sans credit, il n'y a
+   personne a courtiser. */
+async function etapeFrais(zone) {
+  zone.innerHTML = jaugeHTML(4) + '<p class="dim si-note">Chargement…</p>';
+  await charger();
+  const cle = TUNNEL.profil + '|' + TUNNEL.cadre;
+  const f = blocAuPrix(TUNNEL.prix, cle) || {};
+  const defaut = f.taux || {avocat: 0, agence: 0, courtier: 0};
+  const t = TUNNEL.frais || defaut;
+  const notes = DONNEES.frais_notes || {};
+  zone.innerHTML = `
+    ${jaugeHTML(4)}
+    <div class="si-lab">Frais annexes — nos propositions, à ajuster si besoin</div>
+
+    <div class="f" style="margin-top:6px">
+      <label>Honoraires d'avocat (% du prix)</label>
+      <input id="t-avocat" type="number" step="0.1" min="0" max="10"
+             value="${t.avocat}">
+      <p class="dim si-note">${esc(notes.avocat || '')}</p>
+    </div>
+
+    <div class="f" style="margin-top:14px">
+      <label>Frais d'accompagnement (% du prix)</label>
+      <input id="t-agence" type="number" step="0.1" min="0" max="10"
+             value="${t.agence}">
+      <p class="dim si-note">${esc(notes.agence || '')}</p>
+    </div>
+
+    ${TUNNEL.comptant ? '' : `
+    <div class="f" style="margin-top:14px">
+      <label>Courtier en crédit (forfait ₪)</label>
+      <input id="t-courtier" type="number" step="500" min="0"
+             value="${t.courtier}">
+      <p class="dim si-note">${esc(notes.courtier || '')}</p>
+    </div>`}
+
+    <div class="etape-nav">
+      <button type="button" class="precedent" id="t-precedent">Précédent</button>
+      <button type="button" class="suivant" id="t-suivant">Suivant</button>
+    </div>`;
+
+  const lire = () => {
+    TUNNEL.frais = {
+      avocat: Math.max(0, +($('#t-avocat', zone) || {}).value || 0),
+      agence: Math.max(0, +($('#t-agence', zone) || {}).value || 0),
+      courtier: TUNNEL.comptant ? 0
+        : Math.max(0, +(($('#t-courtier', zone) || {}).value) || 0),
+    };
+  };
+  ['#t-avocat', '#t-agence', '#t-courtier'].forEach(sel => {
+    const champ = $(sel, zone);
+    if (champ) champ.oninput = lire;
+  });
+  $('#t-precedent', zone).onclick = () => dessinerEtape(3);
+  $('#t-suivant', zone).onclick = () => { lire(); dessinerEtape(5); };
 }
 
 /* Etape 2 : le profil fiscal, en cartes cliquables — jamais un menu
@@ -3743,7 +3839,7 @@ function etapeProfil(zone) {
   $('#t-suivant', zone).onclick = () => { if (TUNNEL.profil) dessinerEtape(3); };
 }
 
-/* Etape 3 : les coordonnees — pas `contactHTML` (qui laisse tel OU mail
+/* Etape 5 : les coordonnees — pas `contactHTML` (qui laisse tel OU mail
    facultatifs) : ici, Hillel l'a tranche le 09/09/2026, c'est la remise de la
    simulation elle-meme, donc TEL ET MAIL obligatoires tous les deux, plus le
    choix du canal de reception. L'envoi cree le lead exactement comme les
@@ -3752,7 +3848,7 @@ function etapeProfil(zone) {
    `build/serveur-vps/leads/service.py::enregistrer()`. */
 function etapeCoordonnees(zone) {
   zone.innerHTML = `
-    ${jaugeHTML(3)}
+    ${jaugeHTML(5)}
     <div class="si-lab">Comment recevoir votre simulation</div>
     <div class="seg" id="t-canal">
       <button type="button" data-canal="whatsapp"
@@ -3788,7 +3884,7 @@ function etapeCoordonnees(zone) {
   zone.querySelectorAll('#t-canal button').forEach(b => {
     b.onclick = () => { TUNNEL.canal = b.dataset.canal; etapeCoordonnees(zone); };
   });
-  $('#t-precedent', zone).onclick = () => dessinerEtape(2);
+  $('#t-precedent', zone).onclick = () => dessinerEtape(4);
 
   const val = id => (($('#' + id, zone) || {}).value || '').trim();
   $('#t-envoi', zone).onclick = async (e) => {
