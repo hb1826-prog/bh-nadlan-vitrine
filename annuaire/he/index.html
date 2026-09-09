@@ -66,9 +66,9 @@
  --vert-fond:#E9F7F0;
  --alerte:#B4321F;
  --alerte-fond:#FDF0ED;
- --action:#0038B8;
- --action-vive:#2E63E8;
- --action-lavis:#EEF3FF;
+ --action:#0B6BD6;
+ --action-vive:#0A57AE;
+ --action-lavis:#EAF3FE;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
  --or:#DFBF52;
@@ -88,9 +88,9 @@
  --vert-fond:#0C1F16;
  --alerte:#F97066;
  --alerte-fond:#22110F;
- --action:#7BA2FF;
- --action-vive:#9DBAFF;
- --action-lavis:#111A2E;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
 }}
 :root[data-theme=dark]{
  --or:#DFBF52;
@@ -110,9 +110,9 @@
  --vert-fond:#0C1F16;
  --alerte:#F97066;
  --alerte-fond:#22110F;
- --action:#7BA2FF;
- --action-vive:#9DBAFF;
- --action-lavis:#111A2E;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
 }
 /* IDENTITE:fin */
 
@@ -217,6 +217,14 @@ button,input,select,textarea{font:inherit;color:inherit}
  cursor:pointer;transition:.14s var(--ease)}
 .filtres-toggle:hover{border-color:var(--action)}
 .filtres-toggle .chev{transition:transform .15s var(--ease)}
+/* Le bouton qui emmene aux resultats, a cote de « Affiner ma recherche ».
+   Une puce de ville ne fait plus descendre la page toute seule — on compose
+   d'abord sa recherche, pieces et budget compris — donc il faut un endroit
+   evident ou appuyer quand on a fini. */
+.voir-res{margin:0 4px 12px;height:auto;padding:9px 18px;font-size:14px}
+@media(max-width:640px){
+ .voir-res{width:calc(100% - 8px);justify-content:center}
+}
 .filtres-toggle.open .chev{transform:rotate(180deg)}
 .champs[hidden]{display:none}
 .champs{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;
@@ -1388,7 +1396,14 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
   c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const LOCALE = {fr: 'fr-FR', en: 'en-GB', es: 'es-ES', pt: 'pt-PT',
                 he: 'he-IL'}[DONNEES.langue || 'fr'] || 'fr-FR';
-const shek = n => Math.round(Number(n) || 0).toLocaleString(LOCALE) + ' ₪';
+/* Les milliers se separent par un POINT — « 1.735.000 » — dans les deux
+   monnaies. C'est la demande de Hillel, et elle vaut sur les cinq versions du
+   site : un prix doit s'ecrire pareil partout, meme quand la langue de la
+   page voudrait autre chose. `de-DE` est la langue qui groupe ainsi ; elle ne
+   sert qu'a ca. */
+const MILLIERS = 'de-DE';
+const mil = n => Math.round(Number(n) || 0).toLocaleString(MILLIERS);
+const shek = n => mil(n) + ' ₪';
 const pct = n => String(n).replace('.', ',') + ' %';
 
 /* La conversion en euros, a cote de chaque montant en shekels.
@@ -1408,7 +1423,7 @@ function tauxEuro() {
 function eur(n) {
   const t = tauxEuro();
   if (!t) return '';
-  return Math.round(Number(n || 0) / t).toLocaleString(LOCALE) + ' €';
+  return mil(Number(n || 0) / t) + ' €';
 }
 /* Le montant en shekels, avec sa conversion en dessous. */
 function prixDouble(n, classe) {
@@ -1572,6 +1587,44 @@ function chercher() {
     + 'chez les promoteurs.'};
 }
 
+/* Le bouton de recherche annonce ce qu'il va montrer. Sans lui, poser un
+   filtre sans descendre ne donnerait aucun signe que quelque chose a bouge.
+   Le libelle traduit est garde tel quel et le nombre s'y ajoute : cela marche
+   dans les cinq langues sans rien traduire de plus. */
+let LIBELLE_CHERCHER = '';
+
+function majBouton(n) {
+  // Le vrai bouton, celui de la page : il ne porte JAMAIS la classe du
+  // jumeau, sinon on finit par se relire soi-meme et par empiler les
+  // comptes (« Rechercher (11) (1) »).
+  const b = document.querySelector('.chercher:not(.voir-res)');
+  if (b && !LIBELLE_CHERCHER) LIBELLE_CHERCHER = b.textContent.trim();
+  const libelle = LIBELLE_CHERCHER || 'Rechercher';
+  const compte = n ? ' (' + n + ')' : '';
+  if (b) b.textContent = libelle + compte;
+
+  // Ce bouton-la vit DANS le panneau de filtres, qui est replie a l'arrivee :
+  // sans un jumeau visible, poser une ville laisserait le visiteur sans rien
+  // sur quoi appuyer pour voir ce qu'il vient de demander.
+  const apres = document.getElementById('filtres-toggle');
+  if (!apres) return;
+  let v = document.getElementById('voir-res');
+  if (!v) {
+    v = document.createElement('button');
+    v.id = 'voir-res';
+    v.type = 'button';
+    v.className = 'chercher voir-res';
+    v.onclick = () => {
+      const cible = document.getElementById('entete')
+        || document.querySelector('.wrap');
+      if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'start'});
+    };
+    apres.insertAdjacentElement('afterend', v);
+  }
+  v.textContent = libelle + compte;
+  v.hidden = !n;
+}
+
 function liste() {
   basculer(true);
   const r = chercher();
@@ -1590,6 +1643,7 @@ function liste() {
   // La carte d'appel est posee dans la grille, apres la sixieme annonce :
   // c'est la que le visiteur a vu assez pour savoir ce qu'il cherche, et
   // c'est un bloc de plus a lire, jamais une fenetre qui barre l'ecran.
+  majBouton(vus.length);
   const cartes = vus.map(carte);
   if (cartes.length > 6) cartes.splice(6, 0, appel());
   // La carte revient SOUS les annonces. Essayee en tete, elle repoussait la
@@ -2513,8 +2567,12 @@ function raccourcis() {
       if (!b.dataset.tout) b.classList.add('on');
       if (location.hash && location.hash !== '#/') location.hash = '#/';
       else liste();
-      const cible = document.getElementById('entete');
-      if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'start'});
+      // Aucun defilement ici : on reste dans la boite de recherche pour
+      // pouvoir ajouter les pieces et le budget. C'est le bouton
+      // « Rechercher », juste dessous, qui emmene aux resultats.
+      const champ = document.getElementById('f-pieces')
+        || document.getElementById('f-budget');
+      if (champ && window.innerWidth > 860) champ.focus({preventScroll: true});
     };
   });
 }
@@ -3265,7 +3323,7 @@ function blocSociete(f) {
   // Les chiffres viennent du bloc de ce prix, les libelles et les postes du
   // montage, ecrit une seule fois pour toute la page.
   const m = DONNEES.societe || {};
-  const eur = n => n.toLocaleString('fr-FR') + ' €';
+  const eur = n => mil(n) + ' €';
   const c = m.creation, cmp = v.cmp;
   return `
     <div class="si-titre">Ce que la société coûte</div>

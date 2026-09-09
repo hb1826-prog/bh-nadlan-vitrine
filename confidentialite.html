@@ -56,9 +56,9 @@
  --vert-fond:#E9F7F0;
  --alerte:#B4321F;
  --alerte-fond:#FDF0ED;
- --action:#0038B8;
- --action-vive:#2E63E8;
- --action-lavis:#EEF3FF;
+ --action:#0B6BD6;
+ --action-vive:#0A57AE;
+ --action-lavis:#EAF3FE;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
  --or:#DFBF52;
@@ -78,9 +78,9 @@
  --vert-fond:#0C1F16;
  --alerte:#F97066;
  --alerte-fond:#22110F;
- --action:#7BA2FF;
- --action-vive:#9DBAFF;
- --action-lavis:#111A2E;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
 }}
 :root[data-theme=dark]{
  --or:#DFBF52;
@@ -100,9 +100,9 @@
  --vert-fond:#0C1F16;
  --alerte:#F97066;
  --alerte-fond:#22110F;
- --action:#7BA2FF;
- --action-vive:#9DBAFF;
- --action-lavis:#111A2E;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
 }
 /* IDENTITE:fin */
 
@@ -207,6 +207,14 @@ button,input,select,textarea{font:inherit;color:inherit}
  cursor:pointer;transition:.14s var(--ease)}
 .filtres-toggle:hover{border-color:var(--action)}
 .filtres-toggle .chev{transition:transform .15s var(--ease)}
+/* Le bouton qui emmene aux resultats, a cote de « Affiner ma recherche ».
+   Une puce de ville ne fait plus descendre la page toute seule — on compose
+   d'abord sa recherche, pieces et budget compris — donc il faut un endroit
+   evident ou appuyer quand on a fini. */
+.voir-res{margin:0 4px 12px;height:auto;padding:9px 18px;font-size:14px}
+@media(max-width:640px){
+ .voir-res{width:calc(100% - 8px);justify-content:center}
+}
 .filtres-toggle.open .chev{transform:rotate(180deg)}
 .champs[hidden]{display:none}
 .champs{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;
