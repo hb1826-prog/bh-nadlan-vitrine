@@ -1391,6 +1391,26 @@ const E = {profil: 'israelien_unique', cadre: 'nom_propre',
 let SIM = null;                       // sim.json, charge a la demande
 const DEPART = Date.now();            // sert a reconnaitre un robot
 
+/* L'etat du tunnel du simulateur AUTONOME (#/simulateur, sans bien choisi) —
+   separe de `E`, qui reste la memoire du simulateur "classique" integre a une
+   fiche. Trois ecrans, un a la fois : budget, profil fiscal, coordonnees.
+   Aucun chiffre ne se calcule ni ne s'affiche avant l'envoi reussi des
+   coordonnees — voir `vueSimulateurEtapes()`. */
+let TUNNEL = {
+  etape: 1,
+  prix: 2500000,
+  comptant: false,
+  ltv: 70,
+  // Pas de profil par defaut : Hillel veut que ce soit un choix explicite,
+  // pas une case deja cochee qu'on ne remarque pas.
+  profil: null,
+  // Le cadre d'acquisition n'est pas une etape a part (decide le 09/09/2026,
+  // question ouverte tranchee) : nom propre pre-coche, modifiable plus tard
+  // dans le mini-site lui-meme.
+  cadre: 'nom_propre',
+  canal: 'whatsapp',
+};
+
 /* La traduction, cote page.
 
    La cle est la phrase FRANCAISE elle-meme. C'est moins elegant qu'un
@@ -3535,6 +3555,243 @@ async function vueSimulateur() {
   await simulateur($('#simu'), null);
 }
 
+/* ---------------- le simulateur seul, EN TUNNEL PAR ETAPES
+
+   Remplace `vueSimulateur()` ci-dessus pour ce meme cas (aucun bien choisi) :
+   demande depuse par Hillel le 09/09/2026, voir
+   `plans/active/2026-09-09-simulateur-annuaire-par-etapes.md`. Le simulateur
+   integre a une fiche precise (`simulateur(zone, p)` avec un `p` non nul)
+   n'est pas concerne et reste inchange.
+
+   Budget -> profil fiscal -> coordonnees, un ecran a la fois, une jauge de
+   progression sans pourcentage ecrit (3 segments du tekhelet de la marque).
+   Aucun chiffre ne s'affiche avant l'envoi reussi des coordonnees : le
+   chiffrage complet part dans un mini-site que le guichet fabrique et envoie
+   lui-meme, sur le canal choisi — jamais affiche dans cette page. */
+async function vueSimulateurEtapes() {
+  basculer(false);
+  vue.innerHTML = `
+    <p class="fil"><a href="#/">Programmes neufs</a> › Simulateur d'achat</p>
+    <div class="pub-head">
+      <div>
+      <h1>Simulateur d'achat</h1>
+      <p class="sub">Un prix, votre situation, et on vous envoie le chiffrage
+        complet — à la signature, tous les mois, et à la revente.</p>
+      </div>
+    </div>
+    <div class="card"><div class="block"><div class="pad" id="tunnel"></div></div></div>`;
+  dessinerEtape(TUNNEL.etape || 1);
+}
+
+/* La jauge : trois segments, jamais un chiffre. `n` est l'etape ATTEINTE
+   (1, 2 ou 3) — les segments jusqu'a `n` sont pleins. */
+function jaugeHTML(n) {
+  return '<div class="tunnel-jauge">' + [1, 2, 3].map(i =>
+    '<i class="seg' + (i <= n ? ' fait' : '') + '"></i>').join('') + '</div>';
+}
+
+function dessinerEtape(n) {
+  TUNNEL.etape = n;
+  const zone = $('#tunnel');
+  if (!zone) return;
+  if (n === 1) return etapeBudget(zone);
+  if (n === 2) return etapeProfil(zone);
+  return etapeCoordonnees(zone);
+}
+
+/* Etape 1 : le budget. Reprend le champ prix et le bouton segmente LTV du
+   simulateur existant (achat comptant compris), mais SANS afficher le
+   moindre resultat — juste de quoi passer a l'etape suivante. Le plafond de
+   financement depend du profil, pas encore choisi a ce stade : on propose
+   donc toute la grille `DONNEES.ltv`, sans la restreindre. */
+function etapeBudget(zone) {
+  const ltvs = DONNEES.ltv || [];
+  zone.innerHTML = `
+    ${jaugeHTML(1)}
+    <div class="si-lab">Le prix du bien</div>
+    <div class="f"><label>Prix (₪)</label>
+      <input id="t-prix" type="number" inputmode="numeric" step="1000"
+             min="${DONNEES.prix_min || 100000}"
+             max="${DONNEES.prix_max || 20000000}"
+             value="${Math.round(TUNNEL.prix)}">
+      <span class="f-eur" id="t-prix-eur">${eur(TUNNEL.prix)}</span></div>
+
+    <div class="si-lab">${T('Part financée par le prêt')}</div>
+    <div class="seg">
+      <button type="button" data-comptant="1" class="${TUNNEL.comptant ? 'on' : ''}">Achat
+        comptant — sans crédit</button>
+      ${ltvs.map(v =>
+        '<button type="button" data-ltv="' + v + '" class="'
+        + (!TUNNEL.comptant && v === TUNNEL.ltv ? 'on' : '') + '">'
+        + v + ' %</button>').join('')}
+    </div>
+    <p class="dim si-note">${TUNNEL.comptant
+      ? 'Aucun crédit : le prix, les frais et la taxe se paient de votre poche.'
+      : 'Le pourcentage réellement finançable dépend de votre situation — vu '
+        + 'à l’étape suivante.'}</p>
+
+    <div class="etape-nav">
+      <button type="button" class="suivant" id="t-suivant">Suivant</button>
+    </div>`;
+
+  const prix = $('#t-prix', zone);
+  prix.oninput = () => {
+    const v = Math.max(0, +prix.value || 0);
+    TUNNEL.prix = v;
+    const cote = $('#t-prix-eur', zone);
+    if (cote) cote.textContent = eur(v);
+  };
+  zone.querySelector('[data-comptant]').onclick = () => {
+    TUNNEL.comptant = true; etapeBudget(zone);
+  };
+  zone.querySelectorAll('[data-ltv]').forEach(b => {
+    b.onclick = () => {
+      TUNNEL.comptant = false; TUNNEL.ltv = +b.dataset.ltv; etapeBudget(zone);
+    };
+  });
+  $('#t-suivant', zone).onclick = () => {
+    TUNNEL.prix = Math.max(0, +prix.value || 0);
+    if (!TUNNEL.prix) { prix.focus(); return; }
+    dessinerEtape(2);
+  };
+}
+
+/* Etape 2 : le profil fiscal, en cartes cliquables — jamais un menu
+   deroulant nu pour une decision qui pese autant sur le chiffrage. Chaque
+   carte porte l'explication ecrite une fois dans `fiscalite.PROFILS`
+   (`note`), exportee par `generer.py` dans `DONNEES.profils_note`. */
+function etapeProfil(zone) {
+  const profils = DONNEES.profils || {};
+  const notes = DONNEES.profils_note || {};
+  zone.innerHTML = `
+    ${jaugeHTML(2)}
+    <div class="si-lab">${T('Votre situation')}</div>
+    ${Object.entries(profils).map(([cle, libelle]) => `
+      <button type="button" class="etape-carte ${TUNNEL.profil === cle ? 'on' : ''}"
+              data-profil="${cle}">
+        <b>${esc(libelle)}</b>
+        <span>${esc(notes[cle] || '')}</span>
+      </button>`).join('')}
+
+    <div class="etape-nav">
+      <button type="button" class="precedent" id="t-precedent">Précédent</button>
+      <button type="button" class="suivant" id="t-suivant"
+              ${TUNNEL.profil ? '' : 'disabled'}>Suivant</button>
+    </div>`;
+
+  zone.querySelectorAll('[data-profil]').forEach(b => {
+    b.onclick = () => { TUNNEL.profil = b.dataset.profil; etapeProfil(zone); };
+  });
+  $('#t-precedent', zone).onclick = () => dessinerEtape(1);
+  $('#t-suivant', zone).onclick = () => { if (TUNNEL.profil) dessinerEtape(3); };
+}
+
+/* Etape 3 : les coordonnees — pas `contactHTML` (qui laisse tel OU mail
+   facultatifs) : ici, Hillel l'a tranche le 09/09/2026, c'est la remise de la
+   simulation elle-meme, donc TEL ET MAIL obligatoires tous les deux, plus le
+   choix du canal de reception. L'envoi cree le lead exactement comme les
+   deux autres formulaires (meme guichet, meme fonction `envoyerLead`), et le
+   guichet ouvre en plus un mini-site et l'envoie tout de suite — voir
+   `build/serveur-vps/leads/service.py::enregistrer()`. */
+function etapeCoordonnees(zone) {
+  zone.innerHTML = `
+    ${jaugeHTML(3)}
+    <div class="si-lab">Comment recevoir votre simulation</div>
+    <div class="seg" id="t-canal">
+      <button type="button" data-canal="whatsapp"
+              class="${TUNNEL.canal !== 'mail' ? 'on' : ''}">Par WhatsApp</button>
+      <button type="button" data-canal="mail"
+              class="${TUNNEL.canal === 'mail' ? 'on' : ''}">Par mail</button>
+    </div>
+
+    <div class="duo" style="margin-top:14px">
+      <div class="f"><label for="t-prenom">${T('Prénom')}</label>
+        <input id="t-prenom" autocomplete="given-name" placeholder="Votre prénom"></div>
+      <div class="f"><label for="t-tel">${T('Téléphone')}</label>
+        <input id="t-tel" type="tel" autocomplete="tel" placeholder="+33 6 …"></div>
+    </div>
+    <div class="duo" style="margin-top:14px">
+      <div class="f"><label for="t-nom">${T('Nom')}</label>
+        <input id="t-nom" autocomplete="family-name" placeholder="Votre nom"></div>
+      <div class="f"><label for="t-mail">${T('E-mail')}</label>
+        <input id="t-mail" type="email" autocomplete="email"
+               placeholder="vous@exemple.com"></div>
+    </div>
+    <div class="pot"><label>Société</label>
+      <input id="t-societe" tabindex="-1" autocomplete="off"></div>
+    <p class="si-note" id="t-note">Téléphone et e-mail sont nécessaires tous
+      les deux : votre simulation part sur le canal choisi, l’autre nous sert
+      à vous rappeler.</p>
+
+    <div class="etape-nav">
+      <button type="button" class="precedent" id="t-precedent">Précédent</button>
+      <button type="button" class="suivant" id="t-envoi">Recevoir ma simulation</button>
+    </div>`;
+
+  zone.querySelectorAll('#t-canal button').forEach(b => {
+    b.onclick = () => { TUNNEL.canal = b.dataset.canal; etapeCoordonnees(zone); };
+  });
+  $('#t-precedent', zone).onclick = () => dessinerEtape(2);
+
+  const val = id => (($('#' + id, zone) || {}).value || '').trim();
+  $('#t-envoi', zone).onclick = async (e) => {
+    const bouton = e.currentTarget;
+    const tel = val('t-tel'), mail = val('t-mail');
+    const note = $('#t-note', zone);
+    if (!tel || !mail) {
+      note.textContent = 'Il nous faut votre téléphone ET votre e-mail — '
+        + 'la simulation part sur l’un, l’autre nous sert à vous rappeler.';
+      note.classList.add('manque');
+      (tel ? $('#t-mail', zone) : $('#t-tel', zone)).focus();
+      return;
+    }
+    const canal = TUNNEL.canal === 'mail' ? 'mail' : 'whatsapp';
+    const profilLabel = (DONNEES.profils || {})[TUNNEL.profil] || '';
+    const mot = 'Simulation par étapes — Budget : ' + shek(TUNNEL.prix)
+      + (TUNNEL.comptant ? ' (achat comptant)' : ' (crédit jusqu’à ' + TUNNEL.ltv + ' %)')
+      + ' — Profil : ' + profilLabel
+      + ' — Reçue par : ' + (canal === 'mail' ? 'mail' : 'WhatsApp');
+    const etiquette = bouton.textContent;
+    bouton.disabled = true;
+    bouton.textContent = 'Envoi…';
+    try {
+      await envoyerLead({
+        prenom: val('t-prenom'), nom: val('t-nom'), tel: tel, mail: mail,
+        mot: mot, societe: val('t-societe'),
+      }, null, 'simulateur', {
+        budget: TUNNEL.prix, canal: canal,
+        profil: TUNNEL.profil, cadre: TUNNEL.cadre,
+      });
+      etapeConfirmation(zone, canal);
+    } catch (err) {
+      bouton.disabled = false;
+      bouton.textContent = etiquette;
+      note.textContent = 'L’envoi a échoué. Réessayez, ou écrivez-nous '
+        + 'directement sur WhatsApp.';
+      note.classList.add('manque');
+    }
+  };
+}
+
+/* Ecran final : une confirmation d'envoi, jamais les chiffres en direct. Le
+   chiffrage complet vit uniquement dans le mini-site que le guichet vient
+   d'envoyer — cohérent avec la règle de l'espace client (rien de chiffré ne
+   fuit avant que le lien soit ouvert). */
+function etapeConfirmation(zone, canal) {
+  const moyen = canal === 'mail' ? 'par mail' : 'par WhatsApp';
+  zone.innerHTML = `
+    ${jaugeHTML(3)}
+    <div class="merci">
+      <div class="coche">✓</div>
+      <h3>Votre simulation vous a été envoyée ${moyen}.</h3>
+      <p>Le lien reste valable <b>7 jours</b> : passé ce délai, il vous
+        suffira de nous rappeler pour le faire prolonger.</p>
+      <p class="dim">Vous préférez en parler tout de suite ?
+        <a href="https://wa.me/${DONNEES.wa}">Écrivez sur WhatsApp</a>
+        ou appelez le ${esc(DONNEES.tel)}.</p>
+    </div>`;
+}
+
 /* ---------------- le formulaire de contact, sur toutes les pages
 
    Il n'y a pas de serveur derriere cette page : le formulaire compose le
@@ -3616,21 +3873,35 @@ function contactHTML(p, intention) {
 const OBJETS = {
   ville: 'Demande : une sélection de biens',
   fiche: 'Demande : les lots disponibles et les prix réels',
-  simulateur: 'Demande : le chiffrage complet en PDF',
+  // Ce n'est plus un PDF depuis le tunnel par etapes (09/09/2026) : le
+  // guichet ouvre desormais un mini-site et l'envoie lui-meme — voir
+  // `etapeCoordonnees()`.
+  simulateur: 'Demande : sa simulation complète (mini-site personnalisé)',
   liste: 'Demande : une sélection de biens',
 };
 
 /* L'envoi d'un contact au guichet. Ecrit UNE fois.
 
-   Deux formulaires s'en servent : le bloc en bas de page, et la petite
-   fenetre qui s'ouvre au-dessus de chaque bouton « Etre rappele ». Le jour ou
-   le guichet change, ou qu'un champ s'ajoute, il n'y a qu'un endroit a
-   reprendre — deux copies auraient diverge des le premier correctif, et un
-   lead perdu ne se signale jamais.
+   Trois formulaires s'en servent : le bloc en bas de page, la petite fenetre
+   qui s'ouvre au-dessus de chaque bouton « Etre rappele », et l'etape
+   coordonnees du tunnel du simulateur autonome. Le jour ou le guichet change,
+   ou qu'un champ s'ajoute, il n'y a qu'un endroit a reprendre — des copies
+   auraient diverge des le premier correctif, et un lead perdu ne se signale
+   jamais.
+
+   `extra` porte ce que le tunnel a besoin d'ajouter/corriger par rapport au
+   comportement historique (le budget du filtre de recherche `F.budget`, qui
+   n'a pas de sens ici puisqu'il s'agit d'un prix simule) : `budget`, `canal`
+   (mail/whatsapp — pour que la notification de Hillel dise comment le
+   prospect a choisi de recevoir sa simulation), `profil` et `cadre` (les
+   cles de `fiscalite.PROFILS`/`CADRES`, pour que le guichet sache quel
+   chiffrage donner au mini-site qu'il ouvre). Les deux autres appelants ne
+   le passent pas : leur comportement ne change pas.
 
    Leve si le guichet refuse : l'appelant retombe alors sur WhatsApp, qui est
    le filet et n'est jamais casse. */
-async function envoyerLead(champs, p, I) {
+async function envoyerLead(champs, p, I, extra) {
+  extra = extra || {};
   const r = await fetch(DONNEES.guichet + '/lead', {
     method: 'POST', headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
@@ -3640,7 +3911,12 @@ async function envoyerLead(champs, p, I) {
       societe: champs.societe || '',
       projet: p ? p.nom + ' — ' + p.ville : '',
       ville: p ? p.ville : (F.ville || ''),
-      budget: F.budget || '', page: I,
+      budget: extra.budget || F.budget || '', page: I,
+      // Comment le prospect veut recevoir sa simulation, et avec quel
+      // chiffrage : vide pour les deux autres formulaires, qui ne creent pas
+      // de mini-site.
+      canal: extra.canal || '', profil: extra.profil || '',
+      cadre: extra.cadre || '',
       // De qui vient ce contact. Vide sur l'annuaire de Hillel, la cle du
       // partenaire sur sa page en marque blanche — c'est elle qui fait que le
       // lead lui revient dans le CRM. Elle est posee a la fabrication, jamais
@@ -3932,7 +4208,13 @@ function versContactBas() {
 /* ---------------- routage */
 async function router() {
   const cle = location.hash.replace(/^#\/?/, '');
-  if (cle === 'simulateur') return vueSimulateur();
+  // Sans bien choisi, le simulateur autonome est un tunnel par etapes
+  // (budget -> profil -> coordonnees) depuis le 09/09/2026 — voir
+  // `vueSimulateurEtapes()`. `vueSimulateur()` (tout affiche d'un coup) reste
+  // dans ce fichier mais n'est plus appelee : le simulateur integre a une
+  // fiche precise, lui, ne passe jamais par ici, il appelle `simulateur(zone,
+  // p)` directement depuis `fiche(p)`.
+  if (cle === 'simulateur') return vueSimulateurEtapes();
   if (cle.indexOf('ville/') === 0) return pageVille(cle.slice(6));
   if (PAGES[cle]) return pageTexte(cle);
   const p = DONNEES.projets.find(x => x.cle === cle);
