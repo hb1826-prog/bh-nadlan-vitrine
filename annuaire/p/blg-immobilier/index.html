@@ -3120,25 +3120,22 @@ async function simulateur(zone, p) {
         '<button data-duree="' + v + '" class="' + (v === E.duree ? 'on' : '') + '">'
         + v + ' ' + T('ans') + '</button>').join('')}</div>`}
 
-      <div class="si-lab">Frais annexes — les vôtres, si vous les connaissez</div>
+      <div class="si-lab">${T('Frais annexes — les vôtres, si vous les connaissez')}</div>
       <div class="fgrid">
-        <div class="f"><label>Avocat (% du prix)</label>
+        <div class="f"><label>${T('Avocat (% du prix)')}</label>
           <input id="s-avocat" type="number" step="0.1" min="0" max="10"
                  value="${t.avocat}"></div>
-        <div class="f"><label>Accompagnement (% du prix)</label>
+        <div class="f"><label>${T('Accompagnement (% du prix)')}</label>
           <input id="s-agence" type="number" step="0.1" min="0" max="10"
                  value="${t.agence}"></div>
         ${E.comptant ? '' : `
-        <div class="f"><label>Courtier (forfait ₪)</label>
+        <div class="f"><label>${T('Courtier (forfait ₪)')}</label>
           <input id="s-courtier" type="number" step="500" min="0"
                  value="${t.courtier}"></div>`}
       </div>
-      <p class="dim si-note"><b>Aucun frais d'agence</b> : vous achetez
-        directement au promoteur, et tout ce qui précède la signature —
-        sélection, négociation, avocat, banque — est compris. Le
-        <b>1 % d'accompagnement</b> ne couvre que la suite, après la
-        signature : choix des finitions, suivi du chantier, remise des clés.
-        Mettez-le à zéro si vous vous en passez. Hors TVA, ajoutée au calcul
+      <p class="dim si-note"><b>${T('Aucun frais d’agence')}</b> — ${T('vous achetez directement au promoteur, et tout ce qui précède la signature (sélection, négociation, avocat, banque) est compris.')}
+        <b>${T('1 % d’accompagnement')}</b> — ${T('ne couvre que la suite, après la signature : choix des finitions, suivi du chantier, remise des clés. Mettez-le à zéro si vous vous en passez.')}
+        ${T('Hors TVA, ajoutée au calcul')}
         (${pct(Math.round(DONNEES.tva * 1000) / 10)}).</p>
 
       ${reglagesEcheancier(p)}
