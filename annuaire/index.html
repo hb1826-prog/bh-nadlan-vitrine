@@ -2153,7 +2153,7 @@ async function fiche(p) {
             <th class="num">${T('À partir de')}</th></tr></thead>
           <tbody>${p.typologies.map(t => `<tr>
             <td class="mtitle" data-label="Typologie">${t.libelle}
-              ${T('pièces')}${t.type ? ' · <b>' + esc(t.type) + '</b>' : ''}</td>
+              ${T('pièces')}${t.type ? ' · <b>' + esc(T(t.type)) + '</b>' : ''}</td>
             <td data-label="Surface">${surface(t)}</td>
             <td data-label="Équipements" class="dim">${
               [t.parking ? T('parking') : '', t.cave ? T('cave') : '']
@@ -3139,7 +3139,7 @@ async function simulateur(zone, p) {
     ? `<div class="f"><label>${T('Appartement')}</label><select id="s-typo">${
         p.typologies.map(x => '<option value="' + x.cle + '"'
           + (x.cle === E.typo && !E.libre ? ' selected' : '') + '>' + x.libelle
-          + ' ' + T('pièces') + (x.type ? ' · ' + x.type : '')
+          + ' ' + T('pièces') + (x.type ? ' · ' + T(x.type) : '')
           + ' · ' + shek(x.prix_min) + '</option>').join('')
       }</select></div>` + champPrix
     : '';
