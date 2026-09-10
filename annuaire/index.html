@@ -8,9 +8,8 @@
 <link rel=alternate hreflang='fr' href='https://hb1826-prog.github.io/bh-nadlan-vitrine/annuaire/'><link rel=alternate hreflang='en' href='https://hb1826-prog.github.io/bh-nadlan-vitrine/annuaire/en/'><link rel=alternate hreflang='es' href='https://hb1826-prog.github.io/bh-nadlan-vitrine/annuaire/es/'><link rel=alternate hreflang='pt' href='https://hb1826-prog.github.io/bh-nadlan-vitrine/annuaire/pt/'><link rel=alternate hreflang='he' href='https://hb1826-prog.github.io/bh-nadlan-vitrine/annuaire/he/'><link rel=alternate hreflang='x-default' href='https://hb1826-prog.github.io/bh-nadlan-vitrine/annuaire/'>
 <meta name=theme-color content="#0f172a">
 <title>BH — Programmes neufs · Israël</title>
-<meta name=description content="37 programmes neufs en
- Israël suivis par BH, dans 18 villes : prix, typologies,
- simulateur d'achat et accompagnement francophone.">
+<meta name=description content="37 programmes neufs en Israël suivis par
+ BH, dans 18 villes : prix, typologies, simulateur d'achat et accompagnement francophone.">
 <style>/* L'annuaire BH — la peau « portail immobilier ».
    ============================================================
    Hillel a demande le graphisme des grands portails francais (SeLoger et ses
@@ -1258,8 +1257,7 @@ table.ag th{width:64%}
     <h1>Achetez directement au promoteur,<br>au prix négocié, en français</h1>
     <p class=chapeau>37 programmes neufs dans
       18 villes. Vous payez le prix du promoteur —
-      <b class=insec>0 frais d'agence</b> — et vous profitez des conditions
-      que nous avons négociées pour nos acheteurs.</p>
+      <b class=insec>0 frais d'agence</b> — et vous profitez des conditions que nous avons négociées pour nos acheteurs.</p>
   </div>
 </section>
 
@@ -1291,13 +1289,11 @@ table.ag th{width:64%}
   <section class=modele id=modele>
     <div>
       <b>Le prix du promoteur, pas un centime de plus</b>
-      <span><b>0 frais d'agence</b> sur votre achat. Vous signez au même prix
-        que si vous poussiez seul la porte du bureau de vente.</span>
+      <span><b>0 frais d'agence</b> sur votre achat. Vous signez au même prix que si vous poussiez seul la porte du bureau de vente.</span>
     </div>
     <div>
       <b>Sauf que le prix, lui, est négocié</b>
-      <span>Remises, échéancier de paiement, étage, orientation, cuisine :
-        ce qui se discute, nous le discutons — en hébreu, avant vous.</span>
+      <span>Remises, échéancier de paiement, étage, orientation, cuisine : ce qui se discute, nous le discutons — en hébreu, avant vous.</span>
     </div>
     <div>
       <b>Le vrai coût, avant de vous engager</b>
@@ -1306,7 +1302,7 @@ table.ag th{width:64%}
   </section>
 
   <div class=entete id=entete>
-    <h2 id=pub-titre>Nos programmes</h2>
+    <h2 id=pub-titre>Nos programmes neufs</h2>
     <div class=pub-count id=pub-count></div>
   </div>
   <div id=vue></div>
@@ -2500,95 +2496,54 @@ function avisHTML() {
    Ecrit une seule fois, lu par la page de Hillel et par celles de ses
    partenaires. */
 const QUI_COMMUN = `
-      <h3>Comment nous sommes payés</h3>
-      <p>Vous ne nous payez pas. Nous sommes rémunérés par le promoteur, au
-        titre de l’apport d’affaires, et <b>cette rémunération ne s’ajoute pas
-        à votre prix</b> : vous signez au même prix que si vous poussiez seul
-        la porte du bureau de vente — sauf que le prix, lui, a été négocié
-        avant vous. Après la signature seulement, un accompagnement optionnel
-        jusqu’aux clés est facturé 1 % du prix ; vous pouvez vous en
-        passer.</p>
-      <h3>Ce que nous ne faisons pas</h3>
-      <p>Nous ne vendons pas de bien ancien entre particuliers, nous ne
-        sommes ni banquiers ni avocats — nous travaillons avec les vôtres, ou
-        nous vous en présentons — et nous ne vous mettons jamais en relation
-        avec un promoteur en échange de vos coordonnées.</p>`;
+      <h3>${T('Comment nous sommes payés')}</h3>
+      <p>${T('Vous ne nous payez pas. Nous sommes rémunérés par le promoteur, au titre de l’apport d’affaires, et')} <b>${T('cette rémunération ne s’ajoute pas à votre prix')}</b> ${T(': vous signez au même prix que si vous poussiez seul la porte du bureau de vente — sauf que le prix, lui, a été négocié avant vous. Après la signature seulement, un accompagnement optionnel jusqu’aux clés est facturé 1 % du prix ; vous pouvez vous en passer.')}</p>
+      <h3>${T('Ce que nous ne faisons pas')}</h3>
+      <p>${T('Nous ne vendons pas de bien ancien entre particuliers, nous ne sommes ni banquiers ni avocats — nous travaillons avec les vôtres, ou nous vous en présentons — et nous ne vous mettons jamais en relation avec un promoteur en échange de vos coordonnées.')}</p>`;
 
 const PAGES = {
   'qui-sommes-nous': {
-    titre: 'Qui nous sommes',
-    corps: `
-      <p>BH Nadlan est le cabinet de <b>Hillel Bijaoui</b>. Nous accompagnons
-        des acheteurs francophones — de France, de Belgique, de Suisse, du
-        Canada — dans l’achat d’un logement neuf en Israël, depuis le premier
-        appel jusqu’à la signature, et jusqu’à la remise des clés si vous le
-        souhaitez.</p>
-      <h3>D’où nous venons</h3>
-      <p>Douze ans dans l’immobilier, dont l’essentiel <b>chez les
-        promoteurs</b>, du côté du vendeur. C’est là qu’on apprend comment un
-        prix se construit, ce qui se négocie réellement, et ce qui ne se
-        négocie jamais. Aujourd’hui, ce savoir sert l’acheteur.</p>`
-      + QUI_COMMUN,
+    titre: T('Qui nous sommes'),
+    corps:
+      `<p>${T('BH Nadlan est le cabinet de')} <b>Hillel Bijaoui</b>. ${T('Nous accompagnons des acheteurs francophones — de France, de Belgique, de Suisse, du Canada — dans l’achat d’un logement neuf en Israël, depuis le premier appel jusqu’à la signature, et jusqu’à la remise des clés si vous le souhaitez.')}</p>
+      <h3>${T('D’où nous venons')}</h3>
+      <p>${T('Douze ans dans l’immobilier, dont l’essentiel')} <b>${T('chez les promoteurs')}</b>${T(', du côté du vendeur. C’est là qu’on apprend comment un prix se construit, ce qui se négocie réellement, et ce qui ne se négocie jamais. Aujourd’hui, ce savoir sert l’acheteur.')}</p>`
+      + T(QUI_COMMUN),
   },
   'informations-legales': {
-    titre: 'Informations légales',
-    corps: `
-      <h3>Éditeur du site</h3>
+    titre: T('Informations légales'),
+    corps:
+      `<h3>${T('Éditeur du site')}</h3>
       <p><b>{NOM}</b> — {MARQUE}<br>
         {STATUT}, n° {NUMERO}<br>
         {ADRESSE}<br>
-        Activité de conseil et d’apport d’affaires en immobilier neuf,
-        exercée en Israël.<br>
-        Contact : <a href="mailto:{MAIL_ED}">{MAIL_ED}</a> ·
+        ${T('Activité de conseil et d’apport d’affaires en immobilier neuf, exercée en Israël.')}<br>
+        ${T('Contact')} : <a href="mailto:{MAIL_ED}">{MAIL_ED}</a> ·
         <a href="tel:{TEL_ED}">{TEL_ED_AFF}</a></p>
       {PARTENAIRE_ED}
-      <h3>Hébergement</h3>
-      <p>Ce site est publié sur GitHub Pages (GitHub, Inc., 88 Colin P Kelly
-        Jr Street, San Francisco, CA 94107, États-Unis).</p>
-      <h3>Nature des informations publiées</h3>
-      <p>Les prix affichés sont des prix d’appel communiqués par les
-        promoteurs, relevés à la date indiquée sur chaque programme. Ils
-        évoluent, et les disponibilités changent en permanence : <b>aucune
-        information de ce site ne constitue une offre de vente</b>. Les
-        visuels sont des vues d’artiste fournies par les promoteurs et ne sont
-        pas contractuels.</p>
-      <p>Les simulations financières sont des estimations calculées à partir
-        des barèmes fiscaux en vigueur et des taux moyens du marché à la date
-        affichée. Elles ne valent ni offre de prêt, ni conseil fiscal, ni
-        engagement d’une banque.</p>
-      <h3>Propriété intellectuelle</h3>
-      <p>Les textes et la présentation de ce site appartiennent à leur auteur.
-        Les visuels des programmes restent la propriété des promoteurs qui les
-        ont fournis.</p>`,
+      <h3>${T('Hébergement')}</h3>
+      <p>${T('Ce site est publié sur GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr Street, San Francisco, CA 94107, États-Unis).')}</p>
+      <h3>${T('Nature des informations publiées')}</h3>
+      <p>${T('Les prix affichés sont des prix d’appel communiqués par les promoteurs, relevés à la date indiquée sur chaque programme. Ils évoluent, et les disponibilités changent en permanence :')} <b>${T('aucune information de ce site ne constitue une offre de vente')}</b>${T('. Les visuels sont des vues d’artiste fournies par les promoteurs et ne sont pas contractuels.')}</p>
+      <p>${T('Les simulations financières sont des estimations calculées à partir des barèmes fiscaux en vigueur et des taux moyens du marché à la date affichée. Elles ne valent ni offre de prêt, ni conseil fiscal, ni engagement d’une banque.')}</p>
+      <h3>${T('Propriété intellectuelle')}</h3>
+      <p>${T('Les textes et la présentation de ce site appartiennent à leur auteur. Les visuels des programmes restent la propriété des promoteurs qui les ont fournis.')}</p>`,
   },
   'donnees-personnelles': {
-    titre: 'Données personnelles',
-    corps: `
-      <h3>Ce que nous collectons</h3>
-      <p>Uniquement ce que vous écrivez vous-même dans le formulaire : prénom,
-        nom, téléphone, e-mail, et le texte de votre demande. Rien d’autre.
-        Aucun compte, aucun mot de passe.</p>
-      <h3>À quoi cela sert</h3>
-      <p>À vous rappeler et à vous envoyer les biens qui correspondent à votre
-        recherche. Vos coordonnées sont enregistrées dans notre fichier
-        clients, hébergé sur notre propre serveur.</p>
-      <h3>Ce que nous n’en faisons pas</h3>
-      <p><b>Vos coordonnées ne sont ni vendues, ni louées, ni transmises à un
-        promoteur</b> sans votre accord explicite et pour un programme précis.
-        Il n’y a sur ce site <b>aucun traceur publicitaire, aucun cookie de
-        mesure d’audience tiers</b>, et aucun bouton de réseau social qui vous
-        suivrait ailleurs.</p>
-      <h3>Ce que votre navigateur garde</h3>
-      <p>Votre choix d’apparence (clair ou sombre) et le fait que vous avez
-        déjà ouvert une fiche pendant cette visite — pour ne pas compter deux
-        fois la même consultation. Ces informations restent sur votre appareil
-        et ne nous parviennent jamais.</p>
-      <h3>Vos droits</h3>
-      <p>Vous pouvez à tout moment demander à consulter, corriger ou supprimer
-        ce que nous savons de vous : écrivez à
-        <a href="mailto:{MAIL}">{MAIL}</a> ou appelez le
-        <a href="tel:{TEL}">{TEL_AFF}</a>. La suppression est faite sous
-        quelques jours et sans condition.</p>`,
+    titre: T('Données personnelles'),
+    corps:
+      `<h3>${T('Ce que nous collectons')}</h3>
+      <p>${T('Uniquement ce que vous écrivez vous-même dans le formulaire : prénom, nom, téléphone, e-mail, et le texte de votre demande. Rien d’autre. Aucun compte, aucun mot de passe.')}</p>
+      <h3>${T('À quoi cela sert')}</h3>
+      <p>${T('À vous rappeler et à vous envoyer les biens qui correspondent à votre recherche. Vos coordonnées sont enregistrées dans notre fichier clients, hébergé sur notre propre serveur.')}</p>
+      <h3>${T('Ce que nous n’en faisons pas')}</h3>
+      <p><b>${T('Vos coordonnées ne sont ni vendues, ni louées, ni transmises à un promoteur')}</b> ${T('sans votre accord explicite et pour un programme précis. Il n’y a sur ce site')} <b>${T('aucun traceur publicitaire, aucun cookie de mesure d’audience tiers')}</b>${T(', et aucun bouton de réseau social qui vous suivrait ailleurs.')}</p>
+      <h3>${T('Ce que votre navigateur garde')}</h3>
+      <p>${T('Votre choix d’apparence (clair ou sombre) et le fait que vous avez déjà ouvert une fiche pendant cette visite — pour ne pas compter deux fois la même consultation. Ces informations restent sur votre appareil et ne nous parviennent jamais.')}</p>
+      <h3>${T('Vos droits')}</h3>
+      <p>${T('Vous pouvez à tout moment demander à consulter, corriger ou supprimer ce que nous savons de vous : écrivez à')}
+        <a href="mailto:{MAIL}">{MAIL}</a> ${T('ou appelez le')}
+        <a href="tel:{TEL}">{TEL_AFF}</a>. ${T('La suppression est faite sous quelques jours et sans condition.')}</p>`,
   },
 };
 
@@ -2609,13 +2564,9 @@ function quiSommesNous() {
     : '';
   return `
       <p><b>${esc(M.nom)}</b>${M.baseline ? ' — ' + esc(M.baseline) : ''}.
-        Nous accompagnons des acheteurs francophones dans l’achat d’un
-        logement neuf en Israël, depuis le premier appel jusqu’à la signature,
-        et jusqu’à la remise des clés si vous le souhaitez.${site}</p>
-      <p class="dim">${esc(M.mention)}. Les programmes présentés sur cette
-        page, les prix négociés auprès des promoteurs et l’accompagnement sur
-        place sont assurés dans ce cadre.</p>`
-    + QUI_COMMUN;
+        ${T('Nous accompagnons des acheteurs francophones dans l’achat d’un logement neuf en Israël, depuis le premier appel jusqu’à la signature, et jusqu’à la remise des clés si vous le souhaitez.')}${site}</p>
+      <p class="dim">${esc(M.mention)}. ${T('Les programmes présentés sur cette page, les prix négociés auprès des promoteurs et l’accompagnement sur place sont assurés dans ce cadre.')}</p>`
+    + T(QUI_COMMUN);
 }
 
 function pageTexte(cle) {
@@ -2647,7 +2598,7 @@ function pageTexte(cle) {
     .split('{TEL_AFF}').join(esc(DONNEES.tel))
     .split('{TEL}').join(esc(DONNEES.wa));
   vue.innerHTML = `
-    <p class="fil"><a href="#/">Programmes neufs</a> › ${esc(page.titre)}</p>
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${esc(page.titre)}</p>
     <article class="texte">
       <h1>${esc(page.titre)}</h1>
       ${corps}
@@ -3631,7 +3582,7 @@ function blocSociete(f) {
 async function vueSimulateur() {
   basculer(false);
   vue.innerHTML = `
-    <p class="fil"><a href="#/">Programmes neufs</a> › Simulateur d'achat</p>
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T("Simulateur d'achat")}</p>
     <div class="pub-head">
       <div>
       <h1>Simulateur d'achat</h1>
@@ -3663,7 +3614,7 @@ async function vueSimulateur() {
 async function vueSimulateurEtapes() {
   basculer(false);
   vue.innerHTML = `
-    <p class="fil"><a href="#/">Programmes neufs</a> › Simulateur d'achat</p>
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T("Simulateur d'achat")}</p>
     <div class="pub-head">
       <div>
       <h1>Simulateur d'achat</h1>
