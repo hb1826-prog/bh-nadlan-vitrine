@@ -1,12 +1,12 @@
 {
- "name": "BH — Programmes neufs en Israël",
+ "name": "BH — New developments in Israel",
  "short_name": "BH Annuaire",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
  "background_color": "#ffffff",
  "theme_color": "#0f172a",
- "lang": "fr",
+ "lang": "en",
  "icons": [
   {
    "src": "../icone-192.png",
