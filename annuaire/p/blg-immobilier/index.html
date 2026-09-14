@@ -2849,51 +2849,49 @@ function agendaHTML(p, f, fr) {
 
   const lignes = [
     ligne(T('À la réservation'),
-      'Souvent un chèque non encaissé, imputé sur le premier versement.',
-      shek(res[0]) + ' à ' + shek(res[1])),
+      T('Souvent un chèque non encaissé, imputé sur le premier versement.'),
+      shek(res[0]) + ' ' + T('à') + ' ' + shek(res[1])),
     ligne(T('Le jour de la signature'),
-      c.signature + ' % du prix, plus les honoraires d’avocat'
-      + (Math.round(fr.agence || 0) ? ' et les honoraires de conseil' : '')
+      c.signature + ' ' + T('% du prix, plus les honoraires d’avocat')
+      + (Math.round(fr.agence || 0) ? ' ' + T('et les honoraires de conseil') : '')
       + '.',
       prixDouble(signature + Math.round(fr.avocat)
                  + Math.round(fr.agence || 0)), true),
-    ligneSiUtile('Dans les ' + jt + ' jours suivant la signature',
-      'Taxe d’acquisition (mas rekhicha), due à l’État.',
+    ligneSiUtile(T('Dans les') + ' ' + jt + ' ' + T('jours suivant la signature'),
+      T('Taxe d’acquisition (mas rekhicha), due à l’État.'),
       prixDouble(Math.round(f.taxe)), Math.round(f.taxe), true),
   ];
   if (avance) {
-    lignes.push(ligne('Peu après la signature',
-      'Le prêt promoteur avance ' + E.promoteur + ' % du prix. Vous ne le '
-      + 'sortez pas — mais vous le rembourserez à la livraison, et le '
-      + 'promoteur en paie les intérêts intercalaires et les frais '
-      + 'd’ouverture.', '<span class="dim">' + shek(avance)
-      + ' avancés</span>'));
+    lignes.push(ligne(T('Peu après la signature'),
+      T('Le prêt promoteur avance') + ' ' + E.promoteur + ' '
+      + T('% du prix. Vous ne le sortez pas — mais vous le rembourserez à la livraison, et le promoteur en paie les intérêts intercalaires et les frais d’ouverture.'),
+      '<span class="dim">' + shek(avance) + ' ' + T('avancés') + '</span>'));
   }
   A.intermediaires.forEach(e => {
-    lignes.push(ligne(esc(e.libelle),
+    lignes.push(ligne(esc(T(e.libelle)),
       quandEnClair(e.mois) + ' · ' + pct(Math.round(e.pct * 10) / 10)
-      + ' du prix.', prixDouble(Math.round(prix * e.pct / 100))));
+      + ' ' + T('du prix.'), prixDouble(Math.round(prix * e.pct / 100))));
   });
   // Le courtier se paie quand le credit se met en place, pas a la signature
   // — et sans credit du tout (achat comptant), cette ligne n'existe pas.
-  if (!E.comptant) lignes.push(ligneSiUtile('À la mise en place du crédit',
-    'Honoraires du courtier, s’il y en a un.',
+  if (!E.comptant) lignes.push(ligneSiUtile(T('À la mise en place du crédit'),
+    T('Honoraires du courtier, s’il y en a un.'),
     prixDouble(Math.round(fr.courtier)), Math.round(fr.courtier)));
-  lignes.push(ligne(c.jours + ' jours avant la livraison contractuelle',
-    'Le solde doit être intégralement payé, retard de chantier ou non — '
-    + 'c’est une clause standard des contrats de vente israéliens.',
+  lignes.push(ligne(c.jours + ' ' + T('jours avant la livraison contractuelle'),
+    T('Le solde doit être intégralement payé, retard de chantier ou non — c’est une clause standard des contrats de vente israéliens.'),
     A.solde ? prixDouble(A.solde)
-            : '<span class="dim">soldé par les versements ci-dessus</span>',
+            : '<span class="dim">' + T('soldé par les versements ci-dessus') + '</span>',
     true));
   lignes.push(ligne(T('À la livraison réelle'),
-    'Les ' + c.retenue + ' % retenus, versés à la remise des clés — votre '
-    + 'seule prise en cas de retard.', prixDouble(retenue)));
+    T('Les') + ' ' + c.retenue + ' '
+    + T('% retenus, versés à la remise des clés — votre seule prise en cas de retard.'),
+    prixDouble(retenue)));
 
   return `
   <div class="si-titre">${T('L’agenda de vos paiements')}</div>
-  ${c.suppose ? '<p class="dim si-note">Le promoteur n’a pas communiqué ses '
-    + 'conditions pour ce programme : le montage affiché est le plus courant '
-    + '(' + c.signature + ' / ' + (100 - c.signature) + '), à confirmer.</p>'
+  ${c.suppose ? '<p class="dim si-note">'
+    + T('Le promoteur n’a pas communiqué ses conditions pour ce programme : le montage affiché est le plus courant')
+    + ' (' + c.signature + ' / ' + (100 - c.signature) + '), ' + T('à confirmer.') + '</p>'
     : ''}
   <div class="ag-clefs">
     <div><span>${T('Premier paiement')}</span>
@@ -2913,29 +2911,26 @@ function agendaHTML(p, f, fr) {
                     : (A.creditUtile ? T('Couvert par le crédit')
                                      : T('Déjà soldé'))}</b>
       <em>${E.comptant
-        ? 'aucun crédit — vous réglez cette somme vous-même'
+        ? T('aucun crédit — vous réglez cette somme vous-même')
         : (aTrouver
-          ? 'le crédit couvre ' + shek(A.creditUtile) + ' (plafond ' + plafond
-            + ' % du prix)'
+          ? T('le crédit couvre') + ' ' + shek(A.creditUtile) + ' ('
+            + T('plafond') + ' ' + plafond + ' ' + T('% du prix') + ')'
           : (A.creditUtile
-            ? 'le crédit couvre le solde entier — ' + shek(A.creditUtile)
-              + ', sous votre plafond de ' + plafond + ' %'
-            : 'cet échéancier ne laisse rien à financer'))}</em></div>
+            ? T('le crédit couvre le solde entier —') + ' ' + shek(A.creditUtile)
+              + ', ' + T('sous votre plafond de') + ' ' + plafond + ' %'
+            : T('cet échéancier ne laisse rien à financer')))}</em></div>
   </div>
   <table class="kv ag"><tbody>${lignes.join('')}</tbody></table>
   ${(!aTrouver && !A.creditUtile && A.intermediaires.length)
-    ? '<p class="si-note avert"><b>Cet échéancier se paie comptant.</b> Les '
-      + 'versements étalés couvrent la totalité du prix avant la livraison, '
-      + 'et le crédit immobilier ne se met en place qu’à la fin du chantier : '
-      + 'il n’a donc plus rien à financer. Il faut sortir '
-      + shek(A.signature + A.interIls) + ' de sa poche pendant les travaux.</p>'
+    ? '<p class="si-note avert"><b>' + T('Cet échéancier se paie comptant.') + '</b> '
+      + T('Les versements étalés couvrent la totalité du prix avant la livraison, et le crédit immobilier ne se met en place qu’à la fin du chantier : il n’a donc plus rien à financer. Il faut sortir')
+      + ' ' + shek(A.signature + A.interIls) + ' '
+      + T('de sa poche pendant les travaux.') + '</p>'
     : ''}
-  ${avance ? '<p class="si-note avert"><b>Le prêt promoteur ne réduit '
-    + 'rien.</b> Il décale. Vous sortez moins aujourd’hui, mais l’avance sera '
-    + 'remboursée à la livraison comme le reste — et comme vous avez moins '
-    + 'versé au départ, il vous faudra trouver <b>' + shek(aTrouver)
-    + '</b> à la fin. Ce que le promoteur offre réellement, ce sont les '
-    + 'intérêts intercalaires et les frais d’ouverture.</p>' : ''}
+  ${avance ? '<p class="si-note avert"><b>' + T('Le prêt promoteur ne réduit rien.') + '</b> '
+    + T('Il décale. Vous sortez moins aujourd’hui, mais l’avance sera remboursée à la livraison comme le reste — et comme vous avez moins versé au départ, il vous faudra trouver')
+    + ' <b>' + shek(aTrouver) + '</b> '
+    + T('à la fin. Ce que le promoteur offre réellement, ce sont les intérêts intercalaires et les frais d’ouverture.') + '</p>' : ''}
   ${indexationHTML(p, c)}`;
 }
 
@@ -2949,34 +2944,33 @@ function indexationHTML(p, c) {
   const cout = taux => Math.round(base * (Math.pow(1 + taux / 100, annees) - 1));
   const annonce = ind.annees.map(a => a + ' : ' + pct(ind.detail[a])).join(' · ');
   return `
-  <p class="si-note indexation"><b>Indexation du solde.</b> Sur les
-    ${shek(Math.round(base))} qui restent à payer pendant ${annees} an${
-    annees > 1 ? 's' : ''}, l’indice du coût de la construction ajouterait
-    entre <b>${shek(cout(ind.min))}</b> et <b>${shek(cout(ind.max))}</b>
-    (${shek(cout(ind.moyen))} au rythme moyen). Fourchette établie sur les
-    quatre dernières années — ${esc(annonce)} — et non sur une prévision :
-    personne ne sait ce que fera l’indice.</p>`;
+  <p class="si-note indexation"><b>${T('Indexation du solde.')}</b> ${T('Sur les')}
+    ${shek(Math.round(base))} ${T('qui restent à payer pendant')} ${annees}
+    ${T(annees > 1 ? 'ans' : 'an')}, ${T('l’indice du coût de la construction ajouterait entre')}
+    <b>${shek(cout(ind.min))}</b> ${T('et')} <b>${shek(cout(ind.max))}</b>
+    (${shek(cout(ind.moyen))} ${T('au rythme moyen')}). ${T('Fourchette établie sur les quatre dernières années')}
+    — ${esc(annonce)} — ${T('et non sur une prévision : personne ne sait ce que fera l’indice.')}</p>`;
 }
 
 /* Les reglages de l'echeancier : ce que le visiteur peut bouger. */
 function reglagesEcheancier(p) {
   const c = conditionsCourantes(p);
   const modes = [
-    ['fin', 'Tout le solde à la fin'],
-    ['lineaire', 'Échelonné régulier'],
-    ['sur-mesure', 'Échéances sur mesure'],
+    ['fin', T('Tout le solde à la fin')],
+    ['lineaire', T('Échelonné régulier')],
+    ['sur-mesure', T('Échéances sur mesure')],
   ];
   const lignesSurMesure = (E.echeances || []).map((e, i) => `
     <div class="ech-ligne" data-i="${i}">
       <input type="text" class="ech-lib" value="${esc(e.libelle || '')}"
-             placeholder="Ex. fin du gros œuvre">
+             placeholder="${T('Ex. fin du gros œuvre')}">
       <input type="number" class="ech-pct" step="0.5" min="0" max="100"
-             value="${e.pct}" aria-label="Pourcentage">
+             value="${e.pct}" aria-label="${T('Pourcentage')}">
       <span class="ech-u">%</span>
       <input type="number" class="ech-mois" step="1" min="0" max="120"
-             value="${e.mois}" aria-label="Mois après la signature">
-      <span class="ech-u">mois</span>
-      <button type="button" class="ech-moins" aria-label="Retirer">×</button>
+             value="${e.mois}" aria-label="${T('Mois après la signature')}">
+      <span class="ech-u">${T('mois')}</span>
+      <button type="button" class="ech-moins" aria-label="${T('Retirer')}">×</button>
     </div>`).join('');
 
   return `
@@ -3002,7 +2996,7 @@ function reglagesEcheancier(p) {
     </div>` : ''}
   ${E.mode === 'sur-mesure' ? `
     <div class="ech-liste">${lignesSurMesure
-      || '<p class="dim si-note">Aucune échéance : ajoutez-en une.</p>'}</div>
+      || '<p class="dim si-note">' + T('Aucune échéance : ajoutez-en une.') + '</p>'}</div>
     <button type="button" class="ech-plus" id="s-ech-plus">${T('+ ajouter une échéance')}</button>` : ''}
 
   <div class="si-lab">${T('Indexation au cours de la construction')}
@@ -3268,7 +3262,7 @@ async function simulateur(zone, p) {
         const total = Math.max(0, 100 - c.signature - c.retenue);
         E.echeances = [{pct: Math.round(total / 2),
                         mois: Math.round(moisAvantSolde(p, c) / 2),
-                        libelle: 'Versement intermédiaire'}];
+                        libelle: T('Versement intermédiaire')}];
       }
       refaire();
     };
@@ -3283,7 +3277,7 @@ async function simulateur(zone, p) {
     const c = conditionsCourantes(p);
     E.echeances = (E.echeances || []).concat([{
       pct: 10, mois: Math.round(moisAvantSolde(p, c) / 2),
-      libelle: 'Versement intermédiaire'}]);
+      libelle: T('Versement intermédiaire')}]);
     refaire();
   };
   zone.querySelectorAll('.ech-ligne').forEach(ligne => {
@@ -3339,9 +3333,9 @@ function resultatsComptant(zone, cible, f, p) {
         ? '. ' + T('Dernier paiement') + ' : <b>' + shek(AG.aTrouver) + '</b>'
           + (eur(AG.aTrouver) ? ' (' + eur(AG.aTrouver) + ')' : '')
           + ', ' + AG.c.jours + ' ' + T('jours avant la livraison')
-        : '. Le prix est déjà réglé en entier'} — sans aucun crédit.</p>
-      <p class="rep-sous">Coût total de l’acquisition, frais et taxe
-        d’acquisition compris : <b>${shek(cout)}</b>${
+        : '. ' + T('Le prix est déjà réglé en entier')} — ${T('sans aucun crédit.')}</p>
+      <p class="rep-sous">${T('Coût total de l’acquisition, frais et taxe d’acquisition compris')} :
+        <b>${shek(cout)}</b>${
         eur(cout) ? ' — soit <b>' + eur(cout) + '</b>' : ''}.</p>
     </div>
     ${agendaHTML(p, f, fr)}
@@ -3349,47 +3343,44 @@ function resultatsComptant(zone, cible, f, p) {
     <details class="detail"><summary>${T('Voir le détail du chiffrage')}</summary>
     <div class="stats">
       <div class="stat"><b>${prixDouble(sortie, 'eu big')}</b>
-        <span>À sortir à la signature</span></div>
+        <span>${T('À sortir à la signature')}</span></div>
       <div class="stat"><b>${prixDouble(cout, 'eu big')}</b>
-        <span>Coût total de l'acquisition</span></div>
+        <span>${T('Coût total de l\'acquisition')}</span></div>
     </div>
 
-    <div class="si-titre">Ce qu'on paie en plus du prix</div>
+    <div class="si-titre">${T('Ce qu\'on paie en plus du prix')}</div>
     <table class="kv"><tbody>
-      <tr><th>Prix du bien</th><td class="strong">${shek(E.prix)}</td></tr>
-      <tr><th>Taxe d'acquisition (mas rekhicha)</th>
+      <tr><th>${T('Prix du bien')}</th><td class="strong">${shek(E.prix)}</td></tr>
+      <tr><th>${T('Taxe d\'acquisition (mas rekhicha)')}</th>
         <td class="strong">${shek(f.taxe)}${f.tranches && f.tranches.length ? `
           <div class="dim si-tr">${f.tranches.map(x =>
-            'sur ' + shek(x[0]) + ' à ' + pct(Math.round(x[1] * 10) / 10)
+            T('sur') + ' ' + shek(x[0]) + ' ' + T('à') + ' ' + pct(Math.round(x[1] * 10) / 10)
             + ' = ' + shek(x[2])).join('<br>')}</div>` : ''}</td></tr>
-      <tr><th>Avocat</th><td>${shek(fr.avocat)}</td></tr>
-      <tr><th>Accompagnement après la signature</th>
+      <tr><th>${T('Avocat')}</th><td>${shek(fr.avocat)}</td></tr>
+      <tr><th>${T('Accompagnement après la signature')}</th>
         <td>${shek(fr.agence)}</td></tr>
-      <tr><th>Total des frais</th><td class="strong">${shek(fr.total)}
+      <tr><th>${T('Total des frais')}</th><td class="strong">${shek(fr.total)}
         <span class="dim"> · ${pct(Math.round(fr.total / E.prix * 1000) / 10)}
-        du prix</span></td></tr>
-      <tr><th>Coût total</th><td class="strong">${shek(cout)}</td></tr>
-      ${fr.structure ? `<tr><th>Mise en place de la société</th>
+        ${T('du prix')}</span></td></tr>
+      <tr><th>${T('Coût total')}</th><td class="strong">${shek(cout)}</td></tr>
+      ${fr.structure ? `<tr><th>${T('Mise en place de la société')}</th>
         <td class="strong">${shek(fr.structure)}
-          <div class="dim si-tr">Payée en plus du bien, et non déductible
-          de la plus-value.</div></td></tr>` : ''}
+          <div class="dim si-tr">${T('Payée en plus du bien, et non déductible de la plus-value.')}</div></td></tr>` : ''}
     </tbody></table>
 
     ${r.prix ? `
-    <div class="si-titre">Si vous revendiez dans ${r.annees} ans</div>
+    <div class="si-titre">${T('Si vous revendiez dans')} ${r.annees} ${T('ans')}</div>
     <table class="kv"><tbody>
-      <tr><th>Hypothèse de marché</th><td>${pct(r.revalo)} par an</td></tr>
-      <tr><th>Prix de revente</th><td class="strong">${shek(r.prix)}</td></tr>
-      <tr><th>Plus-value</th><td>${shek(r.plus_value)}</td></tr>
-      <tr><th>Impôt sur la plus-value</th><td>${shek(r.impot)}${r.motif
+      <tr><th>${T('Hypothèse de marché')}</th><td>${pct(r.revalo)} ${T('par an')}</td></tr>
+      <tr><th>${T('Prix de revente')}</th><td class="strong">${shek(r.prix)}</td></tr>
+      <tr><th>${T('Plus-value')}</th><td>${shek(r.plus_value)}</td></tr>
+      <tr><th>${T('Impôt sur la plus-value')}</th><td>${shek(r.impot)}${r.motif
         ? '<div class="dim si-tr">' + esc(r.motif) + '</div>' : ''}</td></tr>
-      <tr><th>Gain net</th><td class="strong">${shek(r.net)}</td></tr>
+      <tr><th>${T('Gain net')}</th><td class="strong">${shek(r.net)}</td></tr>
     </tbody></table>
     <p class="dim si-note">${fr.defaut
-      ? 'Les frais d’acquisition sont déductibles de la plus-value.'
-      : 'Calculé sur les frais d’acquisition standard, qui sont déductibles '
-        + 'de la plus-value.'} Projection, pas une promesse : elle dépend du
-      marché au jour de la revente.</p>` : ''}
+      ? T('Les frais d’acquisition sont déductibles de la plus-value.')
+      : T('Calculé sur les frais d’acquisition standard, qui sont déductibles de la plus-value.')} ${T('Projection, pas une promesse : elle dépend du marché au jour de la revente.')}</p>` : ''}
 
     ${blocSociete(f)}
     </details>`;
@@ -3407,8 +3398,8 @@ function resultats(zone, p) {
 
   const l = f.g[E.ltv + '|' + E.duree];
   if (!l) {
-    cible.innerHTML = '<p class="dim" style="margin-top:18px">Ce montage '
-      + 'n’est pas finançable pour cette situation.</p>';
+    cible.innerHTML = '<p class="dim" style="margin-top:18px">'
+      + T('Ce montage n’est pas finançable pour cette situation.') + '</p>';
     return;
   }
   const apport = l[0], mensualite = l[1], taux = l[2], interets = l[3];
@@ -3427,81 +3418,78 @@ function resultats(zone, p) {
           + (eur(AG.aTrouver) ? ' (' + eur(AG.aTrouver) + ')' : '')
           + ', ' + AG.c.jours + ' ' + T('jours avant la livraison')
         : '. ' + T('Le crédit couvre ensuite tout le solde')} —
-        <b>${shek(mensualite)} par mois</b>${
+        <b>${shek(mensualite)} ${T('par mois')}</b>${
         eur(mensualite) ? ' (' + eur(mensualite) + ')' : ''
-        } pendant ${E.duree} ans, une fois le crédit en place.</p>
-      <p class="rep-sous">Coût total de l’acquisition, frais et taxe
-        d’acquisition compris : <b>${shek(fr.cout)}</b>${
-        eur(fr.cout) ? ' — soit <b>' + eur(fr.cout) + '</b>' : ''}. Sur tout ce que vous
-        rembourserez, <b>${pct(part)}</b> ne sont que des intérêts.</p>
+        } ${T('pendant')} ${E.duree} ${T('ans, une fois le crédit en place.')}</p>
+      <p class="rep-sous">${T('Coût total de l’acquisition, frais et taxe d’acquisition compris')} :
+        <b>${shek(fr.cout)}</b>${
+        eur(fr.cout) ? ' — soit <b>' + eur(fr.cout) + '</b>' : ''}. ${T('Sur tout ce que vous rembourserez,')}
+        <b>${pct(part)}</b> ${T('ne sont que des intérêts.')}</p>
     </div>
     ${agendaHTML(p, f, fr)}
 
     <details class="detail"><summary>${T('Voir le détail du chiffrage')}</summary>
     <div class="stats">
       <div class="stat"><b>${prixDouble(apport + fr.sortie, 'eu big')}</b>
-        <span>À sortir à la signature</span></div>
+        <span>${T('À sortir à la signature')}</span></div>
       <div class="stat"><b>${prixDouble(mensualite, 'eu big')}</b>
-        <span>Mensualité sur ${E.duree} ans</span></div>
+        <span>${T('Mensualité sur')} ${E.duree} ${T('ans')}</span></div>
       <div class="stat"><b>${prixDouble(fr.cout, 'eu big')}</b>
-        <span>Coût total de l'acquisition</span></div>
+        <span>${T('Coût total de l\'acquisition')}</span></div>
     </div>
 
-    <div class="si-titre">Ce qu'on paie en plus du prix</div>
+    <div class="si-titre">${T('Ce qu\'on paie en plus du prix')}</div>
     <table class="kv"><tbody>
-      <tr><th>Prix du bien</th><td class="strong">${shek(E.prix)}</td></tr>
-      <tr><th>Taxe d'acquisition (mas rekhicha)</th>
+      <tr><th>${T('Prix du bien')}</th><td class="strong">${shek(E.prix)}</td></tr>
+      <tr><th>${T('Taxe d\'acquisition (mas rekhicha)')}</th>
         <td class="strong">${shek(f.taxe)}${f.tranches && f.tranches.length ? `
           <div class="dim si-tr">${f.tranches.map(x =>
-            'sur ' + shek(x[0]) + ' à ' + pct(Math.round(x[1] * 10) / 10)
+            T('sur') + ' ' + shek(x[0]) + ' ' + T('à') + ' ' + pct(Math.round(x[1] * 10) / 10)
             + ' = ' + shek(x[2])).join('<br>')}</div>` : ''}</td></tr>
-      <tr><th>Avocat</th><td>${shek(fr.avocat)}</td></tr>
-      <tr><th>Accompagnement après la signature</th>
+      <tr><th>${T('Avocat')}</th><td>${shek(fr.avocat)}</td></tr>
+      <tr><th>${T('Accompagnement après la signature')}</th>
         <td>${shek(fr.agence)}</td></tr>
-      <tr><th>Courtier</th><td>${shek(fr.courtier)}</td></tr>
-      <tr><th>Total des frais</th><td class="strong">${shek(fr.total)}
+      <tr><th>${T('Courtier')}</th><td>${shek(fr.courtier)}</td></tr>
+      <tr><th>${T('Total des frais')}</th><td class="strong">${shek(fr.total)}
         <span class="dim"> · ${pct(Math.round(fr.total / E.prix * 1000) / 10)}
-        du prix</span></td></tr>
-      <tr><th>Coût total</th><td class="strong">${shek(fr.cout)}</td></tr>
-      ${fr.structure ? `<tr><th>Mise en place de la société</th>
+        ${T('du prix')}</span></td></tr>
+      <tr><th>${T('Coût total')}</th><td class="strong">${shek(fr.cout)}</td></tr>
+      ${fr.structure ? `<tr><th>${T('Mise en place de la société')}</th>
         <td class="strong">${shek(fr.structure)}
-          <div class="dim si-tr">Payée en plus du bien, et non déductible
-          de la plus-value.</div></td></tr>` : ''}
+          <div class="dim si-tr">${T('Payée en plus du bien, et non déductible de la plus-value.')}</div></td></tr>` : ''}
     </tbody></table>
 
-    <div class="si-titre">Le financement</div>
+    <div class="si-titre">${T('Le financement')}</div>
     <table class="kv"><tbody>
-      <tr><th>Apport</th><td class="strong">${shek(apport)}</td></tr>
-      <tr><th>Emprunt (${E.ltv} % du prix)</th>
+      <tr><th>${T('Apport')}</th><td class="strong">${shek(apport)}</td></tr>
+      <tr><th>${T('Emprunt')} (${E.ltv} ${T('% du prix')})</th>
         <td class="strong">${shek(emprunt)}</td></tr>
-      <tr><th>Taux moyen</th><td>${pct(taux)}${f.mix ? `
+      <tr><th>${T('Taux moyen')}</th><td>${pct(taux)}${f.mix ? `
         <div class="dim si-tr">${esc(f.mix)}<br>${(f.mesloulim || []).map(m =>
           esc(m[0]) + ' · ' + m[1] + ' % · ' + pct(m[2])).join('<br>')}</div>`
         : ''}</td></tr>
-      <tr><th>Mensualité</th><td class="strong">${shek(mensualite)}</td></tr>
-      <tr><th>Total remboursé</th><td>${shek(rembourse)}</td></tr>
-      <tr><th>Dont intérêts</th><td>${shek(interets)}</td></tr>
+      <tr><th>${T('Mensualité')}</th><td class="strong">${shek(mensualite)}</td></tr>
+      <tr><th>${T('Total remboursé')}</th><td>${shek(rembourse)}</td></tr>
+      <tr><th>${T('Dont intérêts')}</th><td>${shek(interets)}</td></tr>
     </tbody></table>
     <div class="jauge"><i class="cap" style="width:${100 - part}%"></i>
       <i class="int" style="width:${part}%"></i></div>
-    <p class="dim si-note">Sur tout ce que vous rembourserez,
-      <b>${pct(part)}</b> ne sont que des intérêts.</p>
+    <p class="dim si-note">${T('Sur tout ce que vous rembourserez,')}
+      <b>${pct(part)}</b> ${T('ne sont que des intérêts.')}</p>
 
     ${r.prix ? `
-    <div class="si-titre">Si vous revendiez dans ${r.annees} ans</div>
+    <div class="si-titre">${T('Si vous revendiez dans')} ${r.annees} ${T('ans')}</div>
     <table class="kv"><tbody>
-      <tr><th>Hypothèse de marché</th><td>${pct(r.revalo)} par an</td></tr>
-      <tr><th>Prix de revente</th><td class="strong">${shek(r.prix)}</td></tr>
-      <tr><th>Plus-value</th><td>${shek(r.plus_value)}</td></tr>
-      <tr><th>Impôt sur la plus-value</th><td>${shek(r.impot)}${r.motif
+      <tr><th>${T('Hypothèse de marché')}</th><td>${pct(r.revalo)} ${T('par an')}</td></tr>
+      <tr><th>${T('Prix de revente')}</th><td class="strong">${shek(r.prix)}</td></tr>
+      <tr><th>${T('Plus-value')}</th><td>${shek(r.plus_value)}</td></tr>
+      <tr><th>${T('Impôt sur la plus-value')}</th><td>${shek(r.impot)}${r.motif
         ? '<div class="dim si-tr">' + esc(r.motif) + '</div>' : ''}</td></tr>
-      <tr><th>Gain net</th><td class="strong">${shek(r.net)}</td></tr>
+      <tr><th>${T('Gain net')}</th><td class="strong">${shek(r.net)}</td></tr>
     </tbody></table>
     <p class="dim si-note">${fr.defaut
-      ? 'Les frais d’acquisition sont déductibles de la plus-value.'
-      : 'Calculé sur les frais d’acquisition standard, qui sont déductibles '
-        + 'de la plus-value.'} Projection, pas une promesse : elle dépend du
-      marché au jour de la revente.</p>` : ''}
+      ? T('Les frais d’acquisition sont déductibles de la plus-value.')
+      : T('Calculé sur les frais d’acquisition standard, qui sont déductibles de la plus-value.')} ${T('Projection, pas une promesse : elle dépend du marché au jour de la revente.')}</p>` : ''}
 
     ${blocSociete(f)}
     </details>`;
@@ -3520,60 +3508,56 @@ function blocSociete(f) {
   const eur = n => mil(n) + ' €';
   const c = m.creation, cmp = v.cmp;
   return `
-    <div class="si-titre">Ce que la société coûte</div>
+    <div class="si-titre">${T('Ce que la société coûte')}</div>
     <table class="kv"><tbody>
-      <tr><th>Création du montage</th><td class="strong">${shek(c.retenu_ils)}
-        <div class="dim si-tr">${eur(c.min_eur)} à ${eur(c.max_eur)} —
-          ${c.postes.map(p => esc(p[0]) + ' : ' + eur(p[1]) + ' à ' + eur(p[2])
-            + ' (' + esc(p[3]) + ')').join('<br>')}
-          <br>Converti à ${c.eur_ils} ₪ pour 1 €.</div></td></tr>
-      <tr><th>Frais chaque année</th><td class="strong">
+      <tr><th>${T('Création du montage')}</th><td class="strong">${shek(c.retenu_ils)}
+        <div class="dim si-tr">${eur(c.min_eur)} ${T('à')} ${eur(c.max_eur)} —
+          ${c.postes.map(p => esc(T(p[0])) + ' : ' + eur(p[1]) + ' ' + T('à') + ' ' + eur(p[2])
+            + ' (' + esc(T(p[3])) + ')').join('<br>')}
+          <br>${T('Converti à')} ${c.eur_ils} ₪ ${T('pour 1 €.')}</div></td></tr>
+      <tr><th>${T('Frais chaque année')}</th><td class="strong">
         ${shek(m.recurrent.retenu_ils)}
-        <div class="dim si-tr">${shek(m.recurrent.min_ils)} à
-          ${shek(m.recurrent.max_ils)} par an : comptabilité israélienne,
-          registre des sociétés, comptabilité de la holding.</div></td></tr>
-      <tr><th>Sur ${v.annees} ans de détention</th>
+        <div class="dim si-tr">${shek(m.recurrent.min_ils)} ${T('à')}
+          ${shek(m.recurrent.max_ils)} ${T('par an : comptabilité israélienne, registre des sociétés, comptabilité de la holding.')}</div></td></tr>
+      <tr><th>${T('Sur')} ${v.annees} ${T('ans de détention')}</th>
         <td class="strong">${shek(v.detention)}</td></tr>
     </tbody></table>
 
-    <div class="si-titre">Ce que la banque prête à une société</div>
+    <div class="si-titre">${T('Ce que la banque prête à une société')}</div>
     <table class="kv"><tbody>
-      <tr><th>Emprunt maximum</th>
+      <tr><th>${T('Emprunt maximum')}</th>
         <td class="strong">${shek(v.emprunt_max)}
-          <div class="dim si-tr">${m.credit.ltv} % du prix, jamais plus, et
-            ${Math.max(...m.credit.durees)} ans au maximum.</div></td></tr>
-      <tr><th>Majoration du taux</th>
-        <td>+${String(m.credit.majoration).replace('.', ',')} point
-          <div class="dim si-tr">Un crédit professionnel, pas une mashkanta :
-            la caution personnelle des associés est demandée.</div></td></tr>
+          <div class="dim si-tr">${m.credit.ltv} ${T('% du prix, jamais plus, et')}
+            ${Math.max(...m.credit.durees)} ${T('ans au maximum.')}</div></td></tr>
+      <tr><th>${T('Majoration du taux')}</th>
+        <td>+${String(m.credit.majoration).replace('.', ',')} ${T('point')}
+          <div class="dim si-tr">${T('Un crédit professionnel, pas une mashkanta : la caution personnelle des associés est demandée.')}</div></td></tr>
     </tbody></table>
 
-    <div class="si-titre">Sortir l'argent, étage par étage</div>
+    <div class="si-titre">${T('Sortir l\'argent, étage par étage')}</div>
     <table class="kv"><tbody>
-      ${m.etages[v.h ? 'h' : 'd'].map((e, i) => `<tr><th>${esc(e[0])}</th>
+      ${m.etages[v.h ? 'h' : 'd'].map((e, i) => `<tr><th>${esc(T(e[0]))}</th>
         <td class="strong">${shek(v.restes[i])}
-          <div class="dim si-tr">${esc(e[1])}</div></td></tr>`).join('')}
-      <tr><th>Pression fiscale totale</th>
+          <div class="dim si-tr">${esc(T(e[1]))}</div></td></tr>`).join('')}
+      <tr><th>${T('Pression fiscale totale')}</th>
         <td class="strong">${pct(v.pression)}</td></tr>
     </tbody></table>
 
-    <div class="si-titre">Face au même achat en nom propre</div>
+    <div class="si-titre">${T('Face au même achat en nom propre')}</div>
     <table class="kv"><tbody>
-      ${cmp[3] ? `<tr><th>Taxe d'acquisition</th>
+      ${cmp[3] ? `<tr><th>${T('Taxe d\'acquisition')}</th>
         <td class="strong">+${shek(cmp[3])}
-          <div class="dim si-tr">${shek(cmp[5])} au lieu de ${shek(cmp[4])} :
-            une société n'a pas droit au barème de votre situation.</div></td></tr>`
+          <div class="dim si-tr">${shek(cmp[5])} ${T('au lieu de')} ${shek(cmp[4])} :
+            ${T('une société n\'a pas droit au barème de votre situation.')}</div></td></tr>`
         : ''}
-      <tr><th>Impôt de revente en nom propre</th><td>${shek(cmp[0])}</td></tr>
-      <tr><th>Impôt de revente par la société</th><td>${shek(cmp[1])}</td></tr>
-      <tr><th>Solde du montage</th><td class="strong">${shek(cmp[2])}
+      <tr><th>${T('Impôt de revente en nom propre')}</th><td>${shek(cmp[0])}</td></tr>
+      <tr><th>${T('Impôt de revente par la société')}</th><td>${shek(cmp[1])}</td></tr>
+      <tr><th>${T('Solde du montage')}</th><td class="strong">${shek(cmp[2])}
         <div class="dim si-tr">${cmp[2] >= 0
-          ? 'Économie d’impôt, coût de la structure déduit.'
-          : 'La structure coûte plus qu’elle n’économise sur cette seule '
-            + 'opération : elle se justifie quand on réinvestit sans sortir '
-            + 'l’argent, pas sur un achat isolé.'}</div></td></tr>
+          ? T('Économie d’impôt, coût de la structure déduit.')
+          : T('La structure coûte plus qu’elle n’économise sur cette seule opération : elle se justifie quand on réinvestit sans sortir l’argent, pas sur un achat isolé.')}</div></td></tr>
     </tbody></table>
-    <p class="dim si-note">${esc(m.avertissement)}</p>`;
+    <p class="dim si-note">${esc(T(m.avertissement))}</p>`;
 }
 
 /* ---------------- le simulateur seul : un service du site, sans bien choisi */
