@@ -1518,11 +1518,82 @@ function vues(cle) {
     + ' ' + T('fois cette semaine') + '</div>';
 }
 
-const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
-              'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+/* Une date en toutes lettres, dans la langue de la page.
+   Format demande par Hillel le 14/09/2026 : chaque langue a sa construction
+   propre (« de » en espagnol/portugais, le prefixe « ב » colle au mois en
+   hebreu, l'anglais n'a ni l'un ni l'autre) — ce n'est pas une simple
+   traduction mot a mot du nom du mois, donc pas un usage de T(). */
+const MOIS_NOMS = {
+  fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
+       'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+       'August', 'September', 'October', 'November', 'December'],
+  es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+       'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+  pt: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho',
+       'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+  he: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט',
+       'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+};
+const MOIS_FR_INDEX = {};
+MOIS_NOMS.fr.forEach((m, i) => { MOIS_FR_INDEX[m] = i; });
+// « aout » et « decembre » (sans accent) : on tolere l'orthographe saisie a
+// la main dans la fiche d'un programme, une frappe sans accent est courante.
+MOIS_FR_INDEX.aout = 7;
+MOIS_FR_INDEX.decembre = 11;
+MOIS_FR_INDEX.fevrier = 1;
+
+// `jour` : nul si le mois n'est pas renseigne — une date en toutes lettres
+// n'a alors aucun sens, et l'appelant doit se rabattre sur autre chose.
+function dateEnClair(jourDuMois, indexMois, annee) {
+  const langue = DONNEES.langue || 'fr';
+  const mois = (MOIS_NOMS[langue] || MOIS_NOMS.fr)[indexMois];
+  if (!mois) return '';
+  if (langue === 'he') {
+    return jourDuMois ? `${jourDuMois} ב${mois} ${annee}` : `${mois} ${annee}`;
+  }
+  if (langue === 'es' || langue === 'pt') {
+    return jourDuMois ? `${jourDuMois} de ${mois} de ${annee}`
+                       : `${mois} de ${annee}`;
+  }
+  // Anglais et francais partagent la meme construction : jour, mois, annee.
+  return jourDuMois ? `${jourDuMois} ${mois} ${annee}` : `${mois} ${annee}`;
+}
+
 function jour(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || ''));
-  return m ? (+m[3]) + ' ' + T(MOIS[+m[2] - 1]) + ' ' + m[1] : '';
+  return m ? dateEnClair(+m[3], +m[2] - 1, m[1]) : '';
+}
+
+/* La date de livraison d'un programme : un texte ecrit a la main dans la
+   fiche (« Avril 2027 », « 15 avril 2027 », mais aussi parfois « decembre
+   2027 ou juin 2028 », « livraison immediate »...). Quand il s'agit
+   clairement d'un jour+mois+annee ou d'un mois+annee, on le reconstruit en
+   toutes lettres dans la langue de la page. Sinon — deux dates, un
+   trimestre, une mention libre — on l'affiche tel quel plutot que de mal
+   le comprendre : un texte libre mal traduit est pire qu'un mot francais. */
+function livraisonEnClair(texte) {
+  const brut = String(texte || '').trim();
+  if (!brut) return '';
+  let m = /^(\d{1,2})\s+([a-zA-ZéÉûÛ]+)\s+(\d{4})$/.exec(brut);
+  if (m && MOIS_FR_INDEX[m[2].toLowerCase()] !== undefined) {
+    return dateEnClair(+m[1], MOIS_FR_INDEX[m[2].toLowerCase()], m[3]);
+  }
+  m = /^([a-zA-ZéÉûÛ]+)\s+(\d{4})$/.exec(brut);
+  if (m && MOIS_FR_INDEX[m[1].toLowerCase()] !== undefined) {
+    return dateEnClair(null, MOIS_FR_INDEX[m[1].toLowerCase()], m[2]);
+  }
+  // Le format numerique est le plus frequent dans le stock reel :
+  // « 02/2028 » (mois/annee) et, si un jour s'y ajoute un jour, « 15/04/2027 ».
+  m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(brut);
+  if (m && +m[2] >= 1 && +m[2] <= 12) {
+    return dateEnClair(+m[1], +m[2] - 1, m[3]);
+  }
+  m = /^(\d{1,2})\/(\d{4})$/.exec(brut);
+  if (m && +m[1] >= 1 && +m[1] <= 12) {
+    return dateEnClair(null, +m[1] - 1, m[2]);
+  }
+  return brut;
 }
 
 /* ---------------- theme : clair / sombre / systeme, garde par appareil */
@@ -1793,7 +1864,7 @@ function carte(p) {
   const badges = ['<span class="badge or">' + T('Neuf') + '</span>'];
   if (p.livraison) {
     badges.push('<span class="badge">' + T('Livraison') + ' '
-      + esc(p.livraison) + '</span>');
+      + esc(livraisonEnClair(p.livraison)) + '</span>');
   }
   const n = (DONNEES.vues || {})[p.cle];
   const d = (DONNEES.demandes || {})[p.ville];
@@ -2017,7 +2088,7 @@ function offre(p) {
   const faits = [
     [T('Typologies'), typo],
     [T('Surfaces'), surf],
-    [T('Livraison'), p.livraison || ''],
+    [T('Livraison'), p.livraison ? livraisonEnClair(p.livraison) : ''],
     [T('Prix relevés le'), p.maj ? jour(p.maj) : ''],
   ].filter(l => l[1]);
   const bonjour = encodeURIComponent('Bonjour, je suis intéressé par '
@@ -2684,13 +2755,10 @@ function moisAvantSolde(p, c) {
 
 /* Une echeance en clair : « dans 18 mois (mars 2028) ». Une date reelle vaut
    mieux qu'un delai, parce que c'est elle qu'on inscrit dans un agenda. */
-const MOIS_COURT = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-                    'juillet', 'août', 'septembre', 'octobre', 'novembre',
-                    'décembre'];
 function quandEnClair(mois) {
   const d = new Date();
   d.setMonth(d.getMonth() + (mois || 0));
-  const date = T(MOIS_COURT[d.getMonth()]) + ' ' + d.getFullYear();
+  const date = dateEnClair(null, d.getMonth(), d.getFullYear());
   if (!mois) return T('à la signature');
   return T('dans') + ' ' + mois + ' ' + T('mois') + ' — ' + date;
 }
