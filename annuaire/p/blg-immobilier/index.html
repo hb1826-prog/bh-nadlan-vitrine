@@ -502,11 +502,18 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
   gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
   background:var(--fond);border-top:1px solid var(--trait);
   box-shadow:0 -6px 20px -8px rgba(15,23,42,.22)}
- .barre-mobile button,.barre-mobile a{flex:1;border:0;border-radius:999px;
-  padding:14px 10px;font-size:15px;font-weight:700;text-align:center;
-  background:var(--encre);color:var(--fond);cursor:pointer}
+ .barre-mobile button,.barre-mobile a{flex:1;border:0;border-radius:20px;
+  padding:10px 10px;font-size:14px;font-weight:700;text-align:center;
+  line-height:1.25;background:var(--encre);color:var(--fond);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1px}
+ .barre-mobile a{flex-direction:row}
+ /* Le rappel gratuit se dit en deux lignes : le titre, puis la reassurance
+    en petit — sans elle, l'engagement est ce qui retient le plus un
+    visiteur d'entrer son numero. */
+ .barre-mobile button small{font-size:10.5px;font-weight:600;opacity:.72}
  .barre-mobile .wa{background:#25d366;color:#052e16}
- body{padding-bottom:78px}
+ body{padding-bottom:86px}
  body.tunnel-plein{padding-bottom:0}
 }
 
@@ -1249,7 +1256,7 @@ table.ag th{width:64%}
   <div class=grow></div>
   <div class=langues></div>
   <div class=theme><button data-t='light' title='Clair'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Comme le système'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Sombre'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
-  <button class="cta" type="button" onclick="versContact(this)">Être rappelé</button>
+  <button class="cta" type="button" onclick="versContact(this)">Un conseiller vous rappelle</button>
 </div></header>
 
 <section class=hero id=hero>
@@ -1337,7 +1344,8 @@ table.ag th{width:64%}
 </button>
 
 <div class=barre-mobile>
-  <button type=button onclick="versContact(this)">Être rappelé</button>
+  <button type=button onclick="versContact(this)">Un conseiller vous rappelle
+    <small>Gratuit, sans engagement</small></button>
   <a class=wa href="https://wa.me/33666590022">WhatsApp</a>
 </div>
 
@@ -1352,7 +1360,7 @@ table.ag th{width:64%}
       <b>Acheter</b>
       <a href="#/">Tous les programmes</a>
       <a href="#/simulateur">Simulateur d'achat</a>
-      <a href="#/" onclick="versContact(this);return false">Être rappelé</a>
+      <a href="#/" onclick="versContact(this);return false">Un conseiller vous rappelle</a>
     </div>
     <div class=pied-col id=pied-villes><b>Où acheter</b></div>
     <div class=pied-col>
@@ -3992,7 +4000,7 @@ function contactHTML(p, intention) {
       texte: T('Nous suivons aussi des programmes qui ne sont pas en ligne. '
         + 'Dites-nous votre ville et votre budget : nous revenons vers vous '
         + 'avec une sélection.'),
-      bouton: T('Être rappelé')},
+      bouton: T('Un conseiller vous rappelle')},
   }[I];
 
   return `
@@ -4243,7 +4251,7 @@ function ouvrirRappel(ancre) {
   POP.dataset.pour = ancreId(ancre);
   POP.innerHTML = `
     <button class="rappel-x" type="button" aria-label="${T('Fermer')}">×</button>
-    <b class="rappel-titre">${T('Être rappelé')}</b>
+    <b class="rappel-titre">${T('Un conseiller vous rappelle')}</b>
     <p>${T('Laissez votre prénom et votre numéro : on vous rappelle')}
       <b>${T('aujourd’hui')}</b>.</p>
     <label for="r-prenom">${T('Prénom')}</label>
@@ -4252,7 +4260,7 @@ function ouvrirRappel(ancre) {
     <input id="r-tel" type="tel" autocomplete="tel" placeholder="+33 6 …">
     <div class="pot"><label>${T('Société')}</label>
       <input id="r-societe" tabindex="-1" autocomplete="off"></div>
-    <button class="rappel-ok" type="button">${T('Être rappelé')}</button>
+    <button class="rappel-ok" type="button">${T('Un conseiller vous rappelle')}</button>
     <p class="rappel-note" id="r-note">${T('Vos coordonnées ne sont ni revendues, ni transmises à un promoteur.')}</p>`;
   document.body.appendChild(POP);
   POP_ANCRE = ancre;
