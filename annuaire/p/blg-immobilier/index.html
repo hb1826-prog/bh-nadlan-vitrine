@@ -2321,8 +2321,8 @@ function carteHTML(vus) {
     <div class="carte-cadre">
       ${c.fond.replace('</svg>', reperes + pastilles + '</svg>')}
     </div>
-    <p class="carte-note">Contour indicatif, destiné à situer les villes.
-      Repères géographiques d’après OpenStreetMap.</p>
+    <p class="carte-note">${T('Contour indicatif, destiné à situer les villes. '
+      + 'Repères géographiques d’après OpenStreetMap.')}</p>
   </section>`;
 }
 
@@ -2631,8 +2631,8 @@ function pageTexte(cle) {
     .split('{TEL_ED_AFF}').join(esc(L.tel || DONNEES.tel))
     .split('{TEL_ED}').join(esc(L.wa || DONNEES.wa))
     .split('{PARTENAIRE_ED}').join(DONNEES.marque
-      ? `<p>Cette page est publiée pour <b>${esc(DONNEES.marque.nom)}</b>,
-           partenaire apporteur d’affaires. ${esc(DONNEES.marque.mention)}.</p>`
+      ? `<p>${T('Cette page est publiée pour')} <b>${esc(DONNEES.marque.nom)}</b>,
+           ${T('partenaire apporteur d’affaires.')} ${esc(DONNEES.marque.mention)}.</p>`
       : '')
     // Ceux-la, en revanche, sont les coordonnees auxquelles le visiteur
     // s'adresse : celles de la maison dont il lit la page.
@@ -2778,7 +2778,7 @@ function echeancesIntermediaires(p) {
   if (E.mode === 'sur-mesure') {
     return (E.echeances || []).filter(e => e.pct > 0).map((e, i) => ({
       pct: e.pct, mois: e.mois,
-      libelle: e.libelle || ('Échéance ' + (i + 1))}));
+      libelle: e.libelle || (T('Échéance') + ' ' + (i + 1))}));
   }
   return [];                      // 'fin' : rien entre les deux
 }
@@ -3234,12 +3234,12 @@ async function simulateur(zone, p) {
 
       <div id="si-res"></div>
 
-      <p class="dim si-pied">${dateChange()} Taux du marché relevés le
-        ${esc(DONNEES.marche.date)} — Banque d'Israël ${pct(DONNEES.marche.boi)}
-        depuis le ${esc(DONNEES.marche.boi_depuis)}, prime
-        ${pct(DONNEES.marche.prime)}. Estimation indicative : le taux réel
-        dépend de votre dossier et de la banque. Elle ne vaut ni offre de prêt,
-        ni conseil fiscal.</p>
+      <p class="dim si-pied">${dateChange()} ${T('Taux du marché relevés le')}
+        ${esc(DONNEES.marche.date)} — ${T('Banque d’Israël')} ${pct(DONNEES.marche.boi)}
+        ${T('depuis le')} ${esc(DONNEES.marche.boi_depuis)}, ${T('prime')}
+        ${pct(DONNEES.marche.prime)}. ${T('Estimation indicative : le taux réel '
+        + 'dépend de votre dossier et de la banque. Elle ne vaut ni offre de prêt, '
+        + 'ni conseil fiscal.')}</p>
     </div>`;
 
   const refaire = () => simulateur(zone, p);
@@ -3724,9 +3724,9 @@ async function etapeFinancement(zone) {
         + v + ' %</button>').join('')}
     </div>
     <p class="dim si-note">${TUNNEL.comptant
-      ? 'Aucun crédit : le prix, les frais et la taxe se paient de votre poche.'
-      : esc(f.note_plafond || ('Votre situation permet de financer jusqu’à '
-        + plafond + ' %.'))}</p>
+      ? T('Aucun crédit : le prix, les frais et la taxe se paient de votre poche.')
+      : esc(f.note_plafond || (T('Votre situation permet de financer jusqu’à')
+        + ' ' + plafond + ' %.'))}</p>
 
     ${TUNNEL.comptant ? '' : `
     <div class="si-lab" style="margin-top:14px">${T('Durée du prêt')}</div>
