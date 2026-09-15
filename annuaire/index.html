@@ -164,7 +164,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .pub-logo{display:block;flex:none;line-height:0;border-radius:10px;
  transition:transform .18s var(--ease)}
 .pub-logo:hover{transform:translateY(-1px)}
-.pub-logo svg{display:block;height:40px;width:auto}
+.pub-logo svg{display:block}
+/* Le logo garde la taille exacte de son propre attribut `height` (fixee
+   cote Python), jamais recalculee ici : un `height` CSS qui lui laisse
+   deviner sa largeur declenche, sur la page hebreu (dir=rtl), un bug de
+   Safari qui tasse le logo en carre et ecrase le nom sur le dessin. Le
+   format telephone applique un zoom (transform:scale) au lieu de
+   redemander ce calcul. */
 .nav{display:flex;align-items:center;gap:4px;margin-left:8px}
 .nav a{padding:9px 14px;border-radius:999px;font-size:14.5px;font-weight:550;
  color:var(--encre-2);transition:background .16s var(--ease)}
@@ -555,13 +561,13 @@ body.tunnel-plein .pub-foot{display:none}
  padding:38px 22px 46px;text-align:center;color:var(--gris);font-size:13.5px;
  line-height:1.75}
 .pub-foot .marque{margin-bottom:12px}
-.pub-foot .marque svg{height:38px}
+.pub-foot .marque svg{display:block}
 .pub-foot a{color:var(--encre-2);font-weight:600}
 
 /* =============================== telephone =============================== */
 @media(max-width:900px){
  .pub-bar{height:62px;gap:12px}
- .pub-logo svg{height:32px}
+ .pub-logo svg{transform:scale(.8)}
  .nav{display:none}
  .hero .dedans{padding:38px 20px 62px}
  .hero h1{font-size:28px}
