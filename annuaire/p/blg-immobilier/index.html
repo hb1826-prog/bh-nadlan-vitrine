@@ -1534,6 +1534,18 @@ const MOIS_NOMS = {
        'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
   he: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט',
        'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+  ru: ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
+       'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
+};
+// Le russe decline le mois quand un jour le precede (« 15 avril » se dit
+// « 15 апреля », pas « 15 апрель ») : une deuxieme liste, au genitif,
+// uniquement pour ce cas-la — le nominatif (mois seul, « avril 2027 »)
+// reste celui de MOIS_NOMS.ru.
+const MOIS_RU_GENITIF = {
+  'январь': 'января', 'февраль': 'февраля', 'март': 'марта',
+  'апрель': 'апреля', 'май': 'мая', 'июнь': 'июня', 'июль': 'июля',
+  'август': 'августа', 'сентябрь': 'сентября', 'октябрь': 'октября',
+  'ноябрь': 'ноября', 'декабрь': 'декабря',
 };
 const MOIS_FR_INDEX = {};
 MOIS_NOMS.fr.forEach((m, i) => { MOIS_FR_INDEX[m] = i; });
@@ -1555,6 +1567,10 @@ function dateEnClair(jourDuMois, indexMois, annee) {
   if (langue === 'es' || langue === 'pt') {
     return jourDuMois ? `${jourDuMois} de ${mois} de ${annee}`
                        : `${mois} de ${annee}`;
+  }
+  if (langue === 'ru') {
+    return jourDuMois ? `${jourDuMois} ${MOIS_RU_GENITIF[mois] || mois} ${annee}`
+                       : `${mois} ${annee}`;
   }
   // Anglais et francais partagent la meme construction : jour, mois, annee.
   return jourDuMois ? `${jourDuMois} ${mois} ${annee}` : `${mois} ${annee}`;
@@ -2091,9 +2107,12 @@ function offre(p) {
     [T('Livraison'), p.livraison ? livraisonEnClair(p.livraison) : ''],
     [T('Prix relevés le'), p.maj ? jour(p.maj) : ''],
   ].filter(l => l[1]);
-  const bonjour = encodeURIComponent('Bonjour, je suis intéressé par '
-    + p.nom + ' (' + p.ville + '). Pouvez-vous m’envoyer les disponibilités '
-    + 'et les prix réels ?');
+  // Le message que le VISITEUR envoie a Hillel (pas l'inverse) : dans sa
+  // langue quand meme, sinon un visiteur russe ou anglais ouvre WhatsApp
+  // avec une phrase francaise toute prete a la place de la sienne.
+  const bonjour = encodeURIComponent(T("Bonjour, je suis intéressé par "
+    + "{nom} ({ville}). Pouvez-vous m'envoyer les disponibilités et les "
+    + "prix réels ?").replace('{nom}', p.nom).replace('{ville}', p.ville));
 
   return `
   <aside class="offre"><div class="offre-in">
