@@ -591,6 +591,30 @@ body.tunnel-plein .pub-top .nav{display:none}
 body.tunnel-plein .pub-top .cta{display:none}
 body.tunnel-plein .pub-foot{display:none}
 
+/* Le simulateur s'ouvre SOUS ses onglets, pas a la place de la page.
+
+   Hillel, le 16/09/2026 : « j'ai l'impression qu'on est sorti complètement de
+   l'application ». Le tunnel ci-dessus efface la navigation pour qu'aucun tap
+   ne se perde pendant les etapes — c'etait juste, mais il ne restait alors
+   aucune sortie visible, sinon le logo.
+
+   « Acheter » et « Simuler mon budget » sont des ONGLETS : la rangee reste
+   donc a l'ecran, l'onglet allume dit ou l'on est, et appuyer sur « Acheter »
+   ramene a la liste. Ce qui disparait, c'est le reste de la boite — villes,
+   pieces, budget — qui ne sert qu'a acheter et n'aurait aucun sens au-dessus
+   d'un simulateur. La rangee d'onglets est une cible large et deliberee : elle
+   ne cree pas le risque de tap accidentel que le tunnel cherche a eviter. */
+body.sim-actif #raccourcis,
+body.sim-actif .cherche .ligne-pieces,
+body.sim-actif .cherche .filtres-toggle,
+body.sim-actif .cherche .champs,
+body.sim-actif #voir-res{display:none}
+/* La boite chevauche la banniere de 46 px sur la liste. La banniere n'est
+   plus la : sans cette ligne, les onglets passent sous la barre du haut. */
+body.sim-actif .cherche{margin-top:18px}
+body.sim-actif .cherche .boite{padding:8px 10px}
+body.sim-actif .onglets{padding-bottom:0}
+
 /* ============================== le contact ============================== */
 .contact{border:1px solid var(--or-trait);background:linear-gradient(
  180deg,var(--or-clair),var(--carte) 62%)}
@@ -1323,7 +1347,7 @@ table.ag th{width:64%}
   <div class=grow></div>
   <div class=langues></div>
   <div class=theme><button data-t='light' title='Clair'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Comme le système'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Sombre'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
-  <button class="cta" type="button" onclick="versContact(this)">Un conseiller vous rappelle</button>
+  <button class="cta" type="button" onclick="versContact(this)">Un conseiller vous rappelle aujourd’hui</button>
 </div></header>
 
 <section class=hero id=hero>
@@ -1340,8 +1364,10 @@ table.ag th{width:64%}
 
 <div class=cherche id=cherche><div class=boite>
   <div class=onglets>
-    <button class=on type=button>Acheter</button>
-    <button type=button onclick="location.hash='#/simulateur'">Simuler mon budget</button>
+    <button class=on type=button id=onglet-acheter
+      onclick="location.hash='#/'">Acheter</button>
+    <button type=button id=onglet-simuler
+      onclick="location.hash='#/simulateur'">Simuler mon budget</button>
   </div>
   <div class=raccourcis id=raccourcis></div>
   <div class=ligne-pieces>
@@ -1410,7 +1436,7 @@ table.ag th{width:64%}
 </button>
 
 <div class=barre-mobile>
-  <button type=button onclick="versContact(this)">Un conseiller vous rappelle
+  <button type=button onclick="versContact(this)">Un conseiller vous rappelle aujourd’hui
     <small>Gratuit, sans engagement</small></button>
   <a class=wa href="https://wa.me/33666590022">WhatsApp</a>
 </div>
@@ -1426,7 +1452,7 @@ table.ag th{width:64%}
       <b>Acheter</b>
       <a href="#/">Tous les programmes</a>
       <a href="#/simulateur">Simulateur d'achat</a>
-      <a href="#/" onclick="versContact(this);return false">Un conseiller vous rappelle</a>
+      <a href="#/" onclick="versContact(this);return false">Un conseiller vous rappelle aujourd’hui</a>
     </div>
     <div class=pied-col id=pied-villes><b>Où acheter</b></div>
     <div class=pied-col>
@@ -2038,12 +2064,43 @@ function appel() {
    pixels de publicite generique avant d'apercevoir le bien qu'il venait
    voir. Sur un telephone, le nom du programme arrivait au deuxieme ecran.
    Une fiche commence par la fiche. */
-function basculer(surLaListe) {
-  ['hero', 'cherche', 'entete', 'modele', 'qui', 'avis',
-   'rassure'].forEach(id => {
+/* Trois etats, pas deux.
+
+   Hillel, le 16/09/2026 : « quand je clique sur Simuler mon budget, j'ai
+   l'impression qu'on est sorti complètement de l'application. Il faut qu'on
+   trouve comment faire — que ça s'ouvre en dessous, dans la partie Simuler
+   mon budget. »
+
+   Le simulateur se comportait comme une fiche : tout disparaissait, y compris
+   la boite de recherche et ses deux onglets — donc la seule sortie etait le
+   logo. Or « Acheter » et « Simuler mon budget » SONT des onglets : ce qui
+   doit changer est ce qu'il y a dessous, pas la page entiere.
+
+   'simulateur' garde donc la boite de recherche et sa rangee d'onglets, et
+   masque le reste de cette boite (villes, pieces, budget) qui ne sert qu'a
+   acheter — voir `body.sim-actif` dans `portail.css`. Appuyer sur « Acheter »
+   ramene a la liste : c'est le retour en arriere, la ou le visiteur le
+   cherche. */
+function basculer(mode) {
+  // Les anciens appels passaient un booleen. On les accepte encore plutot
+  // que de les traduire un par un : `true` = la liste, `false` = une fiche.
+  if (mode === true) mode = 'liste';
+  if (mode === false) mode = 'fiche';
+  const sim = mode === 'simulateur';
+  const liste = mode === 'liste';
+  ['hero', 'entete', 'modele', 'qui', 'avis', 'rassure'].forEach(id => {
     const bloc = document.getElementById(id);
-    if (bloc) bloc.style.display = surLaListe ? '' : 'none';
+    if (bloc) bloc.style.display = liste ? '' : 'none';
   });
+  const cherche = document.getElementById('cherche');
+  if (cherche) cherche.style.display = (liste || sim) ? '' : 'none';
+  document.body.classList.toggle('sim-actif', sim);
+  // L'onglet allume dit ou l'on est. Sans lui, la rangee affirme « Acheter »
+  // pendant qu'on simule.
+  const a = document.getElementById('onglet-acheter');
+  const s = document.getElementById('onglet-simuler');
+  if (a) a.classList.toggle('on', !sim);
+  if (s) s.classList.toggle('on', sim);
 }
 
 /* ---------------- la fiche d'un programme */
@@ -3685,9 +3742,8 @@ function blocSociete(f) {
 
 /* ---------------- le simulateur seul : un service du site, sans bien choisi */
 async function vueSimulateur() {
-  basculer(false);
+  basculer('simulateur');
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T("Simulateur d'achat")}</p>
     <div class="pub-head">
       <div>
       <h1>${T("Simulateur d'achat")}</h1>
@@ -3715,9 +3771,8 @@ async function vueSimulateur() {
    chiffrage complet part dans un mini-site que le guichet fabrique et envoie
    lui-meme, sur le canal choisi — jamais affiche dans cette page. */
 async function vueSimulateurEtapes() {
-  basculer(false);
+  basculer('simulateur');
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T("Simulateur d'achat")}</p>
     <div class="pub-head">
       <div>
       <h1>${T("Simulateur d'achat")}</h1>
@@ -4083,7 +4138,7 @@ function contactHTML(p, intention) {
       texte: T('Nous suivons aussi des programmes qui ne sont pas en ligne. '
         + 'Dites-nous votre ville et votre budget : nous revenons vers vous '
         + 'avec une sélection.'),
-      bouton: T('Un conseiller vous rappelle')},
+      bouton: T('Un conseiller vous rappelle aujourd’hui')},
   }[I];
 
   return `
@@ -4335,7 +4390,7 @@ function ouvrirRappel(ancre) {
   POP.dataset.pour = ancreId(ancre);
   POP.innerHTML = `
     <button class="rappel-x" type="button" aria-label="${T('Fermer')}">×</button>
-    <b class="rappel-titre">${T('Un conseiller vous rappelle')}</b>
+    <b class="rappel-titre">${T('Un conseiller vous rappelle aujourd’hui')}</b>
     <p>${T('Laissez votre prénom et votre numéro : on vous rappelle')}
       <b>${T('aujourd’hui')}</b>.</p>
     <label for="r-prenom">${T('Prénom')}</label>
@@ -4344,7 +4399,7 @@ function ouvrirRappel(ancre) {
     <input id="r-tel" type="tel" autocomplete="tel" placeholder="+33 6 …">
     <div class="pot"><label>${T('Société')}</label>
       <input id="r-societe" tabindex="-1" autocomplete="off"></div>
-    <button class="rappel-ok" type="button">${T('Un conseiller vous rappelle')}</button>
+    <button class="rappel-ok" type="button">${T("Être rappelé aujourd'hui")}</button>
     <p class="rappel-note" id="r-note">${T('Vos coordonnées ne sont ni revendues, ni transmises à un promoteur.')}</p>`;
   document.body.appendChild(POP);
   POP_ANCRE = ancre;

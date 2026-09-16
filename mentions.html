@@ -582,6 +582,30 @@ body.tunnel-plein .pub-top .nav{display:none}
 body.tunnel-plein .pub-top .cta{display:none}
 body.tunnel-plein .pub-foot{display:none}
 
+/* Le simulateur s'ouvre SOUS ses onglets, pas a la place de la page.
+
+   Hillel, le 16/09/2026 : « j'ai l'impression qu'on est sorti complètement de
+   l'application ». Le tunnel ci-dessus efface la navigation pour qu'aucun tap
+   ne se perde pendant les etapes — c'etait juste, mais il ne restait alors
+   aucune sortie visible, sinon le logo.
+
+   « Acheter » et « Simuler mon budget » sont des ONGLETS : la rangee reste
+   donc a l'ecran, l'onglet allume dit ou l'on est, et appuyer sur « Acheter »
+   ramene a la liste. Ce qui disparait, c'est le reste de la boite — villes,
+   pieces, budget — qui ne sert qu'a acheter et n'aurait aucun sens au-dessus
+   d'un simulateur. La rangee d'onglets est une cible large et deliberee : elle
+   ne cree pas le risque de tap accidentel que le tunnel cherche a eviter. */
+body.sim-actif #raccourcis,
+body.sim-actif .cherche .ligne-pieces,
+body.sim-actif .cherche .filtres-toggle,
+body.sim-actif .cherche .champs,
+body.sim-actif #voir-res{display:none}
+/* La boite chevauche la banniere de 46 px sur la liste. La banniere n'est
+   plus la : sans cette ligne, les onglets passent sous la barre du haut. */
+body.sim-actif .cherche{margin-top:18px}
+body.sim-actif .cherche .boite{padding:8px 10px}
+body.sim-actif .onglets{padding-bottom:0}
+
 /* ============================== le contact ============================== */
 .contact{border:1px solid var(--or-trait);background:linear-gradient(
  180deg,var(--or-clair),var(--carte) 62%)}
