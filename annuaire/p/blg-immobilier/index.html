@@ -1,4 +1,4 @@
-<!doctype html><html lang=fr dir=ltr><head><meta charset=utf-8>
+<!doctype html><html lang=fr dir=ltr data-theme=light><head><meta charset=utf-8>
 <meta name=viewport content='width=device-width,initial-scale=1'>
 <meta name=color-scheme content='light dark'>
 <link rel=icon href="../../favicon.ico" sizes="any">
@@ -6,7 +6,7 @@
 <link rel=apple-touch-icon href="../../icone-180.png">
 <link rel=manifest href="manifest.webmanifest">
 
-<meta name=theme-color content="#0f172a">
+<meta name=theme-color content="#414A5C">
 <title>BLG Immobilier — Programmes neufs · Israël</title>
 <meta name=description content="36 programmes neufs en Israël suivis par
  BLG Immobilier, dans 17 villes : prix, typologies, simulateur d'achat et accompagnement francophone.">
@@ -114,6 +114,38 @@
  --action-lavis:#0E1B2C;
 }
 /* IDENTITE:fin */
+
+/* ====================== l'ardoise s'eclaircit, ici seulement ==============
+   La soeur de Hillel, qui lit l'hebreu, a regarde l'annuaire et a dit la
+   meme chose deux fois : « le noir, en gris ». Elle a raison — l'ardoise de
+   marque (#0F172A) est la couleur d'un outil de travail : sur les grandes
+   pastilles pleines de la vitrine, et sur de l'hebreu qui porte plus de
+   matiere a l'oeil que du latin, elle se lit comme du noir d'imprimerie.
+
+   On ne touche PAS a `identite.py` : le CRM, les fiches A4 et les dossiers
+   PDF gardent l'ardoise. Ce qui s'eclaircit est la peau publique, et elle
+   seule — c'est ce que Hillel a tranche. Le gris reste de la meme famille
+   (meme teinte bleutee, juste plus clair), donc la page reste de la marque.
+
+   Ce qui est mesure : #414A5C donne 8,3:1 sur le fond creme et 8,9:1 pour du
+   blanc pose dessus. Tres au-dessus des 4,5:1 exiges — la lisibilite ne paie
+   rien a cet adoucissement. */
+:root:not([data-theme=dark]){
+ --encre:#414A5C;
+ --encre-2:#525B6E;
+}
+/* Et on rend l'encre claire au theme sombre, qu'on vient de recouvrir : les
+   deux regles ont le meme poids, donc c'est la derniere ecrite qui gagne, et
+   sans cette reprise un telephone regle en sombre afficherait du gris sur du
+   gris. */
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+}}
+:root[data-theme=dark]{
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+}
 
 /* Ce qui n'est pas de la couleur reste ecrit ici : les rayons, les ombres et
    la courbe d'animation appartiennent a cette page-la. Une vitrine arrondit
@@ -475,7 +507,7 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 /* ===================== la carte d'appel dans la grille ==================== */
 .tile.appel{display:flex;flex-direction:column;gap:9px;justify-content:center;
  text-align:left;padding:26px 24px;cursor:pointer;
- background:linear-gradient(160deg,var(--encre),#1e293b);color:#fff;
+ background:linear-gradient(160deg,var(--encre),#535D73);color:#fff;
  border-color:var(--encre);font:inherit}
 .tile.appel .pastille{align-self:flex-start;background:var(--or);color:#1a1405;
  font-size:11.5px;font-weight:750;padding:5px 11px;border-radius:999px}
@@ -1634,7 +1666,10 @@ function theme(choix) {
   document.querySelectorAll('.theme button').forEach(b =>
     b.classList.toggle('on', b.dataset.t === choix));
 }
-try { theme(localStorage.getItem('bh-theme') || 'auto'); } catch (e) {}
+// Au premier passage, le clair — pas le reglage du telephone. La page
+// s'ouvre en clair pour tout le monde, et seul un choix explicite du
+// visiteur, garde sur son appareil, la fait basculer.
+try { theme(localStorage.getItem('bh-theme') || 'light'); } catch (e) {}
 
 /* ---------------- la recherche
 
@@ -4041,7 +4076,8 @@ function contactHTML(p, intention) {
           <button class="wa" id="c-wa" type="button">WhatsApp</button>
         </div>
         <p class="si-note" id="c-note">${T('Réponse le jour même. Vos coordonnées ne '
-          + 'sont ni revendues, ni transmises à un promoteur.')}</p>
+          + 'sont ni revendues, ni transmises à un promoteur.')}
+          <a href="#/donnees-personnelles">${T('Politique de confidentialité')}</a></p>
       </div>
     </div>
   </div>`;
