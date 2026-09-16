@@ -237,18 +237,20 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
  color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 
-/* Les deux sorties de la banniere, et la ligne de preuve.
+/* La ligne de preuve, sous la promesse.
 
-   Hillel, le 16/09/2026 : « fais une tres grande entree ». Une banniere qui
-   n'offre rien a faire est une affiche ; celle-ci propose les deux gestes
-   possibles — laisser son numero, ou aller voir — et pose dessous les quatre
-   chiffres qui rendent la promesse credible. Aucun n'est ecrit a la main :
-   ils viennent du stock et de la marque. */
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.hero-actions .cta{font-size:15.5px;padding:0 24px;height:50px}
-.cta.fantome{background:rgba(255,255,255,.12);color:#fff;
- border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(3px)}
-.cta.fantome:hover{background:rgba(255,255,255,.2);opacity:1}
+   Hillel, le 16/09/2026 : « fais une tres grande entree ». Quatre chiffres
+   rendent la promesse credible, et aucun n'est ecrit a la main : ils
+   viennent du stock et de la marque.
+
+   La banniere a porte deux boutons pendant quelques heures — « Etre rappele
+   aujourd'hui » et « Voir les programmes ». Hillel les a fait retirer le
+   jour meme : ils repoussaient la boite de recherche sous la ligne de
+   flottaison. « Je prefere qu'ils defilent, parce que ca m'interesse qu'ils
+   voient le bloc de recherche. » Sur ce site, le premier ecran doit montrer
+   la marchandise — l'appel a l'action vit dans la barre du haut, dans la
+   barre du bas sur telephone, et au pied de chaque section. Ne pas les
+   remettre. */
 .hero-preuves{display:flex;gap:30px;flex-wrap:wrap;margin:30px 0 0;padding:0;
  list-style:none}
 .hero-preuves li{display:flex;flex-direction:column;gap:2px}
@@ -257,8 +259,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero-preuves span{font-size:12.5px;letter-spacing:.05em;
  text-transform:uppercase;color:rgba(255,255,255,.82)}
 @media(max-width:640px){
- .hero-actions{gap:9px;margin-top:20px}
- .hero-actions .cta{flex:1 1 100%;justify-content:center}
  .hero-preuves{gap:18px 26px;margin-top:22px}
  .hero-preuves b{font-size:21px}
  .hero-preuves span{font-size:11px}
@@ -552,7 +552,11 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .rassure .points b{display:block;font-size:15.5px;margin-bottom:5px}
 .rassure .points span{font-size:14.5px;color:var(--gris);line-height:1.6}
 .rassure .appelez{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
-.rassure .appelez .cta{display:inline-flex;align-items:center}
+/* `gap` plutot qu'une espace dans le texte : le bouton est une boite flexible,
+   et une boite flexible jette les espaces entre ses elements. Depuis que le
+   numero est enveloppe dans son `<bdi>`, il forme un element a part — sans
+   cette ligne, le bouton affiche « להתקשר+972… » colle. */
+.rassure .appelez .cta{display:inline-flex;align-items:center;gap:8px}
 
 /* ====================== la barre d'action du telephone =================== */
 .barre-mobile{display:none}
@@ -1330,13 +1334,7 @@ table.ag th{width:64%}
     <span class=promesse>0 frais d'agence</span>
     <h1>Acheter en Israël sans y être,<br>sans parler hébreu, sans frais d’agence.</h1>
     <p class=chapeau>Le prix est négocié avec le promoteur avant que vous n’entriez, le chiffrage complet vous est remis avant que vous ne signiez, et l’accompagnement ne vous coûte rien.</p>
-    <div class=hero-actions>
-      <button class="cta or" type=button onclick="versContact(this)"
-        >Être rappelé aujourd'hui</button>
-      <button class="cta fantome" type=button onclick="versResultats()"
-        >Voir les programmes</button>
-    </div>
-    <ul class=hero-preuves><li><b>36</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li><b>0 ₪</b><span>de frais d’agence</span></li></ul>
+    <ul class=hero-preuves><li><b>36</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li><b>0 %</b><span>de frais d’agence</span></li></ul>
   </div>
 </section>
 
@@ -1386,7 +1384,7 @@ table.ag th{width:64%}
   </div>
   <div id=vue></div>
 
-  <section class=qui id=qui><div><b>BLG Immobilier</b><p class=baseline>Spécialiste de l&#x27;immobilier neuf depuis 2002</p><p>Nous vous accompagnons dans l'achat d'un logement neuf en Israël — du premier appel jusqu'à la signature. Les prix sont ceux du promoteur, négociés avant vous, et le chiffrage complet vous est remis avant que vous ne vous engagiez.</p><p class=dim>Programme proposé en partenariat avec BHN.</p><div class=liens><a href='tel:33666590022'>+33 6 66 59 00 22</a><a href='https://www.blgimmobilier.fr' target=_blank rel=noopener>https://www.blgimmobilier.fr</a></div></div></section>
+  <section class=qui id=qui><div><b>BLG Immobilier</b><p class=baseline>Spécialiste de l&#x27;immobilier neuf depuis 2002</p><p>Nous vous accompagnons dans l'achat d'un logement neuf en Israël — du premier appel jusqu'à la signature. Les prix sont ceux du promoteur, négociés avant vous, et le chiffrage complet vous est remis avant que vous ne vous engagiez.</p><p class=dim>Programme proposé en partenariat avec BHN.</p><div class=liens><a href='tel:33666590022'><bdi dir="ltr" class=tel-num>+33 6 66 59 00 22</bdi></a><a href='https://www.blgimmobilier.fr' target=_blank rel=noopener>https://www.blgimmobilier.fr</a></div></div></section>
 
   <section class=rassure id=rassure>
     <h3>Acheter à 3 000 km, sans jamais avancer à l’aveugle</h3>
@@ -1400,7 +1398,7 @@ table.ag th{width:64%}
     </div>
     <div class=appelez>
       <a class=cta href="tel:33666590022">Appeler
-        +33 6 66 59 00 22</a>
+        <bdi dir="ltr" class=tel-num>+33 6 66 59 00 22</bdi></a>
       <button class="cta or" type=button onclick="versContact(this)">Être rappelé aujourd'hui</button>
     </div>
   </section>
@@ -1422,7 +1420,7 @@ table.ag th{width:64%}
     <div class=pied-marque>
       <span style='display:inline-flex;align-items:center;background:#053c37;border-radius:10px;padding:4px 8px'><img src='logo.svg' alt='BLG Immobilier' height='38' style='height:38px;width:auto;display:block'></span>
       <p>Spécialiste de l'immobilier neuf depuis 2002 BLG Immobilier accompagne les acheteurs francophones dans l'achat d'un logement neuf en Israël, du premier contact à la remise des clés.</p>
-      <div class=pied-tel><a href='tel:33666590022'>+33 6 66 59 00 22</a></div>
+      <div class=pied-tel><a href='tel:33666590022'><bdi dir="ltr" class=tel-num>+33 6 66 59 00 22</bdi></a></div>
     </div>
     <div class=pied-col>
       <b>Acheter</b>
@@ -1535,6 +1533,19 @@ const RACINE = DONNEES.prefixe || '';
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
   c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+/* Un numero de telephone qui se lit dans le bon sens, meme en hebreu.
+
+   « +972(0)58.56789.26 » s'affichait « 58.56789.26(0)972+ » : les parentheses
+   coupent le numero en trois morceaux, et dans un paragraphe qui se lit de
+   droite a gauche, ces trois morceaux sont poses de droite a gauche. Chaque
+   morceau est intact, seul leur ORDRE est retourne — ce qui suffit a donner
+   un numero faux a quelqu'un qui le recopie.
+
+   `<bdi>` isole le numero du sens de lecture de la phrase qui l'entoure.
+   Meme fonction que `tel_affiche()` dans `generer.py`, pour ce que la page
+   fabrique elle-meme. */
+const telHTML = n => '<bdi dir="ltr" class="tel-num">' + esc(n) + '</bdi>';
 const LOCALE = {fr: 'fr-FR', en: 'en-GB', es: 'es-ES', pt: 'pt-PT',
                 he: 'he-IL'}[DONNEES.langue || 'fr'] || 'fr-FR';
 /* Les milliers se separent par un POINT — « 1.735.000 » — dans les deux
@@ -2700,7 +2711,7 @@ function pageTexte(cle) {
     // designerait quelqu'un d'autre serait fausse. Ces trois-la ne suivent
     // donc jamais la marque de la page.
     .split('{MAIL_ED}').join(esc(L.mail || DONNEES.mail))
-    .split('{TEL_ED_AFF}').join(esc(L.tel || DONNEES.tel))
+    .split('{TEL_ED_AFF}').join(telHTML(L.tel || DONNEES.tel))
     .split('{TEL_ED}').join(esc(L.wa || DONNEES.wa))
     .split('{PARTENAIRE_ED}').join(DONNEES.marque
       ? `<p>${T('Cette page est publiée pour')} <b>${esc(DONNEES.marque.nom)}</b>,
@@ -2709,7 +2720,7 @@ function pageTexte(cle) {
     // Ceux-la, en revanche, sont les coordonnees auxquelles le visiteur
     // s'adresse : celles de la maison dont il lit la page.
     .split('{MAIL}').join(esc(DONNEES.mail))
-    .split('{TEL_AFF}').join(esc(DONNEES.tel))
+    .split('{TEL_AFF}').join(telHTML(DONNEES.tel))
     .split('{TEL}').join(esc(DONNEES.wa));
   vue.innerHTML = `
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${esc(page.titre)}</p>
@@ -4037,7 +4048,7 @@ function etapeConfirmation(zone, canal) {
         + 'suffira de nous rappeler pour le faire prolonger.')}</p>
       <p class="dim">${T('Vous préférez en parler tout de suite ?')}
         <a href="https://wa.me/${DONNEES.wa}">${T('Écrivez sur WhatsApp')}</a>
-        ${T('ou appelez le')} ${esc(DONNEES.tel)}.</p>
+        ${T('ou appelez le')} ${telHTML(DONNEES.tel)}.</p>
     </div>`;
 }
 
@@ -4266,7 +4277,7 @@ function merci(p, I) {
         ${T('personnellement')} <b>${T("aujourd'hui")}</b>, ${T('avec')} ${quoi}.</p>
       <p class="dim">${T('Vous préférez tout de suite ?')}
         <a href="https://wa.me/${DONNEES.wa}">${T('Écrivez sur WhatsApp')}</a>
-        ${T('ou appelez le')} ${esc(DONNEES.tel)}.</p>
+        ${T('ou appelez le')} ${telHTML(DONNEES.tel)}.</p>
     </div></div>`;
 }
 
@@ -4459,17 +4470,6 @@ function versContactBas() {
   if (document.getElementById('contact')) return aller();
   liste();
   setTimeout(aller, 60);
-}
-
-/* Le second bouton de la banniere : descendre aux annonces.
-
-   Une grande entree doit offrir DEUX sorties — celle qui laisse un numero, et
-   celle qui va voir. Sans la seconde, le visiteur qui n'est pas encore pret a
-   se manifester n'a nulle part ou appuyer, et il defile au hasard. */
-function versResultats() {
-  const cible = document.getElementById('entete')
-    || document.querySelector('.wrap');
-  if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 /* ---------------- routage */

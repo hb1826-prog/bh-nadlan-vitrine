@@ -228,18 +228,20 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
  color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 
-/* Les deux sorties de la banniere, et la ligne de preuve.
+/* La ligne de preuve, sous la promesse.
 
-   Hillel, le 16/09/2026 : « fais une tres grande entree ». Une banniere qui
-   n'offre rien a faire est une affiche ; celle-ci propose les deux gestes
-   possibles — laisser son numero, ou aller voir — et pose dessous les quatre
-   chiffres qui rendent la promesse credible. Aucun n'est ecrit a la main :
-   ils viennent du stock et de la marque. */
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.hero-actions .cta{font-size:15.5px;padding:0 24px;height:50px}
-.cta.fantome{background:rgba(255,255,255,.12);color:#fff;
- border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(3px)}
-.cta.fantome:hover{background:rgba(255,255,255,.2);opacity:1}
+   Hillel, le 16/09/2026 : « fais une tres grande entree ». Quatre chiffres
+   rendent la promesse credible, et aucun n'est ecrit a la main : ils
+   viennent du stock et de la marque.
+
+   La banniere a porte deux boutons pendant quelques heures — « Etre rappele
+   aujourd'hui » et « Voir les programmes ». Hillel les a fait retirer le
+   jour meme : ils repoussaient la boite de recherche sous la ligne de
+   flottaison. « Je prefere qu'ils defilent, parce que ca m'interesse qu'ils
+   voient le bloc de recherche. » Sur ce site, le premier ecran doit montrer
+   la marchandise — l'appel a l'action vit dans la barre du haut, dans la
+   barre du bas sur telephone, et au pied de chaque section. Ne pas les
+   remettre. */
 .hero-preuves{display:flex;gap:30px;flex-wrap:wrap;margin:30px 0 0;padding:0;
  list-style:none}
 .hero-preuves li{display:flex;flex-direction:column;gap:2px}
@@ -248,8 +250,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero-preuves span{font-size:12.5px;letter-spacing:.05em;
  text-transform:uppercase;color:rgba(255,255,255,.82)}
 @media(max-width:640px){
- .hero-actions{gap:9px;margin-top:20px}
- .hero-actions .cta{flex:1 1 100%;justify-content:center}
  .hero-preuves{gap:18px 26px;margin-top:22px}
  .hero-preuves b{font-size:21px}
  .hero-preuves span{font-size:11px}
@@ -543,7 +543,11 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .rassure .points b{display:block;font-size:15.5px;margin-bottom:5px}
 .rassure .points span{font-size:14.5px;color:var(--gris);line-height:1.6}
 .rassure .appelez{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
-.rassure .appelez .cta{display:inline-flex;align-items:center}
+/* `gap` plutot qu'une espace dans le texte : le bouton est une boite flexible,
+   et une boite flexible jette les espaces entre ses elements. Depuis que le
+   numero est enveloppe dans son `<bdi>`, il forme un element a part — sans
+   cette ligne, le bouton affiche « להתקשר+972… » colle. */
+.rassure .appelez .cta{display:inline-flex;align-items:center;gap:8px}
 
 /* ====================== la barre d'action du telephone =================== */
 .barre-mobile{display:none}
