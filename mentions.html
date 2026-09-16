@@ -228,6 +228,33 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
  color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 
+/* Les deux sorties de la banniere, et la ligne de preuve.
+
+   Hillel, le 16/09/2026 : « fais une tres grande entree ». Une banniere qui
+   n'offre rien a faire est une affiche ; celle-ci propose les deux gestes
+   possibles — laisser son numero, ou aller voir — et pose dessous les quatre
+   chiffres qui rendent la promesse credible. Aucun n'est ecrit a la main :
+   ils viennent du stock et de la marque. */
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.hero-actions .cta{font-size:15.5px;padding:0 24px;height:50px}
+.cta.fantome{background:rgba(255,255,255,.12);color:#fff;
+ border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(3px)}
+.cta.fantome:hover{background:rgba(255,255,255,.2);opacity:1}
+.hero-preuves{display:flex;gap:30px;flex-wrap:wrap;margin:30px 0 0;padding:0;
+ list-style:none}
+.hero-preuves li{display:flex;flex-direction:column;gap:2px}
+.hero-preuves b{font-size:26px;font-weight:750;line-height:1.1;color:var(--or);
+ text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.hero-preuves span{font-size:12.5px;letter-spacing:.05em;
+ text-transform:uppercase;color:rgba(255,255,255,.82)}
+@media(max-width:640px){
+ .hero-actions{gap:9px;margin-top:20px}
+ .hero-actions .cta{flex:1 1 100%;justify-content:center}
+ .hero-preuves{gap:18px 26px;margin-top:22px}
+ .hero-preuves b{font-size:21px}
+ .hero-preuves span{font-size:11px}
+}
+
 /* la carte de recherche, posee sur la banniere */
 .cherche{position:relative;max-width:1240px;margin:-46px auto 0;
  padding:0 22px;z-index:5}
@@ -941,8 +968,12 @@ body.tunnel-plein .pub-foot{display:none}
  transition:.14s var(--ease)}
 .pastilles button:hover{border-color:var(--action)}
 .pastilles button.on{background:var(--action);border-color:var(--action);color:#fff}
-.pastilles button::after{content:" p.";font-weight:500;opacity:.65;
- font-size:13px}
+/* L'abreviation « pieces » vivait ICI, en `content:" p."`. Une feuille de
+   style ne passe pas par le dictionnaire : les six langues affichaient donc
+   « 3 p. », y compris l'hebreu. Elle est desormais ecrite dans la page, par
+   `generer.py`, et traduite comme le reste. */
+.pastilles button small{font-weight:500;opacity:.65;font-size:13px;
+ margin-inline-start:3px}
 
 /* ======================== « Je veux ce bien » ============================
    Hillel voulait l'energie du commerce en ligne sur les tuiles. Le mot ne

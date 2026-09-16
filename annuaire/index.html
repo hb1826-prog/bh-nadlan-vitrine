@@ -237,6 +237,33 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
  color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 
+/* Les deux sorties de la banniere, et la ligne de preuve.
+
+   Hillel, le 16/09/2026 : « fais une tres grande entree ». Une banniere qui
+   n'offre rien a faire est une affiche ; celle-ci propose les deux gestes
+   possibles — laisser son numero, ou aller voir — et pose dessous les quatre
+   chiffres qui rendent la promesse credible. Aucun n'est ecrit a la main :
+   ils viennent du stock et de la marque. */
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.hero-actions .cta{font-size:15.5px;padding:0 24px;height:50px}
+.cta.fantome{background:rgba(255,255,255,.12);color:#fff;
+ border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(3px)}
+.cta.fantome:hover{background:rgba(255,255,255,.2);opacity:1}
+.hero-preuves{display:flex;gap:30px;flex-wrap:wrap;margin:30px 0 0;padding:0;
+ list-style:none}
+.hero-preuves li{display:flex;flex-direction:column;gap:2px}
+.hero-preuves b{font-size:26px;font-weight:750;line-height:1.1;color:var(--or);
+ text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.hero-preuves span{font-size:12.5px;letter-spacing:.05em;
+ text-transform:uppercase;color:rgba(255,255,255,.82)}
+@media(max-width:640px){
+ .hero-actions{gap:9px;margin-top:20px}
+ .hero-actions .cta{flex:1 1 100%;justify-content:center}
+ .hero-preuves{gap:18px 26px;margin-top:22px}
+ .hero-preuves b{font-size:21px}
+ .hero-preuves span{font-size:11px}
+}
+
 /* la carte de recherche, posee sur la banniere */
 .cherche{position:relative;max-width:1240px;margin:-46px auto 0;
  padding:0 22px;z-index:5}
@@ -950,8 +977,12 @@ body.tunnel-plein .pub-foot{display:none}
  transition:.14s var(--ease)}
 .pastilles button:hover{border-color:var(--action)}
 .pastilles button.on{background:var(--action);border-color:var(--action);color:#fff}
-.pastilles button::after{content:" p.";font-weight:500;opacity:.65;
- font-size:13px}
+/* L'abreviation « pieces » vivait ICI, en `content:" p."`. Une feuille de
+   style ne passe pas par le dictionnaire : les six langues affichaient donc
+   « 3 p. », y compris l'hebreu. Elle est desormais ecrite dans la page, par
+   `generer.py`, et traduite comme le reste. */
+.pastilles button small{font-weight:500;opacity:.65;font-size:13px;
+ margin-inline-start:3px}
 
 /* ======================== « Je veux ce bien » ============================
    Hillel voulait l'energie du commerce en ligne sur les tuiles. Le mot ne
@@ -1300,10 +1331,20 @@ table.ag th{width:64%}
   <div class=voile></div>
   <div class=dedans>
     <span class=promesse>0 frais d'agence</span>
-    <h1>Achetez directement au promoteur,<br>au prix négocié, en français</h1>
-    <p class=chapeau>36 programmes neufs dans
-      17 villes. Vous payez le prix du promoteur —
-      <b class=insec>0 frais d'agence</b> — et vous profitez des conditions que nous avons négociées pour nos acheteurs.</p>
+    <h1>Acheter en Israël sans y être,<br>sans parler hébreu, sans frais d’agence.</h1>
+    <p class=chapeau>Douze ans passés chez les promoteurs israéliens. Aujourd’hui, ce métier travaille pour vous : le prix est négocié avant que vous n’entriez, le chiffrage complet vous est remis avant que vous ne signiez, et l’accompagnement ne vous coûte rien.</p>
+    <div class=hero-actions>
+      <button class="cta or" type=button onclick="versContact(this)"
+        >Être rappelé aujourd'hui</button>
+      <button class="cta fantome" type=button onclick="versResultats()"
+        >Voir les programmes</button>
+    </div>
+    <ul class=hero-preuves>
+      <li><b>36</b><span>programmes suivis</span></li>
+      <li><b>17</b><span>villes</span></li>
+      <li><b>12</b><span>ans chez les promoteurs</span></li>
+      <li><b>0 ₪</b><span>de frais d’agence</span></li>
+    </ul>
   </div>
 </section>
 
@@ -1315,7 +1356,7 @@ table.ag th{width:64%}
   <div class=raccourcis id=raccourcis></div>
   <div class=ligne-pieces>
     <span class=rac-lab>Nombre de pièces</span>
-    <div class=pastilles id=f-pieces><button type=button data-p='2.0'>2</button><button type=button data-p='2.5'>2,5</button><button type=button data-p='3.0'>3</button><button type=button data-p='3.5'>3,5</button><button type=button data-p='4.0'>4</button><button type=button data-p='4.5'>4,5</button><button type=button data-p='5.0'>5</button><button type=button data-p='6' data-et-plus='1'>6+</button><span class=pastilles-sep></span><button type=button data-type='Mini penthouse'>Mini penthouse</button><button type=button data-type='Penthouse'>Penthouse</button><button type=button data-type='Rez-de-jardin'>Rez-de-jardin</button></div>
+    <div class=pastilles id=f-pieces><button type=button data-p='2.0'>2<small>p.</small></button><button type=button data-p='2.5'>2,5<small>p.</small></button><button type=button data-p='3.0'>3<small>p.</small></button><button type=button data-p='3.5'>3,5<small>p.</small></button><button type=button data-p='4.0'>4<small>p.</small></button><button type=button data-p='4.5'>4,5<small>p.</small></button><button type=button data-p='5.0'>5<small>p.</small></button><button type=button data-p='6' data-et-plus='1'>6+<small>p.</small></button><span class=pastilles-sep></span><button type=button data-type='Mini penthouse'>Mini penthouse</button><button type=button data-type='Penthouse'>Penthouse</button><button type=button data-type='Rez-de-jardin'>Rez-de-jardin</button></div>
   </div>
   <button type=button class=filtres-toggle id=filtres-toggle>Affiner ma recherche <span class=chev>▾</span></button>
   <div class=champs id=pub-filtres hidden>
@@ -1335,11 +1376,11 @@ table.ag th{width:64%}
   <section class=modele id=modele>
     <div>
       <b>Le prix du promoteur, pas un centime de plus</b>
-      <span><b>0 frais d'agence</b> sur votre achat. Vous signez au même prix que si vous poussiez seul la porte du bureau de vente.</span>
+      <span><b>Zéro frais d’agence</b> sur votre achat : vous signez au prix que vous auriez obtenu en poussant vous-même la porte du bureau de vente — sauf que la porte, nous l’avons déjà poussée.</span>
     </div>
     <div>
       <b>Sauf que le prix, lui, est négocié</b>
-      <span>Remises, échéancier de paiement, étage, orientation, cuisine : ce qui se discute, nous le discutons — en hébreu, avant vous.</span>
+      <span>Remise, étage, orientation, cuisine, échéancier de paiement : tout ce qui se discute est discuté — en hébreu, et avant vous.</span>
     </div>
     <div>
       <b>Le vrai coût, avant de vous engager</b>
@@ -1359,7 +1400,7 @@ table.ag th{width:64%}
     <div>
       <b>Hillel Bijaoui</b>
       <p>Douze ans dans l'immobilier israélien, la plus grande partie chez les promoteurs, du côté du vendeur. Je sais comment un prix se construit, ce qui se négocie vraiment, et ce qui ne se négocie jamais.</p>
-      <p>Aujourd'hui, je négocie de votre côté de la table, et vous ne payez aucun honoraire d'agence : je suis rémunéré par le promoteur, et vous signez au prix négocié avant votre arrivée.</p>
+      <p>Aujourd’hui, ce savoir travaille pour vous — et vous ne payez aucun honoraire d’agence : je suis rémunéré par le promoteur, et vous signez au prix négocié avant votre arrivée.</p>
       <p>Nous suivons 36 programmes dans 17 villes. Vous n'achetez pas un plan sur un écran : quelqu'un va sur le chantier, parle hébreu au bureau de vente, et reste avec vous jusqu'aux clés, avocat et banque compris.</p>
       <p class=dim>Le premier appel ne coûte rien et ne vous engage à rien.</p>
       <div class=liens>
@@ -1383,10 +1424,10 @@ table.ag th{width:64%}
   </section>
 
   <section class=rassure id=rassure>
-    <h3>Acheter en Israël depuis la France, sans y aller à l'aveugle</h3>
+    <h3>Acheter à 3 000 km, sans jamais avancer à l’aveugle</h3>
     <div class=points>
       <div><b>On parle votre langue — et la leur</b>
-        <span>Les promoteurs négocient en hébreu. Nous faisons l'aller-retour, vous décidez en français.</span></div>
+        <span>Les promoteurs négocient en hébreu. Nous faisons l’aller-retour ; vous décidez dans votre langue.</span></div>
       <div><b>Le prix, et tout ce qui s'ajoute</b>
         <span>Taxe d'acquisition, avocat, banque, frais réels : le chiffrage complet avant de vous engager, pas après.</span></div>
       <div><b>L'avocat et la banque, avant de signer</b>
@@ -2377,7 +2418,8 @@ function carteHTML(vus) {
     const r = Math.min(20, 9 + Math.sqrt(g.n) * 3);
     return `<a class="pin" href="#/ville/${esc(cleVille(g.ville))}"
         transform="translate(${x.toFixed(1)},${y.toFixed(1)})"
-        aria-label="${esc(T(g.ville))} — ${g.n} programme${g.n > 1 ? 's' : ''}">
+        aria-label="${esc(T(g.ville))} — ${g.n} ${g.n > 1 ? T('programmes')
+                                                          : T('programme')}">
       <circle class="halo" r="${(r + 7).toFixed(1)}"/>
       <circle class="rond" r="${r.toFixed(1)}"/>
       <text class="nb" y="4">${g.n}</text>
@@ -4475,6 +4517,17 @@ function versContactBas() {
   if (document.getElementById('contact')) return aller();
   liste();
   setTimeout(aller, 60);
+}
+
+/* Le second bouton de la banniere : descendre aux annonces.
+
+   Une grande entree doit offrir DEUX sorties — celle qui laisse un numero, et
+   celle qui va voir. Sans la seconde, le visiteur qui n'est pas encore pret a
+   se manifester n'a nulle part ou appuyer, et il defile au hasard. */
+function versResultats() {
+  const cible = document.getElementById('entete')
+    || document.querySelector('.wrap');
+  if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 /* ---------------- routage */
