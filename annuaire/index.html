@@ -214,6 +214,21 @@ button,input,select,textarea{font:inherit;color:inherit}
 .cta:hover{transform:translateY(-1px);opacity:.92}
 .cta.or{background:var(--action);color:#fff}
 
+/* Le bouton hamburger : cache par defaut (le menu du haut suffit sur grand
+   ecran), il n'apparait qu'en dessous de 900px — la ou `.nav` disparaissait
+   jusqu'ici sans aucun repli, et ou « Blog » devait pourtant rester
+   accessible depuis l'entete. */
+.burger{display:none;flex:none;width:40px;height:40px;border:0;background:none;
+ cursor:pointer;flex-direction:column;align-items:center;justify-content:center;
+ gap:5px}
+.burger span{display:block;width:22px;height:2px;background:var(--encre);
+ border-radius:2px}
+.nav-mobile{display:none}
+.nav-mobile.ouvert{display:flex;flex-direction:column;
+ border-top:1px solid var(--trait);background:var(--fond)}
+.nav-mobile a{padding:14px 22px;font-size:15.5px;font-weight:600;
+ color:var(--encre);border-bottom:1px solid var(--trait-fin)}
+
 /* le selecteur de theme, discret, a droite */
 .theme{display:inline-flex;gap:2px;flex:none;background:var(--fond-2);
  border:1px solid var(--trait);border-radius:999px;padding:3px}
@@ -702,6 +717,8 @@ body.sim-actif .onglets{padding-bottom:0}
  .pub-bar{height:62px;gap:12px}
  .pub-logo svg{transform:scale(.8)}
  .nav{display:none}
+ .burger{display:flex}
+ .cta{padding:9px 12px;font-size:12.5px}
  .hero .dedans{padding:38px 20px 62px}
  .hero h1{font-size:28px}
  .hero p.chapeau{font-size:15.5px}
@@ -1424,6 +1441,7 @@ table.ag th{width:64%}
 </svg></a>
   <nav class=nav>
     <a href="#/">Programmes neufs</a>
+    <a href="#/blog">Blog</a>
     <a href="#/simulateur">Simulateur d'achat</a>
     <a href="#/" onclick="versContact(this);return false">Nous contacter</a>
   </nav>
@@ -1431,7 +1449,17 @@ table.ag th{width:64%}
   <div class=langues><a href='./' hreflang='fr' lang='fr' class=on title='Français'>FR</a><a href='en/' hreflang='en' lang='en' title='English'>EN</a><a href='es/' hreflang='es' lang='es' title='Español'>ES</a><a href='pt/' hreflang='pt' lang='pt' title='Português'>PT</a><a href='ru/' hreflang='ru' lang='ru' title='Русский'>RU</a><a href='he/' hreflang='he' lang='he' title='עברית'>IL</a></div>
   <div class=theme><button data-t='light' title='Clair'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Comme le système'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Sombre'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
   <button class="cta" type="button" onclick="versContact(this)">Un conseiller vous rappelle aujourd’hui</button>
-</div></header>
+  <button class=burger type=button id=burger aria-label="Menu" aria-expanded=false>
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<nav class="nav-mobile" id=nav-mobile hidden>
+  <a href="#/">Programmes neufs</a>
+  <a href="#/blog">Blog</a>
+  <a href="#/simulateur">Simulateur d'achat</a>
+  <a href="#/" onclick="versContact(this);fermerMenuMobile();return false">Nous contacter</a>
+</nav>
+</header>
 
 <section class=hero id=hero>
   <div class=photo><img src="img/up-life-netivot.jpg" alt=""
@@ -4807,6 +4835,30 @@ function accueil() {
 
 const LOGO = document.querySelector('.pub-logo');
 if (LOGO) LOGO.onclick = e => { e.preventDefault(); accueil(); };
+
+/* Le menu telephone : masque par defaut (`.nav-mobile` sans `.ouvert`),
+   revele par le bouton hamburger — seul acces au Blog sur un ecran etroit,
+   ou `.nav` du haut disparait completement. Se referme tout seul des qu'on
+   choisit une page, ou qu'on change de route par un autre moyen (bouton
+   retour du telephone, par exemple). */
+const BURGER = document.getElementById('burger');
+const NAV_MOBILE = document.getElementById('nav-mobile');
+function fermerMenuMobile() {
+  if (!NAV_MOBILE) return;
+  NAV_MOBILE.classList.remove('ouvert');
+  NAV_MOBILE.hidden = true;
+  if (BURGER) BURGER.setAttribute('aria-expanded', 'false');
+}
+if (BURGER && NAV_MOBILE) {
+  BURGER.onclick = () => {
+    const ouvert = NAV_MOBILE.classList.toggle('ouvert');
+    NAV_MOBILE.hidden = !ouvert;
+    BURGER.setAttribute('aria-expanded', String(ouvert));
+  };
+  NAV_MOBILE.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', fermerMenuMobile));
+  addEventListener('hashchange', fermerMenuMobile);
+}
 
 addEventListener('hashchange', router);
 
