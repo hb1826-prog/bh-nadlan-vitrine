@@ -334,8 +334,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .qui{display:flex;gap:24px;align-items:flex-start;margin-top:34px;
  padding:28px 26px;background:var(--carte);border:1px solid var(--trait);
  border-radius:var(--r-lg);box-shadow:var(--ombre)}
-.qui img{width:132px;height:132px;border-radius:50%;object-fit:cover;
- flex:none;border:3px solid var(--or)}
+/* La photo n'est plus une pastille ronde de 132 px mais un vrai portrait :
+   Hillel sur un chantier, casque sur la tete. Une vignette ronde se lit comme
+   un avatar, c'est-a-dire comme un element d'interface ; un portrait se lit
+   comme une personne, et c'est tout l'objet de cette page. */
+.qui img{width:176px;height:220px;border-radius:14px;object-fit:cover;
+ object-position:center 28%;flex:none;border:3px solid var(--or)}
 /* Seul le NOM est un titre. Sans ce fils-direct, le gras d'une phrase
    (« chez les promoteurs ») passait a la ligne en corps 19. */
 .qui > div > b{display:block;font-size:19px;font-weight:750;margin-bottom:8px}
@@ -346,11 +350,38 @@ button,input,select,textarea{font:inherit;color:inherit}
  display:inline-flex;align-items:center;gap:7px}
 .qui .liens svg{flex:none;border-radius:2px;
  box-shadow:0 0 0 1px rgba(15,23,42,.12)}
+/* Qui decroche, a cote du formulaire. */
+.qui-rappelle{display:flex;align-items:center;gap:11px;margin:0 0 16px;
+ padding:10px 12px;background:var(--fond-2,rgba(15,23,42,.04));
+ border-radius:var(--r-lg)}
+.qui-rappelle img{width:46px;height:46px;border-radius:50%;object-fit:cover;
+ flex:none;border:2px solid var(--or)}
+.qui-rappelle span{font-size:14px;line-height:1.5;color:var(--encre-2)}
+
+/* La bande de preuve : trois photos prises par Hillel, sous le paragraphe qui
+   parle de lui. Elle ne raconte rien qu'un texte ne dise deja ; elle prouve
+   que quelqu'un y etait. Sur un telephone tenu en portrait, les trois defilent
+   horizontalement plutot que de s'empiler sur trois ecrans de haut. */
+.preuve-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+ margin-top:14px}
+.preuve-photos figure{margin:0}
+.preuve-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;
+ border-radius:var(--r-lg);border:1px solid var(--trait);display:block;
+ box-shadow:var(--ombre)}
+.preuve-photos figcaption{margin-top:8px;font-size:13.5px;
+ color:var(--encre-2);text-align:center}
+
 @media(max-width:900px){
  .qui{flex-direction:column;align-items:center;text-align:center;gap:16px;
   padding:24px 18px}
  .qui .liens{justify-content:center}
  .modele{gap:16px;padding:20px 0 22px}
+ .preuve-photos{grid-template-columns:none;grid-auto-flow:column;
+  grid-auto-columns:76%;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-padding:0 22px;padding-bottom:6px;
+  scrollbar-width:none}
+ .preuve-photos::-webkit-scrollbar{display:none}
+ .preuve-photos figure{scroll-snap-align:center}
 }
 
 /* =============================== la liste =============================== */
@@ -1433,8 +1464,8 @@ table.ag th{width:64%}
   <div id=vue></div>
 
   <section class=qui id=qui>
-    <img src="annuaire/img/hillel.jpg" alt="Hillel Bijaoui" width="132" height="132"
-         onerror="this.remove()">
+    <img src="annuaire/img/hillel-chantier-casque.jpg" alt="Hillel Bijaoui sur un chantier"
+         width="176" height="220" onerror="this.src='annuaire/img/hillel.jpg'">
     <div>
       <b>Hillel Bijaoui</b>
       <p>Douze ans dans l’immobilier israélien, la plus grande partie chez les promoteurs, du côté du vendeur. Je sais comment un prix se construit, ce qui se négocie vraiment, et ce qui ne se négocie jamais.</p>
@@ -1460,9 +1491,12 @@ table.ag th{width:64%}
       </div>
     </div>
   </section>
+  <section class=preuve-photos aria-label="Sur le terrain">
+    <figure><img src="annuaire/img/hillel-signature-en-famille.jpg" alt="Une signature, en famille" loading="lazy" onerror="this.closest('figure').remove()"><figcaption>Une signature, en famille</figcaption></figure><figure><img src="annuaire/img/hillel-client-devant-tableau-des-lots-recadree.jpg" alt="Au bureau de vente, avant vous" loading="lazy" onerror="this.closest('figure').remove()"><figcaption>Au bureau de vente, avant vous</figcaption></figure><figure><img src="annuaire/img/hillel-stand-salon-paris-recadree.jpg" alt="Au salon, à Paris" loading="lazy" onerror="this.closest('figure').remove()"><figcaption>Au salon, à Paris</figcaption></figure>
+  </section>
 
   <section class=rassure id=rassure>
-    <h3>Acheter à 3 000 km sans jamais avancer à l’aveugle</h3>
+    <h3>Acheter à distance, sans jamais avancer à l’aveugle</h3>
     <div class=points>
       <div><b>On parle votre langue, et la leur</b>
         <span>Les promoteurs négocient en hébreu, et tout se joue là. Nous faisons l’aller-retour, vous décidez en français.</span></div>
@@ -1470,6 +1504,8 @@ table.ag th{width:64%}
         <span>Taxe d’acquisition, avocat, banque : vous avez le total avant de vous engager, pas le jour de la signature.</span></div>
       <div><b>L'avocat et la banque, avant de signer</b>
         <span>Le contrat relu, le prêt israélien monté, l’échéancier vérifié. C’est là que se jouent les mauvaises surprises, et c’est compris.</span></div>
+      <div><b>Vos yeux sur place</b>
+        <span>Nous allons sur le terrain : photos, vidéos, visite du bureau de vente. Vous voyez le programme avant de décider, et nous suivons le chantier jusqu’aux clés.</span></div>
     </div>
     <div class=appelez>
       <a class=cta href="tel:972585678926">Appeler
@@ -4229,6 +4265,16 @@ function contactHTML(p, intention) {
       <div class="block-head"><span>${MOTS.titre}</span></div>
       <div class="pad">
         <p class="intro">${MOTS.texte}</p>
+        <!-- Qui decroche. Un formulaire sur une page publique ne dit jamais
+             vers qui il envoie, et c'est la que le visiteur renonce : il ne
+             sait pas s'il va tomber sur un standard. Une tete et un nom
+             repondent a la question avant qu'elle ne se pose. -->
+        <div class="qui-rappelle">
+          <img src="${(DONNEES.prefixe || '') + 'img/hillel.jpg'}" alt=""
+               width="46" height="46" loading="lazy"
+               onerror="this.closest('.qui-rappelle').remove()">
+          <span>${T('C’est Hillel Bijaoui, ou quelqu’un de son équipe, qui vous rappelle aujourd’hui.')}</span>
+        </div>
         <div class="duo">
           <div class="f"><label for="c-prenom">${T('Prénom')}</label>
             <input id="c-prenom" autocomplete="given-name"
