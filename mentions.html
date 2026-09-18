@@ -1035,6 +1035,25 @@ body.sim-actif .onglets{padding-bottom:0}
  .avis h3{font-size:19px}
 }
 
+/* ========================= la page « Nos vidéos » =========================
+   Une carte par video, triee de la plus recente a la plus ancienne. Chaque
+   carte ouvre le reseau ou la video est vraiment hebergee (YouTube, Instagram
+   ou Facebook selon ce qui est disponible) : la page ne joue aucune video
+   elle-meme, elle n'est que l'index. */
+.video-grille{display:grid;gap:14px;margin-top:20px;
+ grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.video-carte{display:flex;align-items:center;gap:16px;
+ background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--ombre);
+ text-decoration:none;color:inherit;transition:border-color .15s}
+.video-carte:hover{border-color:var(--or)}
+.video-play{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+ width:42px;height:42px;border-radius:50%;background:var(--or);color:#1a1305;
+ font-size:14px}
+.video-corps{display:flex;flex-direction:column;gap:4px;min-width:0}
+.video-corps b{font-size:15px;line-height:1.4;color:var(--encre)}
+.video-date{font-size:13px;color:var(--gris)}
+
 /* ===================== les pastilles de typologie ========================
    « À partir de 2 pièces » etait un filtre ecrit pour une base de donnees :
    personne ne cherche un minimum, on cherche un trois-pieces. On coche donc
