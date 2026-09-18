@@ -4661,8 +4661,32 @@ function versContactBas() {
 }
 
 /* ---------------- routage */
+/* Changer de langue ne doit jamais faire perdre la page ou l'on est.
+
+   Les liens du commutateur pointent le dossier de la langue (« he/ ») : ils
+   restent de vrais liens, qu'on peut ouvrir dans un autre onglet et qu'un
+   moteur peut suivre. Mais ils perdaient l'adresse interne – depuis la fiche
+   d'un programme, passer en hebreu renvoyait a l'accueil, et il fallait
+   retrouver le programme a la main. Devant un promoteur a qui l'on montre SA
+   fiche dans les deux langues, c'est exactement le geste qui rate.
+
+   Les adresses internes ne sont pas traduites (le repere d'un programme est
+   son slug, « simulateur » et « ville/... » sont des mots de code) : la meme
+   adresse designe donc la meme page dans les cinq langues, et il suffit de la
+   recopier au bout du lien. */
+function langueGardeLaPage() {
+  const ici = location.hash || '';
+  document.querySelectorAll('.langues a').forEach(function (a) {
+    if (!a.dataset.base) {
+      a.dataset.base = (a.getAttribute('href') || '').split('#')[0];
+    }
+    a.setAttribute('href', a.dataset.base + ici);
+  });
+}
+
 async function router() {
   const cle = location.hash.replace(/^#\/?/, '');
+  langueGardeLaPage();
   // Le tunnel du simulateur ne traite QUE la simulation – demande par Hillel
   // le 10/09/2026 apres avoir appuye par erreur sur le WhatsApp de la barre
   // fixe du bas en voulant appuyer sur « Suivant ». Cette classe masque tout
