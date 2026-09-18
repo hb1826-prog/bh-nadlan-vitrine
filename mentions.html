@@ -325,8 +325,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .qui{display:flex;gap:24px;align-items:flex-start;margin-top:34px;
  padding:28px 26px;background:var(--carte);border:1px solid var(--trait);
  border-radius:var(--r-lg);box-shadow:var(--ombre)}
-.qui img{width:132px;height:132px;border-radius:50%;object-fit:cover;
- flex:none;border:3px solid var(--or)}
+/* La photo n'est plus une pastille ronde de 132 px mais un vrai portrait :
+   Hillel sur un chantier, casque sur la tete. Une vignette ronde se lit comme
+   un avatar, c'est-a-dire comme un element d'interface ; un portrait se lit
+   comme une personne, et c'est tout l'objet de cette page. */
+.qui img{width:176px;height:220px;border-radius:14px;object-fit:cover;
+ object-position:center 28%;flex:none;border:3px solid var(--or)}
 /* Seul le NOM est un titre. Sans ce fils-direct, le gras d'une phrase
    (« chez les promoteurs ») passait a la ligne en corps 19. */
 .qui > div > b{display:block;font-size:19px;font-weight:750;margin-bottom:8px}
@@ -337,11 +341,38 @@ button,input,select,textarea{font:inherit;color:inherit}
  display:inline-flex;align-items:center;gap:7px}
 .qui .liens svg{flex:none;border-radius:2px;
  box-shadow:0 0 0 1px rgba(15,23,42,.12)}
+/* Qui decroche, a cote du formulaire. */
+.qui-rappelle{display:flex;align-items:center;gap:11px;margin:0 0 16px;
+ padding:10px 12px;background:var(--fond-2,rgba(15,23,42,.04));
+ border-radius:var(--r-lg)}
+.qui-rappelle img{width:46px;height:46px;border-radius:50%;object-fit:cover;
+ flex:none;border:2px solid var(--or)}
+.qui-rappelle span{font-size:14px;line-height:1.5;color:var(--encre-2)}
+
+/* La bande de preuve : trois photos prises par Hillel, sous le paragraphe qui
+   parle de lui. Elle ne raconte rien qu'un texte ne dise deja ; elle prouve
+   que quelqu'un y etait. Sur un telephone tenu en portrait, les trois defilent
+   horizontalement plutot que de s'empiler sur trois ecrans de haut. */
+.preuve-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+ margin-top:14px}
+.preuve-photos figure{margin:0}
+.preuve-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;
+ border-radius:var(--r-lg);border:1px solid var(--trait);display:block;
+ box-shadow:var(--ombre)}
+.preuve-photos figcaption{margin-top:8px;font-size:13.5px;
+ color:var(--encre-2);text-align:center}
+
 @media(max-width:900px){
  .qui{flex-direction:column;align-items:center;text-align:center;gap:16px;
   padding:24px 18px}
  .qui .liens{justify-content:center}
  .modele{gap:16px;padding:20px 0 22px}
+ .preuve-photos{grid-template-columns:none;grid-auto-flow:column;
+  grid-auto-columns:76%;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-padding:0 22px;padding-bottom:6px;
+  scrollbar-width:none}
+ .preuve-photos::-webkit-scrollbar{display:none}
+ .preuve-photos figure{scroll-snap-align:center}
 }
 
 /* =============================== la liste =============================== */
