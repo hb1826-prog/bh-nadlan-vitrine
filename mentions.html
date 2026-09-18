@@ -1053,6 +1053,17 @@ body.sim-actif .onglets{padding-bottom:0}
 .video-corps{display:flex;flex-direction:column;gap:4px;min-width:0}
 .video-corps b{font-size:15px;line-height:1.4;color:var(--encre)}
 .video-date{font-size:13px;color:var(--gris)}
+.article-carte{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:2px;box-shadow:var(--ombre)}
+.article-carte summary{display:flex;align-items:center;gap:16px;
+ padding:14px 16px;cursor:pointer;list-style:none}
+.article-carte summary::-webkit-details-marker{display:none}
+.article-carte .video-play{background:var(--action);color:#fff;font-size:15px}
+.article-corps{padding:0 20px 20px 78px;color:var(--encre-2);font-size:14.5px;
+ line-height:1.7}
+.article-corps p{margin:0 0 12px}
+.article-corps p:last-child{margin-bottom:0}
+@media(max-width:600px){.article-corps{padding-left:20px}}
 
 /* ===================== les pastilles de typologie ========================
    « À partir de 2 pièces » etait un filtre ecrit pour une base de donnees :
