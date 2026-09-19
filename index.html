@@ -1858,6 +1858,12 @@ const DEPART = Date.now();            // sert a reconnaitre un robot
    sait s'il y a un courtier a chiffrer (achat comptant ou non).
    Aucun chiffre ne se calcule ni ne s'affiche avant l'envoi reussi des
    coordonnees — voir `vueSimulateurEtapes()`. */
+// Le forfait du courtier que Hillel recommande — 7 000 ₪, precise par lui
+// le 19/09/2026 (« meme pas 15 000 »). Une seule constante, lue par le
+// tunnel ET par le simulateur integre a une fiche, pour ne jamais afficher
+// deux chiffres differents pour le meme conseil.
+const COURTIER_RECOMMANDE = 7000;
+
 let TUNNEL = {
   etape: 1,
   prix: 2500000,
@@ -4403,13 +4409,15 @@ async function etapeFrais(zone) {
   const defaut = f.taux || {avocat: 0, agence: 0, courtier: 0};
   const notes = DONNEES.frais_notes || {};
 
-  // Etat par defaut : l'avocat recommande est deja choisi (c'est le conseil
-  // d'Hillel), l'accompagnement demarre a zero — « tu laisses a zero »,
-  // c'est au visiteur de le cocher s'il le veut.
+  // Etat par defaut : l'avocat et le courtier recommandes sont deja
+  // choisis (c'est le conseil d'Hillel), l'accompagnement demarre a zero —
+  // « tu laisses a zero », c'est au visiteur de le cocher s'il le veut.
   if (!TUNNEL.avocatMode) TUNNEL.avocatMode = 'notre';
   if (TUNNEL.avocatLibre == null) TUNNEL.avocatLibre = defaut.avocat || 0.5;
   if (!TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'non';
-  const t = TUNNEL.frais || defaut;
+  if (!TUNNEL.courtierMode) TUNNEL.courtierMode = 'notre';
+  if (!TUNNEL.courtierLibreType) TUNNEL.courtierLibreType = 'montant';
+  if (TUNNEL.courtierLibre == null) TUNNEL.courtierLibre = COURTIER_RECOMMANDE;
 
   const aide = (cle, texte) => `
     <span class="plus" data-aide="${cle}">${TUNNEL['aide' + cle] ? T('Voir moins −') : T('En savoir plus +')}</span>
@@ -4422,8 +4430,8 @@ async function etapeFrais(zone) {
     <div class="f-choix" style="margin-top:6px">
       <b>${T('Avocat')}</b>${aide('Avocat', notes.avocat || '')}
       <div class="seg">
-        <button data-avocat="notre" class="${TUNNEL.avocatMode === 'notre' ? 'on' : ''}">${T('Notre avocat (0,5 %)')}</button>
-        <button data-avocat="libre" class="${TUNNEL.avocatMode === 'libre' ? 'on' : ''}">${T('Mon propre avocat')}</button>
+        <button data-avocat="notre" class="${TUNNEL.avocatMode === 'notre' ? 'on' : ''}">${T('L’avocat que nous recommandons (0,5 %)')}</button>
+        <button data-avocat="libre" class="${TUNNEL.avocatMode === 'libre' ? 'on' : ''}">${T('Votre avocat')}</button>
         <button data-avocat="non" class="${TUNNEL.avocatMode === 'non' ? 'on' : ''}">${T('Sans avocat')}</button>
       </div>
       ${TUNNEL.avocatMode === 'libre' ? `
@@ -4442,17 +4450,31 @@ async function etapeFrais(zone) {
         <button data-accompagnement="oui" class="${TUNNEL.accompagnementMode === 'oui' ? 'on' : ''}">${T('Oui, 1 % du prix')}</button>
         <button data-accompagnement="non" class="${TUNNEL.accompagnementMode === 'non' ? 'on' : ''}">${T('Sans accompagnement')}</button>
       </div>
+      ${TUNNEL.accompagnementMode === 'non' ? `
+      <p class="dim si-note" style="margin-top:8px">⚠ ${T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')}</p>` : ''}
     </div>
 
     ${TUNNEL.comptant ? `
     <p class="dim si-note" style="margin-top:18px">${T('Aucun crédit : pas de courtier à payer. Seuls l’avocat et l’accompagnement restent à votre charge.')}</p>` : `
     <div class="f-choix" style="margin-top:18px">
       <b>${T('Courtier en crédit')}</b>${aide('Courtier', notes.courtier || '')}
-      <div class="f" style="margin-top:10px">
-        <label>${T('Forfait (₪)')}</label>
-        <input id="t-courtier" type="number" step="500" min="0"
-               value="${t.courtier ?? defaut.courtier}">
+      <div class="seg">
+        <button data-courtier="notre" class="${TUNNEL.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant} ₪)').replace('{montant}', COURTIER_RECOMMANDE.toLocaleString('fr-FR'))}</button>
+        <button data-courtier="libre" class="${TUNNEL.courtierMode === 'libre' ? 'on' : ''}">${T('Votre courtier')}</button>
+        <button data-courtier="non" class="${TUNNEL.courtierMode === 'non' ? 'on' : ''}">${T('Sans courtier')}</button>
       </div>
+      ${TUNNEL.courtierMode === 'libre' ? `
+      <div class="seg" style="margin-top:10px">
+        <button data-courtier-type="montant" class="${TUNNEL.courtierLibreType === 'montant' ? 'on' : ''}">${T('Montant (₪)')}</button>
+        <button data-courtier-type="pct" class="${TUNNEL.courtierLibreType === 'pct' ? 'on' : ''}">${T('% du prix')}</button>
+      </div>
+      <div class="f" style="margin-top:10px">
+        <label>${TUNNEL.courtierLibreType === 'pct' ? T('Votre courtier (% du prix)') : T('Votre courtier (₪)')}</label>
+        <input id="t-courtier-libre" type="number" step="${TUNNEL.courtierLibreType === 'pct' ? '0.1' : '500'}" min="0"
+               value="${TUNNEL.courtierLibre}">
+      </div>` : ''}
+      ${TUNNEL.courtierMode === 'non' ? `
+      <p class="dim si-note" style="margin-top:8px">⚠ ${T('Le marché du crédit est très concurrentiel : même avec un crédit déjà en tête, un courtier négocie souvent un meilleur taux que ce qu’une seule banque proposera. Nous recommandons d’en garder un.')}</p>` : ''}
     </div>`}
 
     <div class="etape-nav">
@@ -4466,11 +4488,21 @@ async function etapeFrais(zone) {
     const avocat = TUNNEL.avocatMode === 'notre' ? (defaut.avocat || 0.5)
       : TUNNEL.avocatMode === 'libre' ? TUNNEL.avocatLibre : 0;
     const agence = TUNNEL.accompagnementMode === 'oui' ? (defaut.agence || 1) : 0;
-    TUNNEL.frais = {
-      avocat, agence,
-      courtier: TUNNEL.comptant ? 0
-        : Math.max(0, +(($('#t-courtier', zone) || {}).value) || 0),
-    };
+    const courtierLibreChamp = $('#t-courtier-libre', zone);
+    if (courtierLibreChamp) TUNNEL.courtierLibre = Math.max(0, +courtierLibreChamp.value || 0);
+    // Le choix (% ou montant) ne sort jamais d'ici : on resout tout de
+    // suite en shekels, pour que le reste du calcul (comme le dossier
+    // envoye) n'ait jamais besoin de savoir comment on y est arrive.
+    let courtier = 0;
+    if (!TUNNEL.comptant) {
+      if (TUNNEL.courtierMode === 'notre') courtier = COURTIER_RECOMMANDE;
+      else if (TUNNEL.courtierMode === 'libre') {
+        courtier = TUNNEL.courtierLibreType === 'pct'
+          ? Math.round(TUNNEL.prix * TUNNEL.courtierLibre / 100)
+          : TUNNEL.courtierLibre;
+      }
+    }
+    TUNNEL.frais = {avocat, agence, courtier};
   };
   lire();
 
@@ -4480,6 +4512,12 @@ async function etapeFrais(zone) {
   zone.querySelectorAll('[data-accompagnement]').forEach(b => {
     b.onclick = () => { TUNNEL.accompagnementMode = b.dataset.accompagnement; lire(); etapeFrais(zone); };
   });
+  zone.querySelectorAll('[data-courtier]').forEach(b => {
+    b.onclick = () => { TUNNEL.courtierMode = b.dataset.courtier; lire(); etapeFrais(zone); };
+  });
+  zone.querySelectorAll('[data-courtier-type]').forEach(b => {
+    b.onclick = () => { TUNNEL.courtierLibreType = b.dataset.courtierType; lire(); etapeFrais(zone); };
+  });
   zone.querySelectorAll('[data-aide]').forEach(b => {
     b.onclick = (e) => {
       e.stopPropagation();
@@ -4488,10 +4526,10 @@ async function etapeFrais(zone) {
       etapeFrais(zone);
     };
   });
-  const courtierChamp = $('#t-courtier', zone);
-  if (courtierChamp) courtierChamp.oninput = lire;
   const libreChamp = $('#t-avocat-libre', zone);
   if (libreChamp) libreChamp.oninput = lire;
+  const courtierLibreChamp = $('#t-courtier-libre', zone);
+  if (courtierLibreChamp) courtierLibreChamp.oninput = lire;
   $('#t-precedent', zone).onclick = () => dessinerEtape(3);
   $('#t-suivant', zone).onclick = () => { lire(); dessinerEtape(5); };
 }
