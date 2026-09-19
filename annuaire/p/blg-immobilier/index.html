@@ -1304,6 +1304,23 @@ table.ag th{width:64%}
  .remonter span{font-size:19px}
 }
 
+/* WhatsApp et mail, empiles juste au-dessus de la fleche « remonter » —
+   demande le 19/09/2026 : un contact toujours a portee de pouce, sur
+   n'importe quelle page, jamais seulement en bas de l'ecran. */
+.flottant{position:fixed;right:22px;z-index:25;width:46px;height:46px;
+ border-radius:999px;display:flex;align-items:center;justify-content:center;
+ box-shadow:var(--ombre-3);transition:transform .16s var(--ease);
+ text-decoration:none}
+.flottant:hover{transform:translateY(-2px)}
+.flottant svg{width:22px;height:22px;display:block}
+.flottant.wa{bottom:84px;background:#25d366;color:#052e16}
+.flottant.mail{bottom:142px;background:var(--encre);color:var(--fond)}
+@media(max-width:900px){
+ .flottant{right:14px}
+ .flottant.wa{bottom:calc(144px + env(safe-area-inset-bottom))}
+ .flottant.mail{bottom:calc(202px + env(safe-area-inset-bottom))}
+}
+
 /* ===================== l'echeancier sur mesure ===========================
    Hillel negocie l'echelonnement autant que le prix : il doit pouvoir poser
    ses propres echeances, avec leur pourcentage et leur date. */
@@ -2986,7 +3003,7 @@ const PAGES = {
         {ADRESSE}<br>
         ${T('Activité de conseil et d’apport d’affaires en immobilier neuf, exercée en Israël.')}<br>
         ${T('Contact')} : <a href="mailto:{MAIL_ED}">{MAIL_ED}</a> ·
-        <a href="tel:{TEL_ED}">{TEL_ED_AFF}</a></p>
+        <a href="https://wa.me/{TEL_ED}">WhatsApp</a></p>
       {PARTENAIRE_ED}
       <h3>${T('Hébergement')}</h3>
       <p>${T('Ce site est publié sur GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr Street, San Francisco, CA 94107, États-Unis).')}</p>
@@ -3009,8 +3026,8 @@ const PAGES = {
       <p>${T("Votre choix d’apparence (clair ou sombre) et le fait que vous avez déjà ouvert une fiche pendant cette visite : pour ne pas compter deux fois la même consultation. Ces informations restent sur votre appareil et ne nous parviennent jamais.")}</p>
       <h3>${T('Vos droits')}</h3>
       <p>${T('Vous pouvez à tout moment demander à consulter, corriger ou supprimer ce que nous savons de vous : écrivez à')}
-        <a href="mailto:{MAIL}">{MAIL}</a> ${T('ou appelez le')}
-        <a href="tel:{TEL}">{TEL_AFF}</a>. ${T('La suppression est faite sous quelques jours et sans condition.')}</p>`,
+        <a href="mailto:{MAIL}">{MAIL}</a> ${T('ou sur WhatsApp au')}
+        <a href="https://wa.me/{TEL}">{TEL_AFF}</a>. ${T('La suppression est faite sous quelques jours et sans condition.')}</p>`,
   },
 };
 
