@@ -1348,18 +1348,22 @@ table.ag th{width:64%}
 @media(max-width:900px){.autour-carte .carte-fond{max-height:230px}}
 
 /* ================== l'en-tete sur un telephone ==========================
-   Hillel, le 19/09/2026 : « le menu il est a droite, il faut qu'il soit a
-   gauche » et « c'est pas tres marketing tout ca ». La barre du haut
-   entassait logo, langues, WhatsApp, « Etre rappele » et le menu sur 390
-   pixels — une ligne debordait deja avant meme le rond WhatsApp, qui l'a
-   fait deborder pour de bon. Plutot que d'empiler encore une ligne, le
-   telephone repasse a l'essentiel : le menu (deplace a gauche, a cote du
-   logo) EST la porte d'entree vers tout le reste — langues comprises. Les
-   langues et WhatsApp vivent desormais DANS son tiroir (`.nav-mobile`), pas
-   a cote de lui ; « Etre rappele » ne sert plus a rien ici, la barre fixe du
-   bas (`.barre-mobile`) fait deja ce travail a la portee du pouce. */
+   Hillel, le 19/09/2026, en deux temps. D'abord : « le menu il est a
+   droite, il faut qu'il soit a gauche » et « c'est pas tres marketing tout
+   ca » — le menu est passe a gauche, a cote du logo, et « Etre rappele »
+   (deja fait par la barre fixe du bas) a ete retire pour degager la place.
+   Puis, une fois la place degagee : « on voit plus les langues, il faut
+   qu'on les voit sans rentrer dans le menu » et « mets-moi un logo
+   WhatsApp en haut a droite ». Les deux reviennent donc dans la barre,
+   a droite du logo — la place laissee libre par « Etre rappele » leur sert
+   maintenant. Les drapeaux (`.langues`, voir plus bas) remplacent les
+   lettres FR/EN/... : six drapeaux tiennent la ou six pastilles de texte
+   debordaient, et `overflow-x:auto` les fait defiler si un telephone tres
+   etroit n'a vraiment pas la place. */
 @media(max-width:900px){
- .pub-bar .langues,.pub-bar .wa-nav,.pub-bar .cta{display:none}
+ .pub-bar .cta{display:none}
+ .pub-bar .langues{overflow-x:auto;max-width:38vw;scrollbar-width:none}
+ .pub-bar .langues::-webkit-scrollbar{display:none}
  .nav-mobile .langues{display:inline-flex;margin:12px 22px 16px}
 }
 
