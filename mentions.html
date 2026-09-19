@@ -1090,6 +1090,14 @@ body.sim-actif .onglets{padding-bottom:0}
  padding:14px 16px;cursor:pointer;list-style:none}
 .article-carte summary::-webkit-details-marker{display:none}
 .article-carte .video-play{background:var(--action);color:#fff;font-size:15px}
+.article-carte .video-play svg{width:20px;height:20px;display:block}
+/* Une couleur par theme, pour reperer d'un coup d'oeil de quoi parle un
+   article avant meme de lire son titre. */
+.article-carte.theme-credit .video-play{background:#2563EB}
+.article-carte.theme-fiscalite .video-play{background:#B45309}
+.article-carte.theme-marche .video-play{background:#059669}
+.article-carte.theme-projets .video-play{background:var(--or);color:#1a1305}
+.article-carte.theme-urbanisme .video-play{background:#7C3AED}
 .article-corps{padding:0 20px 20px 78px;color:var(--encre-2);font-size:14.5px;
  line-height:1.7}
 .article-corps p{margin:0 0 12px}

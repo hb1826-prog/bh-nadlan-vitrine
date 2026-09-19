@@ -1099,6 +1099,14 @@ body.sim-actif .onglets{padding-bottom:0}
  padding:14px 16px;cursor:pointer;list-style:none}
 .article-carte summary::-webkit-details-marker{display:none}
 .article-carte .video-play{background:var(--action);color:#fff;font-size:15px}
+.article-carte .video-play svg{width:20px;height:20px;display:block}
+/* Une couleur par theme, pour reperer d'un coup d'oeil de quoi parle un
+   article avant meme de lire son titre. */
+.article-carte.theme-credit .video-play{background:#2563EB}
+.article-carte.theme-fiscalite .video-play{background:#B45309}
+.article-carte.theme-marche .video-play{background:#059669}
+.article-carte.theme-projets .video-play{background:var(--or);color:#1a1305}
+.article-carte.theme-urbanisme .video-play{background:#7C3AED}
 .article-corps{padding:0 20px 20px 78px;color:var(--encre-2);font-size:14.5px;
  line-height:1.7}
 .article-corps p{margin:0 0 12px}
@@ -2964,6 +2972,23 @@ function pageTexte(cle) {
    separees, un seul flux ou l'un et l'autre s'alternent. Rien n'est calcule
    ici : une nouvelle entree validee remonte seule, en haut de la page, a la
    prochaine fabrication du site. */
+/* Une pastille par theme d'article, plutot que le meme crayon repete a
+   l'identique sur toute la liste : Hillel l'a demande le 19/09/2026 apres
+   avoir vu que rien ne distinguait un article de fiscalite d'un article de
+   credit avant de l'ouvrir. Cinq themes ecrits par la redaction
+   (`data/sources/blog_articles.py`), cinq dessins geometriques simples —
+   jamais une photo, qui daterait plus vite qu'un trait. */
+const ICONES_THEME = {
+  credit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="2.6"/><circle cx="17" cy="17" r="2.6"/><path d="M6 18 18 6"/></svg>',
+  fiscalite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l3 3v15l-3-1.4-3 1.4-3-1.4-3 1.4V3Z"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/></svg>',
+  marche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 9 11 13 15 21 7"/><path d="M15 7h6v6"/></svg>',
+  projets: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21V8l6-4v17"/><path d="M4 21h16"/><path d="M9 12h2M9 16h2"/></svg>',
+  urbanisme: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21v-9l4-2 4 2v9"/><path d="M11 21V6l4-3 4 3v15"/></svg>',
+};
+function iconeTheme(theme) {
+  return ICONES_THEME[theme] || ICONES_THEME.marche;
+}
+
 function pageBlog() {
   basculer(false);
   const items = [
@@ -2982,9 +3007,9 @@ function pageBlog() {
           ${dateAff(it.date) ? `<span class="video-date">${dateAff(it.date)}</span>` : ''}
         </span>
       </a>` : `
-      <details class="article-carte">
+      <details class="article-carte theme-${esc(it.theme || 'marche')}">
         <summary>
-          <span class="video-play">✎</span>
+          <span class="video-play">${iconeTheme(it.theme)}</span>
           <span class="video-corps">
             <b>${esc(it.titre)}</b>
             ${dateAff(it.date) ? `<span class="video-date">${dateAff(it.date)}</span>` : ''}
@@ -2997,7 +3022,7 @@ function pageBlog() {
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T('Blog')}</p>
     <article class="texte">
       <h1>${T('Blog')}</h1>
-      <p>${T('Toutes les vidéos et tous les articles publiés depuis que nous travaillons ensemble.')}</p>
+      <p>${T("L'actualité de l'immobilier en Israël, en français : nouveaux permis, fiscalité, taux, quartiers qui montent.")}</p>
       <div class="video-grille">${cartes}</div>
     </article>
     ${contactHTML(null, 'liste')}`;
