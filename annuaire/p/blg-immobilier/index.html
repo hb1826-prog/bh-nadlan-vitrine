@@ -2595,8 +2595,27 @@ function rassureMini() {
   </div>`;
 }
 
+/* Le bouton WhatsApp flottant (partout sur le site) ouvre un message vide
+   par defaut — demande le 19/09/2026, Hillel veut comprendre d'ou vient
+   chaque conversation sans avoir a deviner. Sur la fiche d'un programme, le
+   message nomme le programme ; ailleurs, un message generique suffit.
+   Le bouton lui-meme (avec son message par defaut) est ecrit par
+   `generer.py` (`m_wa_href`) — cette fonction ne fait que le personnaliser
+   une fois la page chargee. */
+function majFlottantWa(p) {
+  const bouton = document.querySelector('.flottant.wa');
+  if (!bouton) return;
+  const texte = p
+    ? T('Bonjour, je suis intéressé par {nom} ({ville}).')
+        .replace('{nom}', p.nom).replace('{ville}', T(p.ville))
+    : T('Bonjour {marque}, je suis intéressé, je voudrais échanger avec vous.')
+        .replace('{marque}', DONNEES.marque ? DONNEES.marque.nom : 'BH Nadlan');
+  bouton.href = 'https://wa.me/' + DONNEES.wa + '?text=' + encodeURIComponent(texte);
+}
+
 async function fiche(p) {
   basculer(false);
+  majFlottantWa(p);
   compterVue(p.cle);
   E.typo = p.typologies[0].cle;
   E.prix = p.typologies[0].prix_min;
@@ -4040,9 +4059,25 @@ function resultatsComptant(zone, cible, f, p) {
    qui ouvre deja un mini-site et previent Hillel sur WhatsApp
    (`build/serveur-vps/leads/service.py::creer_et_envoyer_simulation`). Un
    seul envoi par visite (sessionStorage), jamais reenvoye a chaque
-   changement de curseur. */
-function porteSimulationFiche(zone, cible, p) {
-  cible.dataset.etat = 'porte';
+   changement de curseur.
+
+   EN DEUX TEMPS, pas un formulaire d'emblee — corrige le 19/09/2026 : un
+   visiteur qui voit tout de suite « laissez vos coordonnees » avant meme
+   d'avoir touche un curseur abandonne sans remplir. Il doit d'abord pouvoir
+   tout regler tranquillement (prix, profil, credit...) ; seul un bouton
+   neutre « Recevoir ma simulation » apparait a la place du chiffre, et le
+   formulaire tel/mail n'apparait qu'au clic dessus. */
+function boutonRecevoirFiche(zone, cible, p) {
+  cible.dataset.etat = 'bouton';
+  cible.innerHTML = `
+    <div class="porte-simu">
+      <button type="button" class="cta or" id="fs-recevoir">${T('Recevoir ma simulation')}</button>
+    </div>`;
+  $('#fs-recevoir', zone).onclick = () => formulaireSimulationFiche(zone, cible, p);
+}
+
+function formulaireSimulationFiche(zone, cible, p) {
+  cible.dataset.etat = 'formulaire';
   cible.innerHTML = `
     <div class="porte-simu">
       <p class="si-lab">${T('Laissez vos coordonnées pour recevoir cette simulation')}</p>
@@ -4061,7 +4096,7 @@ function porteSimulationFiche(zone, cible, p) {
       <p class="si-note" id="fs-note">${T('Téléphone et e-mail sont nécessaires tous '
         + 'les deux : votre simulation part sur le canal choisi, l’autre nous sert '
         + 'à vous rappeler.')}</p>
-      <button type="button" class="cta or" id="fs-envoi">${T('Recevoir ma simulation')}</button>
+      <button type="button" class="cta or" id="fs-envoi">${T('Envoyer')}</button>
     </div>`;
 
   let canal = 'whatsapp';
@@ -4134,7 +4169,9 @@ function resultats(zone, p) {
     }
     return;
   }
-  if (cible.dataset.etat !== 'porte') porteSimulationFiche(zone, cible, p);
+  if (cible.dataset.etat !== 'bouton' && cible.dataset.etat !== 'formulaire') {
+    boutonRecevoirFiche(zone, cible, p);
+  }
   return;
 
   // Code inaccessible tant que la porte n'est pas franchie — conserve tel
@@ -5254,6 +5291,9 @@ function langueGardeLaPage() {
 async function router() {
   const cle = location.hash.replace(/^#\/?/, '');
   langueGardeLaPage();
+  // Repli generique par defaut ; `fiche(p)` le personnalise juste apres si
+  // la route resolue en est une.
+  majFlottantWa(null);
   // Le tunnel du simulateur ne traite QUE la simulation — demande par Hillel
   // le 10/09/2026 apres avoir appuye par erreur sur le WhatsApp de la barre
   // fixe du bas en voulant appuyer sur « Suivant ». Cette classe masque tout
