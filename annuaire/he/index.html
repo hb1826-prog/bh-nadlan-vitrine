@@ -1335,10 +1335,17 @@ table.ag th{width:64%}
 .langues-actuel:hover{border-color:var(--gris-clair)}
 .langues-actuel .chev{color:var(--gris);transition:transform .15s var(--ease)}
 .langues-dd.ouvert .langues-actuel .chev{transform:rotate(180deg)}
+/* `:not([hidden])` porte le display – jamais la classe seule. Un
+   `display:flex` pose directement sur `.langues-menu` bat l'attribut
+   `hidden` (une regle de classe l'emporte sur la feuille de style interne
+   du navigateur) : le menu restait ouvert en permanence, sur chaque page,
+   pour chaque visiteur, jusqu'a ce qu'Hillel le signale le 19/09/2026
+   (« ca ne va pas du tout »). */
 .langues-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:20;
- display:flex;flex-direction:column;min-width:170px;background:var(--carte);
+ display:none;flex-direction:column;min-width:170px;background:var(--carte);
  border:1px solid var(--trait);border-radius:var(--r);box-shadow:var(--ombre-2);
  padding:6px;gap:1px}
+.langues-menu:not([hidden]){display:flex}
 .langues-menu a{display:flex;align-items:center;gap:9px;padding:9px 10px;
  border-radius:8px;font-size:14px;font-weight:600;color:var(--encre-2)}
 .langues-menu a:hover{background:var(--fond-2);color:var(--encre)}
