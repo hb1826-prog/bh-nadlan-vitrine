@@ -607,6 +607,16 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .etape-carte .plus{color:var(--action);font-weight:700}
 .etape-carte .note{margin-top:8px}
 
+/* Avocat / accompagnement / courtier, sur l'etape « Frais annexes » : un
+   choix explicite (`.seg`), jamais un champ deja rempli qu'on pourrait ne
+   pas remarquer. */
+.f-choix{display:block}
+.f-choix > b{display:block;font-size:14.5px;font-weight:700;margin-bottom:8px}
+.f-choix .plus{color:var(--action);font-weight:700;font-size:13px;
+ cursor:pointer;margin-left:8px}
+.f-choix .note{display:block;margin-top:8px;font-size:13px}
+.f-choix .seg button{font-size:13.5px;padding:8px 14px}
+
 .etape-nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
 .etape-nav button{border:0;border-radius:999px;padding:14px 26px;
  font-size:15px;font-weight:700;cursor:pointer;min-height:50px}
