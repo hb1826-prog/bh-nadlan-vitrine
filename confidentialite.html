@@ -205,6 +205,17 @@ button,input,select,textarea{font:inherit;color:inherit}
 .cta:hover{transform:translateY(-1px);opacity:.92}
 .cta.or{background:var(--action);color:#fff}
 
+/* Le rond vert de l'entete : demande par Hillel le 19/09/2026 pour etre
+   joignable sur WhatsApp depuis n'importe quelle page, sans passer par le
+   formulaire « Nous contacter ». Pose HORS de `.nav` (comme `.cta`) pour
+   rester visible meme sous 900px, la ou `.nav` s'efface derriere le
+   hamburger. */
+.wa-nav{display:inline-flex;align-items:center;justify-content:center;
+ flex:none;width:38px;height:38px;border-radius:999px;background:#25d366;
+ color:#fff;transition:transform .16s var(--ease),background .16s var(--ease)}
+.wa-nav:hover{background:#1eb85a;transform:translateY(-1px)}
+.wa-nav svg{display:block}
+
 /* Le bouton hamburger : cache par defaut (le menu du haut suffit sur grand
    ecran), il n'apparait qu'en dessous de 900px — la ou `.nav` disparaissait
    jusqu'ici sans aucun repli, et ou « Blog » devait pourtant rester
@@ -218,7 +229,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .nav-mobile.ouvert{display:flex;flex-direction:column;
  border-top:1px solid var(--trait);background:var(--fond)}
 .nav-mobile a{padding:14px 22px;font-size:15.5px;font-weight:600;
- color:var(--encre);border-bottom:1px solid var(--trait-fin)}
+ color:var(--encre);border-bottom:1px solid var(--trait-fin);
+ display:flex;align-items:center;gap:10px}
+.nav-mobile a.wa{color:#128c3e}
 
 /* le selecteur de theme, discret, a droite */
 .theme{display:inline-flex;gap:2px;flex:none;background:var(--fond-2);
@@ -617,7 +630,7 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
   line-height:1.25;background:var(--encre);color:var(--fond);cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:1px}
- .barre-mobile a{flex-direction:row}
+ .barre-mobile a{flex-direction:row;gap:8px}
  /* Le rappel gratuit se dit en deux lignes : le titre, puis la reassurance
     en petit — sans elle, l'engagement est ce qui retient le plus un
     visiteur d'entrer son numero. */
@@ -636,6 +649,7 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 body.tunnel-plein .barre-mobile{display:none}
 body.tunnel-plein .pub-top .nav{display:none}
 body.tunnel-plein .pub-top .cta{display:none}
+body.tunnel-plein .pub-top .wa-nav{display:none}
 body.tunnel-plein .pub-foot{display:none}
 
 /* Le simulateur s'ouvre SOUS ses onglets, pas a la place de la page.
@@ -712,6 +726,7 @@ body.sim-actif .onglets{padding-bottom:0}
  .nav{display:none}
  .burger{display:flex}
  .cta{padding:9px 12px;font-size:12.5px}
+ .wa-nav{width:34px;height:34px}
  .hero .dedans{padding:38px 20px 62px}
  .hero h1{font-size:28px}
  .hero p.chapeau{font-size:15.5px}
