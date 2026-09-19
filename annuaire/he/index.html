@@ -501,6 +501,22 @@ button,input,select,textarea{font:inherit;color:inherit}
 .block-head{padding:18px 22px 0;font-size:12px;font-weight:750;
  letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
 .pad{padding:14px 22px 22px}
+/* Le simulateur sur la fiche d'un bien, replie par defaut : Hillel, le
+   19/09/2026, apres avoir vu la fiche d'un telephone – « ca charge
+   beaucoup trop la fiche ». On comprend deja la typologie et le prix dans
+   le tableau juste au-dessus ; le detail du chiffrage (profil, credit,
+   frais, echeancier) n'a plus besoin d'etre deroule avant meme qu'on l'ait
+   demande. Regle valable pour TOUTE fiche, dans toutes les langues – pas
+   seulement celle qu'il regardait. La page dediee au simulateur seul
+   (`#/simulateur`) n'est pas concernee : y arriver EST deja la demande. */
+.simu-resume{display:flex;align-items:center;justify-content:space-between;
+ gap:12px;padding:18px 22px;cursor:pointer;font-size:15.5px;font-weight:700;
+ color:var(--action);list-style:none}
+.simu-resume::-webkit-details-marker{display:none}
+.simu-resume .chev{color:var(--gris);font-size:18px;line-height:1;flex:none;
+ transition:transform .15s var(--ease)}
+.simu-plier[open] .simu-resume .chev{transform:rotate(180deg)}
+.simu-plier[open] .simu-resume{border-bottom:1px solid var(--trait-fin)}
 /* Le tableau des typologies n'est pas dans un `.pad` : il porte sa propre
    marge, sinon il se colle a l'intitule du bloc. */
 .block .scroll{padding:14px 22px 20px}
