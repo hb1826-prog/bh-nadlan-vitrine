@@ -2665,7 +2665,11 @@ async function fiche(p) {
           </tr>`).join('')}</tbody>
         </table></div>
       </div>
-      <div class="block" id="simu"></div>
+      <details class="block simu-plier">
+        <summary class="simu-resume"><span>${T('Simulez ici ce que ce bien vous coûte vraiment →')}</span>
+          <span class="chev" aria-hidden="true">⌄</span></summary>
+        <div id="simu"></div>
+      </details>
       <div class="pad dim" style="font-size:12px">${T('Prix indicatifs, susceptibles d’évolution ; disponibilités sous réserve. Document non contractuel.')} ${dateChange()}</div>
     </div>
     ${quartierHTML(p.ville)}
