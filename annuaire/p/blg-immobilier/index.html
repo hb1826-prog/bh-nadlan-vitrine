@@ -596,6 +596,8 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .tile.appel span{font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.82)}
 .tile.appel .lien{color:var(--action);font-weight:700;margin-top:4px}
 .tile.appel:hover{transform:translateY(-3px);box-shadow:var(--ombre-2)}
+.tile.appel.blog{background:linear-gradient(160deg,var(--action),#1a3f8f)}
+.tile.appel.blog .pastille{background:#fff;color:var(--action)}
 
 /* ========================= la reassurance, sous la liste ================== */
 .rassure{margin-top:34px;padding:30px 26px;background:var(--fond-2);
@@ -2024,6 +2026,7 @@ function liste() {
   majBouton(vus.length);
   const cartes = vus.map(carte);
   if (cartes.length > 6) cartes.splice(6, 0, appel());
+  if (cartes.length > 2) cartes.splice(2, 0, blogAppel());
   // La carte revient SOUS les annonces. Essayee en tete, elle repoussait la
   // recherche et les premieres tuiles hors du premier ecran ; Hillel a
   // tranche : le bloc de raccourcis y est plus professionnel. La carte reste
@@ -2158,6 +2161,23 @@ document.addEventListener('click', e => {
   location.hash = '#/' + cle;
   setTimeout(versContact, 260);
 });
+
+/* La carte du blog, posee tot dans la grille (position 2) : Hillel l'a
+   demande le 18/09/2026 apres avoir vu le lien « Blog » range dans le menu
+   telephone — invisible pour qui n'ouvre jamais le menu. Une tuile, au
+   milieu des annonces qu'on regarde de toute facon, se voit sans qu'il faille
+   savoir qu'elle existe. Absente si le blog est vide (page partenaire, ou
+   avant la toute premiere validation d'un article). */
+function blogAppel() {
+  if (!(DONNEES.videos || []).length && !(DONNEES.articles || []).length) return '';
+  return `
+    <a class="tile appel blog" href="#/blog">
+      <span class="pastille">${T('Blog')}</span>
+      <b>${T('Nos vidéos et nos articles')}</b>
+      <span>${T("L'actualité de l'immobilier en Israël, en français : nouveaux permis, fiscalité, taux, quartiers qui montent.")}</span>
+      <span class="lien">${T('Découvrir le blog →')}</span>
+    </a>`;
+}
 
 /* La carte d'appel, au milieu des annonces : ce que le site ne montre pas. */
 function appel() {
