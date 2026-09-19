@@ -4287,7 +4287,8 @@ async function etapeFrais(zone) {
       <p class="dim si-note">${esc(notes.agence || '')}</p>
     </div>
 
-    ${TUNNEL.comptant ? '' : `
+    ${TUNNEL.comptant ? `
+    <p class="dim si-note" style="margin-top:14px">${T('Aucun crédit : pas de courtier à payer. Seuls l’avocat et l’accompagnement restent à votre charge.')}</p>` : `
     <div class="f" style="margin-top:14px">
       <label>${T('Courtier en crédit (forfait ₪)')}</label>
       <input id="t-courtier" type="number" step="500" min="0"
