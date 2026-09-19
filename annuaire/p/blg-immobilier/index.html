@@ -1170,6 +1170,13 @@ body.sim-actif .onglets{padding-bottom:0}
 .article-carte summary::-webkit-details-marker{display:none}
 .article-carte .video-play{background:var(--action);color:#fff;font-size:15px}
 .article-carte .video-play svg{width:36px;height:36px;display:block}
+/* La vraie photo de Hillel remplace le dessin des qu'elle existe — demande
+   du 19/09/2026, le dessin seul jugé « très vilain ». Le dessin reste posé
+   dans le HTML et redevient visible si l'image casse (onerror retire
+   `avec-photo` en JS). */
+.article-carte .video-vignette{display:none}
+.article-carte.avec-photo .video-vignette{display:block}
+.article-carte.avec-photo .video-play{display:none}
 /* Une couleur par theme, pour reperer d'un coup d'oeil de quoi parle un
    article avant meme de lire son titre. */
 .article-carte.theme-credit .video-play{background:#2563EB}
@@ -3083,8 +3090,10 @@ function pageTexte(cle) {
    l'identique sur toute la liste : Hillel l'a demande le 19/09/2026 apres
    avoir vu que rien ne distinguait un article de fiscalite d'un article de
    credit avant de l'ouvrir. Cinq themes ecrits par la redaction
-   (`data/sources/blog_articles.py`), cinq dessins geometriques simples —
-   jamais une photo, qui daterait plus vite qu'un trait. */
+   (`data/sources/blog_articles.py`). Le dessin geometrique reste le repli :
+   la vraie photo (`THEME_PHOTOS` dans `generer.py`) le recouvre des qu'elle
+   existe — Hillel l'a redemande le meme jour, le dessin seul restant « très
+   vilain » a ses yeux. */
 const ICONES_THEME = {
   credit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="2.6"/><circle cx="17" cy="17" r="2.6"/><path d="M6 18 18 6"/></svg>',
   fiscalite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l3 3v15l-3-1.4-3 1.4-3-1.4-3 1.4V3Z"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/></svg>',
@@ -3116,8 +3125,9 @@ function pageBlog() {
           ${dateAff(it.date) ? `<span class="video-date">${dateAff(it.date)}</span>` : ''}
         </span>
       </a>` : `
-      <details class="article-carte theme-${esc(it.theme || 'marche')}">
+      <details class="article-carte theme-${esc(it.theme || 'marche')}${it.photo ? ' avec-photo' : ''}">
         <summary>
+          ${it.photo ? `<span class="video-vignette"><img src="${esc(it.photo)}" alt="" loading="lazy" onerror="this.closest('details').classList.remove('avec-photo')"></span>` : ''}
           <span class="video-play">${iconeTheme(it.theme)}</span>
           <span class="video-corps">
             <b>${esc(it.titre)}</b>
