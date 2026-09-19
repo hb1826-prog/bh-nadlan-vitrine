@@ -587,6 +587,8 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .tunnel-jauge .seg.fait:nth-child(3){opacity:.66}
 .tunnel-jauge .seg.fait:nth-child(4){opacity:.84}
 .tunnel-jauge .seg.fait:nth-child(5){opacity:1}
+.tunnel-jauge .seg.cliquable{cursor:pointer}
+.tunnel-jauge .seg.cliquable:hover{height:10px}
 
 /* Les cartes de profil fiscal, cliquables. L'explication de chacune reste
    repliee derriere un petit « + » (demande par Hillel le 10/09/2026) : la
@@ -4113,13 +4115,29 @@ async function vueSimulateurEtapes() {
     </div>
     <div class="card"><div class="block"><div class="pad" id="tunnel"></div></div></div>`;
   dessinerEtape(TUNNEL.etape || 1);
+  // Revenir directement a une etape DEJA remplie, sans repasser par
+  // « Precedent » autant de fois : Hillel, le 19/09/2026, « la possibilite
+  // de revenir en arriere a chaque etape pour modifier les informations ».
+  // Un seul ecouteur, pose une fois sur le conteneur (`#tunnel` ne change
+  // jamais, seul son contenu est refait a chaque etape) : il survit a
+  // chaque `innerHTML` suivant, jamais besoin de le repser. Jamais en
+  // avant : sauter a une etape non remplie afficherait un chiffrage sur
+  // des reponses qui n'existent pas encore.
+  $('#tunnel').onclick = (e) => {
+    const seg = e.target.closest('[data-etape]');
+    if (!seg) return;
+    const cible = +seg.dataset.etape;
+    if (cible < TUNNEL.etape) dessinerEtape(cible);
+  };
 }
 
 /* La jauge : cinq segments, jamais un chiffre. `n` est l'etape ATTEINTE
-   (1 a 5) — les segments jusqu'a `n` sont pleins. */
+   (1 a 5) — les segments jusqu'a `n` sont pleins, et les segments deja
+   remplis (avant l'etape courante) sont cliquables pour y revenir. */
 function jaugeHTML(n) {
   return '<div class="tunnel-jauge">' + [1, 2, 3, 4, 5].map(i =>
-    '<i class="seg' + (i <= n ? ' fait' : '') + '"></i>').join('') + '</div>';
+    '<i class="seg' + (i <= n ? ' fait' : '') + (i < n ? ' cliquable' : '')
+    + '" data-etape="' + i + '"></i>').join('') + '</div>';
 }
 
 function dessinerEtape(n) {
