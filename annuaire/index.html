@@ -3738,9 +3738,12 @@ async function simulateur(zone, p) {
   // remplit ; le visiteur reste libre de le corriger — c'est le prix negocie
   // qui l'interesse, pas le prix d'appel.
   const champPrix = `<div class="f"><label>${T('Prix du bien (₪)')}</label>
-      <input id="s-prix" type="number" inputmode="numeric" step="1000"
-             min="${DONNEES.prix_min || 100000}"
-             max="${DONNEES.prix_max || 20000000}" value="${Math.round(E.prix)}">
+      <div class="qwrap has-val">
+        <input id="s-prix" type="number" inputmode="numeric" step="1000"
+               min="${DONNEES.prix_min || 100000}"
+               max="${DONNEES.prix_max || 20000000}" value="${Math.round(E.prix)}">
+        <button type="button" class="q-clear" id="s-prix-clear" aria-label="${T('Effacer')}">✕</button>
+      </div>
       <span class="f-eur" id="s-prix-eur">${eur(E.prix)}</span></div>`;
   const choix = p
     ? `<div class="f"><label>${T('Appartement')}</label><select id="s-typo">${
@@ -3827,6 +3830,7 @@ async function simulateur(zone, p) {
     // On redessine les CHIFFRES a chaque frappe, mais pas le formulaire :
     // redessiner le formulaire ferait perdre le curseur au milieu du nombre.
     prix.oninput = () => {
+      $('.qwrap', zone).classList.toggle('has-val', !!prix.value);
       const valeur = Math.max(0, +prix.value || 0);
       if (!valeur) return;
       E.prix = valeur;
@@ -3834,6 +3838,12 @@ async function simulateur(zone, p) {
       const cote = $('#s-prix-eur', zone);
       if (cote) cote.textContent = eur(valeur);
       resultats(zone, p);
+    };
+    const clear = $('#s-prix-clear', zone);
+    if (clear) clear.onclick = () => {
+      prix.value = '';
+      $('.qwrap', zone).classList.remove('has-val');
+      prix.focus();
     };
   }
   $('#s-profil', zone).onchange = e => { E.profil = e.target.value; refaire(); };
@@ -4242,10 +4252,13 @@ function etapePrix(zone) {
     ${jaugeHTML(1)}
     <div class="si-lab">${T('Le prix du bien')}</div>
     <div class="f"><label>${T('Prix (₪)')}</label>
-      <input id="t-prix" type="number" inputmode="numeric" step="1000"
-             min="${DONNEES.prix_min || 100000}"
-             max="${DONNEES.prix_max || 20000000}"
-             value="${Math.round(TUNNEL.prix)}">
+      <div class="qwrap has-val">
+        <input id="t-prix" type="number" inputmode="numeric" step="1000"
+               min="${DONNEES.prix_min || 100000}"
+               max="${DONNEES.prix_max || 20000000}"
+               value="${Math.round(TUNNEL.prix)}">
+        <button type="button" class="q-clear" id="t-prix-clear" aria-label="${T('Effacer')}">✕</button>
+      </div>
       <span class="f-eur" id="t-prix-eur">${eur(TUNNEL.prix)}</span></div>
 
     <div class="etape-nav">
@@ -4253,11 +4266,18 @@ function etapePrix(zone) {
     </div>`;
 
   const prix = $('#t-prix', zone);
+  const majClear = () => $('.qwrap', zone).classList.toggle('has-val', !!prix.value);
   prix.oninput = () => {
     const v = Math.max(0, +prix.value || 0);
     TUNNEL.prix = v;
     const cote = $('#t-prix-eur', zone);
     if (cote) cote.textContent = eur(v);
+    majClear();
+  };
+  $('#t-prix-clear', zone).onclick = () => {
+    prix.value = ''; TUNNEL.prix = 0;
+    $('#t-prix-eur', zone).textContent = eur(0);
+    majClear(); prix.focus();
   };
   $('#t-suivant', zone).onclick = () => {
     TUNNEL.prix = Math.max(0, +prix.value || 0);
