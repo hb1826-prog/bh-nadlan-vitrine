@@ -3114,20 +3114,35 @@ function avisHTML() {
    pas de l'enseigne – c'est le meme metier, le meme promoteur, le meme prix.
    Ecrit une seule fois, lu par la page de Hillel et par celles de ses
    partenaires. */
-const QUI_COMMUN = `
-      <h3>${T('Comment nous sommes payés')}</h3>
-      <p>${T('Vous ne nous payez pas. Nous sommes rémunérés par le promoteur, au titre de l’apport d’affaires, et')} <b>${T('cette rémunération ne s’ajoute pas à votre prix')}</b> ${T(": vous signez au même prix que si vous poussiez seul la porte du bureau de vente, sauf que le prix, lui, a été négocié avant vous. Après la signature seulement, un accompagnement optionnel jusqu’aux clés est facturé 1 % du prix ; vous pouvez vous en passer.")}</p>
-      <h3>${T('Ce que nous ne faisons pas')}</h3>
+/* Format questions/reponses, demande par Hillel le 19/09/2026 : plus facile
+   a parcourir qu'un mur de paragraphes, et surtout – sa raison – ca permet
+   de sortir « comment sommes-nous payes » de son coin pour en faire une
+   vraie question, posee tot. Un visiteur qui voit « gratuit » se demande
+   d'abord ou est l'arnaque ; y repondre en 2e position (juste apres avoir
+   dit qui on est) leve le doute vite, sans donner l'impression qu'on se
+   defend avant meme qu'on ait demande – la mettre en tout premier, avant
+   de s'etre presente, aurait fait l'effet inverse. */
+const QUI_PAYES = `
+      <h3>${T('Comment sommes-nous payés ?')}</h3>
+      <p>${T('Vous ne nous payez pas. Nous sommes rémunérés par le promoteur, au titre de l’apport d’affaires, et')} <b>${T('cette rémunération ne s’ajoute pas à votre prix')}</b> ${T(": vous signez au même prix que si vous poussiez seul la porte du bureau de vente, sauf que le prix, lui, a été négocié avant vous. Après la signature seulement, un accompagnement optionnel jusqu’aux clés est facturé 1 % du prix ; vous pouvez vous en passer.")}</p>`;
+const QUI_NE_FAIT_PAS = `
+      <h3>${T('Que ne faisons-nous pas ?')}</h3>
       <p>${T("Nous ne vendons pas de bien ancien entre particuliers, et nous ne sommes ni banquiers ni avocats : nous travaillons avec les vôtres, ou nous vous en présentons. Nous ne vous mettons jamais en relation avec un promoteur en échange de vos coordonnées.")}</p>`;
+// Gardee pour la page d'un partenaire (`quiSommesNous()`, plus bas) : meme
+// ordre qu'avant, la question des payes y suit deja directement la
+// presentation – rien a reordonner la-bas.
+const QUI_COMMUN = QUI_PAYES + QUI_NE_FAIT_PAS;
 
 const PAGES = {
   'qui-sommes-nous': {
-    titre: T('Qui nous sommes'),
+    titre: T('Qui sommes-nous'),
     corps:
-      `<p>${T('BH Nadlan est le cabinet de')} <b>Hillel Bijaoui</b>. ${T("Nous accompagnons des acheteurs francophones de France, de Belgique, de Suisse et du Canada dans l’achat d’un logement neuf en Israël, depuis le premier appel jusqu’à la signature, et jusqu’à la remise des clés si vous le souhaitez.")}</p>
-      <h3>${T('D’où nous venons')}</h3>
+      `<h3>${T('Qui êtes-vous ?')}</h3>
+      <p>${T('BH Nadlan est le cabinet de')} <b>Hillel Bijaoui</b>. ${T("Nous accompagnons des acheteurs francophones de France, de Belgique, de Suisse et du Canada dans l’achat d’un logement neuf en Israël, depuis le premier appel jusqu’à la signature, et jusqu’à la remise des clés si vous le souhaitez.")}</p>`
+      + T(QUI_PAYES) +
+      `<h3>${T('D’où venez-vous ?')}</h3>
       <p>${T('Douze ans dans l’immobilier, dont l’essentiel')} <b>${T('chez les promoteurs')}</b>${T(', du côté du vendeur. C’est là qu’on apprend comment un prix se construit, ce qui se négocie réellement, et ce qui ne se négocie jamais. Aujourd’hui, ce savoir sert l’acheteur.')}</p>`
-      + T(QUI_COMMUN),
+      + T(QUI_NE_FAIT_PAS),
   },
   'informations-legales': {
     titre: T('Informations légales'),
