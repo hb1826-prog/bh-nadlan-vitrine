@@ -575,11 +575,25 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
    repliee derriere un petit « + » (demande par Hillel le 10/09/2026) : la
    liste tient sur moins de hauteur et le bouton Suivant reste visible sans
    avoir a faire defiler. */
-.etape-carte{display:block;width:100%;text-align:left;cursor:pointer;
+.etape-carte{display:flex;align-items:flex-start;justify-content:space-between;
+ gap:14px;width:100%;text-align:left;cursor:pointer;
  background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
  padding:16px 18px;margin-bottom:10px}
 .etape-carte:hover{border-color:var(--gris-clair)}
-.etape-carte.on{border-color:var(--action);background:var(--fond-2)}
+/* Hillel, le 19/09/2026 : « c'est pas clair qu'on a selectionne le bon
+   statut ». Le seul signal etait une bordure a peine plus foncee — un vrai
+   bouton radio, qui se remplit, est le geste qu'on reconnait sans avoir a
+   le lire. */
+.etape-carte.on{border-color:var(--action);background:var(--fond-2);
+ box-shadow:0 0 0 1px var(--action)}
+.etape-carte-corps{flex:1;min-width:0}
+.etape-carte .radio{flex:none;width:22px;height:22px;margin-top:2px;
+ border-radius:50%;border:2px solid var(--trait);position:relative;
+ transition:border-color .15s var(--ease)}
+.etape-carte:hover .radio{border-color:var(--gris-clair)}
+.etape-carte.on .radio{border-color:var(--action)}
+.etape-carte.on .radio::after{content:"";position:absolute;inset:4px;
+ border-radius:50%;background:var(--action)}
 .etape-carte b{display:block;font-size:15.5px;font-weight:750}
 .etape-carte span{display:block;font-size:13.5px;color:var(--gris);
  line-height:1.5;margin-top:4px}
@@ -4207,12 +4221,15 @@ function etapeProfil(zone) {
     <div class="si-lab">${T('Votre situation')}</div>
     ${Object.entries(profils).map(([cle, libelle]) => `
       <button type="button" class="etape-carte ${TUNNEL.profil === cle ? 'on' : ''}"
-              data-profil="${cle}">
-        <b>${esc(libelle)}</b>
-        ${notes[cle] ? `<span class="plus" data-aide="${cle}">${
-          TUNNEL.aideProfil === cle ? T('Voir moins −') : T('En savoir plus +')}</span>` : ''}
-        ${notes[cle] && TUNNEL.aideProfil === cle
-          ? `<span class="note">${esc(notes[cle])}</span>` : ''}
+              data-profil="${cle}" role="radio" aria-checked="${TUNNEL.profil === cle}">
+        <span class="etape-carte-corps">
+          <b>${esc(libelle)}</b>
+          ${notes[cle] ? `<span class="plus" data-aide="${cle}">${
+            TUNNEL.aideProfil === cle ? T('Voir moins −') : T('En savoir plus +')}</span>` : ''}
+          ${notes[cle] && TUNNEL.aideProfil === cle
+            ? `<span class="note">${esc(notes[cle])}</span>` : ''}
+        </span>
+        <span class="radio" aria-hidden="true"></span>
       </button>`).join('')}
 
     <div class="etape-nav">
