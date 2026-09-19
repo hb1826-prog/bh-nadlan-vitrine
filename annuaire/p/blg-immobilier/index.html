@@ -4030,10 +4030,119 @@ function resultatsComptant(zone, cible, f, p) {
     </details>`;
 }
 
+/* Regle d'Hillel du 19/09/2026 : « la simulation ne doit absolument jamais
+   etre disponible pour le client sans ses coordonnees en echange ». Les
+   curseurs du simulateur de fiche restent libres, mais le RESULTAT est
+   derriere la meme porte que le simulateur libre (`etapeCoordonnees` /
+   `etapeConfirmation` plus haut) : jamais de chiffre affiche, une
+   confirmation d'envoi une fois les coordonnees laissees — le chiffrage
+   complet part par le meme guichet (`envoyerLead`, extra.canal/profil/...)
+   qui ouvre deja un mini-site et previent Hillel sur WhatsApp
+   (`build/serveur-vps/leads/service.py::creer_et_envoyer_simulation`). Un
+   seul envoi par visite (sessionStorage), jamais reenvoye a chaque
+   changement de curseur. */
+function porteSimulationFiche(zone, cible, p) {
+  cible.dataset.etat = 'porte';
+  cible.innerHTML = `
+    <div class="porte-simu">
+      <p class="si-lab">${T('Laissez vos coordonnées pour recevoir cette simulation')}</p>
+      <div class="seg" id="fs-canal">
+        <button type="button" data-canal="whatsapp" class="on">${T('Par WhatsApp')}</button>
+        <button type="button" data-canal="mail">${T('Par mail')}</button>
+      </div>
+      <div class="duo" style="margin-top:14px">
+        <div class="f"><label for="fs-tel">${T('Téléphone')}</label>
+          <input id="fs-tel" type="tel" autocomplete="tel" placeholder="+33 6 …"></div>
+        <div class="f"><label for="fs-mail">${T('E-mail')}</label>
+          <input id="fs-mail" type="email" autocomplete="email" placeholder="vous@exemple.com"></div>
+      </div>
+      <div class="pot"><label>${T('Société')}</label>
+        <input id="fs-societe" tabindex="-1" autocomplete="off"></div>
+      <p class="si-note" id="fs-note">${T('Téléphone et e-mail sont nécessaires tous '
+        + 'les deux : votre simulation part sur le canal choisi, l’autre nous sert '
+        + 'à vous rappeler.')}</p>
+      <button type="button" class="cta or" id="fs-envoi">${T('Recevoir ma simulation')}</button>
+    </div>`;
+
+  let canal = 'whatsapp';
+  zone.querySelectorAll('#fs-canal button').forEach(b => {
+    b.onclick = () => {
+      canal = b.dataset.canal;
+      zone.querySelectorAll('#fs-canal button').forEach(x => x.classList.toggle('on', x === b));
+    };
+  });
+  const val = id => (($('#' + id, zone) || {}).value || '').trim();
+  $('#fs-envoi', zone).onclick = async (e) => {
+    const bouton = e.currentTarget;
+    const tel = val('fs-tel'), mail = val('fs-mail');
+    const note = $('#fs-note', zone);
+    if (!tel || !mail) {
+      note.textContent = T('Il nous faut votre téléphone ET votre e-mail : la '
+        + 'simulation part sur l’un, l’autre nous sert à vous rappeler.');
+      note.classList.add('manque');
+      (tel ? $('#fs-mail', zone) : $('#fs-tel', zone)).focus();
+      return;
+    }
+    const profilLabel = (DONNEES.profils || {})[E.profil] || '';
+    const mot = 'Simulation sur ' + (p.nom || '') + ' — Budget : ' + shek(E.prix)
+      + (E.comptant ? ' (achat comptant)'
+        : ' (crédit jusqu’à ' + E.ltv + ' % sur ' + E.duree + ' ans)')
+      + ' — Profil : ' + profilLabel
+      + ' — Reçue par : ' + (canal === 'mail' ? 'mail' : 'WhatsApp');
+    const etiquette = bouton.textContent;
+    bouton.disabled = true;
+    bouton.textContent = T('Envoi…');
+    try {
+      await envoyerLead({
+        prenom: '', nom: '', tel: tel, mail: mail, mot: mot,
+        societe: val('fs-societe'),
+      }, p, 'fiche-simu', {
+        budget: E.prix, canal: canal, profil: E.profil, cadre: E.cadre,
+        emprunt_pct: E.comptant ? 0 : E.ltv,
+        emprunt_duree: E.comptant ? null : E.duree,
+      });
+      sessionStorage.setItem('bh-simu-envoyee', '1');
+      sessionStorage.setItem('bh-simu-canal', canal);
+      confirmationSimulationFiche(cible, canal);
+    } catch (err) {
+      bouton.disabled = false;
+      bouton.textContent = etiquette;
+      note.textContent = T('L’envoi a échoué. Réessayez, ou écrivez-nous '
+        + 'directement sur WhatsApp.');
+      note.classList.add('manque');
+    }
+  };
+}
+
+function confirmationSimulationFiche(cible, canal) {
+  cible.dataset.etat = 'confirmation';
+  const moyen = canal === 'mail' ? T('par mail') : T('par WhatsApp');
+  cible.innerHTML = `
+    <div class="merci">
+      <div class="coche">✓</div>
+      <h3>${T('Votre simulation vous a été envoyée')} ${moyen}.</h3>
+      <p>${T('Le lien reste valable')} <b>${T('7 jours')}</b>.</p>
+    </div>`;
+}
+
 function resultats(zone, p) {
-  const f = blocCourant(p);
   const cible = $('#si-res', zone);
-  if (!f || !cible) return;
+  if (!cible) return;
+  if (sessionStorage.getItem('bh-simu-envoyee') === '1') {
+    if (cible.dataset.etat !== 'confirmation') {
+      confirmationSimulationFiche(cible, sessionStorage.getItem('bh-simu-canal'));
+    }
+    return;
+  }
+  if (cible.dataset.etat !== 'porte') porteSimulationFiche(zone, cible, p);
+  return;
+
+  // Code inaccessible tant que la porte n'est pas franchie — conserve tel
+  // quel plutot que supprime : `resultatsComptant` et le chiffrage complet
+  // servent encore de reference pour le mini-site fabrique cote serveur.
+  // eslint-disable-next-line no-unreachable
+  const f = blocCourant(p);
+  if (!f) return;
 
   // Achat comptant : un etat a part, jamais une ligne du tableau de credit.
   // Aucune mention de mensualite, taux, duree ou barre capital/interets —
