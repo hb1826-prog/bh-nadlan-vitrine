@@ -1579,6 +1579,30 @@ table.ag th{width:64%}
 /* Le piege a robots : present dans le DOM, invisible pour un humain. */
 .rappel .pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
+/* Indicatif telephonique + suggestions de mail — 19/09/2026 */
+.tel-boite{display:flex;gap:6px}
+.tel-drap{flex:none;border:1px solid var(--trait);background:var(--fond);
+ border-radius:var(--r);padding:0 10px;font-size:14px;cursor:pointer;min-height:46px}
+.tel-boite input{flex:1;min-width:0}
+.tel-champ{position:relative}
+.tel-liste{position:absolute;z-index:30;top:100%;left:0;margin-top:4px;
+ width:min(320px,100%);background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r);box-shadow:var(--ombre-3);padding:8px}
+.tel-recherche{width:100%;border:1px solid var(--trait);border-radius:var(--r);
+ padding:9px 10px;font-size:14px;margin-bottom:6px}
+.tel-options{max-height:220px;overflow:auto}
+.tel-opt{display:block;width:100%;text-align:left;background:none;border:0;
+ padding:8px 6px;font-size:14px;cursor:pointer;border-radius:6px}
+.tel-opt:hover{background:var(--fond-2)}
+.tel-opt span{float:right;color:var(--gris)}
+.tel-sep{border-top:1px solid var(--trait);margin:6px 0}
+.mail-suggestions{position:absolute;z-index:30;left:0;right:0;margin-top:2px;
+ background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
+ box-shadow:var(--ombre-3);overflow:hidden}
+.mail-suggestions button{display:block;width:100%;text-align:left;background:none;
+ border:0;padding:9px 12px;font-size:14px;cursor:pointer}
+.mail-suggestions button:hover{background:var(--fond-2)}
+
 :root{ --or:#0D9488; --or-fonce:#0a736a; --or-clair:#ecf6f5; --or-trait:#bbe1de; --action:#0F766E; --action-vive:#44948e; --action-lavis:#f1f7f6;}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){ --or:#7ac4be; --or-fonce:#5ab6ae; --or-clair:#021b18; --or-trait:#053834; --action:#93c1be; --action-vive:#b7d6d4; --action-lavis:#031816;}}
 :root[data-theme=dark]{ --or:#7ac4be; --or-fonce:#5ab6ae; --or-clair:#021b18; --or-trait:#053834; --action:#93c1be; --action-vive:#b7d6d4; --action-lavis:#031816;}
@@ -4769,8 +4793,7 @@ function etapeCoordonnees(zone) {
         <input id="t-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div>
     </div>
     <div class="duo" style="margin-top:14px">
-      <div class="f"><label for="t-tel">${T('Téléphone')}</label>
-        <input id="t-tel" type="tel" autocomplete="tel" placeholder="+33 6 …"></div>
+      ${champTelHTML('t-tel', T('Téléphone'))}
       <div class="f"><label for="t-mail">${T('E-mail')}</label>
         <input id="t-mail" type="email" autocomplete="email"
                placeholder="vous@exemple.com"></div>
@@ -4791,15 +4814,17 @@ function etapeCoordonnees(zone) {
   });
   $('#t-precedent', zone).onclick = () => dessinerEtape(4);
 
+  const telT = initTel('t-tel', zone);
+  initMailSuggestions('t-mail', zone);
   const val = id => (($('#' + id, zone) || {}).value || '').trim();
   $('#t-envoi', zone).onclick = async (e) => {
     const bouton = e.currentTarget;
-    const tel = val('t-tel'), mail = val('t-mail');
+    const tel = telT.valeur(), mail = val('t-mail');
     const note = $('#t-note', zone);
     if (!tel || !mail) {
       note.textContent = T("Il nous faut votre téléphone ET votre e-mail : la simulation part sur l’un, l’autre nous sert à vous rappeler.");
       note.classList.add('manque');
-      (tel ? $('#t-mail', zone) : $('#t-tel', zone)).focus();
+      (tel ? $('#t-mail', zone) : $('#t-tel-num', zone)).focus();
       return;
     }
     const canal = TUNNEL.canal === 'mail' ? 'mail' : 'whatsapp';
@@ -4906,9 +4931,7 @@ function contactHTML(p, intention) {
           <div class="f"><label for="c-prenom">${T('Prénom')}</label>
             <input id="c-prenom" autocomplete="given-name"
                    placeholder="${T('Votre prénom')}"></div>
-          <div class="f"><label for="c-tel">${T('Téléphone')}</label>
-            <input id="c-tel" type="tel" autocomplete="tel"
-                   placeholder="+33 6 …"></div>
+          ${champTelHTML('c-tel', T('Téléphone'))}
         </div>
         <button class="plus" id="c-plus" type="button">${T('+ ajouter un e-mail '
           + 'ou un mot')}</button>
@@ -5161,6 +5184,8 @@ async function envoyerLead(champs, p, I, extra) {
 function wireContact(p, intention) {
   const I = intention || (p ? 'fiche' : 'liste');
   const val = id => (($('#' + id) || {}).value || '').trim();
+  const telC = initTel('c-tel');
+  initMailSuggestions('c-mail');
   const plus = $('#c-plus');
   if (plus) plus.onclick = () => {
     $('#c-suite').hidden = false;
@@ -5171,7 +5196,7 @@ function wireContact(p, intention) {
     const lignes = [OBJETS[I]];
     const nom = [val('c-prenom'), val('c-nom')].filter(Boolean).join(' ');
     if (nom) lignes.push(T('Nom') + ' : ' + nom);
-    if (val('c-tel')) lignes.push(T('Téléphone') + ' : ' + val('c-tel'));
+    if (telC.valeur()) lignes.push(T('Téléphone') + ' : ' + telC.valeur());
     if (val('c-mail')) lignes.push(T('E-mail') + ' : ' + val('c-mail'));
     if (p) lignes.push(T('Programme') + ' : ' + p.nom + ' (' + p.ville + ')');
     if (val('c-mot')) lignes.push(T('Projet') + ' : ' + val('c-mot'));
@@ -5180,13 +5205,13 @@ function wireContact(p, intention) {
   // Un numero, c'est tout ce qu'on exige : sans lui il n'y a personne a
   // rappeler, et c'est le seul refus que le formulaire oppose.
   const manque = () => {
-    if (val('c-tel') || val('c-mail')) return false;
+    if (telC.valeur() || val('c-mail')) return false;
     const note = $('#c-note');
     if (note) {
       note.textContent = T('Il nous faut au moins votre téléphone pour vous répondre.');
       note.classList.add('manque');
     }
-    const tel = $('#c-tel');
+    const tel = $('#c-tel-num');
     if (tel) tel.focus();
     return true;
   };
@@ -5200,7 +5225,7 @@ function wireContact(p, intention) {
     envoi.textContent = T('Envoi…');
     try {
       await envoyerLead({
-        prenom: val('c-prenom'), nom: val('c-nom'), tel: val('c-tel'),
+        prenom: val('c-prenom'), nom: val('c-nom'), tel: telC.valeur(),
         mail: val('c-mail'), mot: val('c-mot'), societe: val('c-societe'),
       }, p, I);
       merci(p, I);
@@ -5302,8 +5327,15 @@ function ouvrirRappel(ancre) {
       <b>${T('aujourd’hui')}</b>.</p>
     <label for="r-prenom">${T('Prénom')}</label>
     <input id="r-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}">
-    <label for="r-tel">${T('Téléphone')}</label>
-    <input id="r-tel" type="tel" autocomplete="tel" placeholder="+33 6 …">
+    <label for="r-tel-num">${T('Téléphone')}</label>
+    <div class="tel-boite">
+      <button type="button" class="tel-drap" id="r-tel-ind" aria-haspopup="listbox"></button>
+      <input id="r-tel-num" type="tel" autocomplete="tel-national" placeholder="6 12 34 56 78">
+    </div>
+    <div class="tel-liste" id="r-tel-liste" hidden>
+      <input class="tel-recherche" id="r-tel-rech" placeholder="${T('Rechercher un pays…')}">
+      <div class="tel-options" id="r-tel-opts"></div>
+    </div>
     <div class="pot"><label>${T('Société')}</label>
       <input id="r-societe" tabindex="-1" autocomplete="off"></div>
     <button class="rappel-ok" type="button">${T("Être rappelé aujourd'hui")}</button>
@@ -5313,14 +5345,15 @@ function ouvrirRappel(ancre) {
   placerRappel(ancre);
 
   const note = POP.querySelector('#r-note');
-  const tel = POP.querySelector('#r-tel');
+  const telR = initTel('r-tel', POP);
   POP.querySelector('.rappel-x').onclick = fermerRappel;
   POP.querySelector('.rappel-ok').onclick = async (e) => {
     const bouton = e.currentTarget;
-    if (!tel.value.trim()) {
+    const tel = telR.valeur();
+    if (!tel) {
       note.textContent = T('Il nous faut votre téléphone pour vous rappeler.');
       note.classList.add('manque');
-      tel.focus();
+      POP.querySelector('#r-tel-num').focus();
       return;
     }
     const etiquette = bouton.textContent;
@@ -5329,7 +5362,7 @@ function ouvrirRappel(ancre) {
     try {
       await envoyerLead({
         prenom: POP.querySelector('#r-prenom').value.trim(),
-        tel: tel.value.trim(),
+        tel: tel,
         societe: POP.querySelector('#r-societe').value.trim(),
       }, p, I);
       POP.innerHTML = `<div class="rappel-ok-fait"><span>✓</span>

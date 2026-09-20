@@ -1570,6 +1570,30 @@ table.ag th{width:64%}
 /* Le piege a robots : present dans le DOM, invisible pour un humain. */
 .rappel .pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
+/* Indicatif telephonique + suggestions de mail — 19/09/2026 */
+.tel-boite{display:flex;gap:6px}
+.tel-drap{flex:none;border:1px solid var(--trait);background:var(--fond);
+ border-radius:var(--r);padding:0 10px;font-size:14px;cursor:pointer;min-height:46px}
+.tel-boite input{flex:1;min-width:0}
+.tel-champ{position:relative}
+.tel-liste{position:absolute;z-index:30;top:100%;left:0;margin-top:4px;
+ width:min(320px,100%);background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r);box-shadow:var(--ombre-3);padding:8px}
+.tel-recherche{width:100%;border:1px solid var(--trait);border-radius:var(--r);
+ padding:9px 10px;font-size:14px;margin-bottom:6px}
+.tel-options{max-height:220px;overflow:auto}
+.tel-opt{display:block;width:100%;text-align:left;background:none;border:0;
+ padding:8px 6px;font-size:14px;cursor:pointer;border-radius:6px}
+.tel-opt:hover{background:var(--fond-2)}
+.tel-opt span{float:right;color:var(--gris)}
+.tel-sep{border-top:1px solid var(--trait);margin:6px 0}
+.mail-suggestions{position:absolute;z-index:30;left:0;right:0;margin-top:2px;
+ background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
+ box-shadow:var(--ombre-3);overflow:hidden}
+.mail-suggestions button{display:block;width:100%;text-align:left;background:none;
+ border:0;padding:9px 12px;font-size:14px;cursor:pointer}
+.mail-suggestions button:hover{background:var(--fond-2)}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
