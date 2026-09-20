@@ -1588,6 +1588,11 @@ table.ag th{width:64%}
  width:min(300px,100%);background:var(--fond);border:1px solid var(--trait);
  border-radius:var(--r-lg,14px);box-shadow:var(--ombre-3);padding:10px;
  max-height:280px;display:flex;flex-direction:column}
+/* `display:flex` ci-dessus a la meme specificite que la regle systeme
+   `[hidden]{display:none}` et passe apres elle : sans ce correctif, la
+   liste restait affichee en permanence et cachait le champ mail — bug
+   remonte le 19/09/2026. */
+.tel-liste[hidden]{display:none}
 .tel-recherche{width:100%;border:1px solid var(--trait);border-radius:var(--r);
  padding:9px 11px;font-size:14px;margin-bottom:8px;outline:none;
  transition:border-color .16s var(--ease)}

@@ -1597,6 +1597,11 @@ table.ag th{width:64%}
  width:min(300px,100%);background:var(--fond);border:1px solid var(--trait);
  border-radius:var(--r-lg,14px);box-shadow:var(--ombre-3);padding:10px;
  max-height:280px;display:flex;flex-direction:column}
+/* `display:flex` ci-dessus a la meme specificite que la regle systeme
+   `[hidden]{display:none}` et passe apres elle : sans ce correctif, la
+   liste restait affichee en permanence et cachait le champ mail — bug
+   remonte le 19/09/2026. */
+.tel-liste[hidden]{display:none}
 .tel-recherche{width:100%;border:1px solid var(--trait);border-radius:var(--r);
  padding:9px 11px;font-size:14px;margin-bottom:8px;outline:none;
  transition:border-color .16s var(--ease)}
@@ -4141,8 +4146,12 @@ function formulaireSimulationFiche(zone, cible, p) {
         <button type="button" data-canal="whatsapp" class="on">${T('Par WhatsApp')}</button>
         <button type="button" data-canal="mail">${T('Par mail')}</button>
       </div>
-      <div class="f" style="margin-top:14px"><label for="fs-nom">${T('Nom')}</label>
-        <input id="fs-nom" autocomplete="name" placeholder="${T('Votre nom')}"></div>
+      <div class="duo" style="margin-top:14px">
+        <div class="f"><label for="fs-nom">${T('Nom')}</label>
+          <input id="fs-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
+        <div class="f"><label for="fs-prenom">${T('Prénom')}</label>
+          <input id="fs-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div>
+      </div>
       <div class="duo" style="margin-top:14px">
         ${champTelHTML('fs-tel', T('Téléphone'))}
         <div class="f"><label for="fs-mail">${T('E-mail')}</label>
@@ -4168,7 +4177,7 @@ function formulaireSimulationFiche(zone, cible, p) {
   const val = id => (($('#' + id, zone) || {}).value || '').trim();
   $('#fs-envoi', zone).onclick = async (e) => {
     const bouton = e.currentTarget;
-    const nom = val('fs-nom'), tel = telFs.valeur(), mail = val('fs-mail');
+    const nom = val('fs-nom'), prenom = val('fs-prenom'), tel = telFs.valeur(), mail = val('fs-mail');
     const note = $('#fs-note', zone);
     if (!nom || !tel || !mail) {
       note.textContent = T('Il nous faut votre nom, votre téléphone ET votre '
@@ -4189,7 +4198,7 @@ function formulaireSimulationFiche(zone, cible, p) {
     bouton.textContent = T('Envoi…');
     try {
       await envoyerLead({
-        prenom: '', nom: nom, tel: tel, mail: mail, mot: mot,
+        prenom: prenom, nom: nom, tel: tel, mail: mail, mot: mot,
         societe: val('fs-societe'),
       }, p, 'fiche-simu', {
         budget: E.prix, canal: canal, profil: E.profil, cadre: E.cadre,
@@ -4943,22 +4952,22 @@ function contactHTML(p, intention) {
           <span>${T('C’est Hillel Bijaoui, ou quelqu’un de son équipe, qui vous rappelle aujourd’hui.')}</span>
         </div>
         <div class="duo">
+          <div class="f"><label for="c-nom">${T('Nom')}</label>
+            <input id="c-nom" autocomplete="family-name"
+                   placeholder="${T('Votre nom')}"></div>
           <div class="f"><label for="c-prenom">${T('Prénom')}</label>
             <input id="c-prenom" autocomplete="given-name"
                    placeholder="${T('Votre prénom')}"></div>
+        </div>
+        <div class="duo" style="margin-top:14px">
           ${champTelHTML('c-tel', T('Téléphone'))}
         </div>
         <button class="plus" id="c-plus" type="button">${T('+ ajouter un e-mail '
           + 'ou un mot')}</button>
         <div id="c-suite" hidden>
-          <div class="duo">
-            <div class="f"><label for="c-nom">${T('Nom')}</label>
-              <input id="c-nom" autocomplete="family-name"
-                     placeholder="${T('Votre nom')}"></div>
-            <div class="f"><label for="c-mail">${T('E-mail')}</label>
-              <input id="c-mail" type="email" autocomplete="email"
-                     placeholder="vous@exemple.com"></div>
-          </div>
+          <div class="f"><label for="c-mail">${T('E-mail')}</label>
+            <input id="c-mail" type="email" autocomplete="email"
+                   placeholder="vous@exemple.com"></div>
           <div class="f" style="margin-top:12px">
             <label for="c-mot">${T('Votre projet')}</label>
             <textarea id="c-mot" rows="2" placeholder="${p
@@ -5338,10 +5347,14 @@ function ouvrirRappel(ancre) {
   POP.innerHTML = `
     <button class="rappel-x" type="button" aria-label="${T('Fermer')}">×</button>
     <b class="rappel-titre">${T('Un conseiller vous rappelle aujourd’hui')}</b>
-    <p>${T('Laissez votre prénom et votre numéro : on vous rappelle')}
+    <p>${T('Laissez vos coordonnées : on vous rappelle')}
       <b>${T('aujourd’hui')}</b>.</p>
-    <label for="r-prenom">${T('Prénom')}</label>
-    <input id="r-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}">
+    <div class="duo">
+      <div class="f"><label for="r-nom">${T('Nom')}</label>
+        <input id="r-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
+      <div class="f"><label for="r-prenom">${T('Prénom')}</label>
+        <input id="r-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div>
+    </div>
     <label for="r-tel-num">${T('Téléphone')}</label>
     <div class="tel-boite">
       <button type="button" class="tel-drap" id="r-tel-ind" aria-haspopup="listbox"></button>
@@ -5377,6 +5390,7 @@ function ouvrirRappel(ancre) {
     try {
       await envoyerLead({
         prenom: POP.querySelector('#r-prenom').value.trim(),
+        nom: POP.querySelector('#r-nom').value.trim(),
         tel: tel,
         societe: POP.querySelector('#r-societe').value.trim(),
       }, p, I);
