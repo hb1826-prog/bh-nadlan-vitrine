@@ -327,6 +327,14 @@ button,input,select,textarea{font:inherit;color:inherit}
  border-radius:var(--r);padding:12px 13px;font-size:15px;min-height:48px;
  width:100%;transition:border-color .16s var(--ease)}
 .champ input:focus,.champ select:focus{border-color:var(--action)}
+/* La fleche native d'un <select> est a peine visible sur iOS — Hillel, le
+   19/09/2026 : « quand il y a un choix dans un champ je dois le savoir, je
+   ne peux pas le deviner ». Une fleche dessinee, nette, dans la couleur du
+   texte (`currentColor`, donc juste en clair comme en sombre) plutot que le
+   controle du systeme. */
+.champ select{appearance:none;-webkit-appearance:none;-moz-appearance:none;
+ padding-right:38px;background-repeat:no-repeat;background-position:right 12px center;
+ background-size:18px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")}
 .chercher{background:var(--action);color:#fff;border:0;border-radius:var(--r);
  padding:0 26px;height:48px;font-size:15.5px;font-weight:700;cursor:pointer;
  display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
@@ -543,6 +551,11 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
  font-size:15px;min-height:46px;width:100%}
 .f textarea{min-height:70px;resize:vertical}
 .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--action)}
+/* Meme fleche nette que `.champ select` — un champ avec un choix doit se
+   voir comme tel, jamais comme du texte fixe (19/09/2026). */
+.f select{appearance:none;-webkit-appearance:none;-moz-appearance:none;
+ padding-right:36px;background-repeat:no-repeat;background-position:right 11px center;
+ background-size:17px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")}
 .seg{display:flex;gap:8px;flex-wrap:wrap}
 .seg button{background:var(--fond);border:1px solid var(--trait);
  border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;
