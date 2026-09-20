@@ -5420,13 +5420,15 @@ function ouvrirRappel(ancre) {
         <input id="r-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div>
     </div>
     <label for="r-tel-num">${T('Téléphone')}</label>
-    <div class="tel-boite">
-      <button type="button" class="tel-drap" id="r-tel-ind" aria-haspopup="listbox"></button>
-      <input id="r-tel-num" type="tel" autocomplete="tel-national" placeholder="6 12 34 56 78">
-    </div>
-    <div class="tel-liste" id="r-tel-liste" hidden>
-      <input class="tel-recherche" id="r-tel-rech" placeholder="${T('Rechercher un pays…')}">
-      <div class="tel-options" id="r-tel-opts"></div>
+    <div class="tel-champ">
+      <div class="tel-boite">
+        <button type="button" class="tel-drap" id="r-tel-ind" aria-haspopup="listbox"></button>
+        <input id="r-tel-num" type="tel" autocomplete="tel-national" placeholder="6 12 34 56 78">
+      </div>
+      <div class="tel-liste" id="r-tel-liste" hidden>
+        <input class="tel-recherche" id="r-tel-rech" placeholder="${T('Rechercher un pays…')}">
+        <div class="tel-options" id="r-tel-opts"></div>
+      </div>
     </div>
     <div class="pot"><label>${T('Société')}</label>
       <input id="r-societe" tabindex="-1" autocomplete="off"></div>
