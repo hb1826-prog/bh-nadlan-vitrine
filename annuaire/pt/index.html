@@ -749,7 +749,13 @@ body.sim-actif .onglets{padding-bottom:0}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .plus{background:none;border:0;color:var(--or-fonce);font-size:13.5px;
  font-weight:650;cursor:pointer;padding:12px 0 0;text-decoration:underline}
-@media(max-width:560px){.duo{grid-template-columns:1fr}}
+@media(max-width:560px){.duo{grid-template-columns:1fr}
+ /* Nom et prenom restent sur la meme ligne meme sur un petit telephone —
+    demande le 19/09/2026 : les deux se lisent d'un coup d'oeil, jamais
+    l'un sous l'autre. */
+ .duo.duo-nom{grid-template-columns:1fr 1fr;gap:8px}}
+@media(max-width:360px){.duo.duo-nom label{font-size:10.5px}
+ .duo.duo-nom input{padding-left:9px;padding-right:9px;font-size:14px}}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .actions button{border:0;border-radius:999px;padding:14px 26px;font-size:15px;
  font-weight:700;cursor:pointer;min-height:50px;background:var(--encre);
@@ -4210,7 +4216,7 @@ function formulaireSimulationFiche(zone, cible, p) {
         <button type="button" data-canal="whatsapp" class="on">${T('Par WhatsApp')}</button>
         <button type="button" data-canal="mail">${T('Par mail')}</button>
       </div>
-      <div class="duo" style="margin-top:14px">
+      <div class="duo duo-nom" style="margin-top:14px">
         <div class="f"><label for="fs-nom">${T('Nom')}</label>
           <input id="fs-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
         <div class="f"><label for="fs-prenom">${T('Prénom')}</label>
@@ -4874,7 +4880,7 @@ function etapeCoordonnees(zone) {
               class="${TUNNEL.canal === 'mail' ? 'on' : ''}">${T('Par mail')}</button>
     </div>
 
-    <div class="duo" style="margin-top:14px">
+    <div class="duo duo-nom" style="margin-top:14px">
       <div class="f"><label for="t-nom">${T('Nom')}</label>
         <input id="t-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
       <div class="f"><label for="t-prenom">${T('Prénom')}</label>
@@ -5015,7 +5021,7 @@ function contactHTML(p, intention) {
                onerror="this.closest('.qui-rappelle').remove()">
           <span>${T('C’est Hillel Bijaoui, ou quelqu’un de son équipe, qui vous rappelle aujourd’hui.')}</span>
         </div>
-        <div class="duo">
+        <div class="duo duo-nom">
           <div class="f"><label for="c-nom">${T('Nom')}</label>
             <input id="c-nom" autocomplete="family-name"
                    placeholder="${T('Votre nom')}"></div>
@@ -5148,6 +5154,32 @@ function paysParDefaut() {
   const region = ((navigator.language || 'fr-FR').split('-')[1] || 'FR').toUpperCase();
   return PAYS_TEL.some(p => p[0] === region) ? region : 'FR';
 }
+// Le pays repere par l'IP du visiteur — demande le 19/09/2026 : « si je me
+// connecte d'Israël je dois voir 972, pas 33 de la France ». La langue du
+// telephone ne dit rien du pays reel (un telephone regle en francais peut
+// tres bien se connecter d'Israël) ; seule l'IP le sait. Interroge une
+// seule fois par visite (memorise en sessionStorage), avec un delai court
+// pour ne jamais bloquer l'affichage si le service ne repond pas.
+let PAYS_IP_PROMISE = null;
+function paysParIP() {
+  if (PAYS_IP_PROMISE) return PAYS_IP_PROMISE;
+  const memoire = sessionStorage.getItem('bh-pays-ip');
+  if (memoire) return (PAYS_IP_PROMISE = Promise.resolve(memoire || null));
+  PAYS_IP_PROMISE = (async () => {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 2500);
+      const r = await fetch('https://ipapi.co/json/', {signal: ctrl.signal});
+      clearTimeout(t);
+      const d = await r.json();
+      const iso = (d && d.country_code || '').toUpperCase();
+      const trouve = PAYS_TEL.some(p => p[0] === iso) ? iso : null;
+      sessionStorage.setItem('bh-pays-ip', trouve || '');
+      return trouve;
+    } catch (e) { return null; }
+  })();
+  return PAYS_IP_PROMISE;
+}
 function champTelHTML(id, label) {
   return `<div class="f tel-champ"><label for="${id}-num">${label}</label>
     <div class="tel-boite">
@@ -5165,9 +5197,15 @@ function initTel(id, zone, isoDepart) {
         rech = $('#' + id + '-rech', zone), opts = $('#' + id + '-opts', zone);
   if (!bouton || !liste) return;
   let iso = isoDepart || paysParDefaut();
+  let choisiParVisiteur = !!isoDepart;
   const dial = i => (PAYS_TEL.find(p => p[0] === i) || PAYS_TEL[0])[2];
   const peindre = () => { bouton.textContent = drapeauPays(iso) + ' +' + dial(iso); };
   peindre();
+  if (!isoDepart) {
+    paysParIP().then(isoIP => {
+      if (isoIP && !choisiParVisiteur) { iso = isoIP; peindre(); }
+    });
+  }
   const rendreOptions = (filtre) => {
     const f = (filtre || '').trim().toLowerCase();
     const passe = (p) => !f || p[1].toLowerCase().includes(f) || p[2].includes(f);
@@ -5180,7 +5218,7 @@ function initTel(id, zone, isoDepart) {
       : `<button type="button" class="tel-opt" data-iso="${p[0]}">${drapeauPays(p[0])} `
         + `${esc(p[1])} <span>+${p[2]}</span></button>`).join('');
     opts.querySelectorAll('.tel-opt').forEach(b => {
-      b.onclick = () => { iso = b.dataset.iso; peindre(); fermer(); };
+      b.onclick = () => { iso = b.dataset.iso; choisiParVisiteur = true; peindre(); fermer(); };
     });
   };
   const ouvrir = () => { liste.hidden = false; rech.value = ''; rendreOptions(); rech.focus(); };
@@ -5413,7 +5451,7 @@ function ouvrirRappel(ancre) {
     <b class="rappel-titre">${T('Un conseiller vous rappelle aujourd’hui')}</b>
     <p>${T('Laissez vos coordonnées : on vous rappelle')}
       <b>${T('aujourd’hui')}</b>.</p>
-    <div class="duo">
+    <div class="duo duo-nom">
       <div class="f"><label for="r-nom">${T('Nom')}</label>
         <input id="r-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
       <div class="f"><label for="r-prenom">${T('Prénom')}</label>
