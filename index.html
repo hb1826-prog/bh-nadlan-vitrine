@@ -215,6 +215,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .cta:hover{transform:translateY(-1px);opacity:.92}
 .cta.or{background:var(--action);color:#fff}
 
+/* Le bouton qui ouvre le formulaire de coordonnees sur la fiche d'un bien :
+   demande par Hillel le 20/09/2026 pour qu'il se voie vraiment, au lieu de
+   se fondre parmi les boutons de reglage juste au-dessus. */
+.porte-simu-cta{text-align:center;margin-top:6px}
+.cta-grand{padding:16px 40px;font-size:17px;border-radius:999px}
+
 /* Le rond vert de l'entete : demande par Hillel le 19/09/2026 pour etre
    joignable sur WhatsApp depuis n'importe quelle page, sans passer par le
    formulaire « Nous contacter ». Pose HORS de `.nav` (comme `.cta`) pour
@@ -3661,60 +3667,11 @@ function indexationHTML(p, c) {
     — ${esc(annonce)} — ${T('et non sur une prévision : personne ne sait ce que fera l’indice.')}</p>`;
 }
 
-/* Les reglages de l'echeancier : ce que le visiteur peut bouger. */
-function reglagesEcheancier(p) {
-  const c = conditionsCourantes(p);
-  const modes = [
-    ['fin', T('Tout le solde à la fin')],
-    ['lineaire', T('Échelonné régulier')],
-    ['sur-mesure', T('Échéances sur mesure')],
-  ];
-  const lignesSurMesure = (E.echeances || []).map((e, i) => `
-    <div class="ech-ligne" data-i="${i}">
-      <input type="text" class="ech-lib" value="${esc(e.libelle || '')}"
-             placeholder="${T('Ex. fin du gros œuvre')}">
-      <input type="number" class="ech-pct" step="0.5" min="0" max="100"
-             value="${e.pct}" aria-label="${T('Pourcentage')}">
-      <span class="ech-u">%</span>
-      <input type="number" class="ech-mois" step="1" min="0" max="120"
-             value="${e.mois}" aria-label="${T('Mois après la signature')}">
-      <span class="ech-u">${T('mois')}</span>
-      <button type="button" class="ech-moins" aria-label="${T('Retirer')}">×</button>
-    </div>`).join('');
-
-  return `
-  <div class="si-lab">${T('L’échéancier du promoteur')}</div>
-  <div class="fgrid">
-    <div class="f"><label>${T('Versé à la signature (%)')}</label>
-      <input id="s-signature" type="number" step="1" min="0" max="100"
-             value="${c.signature}"></div>
-    <div class="f"><label>${T('Prêt promoteur (% du prix)')}</label>
-      <input id="s-promoteur" type="number" step="5" min="0" max="60"
-             value="${E.promoteur || 0}"></div>
-  </div>
-
-  <div class="si-lab">${T('Comment se paie le reste')}</div>
-  <div class="seg" id="s-mode">${modes.map(m =>
-    '<button data-mode="' + m[0] + '" class="'
-    + (E.mode === m[0] ? 'on' : '') + '">' + m[1] + '</button>').join('')}</div>
-  ${E.mode === 'lineaire' ? `
-    <div class="fgrid" style="margin-top:14px">
-      <div class="f"><label>${T('Nombre de versements')}</label>
-        <input id="s-tranches" type="number" step="1" min="1" max="24"
-               value="${E.tranches || 4}"></div>
-    </div>` : ''}
-  ${E.mode === 'sur-mesure' ? `
-    <div class="ech-liste">${lignesSurMesure
-      || '<p class="dim si-note">' + T('Aucune échéance : ajoutez-en une.') + '</p>'}</div>
-    <button type="button" class="ech-plus" id="s-ech-plus">${T('+ ajouter une échéance')}</button>` : ''}
-
-  <div class="si-lab">${T('Indexation au cours de la construction')}
-    (madad)</div>
-  <div class="seg" id="s-madad">
-    <button data-madad="0" class="${E.indexation ? '' : 'on'}">${T('Non')}</button>
-    <button data-madad="1" class="${E.indexation ? 'on' : ''}">${T('Oui')}</button>
-  </div>`;
-}
+// L'echeancier (versement a la signature, pret promoteur, mode de paiement)
+// et l'indexation MADAD ne sont plus reglables ici depuis le 20/09/2026 :
+// Hillel ne veut plus livrer ces details sur la fiche publique, seulement
+// dans le mini-site envoye apres les coordonnees. Le calcul continue de
+// tourner avec les conditions reelles du programme (`conditionsCourantes`).
 
 /* ---------------- le simulateur
 
@@ -3995,72 +3952,6 @@ async function simulateur(zone, p) {
   zone.querySelectorAll('[data-duree]').forEach(b => {
     b.onclick = () => { E.duree = +b.dataset.duree; refaire(); };
   });
-  const sig = $('#s-signature', zone);
-  if (sig) sig.oninput = () => {
-    const v = parseFloat(sig.value);
-    E.signature = isNaN(v) ? null : Math.min(100, Math.max(0, v));
-    resultats(zone, p);
-  };
-  const pro = $('#s-promoteur', zone);
-  if (pro) pro.oninput = () => {
-    const v = parseFloat(pro.value);
-    E.promoteur = isNaN(v) ? 0 : Math.min(60, Math.max(0, v));
-    resultats(zone, p);
-  };
-  zone.querySelectorAll('#s-madad button').forEach(b => {
-    b.onclick = () => { E.indexation = b.dataset.madad === '1'; refaire(); };
-  });
-
-  // Changer de mode redessine le formulaire (les champs ne sont pas les
-  // memes) ; changer un chiffre ne redessine que les resultats, pour ne pas
-  // perdre le curseur en pleine frappe.
-  zone.querySelectorAll('#s-mode button').forEach(b => {
-    b.onclick = () => {
-      E.mode = b.dataset.mode;
-      if (E.mode === 'sur-mesure' && !(E.echeances || []).length) {
-        const c = conditionsCourantes(p);
-        const total = Math.max(0, 100 - c.signature - c.retenue);
-        E.echeances = [{pct: Math.round(total / 2),
-                        mois: Math.round(moisAvantSolde(p, c) / 2),
-                        libelle: T('Versement intermédiaire')}];
-      }
-      refaire();
-    };
-  });
-  const tr = $('#s-tranches', zone);
-  if (tr) tr.oninput = () => {
-    E.tranches = Math.max(1, Math.min(24, parseInt(tr.value, 10) || 1));
-    resultats(zone, p);
-  };
-  const plus = $('#s-ech-plus', zone);
-  if (plus) plus.onclick = () => {
-    const c = conditionsCourantes(p);
-    E.echeances = (E.echeances || []).concat([{
-      pct: 10, mois: Math.round(moisAvantSolde(p, c) / 2),
-      libelle: T('Versement intermédiaire')}]);
-    refaire();
-  };
-  zone.querySelectorAll('.ech-ligne').forEach(ligne => {
-    const i = +ligne.dataset.i;
-    const maj = () => {
-      const e = E.echeances[i];
-      if (!e) return;
-      e.libelle = $('.ech-lib', ligne).value;
-      e.pct = Math.max(0, parseFloat($('.ech-pct', ligne).value) || 0);
-      e.mois = Math.max(0, parseInt($('.ech-mois', ligne).value, 10) || 0);
-      resultats(zone, p);
-    };
-    ['.ech-lib', '.ech-pct', '.ech-mois'].forEach(sel => {
-      const champ = $(sel, ligne);
-      if (champ) champ.oninput = maj;
-    });
-    const moins = $('.ech-moins', ligne);
-    if (moins) moins.onclick = () => {
-      E.echeances.splice(i, 1);
-      refaire();
-    };
-  });
-
   const lireFrais = () => {
     const avLibre = $('#s-avocat-libre', zone);
     if (avLibre) E.avocatLibre = Math.max(0, +avLibre.value || 0);
@@ -4199,8 +4090,8 @@ function resultatsComptant(zone, cible, f, p) {
 function boutonRecevoirFiche(zone, cible, p) {
   cible.dataset.etat = 'bouton';
   cible.innerHTML = `
-    <div class="porte-simu">
-      <button type="button" class="cta or" id="fs-recevoir">${T('Recevoir ma simulation')}</button>
+    <div class="porte-simu porte-simu-cta">
+      <button type="button" class="cta or cta-grand" id="fs-recevoir">${T('Recevoir ma simulation')}</button>
     </div>`;
   $('#fs-recevoir', zone).onclick = () => formulaireSimulationFiche(zone, cible, p);
 }
