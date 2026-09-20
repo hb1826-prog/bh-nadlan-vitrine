@@ -5082,6 +5082,14 @@ const PAYS_TEL = [
   ["ZM","Zambie","260"],["ZW","Zimbabwe","263"],
 ];
 const PAYS_PRIORITE = ["FR","IL","US","GB","ES","BR","PT","RU"];
+// L'exemple affiche dans le champ doit montrer le format du pays choisi, pas
+// toujours celui de la France : demande le 20/09/2026 apres qu'un numero
+// israelien tape avec son "972" en plus du drapeau ait semble en erreur.
+const PLACEHOLDER_TEL_DEFAUT = "6 12 34 56 78";
+const PLACEHOLDERS_TEL = { IL: "52 123 4567" };
+function placeholderTel(iso) {
+  return PLACEHOLDERS_TEL[iso] || PLACEHOLDER_TEL_DEFAUT;
+}
 function drapeauPays(iso) {
   return String.fromCodePoint(...[...iso.toUpperCase()]
     .map(c => 127397 + c.charCodeAt(0)));
@@ -5134,8 +5142,12 @@ function initTel(id, zone, isoDepart) {
   if (!bouton || !liste) return;
   let iso = isoDepart || paysParDefaut();
   let choisiParVisiteur = !!isoDepart;
+  const champNum = $('#' + id + '-num', zone);
   const dial = i => (PAYS_TEL.find(p => p[0] === i) || PAYS_TEL[0])[2];
-  const peindre = () => { bouton.textContent = drapeauPays(iso) + ' +' + dial(iso); };
+  const peindre = () => {
+    bouton.textContent = drapeauPays(iso) + ' +' + dial(iso);
+    if (champNum) champNum.placeholder = placeholderTel(iso);
+  };
   peindre();
   if (!isoDepart) {
     paysParIP().then(isoIP => {
