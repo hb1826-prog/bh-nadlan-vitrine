@@ -795,23 +795,26 @@ body.sim-actif .onglets{padding-bottom:0}
 
 /* =============================== telephone =============================== */
 @media(max-width:900px){
- .pub-bar{height:62px;gap:12px;position:relative}
+ .pub-bar{height:62px;gap:0}
  .nav{display:none}
  .burger{display:flex}
  .cta{padding:9px 12px;font-size:12.5px}
  .wa-nav{width:34px;height:34px}
- /* Le logo au milieu, le menu et WhatsApp aux deux bouts : Hillel, le
-    19/09/2026, apres l'arrivee des drapeaux — « le menu et le logo, il y a
-    quelque chose qui ne va pas [...] peut-etre le logo au milieu ». Deux
-    petits blocs a gauche et a droite d'un logo fixe au centre se lisent
-    comme une composition voulue ; le logo colle au menu, a gauche, se
-    lisait comme un tassement. `position:absolute` le sort du flux flex.
-    Les langues, elles, ne tiennent plus dans cette barre une fois le logo
-    recentre (six drapeaux + lettres sont trop larges pour ne pas le
-    recouvrir) : elles descendent sur leur propre ligne, juste en dessous —
-    toujours visibles sans ouvrir le menu, seulement pas au meme etage. */
- .pub-logo{position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);margin-left:0;padding:0}
+ /* Le logo au milieu, le menu et les langues aux deux bouts : Hillel, le
+    19/09/2026 — « le menu et le logo, il y a quelque chose qui ne va pas
+    [...] peut-etre le logo au milieu ». Corrige une premiere fois avec
+    `position:absolute` + `transform:translate(-50%)`, mais Hillel a repere
+    le 20/09/2026 (video a l'appui) que le logo continuait a sauter d'un
+    cote a l'autre pendant qu'on faisait defiler la page — ce calcul se
+    refait a chaque repaint de la barre collante (`position:sticky`) et
+    Safari ne le rejoue pas toujours a l'identique. Remplace par deux blocs
+    `flex:1` de poids egal, un de chaque cote : le logo tombe pile au milieu
+    par la seule geometrie du flex, sans jamais mesurer sa propre largeur —
+    donc plus rien a recalculer, plus rien qui puisse sauter. */
+ .pub-flanc{flex:1 1 0%;display:flex;align-items:center;min-width:0}
+ .pub-flanc-d{justify-content:flex-end;gap:12px}
+ .pub-bar > .grow{display:none}
+ .pub-logo{flex:none;margin-left:0;padding:0}
  .pub-logo svg{transform:scale(.8)}
  .hero .dedans{padding:38px 20px 62px}
  .hero h1{font-size:28px}
@@ -1638,9 +1641,17 @@ table.ag th{width:64%}
 </head><body>
 
 <header class=pub-top><div class="pub-in pub-bar">
-  <button class=burger type=button id=burger aria-label="Menu" aria-expanded=false>
-    <span></span><span></span><span></span>
-  </button>
+  <div class="pub-flanc pub-flanc-g">
+    <button class=burger type=button id=burger aria-label="Menu" aria-expanded=false>
+      <span></span><span></span><span></span>
+    </button>
+    <nav class=nav>
+      <a href="#/">Empreendimentos novos</a>
+      <a href="#/blog">Blogue</a>
+      <a href="#/simulateur">Simulador de compra</a>
+      <a href="#/" onclick="versContact(this);return false">Contactar</a>
+    </nav>
+  </div>
   <a class=pub-logo href="#/" title="Voltar ao início"
      aria-label="BH"><svg viewBox="0 0 152 64" width="95.00" height="40"
  style="aspect-ratio:152/64;direction:ltr" role="img"
@@ -1650,15 +1661,10 @@ table.ag th{width:64%}
   <text x="74" y="47" font-family="Helvetica,Arial,sans-serif" font-size="40"
         font-weight="800" letter-spacing="-1.5" fill="currentColor">BH</text>
 </svg></a>
-  <nav class=nav>
-    <a href="#/">Empreendimentos novos</a>
-    <a href="#/blog">Blogue</a>
-    <a href="#/simulateur">Simulador de compra</a>
-    <a href="#/" onclick="versContact(this);return false">Contactar</a>
-  </nav>
   <div class=grow></div>
-  <div class=theme><button data-t='light' title='Claro'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Como o sistema'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Escuro'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
-  <div class=langues-dd>
+  <div class="pub-flanc pub-flanc-d">
+    <div class=theme><button data-t='light' title='Claro'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Como o sistema'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Escuro'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
+    <div class=langues-dd>
   <button type=button class=langues-actuel aria-haspopup=true aria-expanded=false>
     <svg viewBox="0 0 18 12" width="19" height="13" aria-hidden="true">
  <rect width="18" height="12" fill="#FF0000" rx="1.5"/>
@@ -1693,7 +1699,8 @@ table.ag th{width:64%}
  <path d="M0 8h18v2.5A1.5 1.5 0 0 1 16.5 12h-15A1.5 1.5 0 0 1 0 10.5Z" fill="#D52B1E"/>
  </svg><span>RU</span></a></div>
 </div>
-  <button class="cta" type="button" onclick="versContact(this)">Um consultor liga-lhe hoje</button>
+    <button class="cta" type="button" onclick="versContact(this)">Um consultor liga-lhe hoje</button>
+  </div>
 </div>
 <nav class="nav-mobile" id=nav-mobile hidden>
   <a href="#/">Empreendimentos novos</a>

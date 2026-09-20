@@ -786,23 +786,26 @@ body.sim-actif .onglets{padding-bottom:0}
 
 /* =============================== telephone =============================== */
 @media(max-width:900px){
- .pub-bar{height:62px;gap:12px;position:relative}
+ .pub-bar{height:62px;gap:0}
  .nav{display:none}
  .burger{display:flex}
  .cta{padding:9px 12px;font-size:12.5px}
  .wa-nav{width:34px;height:34px}
- /* Le logo au milieu, le menu et WhatsApp aux deux bouts : Hillel, le
-    19/09/2026, apres l'arrivee des drapeaux — « le menu et le logo, il y a
-    quelque chose qui ne va pas [...] peut-etre le logo au milieu ». Deux
-    petits blocs a gauche et a droite d'un logo fixe au centre se lisent
-    comme une composition voulue ; le logo colle au menu, a gauche, se
-    lisait comme un tassement. `position:absolute` le sort du flux flex.
-    Les langues, elles, ne tiennent plus dans cette barre une fois le logo
-    recentre (six drapeaux + lettres sont trop larges pour ne pas le
-    recouvrir) : elles descendent sur leur propre ligne, juste en dessous —
-    toujours visibles sans ouvrir le menu, seulement pas au meme etage. */
- .pub-logo{position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);margin-left:0;padding:0}
+ /* Le logo au milieu, le menu et les langues aux deux bouts : Hillel, le
+    19/09/2026 — « le menu et le logo, il y a quelque chose qui ne va pas
+    [...] peut-etre le logo au milieu ». Corrige une premiere fois avec
+    `position:absolute` + `transform:translate(-50%)`, mais Hillel a repere
+    le 20/09/2026 (video a l'appui) que le logo continuait a sauter d'un
+    cote a l'autre pendant qu'on faisait defiler la page — ce calcul se
+    refait a chaque repaint de la barre collante (`position:sticky`) et
+    Safari ne le rejoue pas toujours a l'identique. Remplace par deux blocs
+    `flex:1` de poids egal, un de chaque cote : le logo tombe pile au milieu
+    par la seule geometrie du flex, sans jamais mesurer sa propre largeur —
+    donc plus rien a recalculer, plus rien qui puisse sauter. */
+ .pub-flanc{flex:1 1 0%;display:flex;align-items:center;min-width:0}
+ .pub-flanc-d{justify-content:flex-end;gap:12px}
+ .pub-bar > .grow{display:none}
+ .pub-logo{flex:none;margin-left:0;padding:0}
  .pub-logo svg{transform:scale(.8)}
  .hero .dedans{padding:38px 20px 62px}
  .hero h1{font-size:28px}
