@@ -5201,7 +5201,7 @@ const PAYS_PRIORITE = ["FR","IL","US","GB","ES","BR","PT","RU"];
 // toujours celui de la France : demande le 20/09/2026 apres qu'un numero
 // israelien tape avec son "972" en plus du drapeau ait semble en erreur.
 const PLACEHOLDER_TEL_DEFAUT = "6 12 34 56 78";
-const PLACEHOLDERS_TEL = { IL: "52 123 4567" };
+const PLACEHOLDERS_TEL = { IL: "52 123 4567", US: "202 555 0123", CA: "202 555 0123" };
 function placeholderTel(iso) {
   return PLACEHOLDERS_TEL[iso] || PLACEHOLDER_TEL_DEFAUT;
 }
