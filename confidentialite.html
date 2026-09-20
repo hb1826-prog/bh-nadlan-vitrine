@@ -1570,28 +1570,43 @@ table.ag th{width:64%}
 /* Le piege a robots : present dans le DOM, invisible pour un humain. */
 .rappel .pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
-/* Indicatif telephonique + suggestions de mail — 19/09/2026 */
-.tel-boite{display:flex;gap:6px}
-.tel-drap{flex:none;border:1px solid var(--trait);background:var(--fond);
- border-radius:var(--r);padding:0 10px;font-size:14px;cursor:pointer;min-height:46px}
-.tel-boite input{flex:1;min-width:0}
+/* Indicatif telephonique + suggestions de mail — 19/09/2026. Corrige le
+   19/09/2026 (« très grossier, je veux un truc fin classe ») : sobre, une
+   ligne par pays (jamais des pastilles en vrac), et un contour de focus
+   dans le bleu de la marque — jamais l'anneau dore/systeme par defaut. */
+.tel-boite{display:flex;gap:0;border:1px solid var(--trait);
+ border-radius:var(--r);overflow:hidden;background:var(--fond);
+ transition:border-color .16s var(--ease)}
+.tel-boite:focus-within{border-color:var(--action)}
+.tel-drap{flex:none;border:0;border-right:1px solid var(--trait);
+ background:transparent;padding:0 12px;font-size:14.5px;font-weight:600;
+ cursor:pointer;min-height:46px;letter-spacing:.01em}
+.tel-boite input{flex:1;min-width:0;border:0;border-radius:0;background:none}
+.tel-boite input:focus{border-color:transparent}
 .tel-champ{position:relative}
-.tel-liste{position:absolute;z-index:30;top:100%;left:0;margin-top:4px;
- width:min(320px,100%);background:var(--fond);border:1px solid var(--trait);
- border-radius:var(--r);box-shadow:var(--ombre-3);padding:8px}
+.tel-liste{position:absolute;z-index:30;top:100%;left:0;margin-top:6px;
+ width:min(300px,100%);background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r-lg,14px);box-shadow:var(--ombre-3);padding:10px;
+ max-height:280px;display:flex;flex-direction:column}
 .tel-recherche{width:100%;border:1px solid var(--trait);border-radius:var(--r);
- padding:9px 10px;font-size:14px;margin-bottom:6px}
-.tel-options{max-height:220px;overflow:auto}
-.tel-opt{display:block;width:100%;text-align:left;background:none;border:0;
- padding:8px 6px;font-size:14px;cursor:pointer;border-radius:6px}
+ padding:9px 11px;font-size:14px;margin-bottom:8px;outline:none;
+ transition:border-color .16s var(--ease)}
+.tel-recherche:focus{border-color:var(--action);box-shadow:0 0 0 1px var(--action)}
+.tel-options{overflow-y:auto}
+.tel-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;
+ width:100%;text-align:left;background:none;border:0;
+ padding:9px 8px;font-size:14.5px;cursor:pointer;border-radius:8px;
+ color:var(--encre-2);line-height:1.3}
 .tel-opt:hover{background:var(--fond-2)}
-.tel-opt span{float:right;color:var(--gris)}
-.tel-sep{border-top:1px solid var(--trait);margin:6px 0}
-.mail-suggestions{position:absolute;z-index:30;left:0;right:0;margin-top:2px;
- background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
- box-shadow:var(--ombre-3);overflow:hidden}
+.tel-opt span{color:var(--gris);font-size:13.5px;flex:none}
+.tel-sep{border-top:1px solid var(--trait);margin:6px 2px}
+.mail-suggestions{position:absolute;z-index:30;left:0;right:0;margin-top:6px;
+ background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r-lg,14px);box-shadow:var(--ombre-3);overflow:hidden;
+ padding:4px}
 .mail-suggestions button{display:block;width:100%;text-align:left;background:none;
- border:0;padding:9px 12px;font-size:14px;cursor:pointer}
+ border:0;padding:9px 10px;font-size:14px;cursor:pointer;border-radius:8px;
+ color:var(--encre-2)}
 .mail-suggestions button:hover{background:var(--fond-2)}
 
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
