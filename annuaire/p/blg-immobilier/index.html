@@ -4105,8 +4105,7 @@ function formulaireSimulationFiche(zone, cible, p) {
       <div class="f" style="margin-top:14px"><label for="fs-nom">${T('Nom')}</label>
         <input id="fs-nom" autocomplete="name" placeholder="${T('Votre nom')}"></div>
       <div class="duo" style="margin-top:14px">
-        <div class="f"><label for="fs-tel">${T('Téléphone')}</label>
-          <input id="fs-tel" type="tel" autocomplete="tel" placeholder="+33 6 …"></div>
+        ${champTelHTML('fs-tel', T('Téléphone'))}
         <div class="f"><label for="fs-mail">${T('E-mail')}</label>
           <input id="fs-mail" type="email" autocomplete="email" placeholder="vous@exemple.com"></div>
       </div>
@@ -4125,17 +4124,19 @@ function formulaireSimulationFiche(zone, cible, p) {
       zone.querySelectorAll('#fs-canal button').forEach(x => x.classList.toggle('on', x === b));
     };
   });
+  const telFs = initTel('fs-tel', zone);
+  initMailSuggestions('fs-mail', zone);
   const val = id => (($('#' + id, zone) || {}).value || '').trim();
   $('#fs-envoi', zone).onclick = async (e) => {
     const bouton = e.currentTarget;
-    const nom = val('fs-nom'), tel = val('fs-tel'), mail = val('fs-mail');
+    const nom = val('fs-nom'), tel = telFs.valeur(), mail = val('fs-mail');
     const note = $('#fs-note', zone);
     if (!nom || !tel || !mail) {
       note.textContent = T('Il nous faut votre nom, votre téléphone ET votre '
         + 'e-mail : la simulation part sur le canal choisi, l’autre nous sert à '
         + 'vous rappeler.');
       note.classList.add('manque');
-      (!nom ? $('#fs-nom', zone) : (tel ? $('#fs-mail', zone) : $('#fs-tel', zone))).focus();
+      (!nom ? $('#fs-nom', zone) : (tel ? $('#fs-mail', zone) : $('#fs-tel-num', zone))).focus();
       return;
     }
     const profilLabel = (DONNEES.profils || {})[E.profil] || '';
@@ -4970,6 +4971,155 @@ const OBJETS = {
 
    Leve si le guichet refuse : l'appelant retombe alors sur WhatsApp, qui est
    le filet et n'est jamais casse. */
+/* L'indicatif telephonique et les fins de mail courantes — demande le
+   19/09/2026 : « il faut que je sache de quel pays est le client », sur
+   TOUS les champs telephone du site, plus une aide a la saisie du mail.
+   Autonome (aucun appel reseau) : le pays par defaut vient de la langue du
+   navigateur, jamais d'une geolocalisation IP. */
+const PAYS_TEL = [
+  ["FR","France","33"],["IL","Israël","972"],["US","États-Unis","1"],
+  ["GB","Royaume-Uni","44"],["ES","Espagne","34"],["BR","Brésil","55"],
+  ["PT","Portugal","351"],["RU","Russie","7"],
+  ["DZ","Algérie","213"],["DE","Allemagne","49"],["AD","Andorre","376"],
+  ["AO","Angola","244"],["SA","Arabie saoudite","966"],["AR","Argentine","54"],
+  ["AM","Arménie","374"],["AU","Australie","61"],["AT","Autriche","43"],
+  ["AZ","Azerbaïdjan","994"],["BE","Belgique","32"],["BJ","Bénin","229"],
+  ["BY","Biélorussie","375"],["BO","Bolivie","591"],["BA","Bosnie-Herzégovine","387"],
+  ["BW","Botswana","267"],["BG","Bulgarie","359"],["BF","Burkina Faso","226"],
+  ["BI","Burundi","257"],["KH","Cambodge","855"],["CM","Cameroun","237"],
+  ["CA","Canada","1"],["CL","Chili","56"],["CN","Chine","86"],
+  ["CY","Chypre","357"],["CO","Colombie","57"],["KR","Corée du Sud","82"],
+  ["CI","Côte d’Ivoire","225"],["HR","Croatie","385"],["CU","Cuba","53"],
+  ["DK","Danemark","45"],["DJ","Djibouti","253"],["EG","Égypte","20"],
+  ["AE","Émirats arabes unis","971"],["EC","Équateur","593"],["ER","Érythrée","291"],
+  ["EE","Estonie","372"],["US","États-Unis","1"],["ET","Éthiopie","251"],
+  ["FI","Finlande","358"],["GA","Gabon","241"],["GM","Gambie","220"],
+  ["GE","Géorgie","995"],["GH","Ghana","233"],["GR","Grèce","30"],
+  ["GT","Guatemala","502"],["GN","Guinée","224"],["GQ","Guinée équatoriale","240"],
+  ["HT","Haïti","509"],["HN","Honduras","504"],["HU","Hongrie","36"],
+  ["IN","Inde","91"],["ID","Indonésie","62"],["IQ","Irak","964"],
+  ["IR","Iran","98"],["IE","Irlande","353"],["IS","Islande","354"],
+  ["IT","Italie","39"],["JM","Jamaïque","1"],["JP","Japon","81"],
+  ["JO","Jordanie","962"],["KZ","Kazakhstan","7"],["KE","Kenya","254"],
+  ["KG","Kirghizistan","996"],["KW","Koweït","965"],["LA","Laos","856"],
+  ["LV","Lettonie","371"],["LB","Liban","961"],["LR","Libéria","231"],
+  ["LY","Libye","218"],["LI","Liechtenstein","423"],["LT","Lituanie","370"],
+  ["LU","Luxembourg","352"],["MK","Macédoine du Nord","389"],["MG","Madagascar","261"],
+  ["MY","Malaisie","60"],["MW","Malawi","265"],["ML","Mali","223"],
+  ["MA","Maroc","212"],["MU","Maurice","230"],["MR","Mauritanie","222"],
+  ["MX","Mexique","52"],["MD","Moldavie","373"],["MC","Monaco","377"],
+  ["MN","Mongolie","976"],["ME","Monténégro","382"],["MZ","Mozambique","258"],
+  ["NA","Namibie","264"],["NP","Népal","977"],["NI","Nicaragua","505"],
+  ["NE","Niger","227"],["NG","Nigéria","234"],["NO","Norvège","47"],
+  ["NZ","Nouvelle-Zélande","64"],["OM","Oman","968"],["UG","Ouganda","256"],
+  ["UZ","Ouzbékistan","998"],["PK","Pakistan","92"],["PA","Panama","507"],
+  ["PY","Paraguay","595"],["NL","Pays-Bas","31"],["PE","Pérou","51"],
+  ["PH","Philippines","63"],["PL","Pologne","48"],["QA","Qatar","974"],
+  ["CD","RD Congo","243"],["CZ","République tchèque","420"],
+  ["DO","République dominicaine","1"],["RO","Roumanie","40"],
+  ["RW","Rwanda","250"],["SN","Sénégal","221"],["RS","Serbie","381"],
+  ["SG","Singapour","65"],["SK","Slovaquie","421"],["SI","Slovénie","386"],
+  ["SO","Somalie","252"],["SD","Soudan","249"],["LK","Sri Lanka","94"],
+  ["SE","Suède","46"],["CH","Suisse","41"],["SR","Suriname","597"],
+  ["SY","Syrie","963"],["TJ","Tadjikistan","992"],["TW","Taïwan","886"],
+  ["TZ","Tanzanie","255"],["TD","Tchad","235"],["TH","Thaïlande","66"],
+  ["TG","Togo","228"],["TN","Tunisie","216"],["TM","Turkménistan","993"],
+  ["TR","Turquie","90"],["UA","Ukraine","380"],["UY","Uruguay","598"],
+  ["VE","Venezuela","58"],["VN","Vietnam","84"],["YE","Yémen","967"],
+  ["ZM","Zambie","260"],["ZW","Zimbabwe","263"],
+];
+const PAYS_PRIORITE = ["FR","IL","US","GB","ES","BR","PT","RU"];
+function drapeauPays(iso) {
+  return String.fromCodePoint(...[...iso.toUpperCase()]
+    .map(c => 127397 + c.charCodeAt(0)));
+}
+function paysParDefaut() {
+  const region = ((navigator.language || 'fr-FR').split('-')[1] || 'FR').toUpperCase();
+  return PAYS_TEL.some(p => p[0] === region) ? region : 'FR';
+}
+function champTelHTML(id, label) {
+  return `<div class="f tel-champ"><label for="${id}-num">${label}</label>
+    <div class="tel-boite">
+      <button type="button" class="tel-drap" id="${id}-ind" aria-haspopup="listbox"></button>
+      <input id="${id}-num" type="tel" autocomplete="tel-national" placeholder="6 12 34 56 78">
+    </div>
+    <div class="tel-liste" id="${id}-liste" hidden>
+      <input class="tel-recherche" id="${id}-rech" placeholder="${T('Rechercher un pays…')}">
+      <div class="tel-options" id="${id}-opts"></div>
+    </div>
+  </div>`;
+}
+function initTel(id, zone, isoDepart) {
+  const bouton = $('#' + id + '-ind', zone), liste = $('#' + id + '-liste', zone),
+        rech = $('#' + id + '-rech', zone), opts = $('#' + id + '-opts', zone);
+  if (!bouton || !liste) return;
+  let iso = isoDepart || paysParDefaut();
+  const dial = i => (PAYS_TEL.find(p => p[0] === i) || PAYS_TEL[0])[2];
+  const peindre = () => { bouton.textContent = drapeauPays(iso) + ' +' + dial(iso); };
+  peindre();
+  const rendreOptions = (filtre) => {
+    const f = (filtre || '').trim().toLowerCase();
+    const passe = (p) => !f || p[1].toLowerCase().includes(f) || p[2].includes(f);
+    const tries = f
+      ? PAYS_TEL.filter(passe)
+      : [...PAYS_PRIORITE.map(c => PAYS_TEL.find(p => p[0] === c)),
+         null, ...PAYS_TEL.filter(p => !PAYS_PRIORITE.includes(p[0]))];
+    opts.innerHTML = tries.map(p => p === null
+      ? '<div class="tel-sep"></div>'
+      : `<button type="button" class="tel-opt" data-iso="${p[0]}">${drapeauPays(p[0])} `
+        + `${esc(p[1])} <span>+${p[2]}</span></button>`).join('');
+    opts.querySelectorAll('.tel-opt').forEach(b => {
+      b.onclick = () => { iso = b.dataset.iso; peindre(); fermer(); };
+    });
+  };
+  const ouvrir = () => { liste.hidden = false; rech.value = ''; rendreOptions(); rech.focus(); };
+  const fermer = () => { liste.hidden = true; };
+  bouton.onclick = () => (liste.hidden ? ouvrir() : fermer());
+  rech.oninput = () => rendreOptions(rech.value);
+  document.addEventListener('click', (e) => {
+    if (!liste.hidden && !liste.contains(e.target) && e.target !== bouton) fermer();
+  });
+  return { valeur: () => {
+    const num = (($('#' + id + '-num', zone) || {}).value || '').trim();
+    return num ? '+' + dial(iso) + ' ' + num : '';
+  } };
+}
+
+// Les fins de mail les plus courantes chez nos clients francophones et
+// israeliens — suggestions sous le champ des qu'on tape le « @ », jamais
+// une liste figee de l'OS qui ne connait pas forcement le bon fournisseur.
+const MAILS_COURANTS = ["gmail.com","outlook.com","hotmail.com","yahoo.com",
+  "yahoo.fr","icloud.com","live.fr","orange.fr","free.fr","wanadoo.fr",
+  "sfr.fr","laposte.net","walla.co.il","gmail.co.il"];
+function initMailSuggestions(id, zone) {
+  const champ = $('#' + id, zone);
+  if (!champ) return;
+  const boite = document.createElement('div');
+  boite.className = 'mail-suggestions';
+  boite.hidden = true;
+  champ.insertAdjacentElement('afterend', boite);
+  const peupler = () => {
+    const v = champ.value;
+    const arobase = v.indexOf('@');
+    if (arobase < 0) { boite.hidden = true; return; }
+    const avant = v.slice(0, arobase + 1), apres = v.slice(arobase + 1).toLowerCase();
+    const choix = MAILS_COURANTS.filter(m => m.startsWith(apres) && m !== apres);
+    if (!choix.length) { boite.hidden = true; return; }
+    boite.innerHTML = choix.slice(0, 5)
+      .map(m => `<button type="button">${esc(avant + m)}</button>`).join('');
+    boite.querySelectorAll('button').forEach(b => {
+      b.onmousedown = (e) => {
+        e.preventDefault();
+        champ.value = b.textContent;
+        boite.hidden = true;
+      };
+    });
+    boite.hidden = false;
+  };
+  champ.addEventListener('input', peupler);
+  champ.addEventListener('blur', () => setTimeout(() => { boite.hidden = true; }, 150));
+}
+
 async function envoyerLead(champs, p, I, extra) {
   extra = extra || {};
   const r = await fetch(DONNEES.guichet + '/lead', {
