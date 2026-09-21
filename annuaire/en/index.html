@@ -5626,7 +5626,12 @@ function versContactBas() {
    recopier au bout du lien. */
 function langueGardeLaPage() {
   const ici = location.hash || '';
-  document.querySelectorAll('.langues a').forEach(function (a) {
+  // La zone du commutateur s'appelle `.langues-menu` (voir `menu_langues()`
+  // dans generer.py) — `.langues` seul ne correspond a rien dans le DOM et
+  // ne selectionnait donc jamais aucun lien : la fonction s'executait sans
+  // rien faire, et changer de langue renvoyait toujours a l'accueil de
+  // l'autre langue. Bug repere par Hillel le 21/09/2026.
+  document.querySelectorAll('.langues-menu a').forEach(function (a) {
     if (!a.dataset.base) {
       a.dataset.base = (a.getAttribute('href') || '').split('#')[0];
     }
