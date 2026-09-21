@@ -2562,9 +2562,19 @@ function basculer(mode) {
   if (s) s.classList.toggle('on', sim);
 }
 
-/* ---------------- la fiche d'un programme */
+/* ---------------- la fiche d'un programme
+
+   Hillel, le 21/09/2026 : une donnee qu'il n'a pas encore relevee (surface,
+   parking, cave) ne s'affiche JAMAIS en tiret. Un tiret dit « on a cherche et
+   il n'y a rien » ; ici on n'a simplement pas encore la reponse, et un site
+   qui multiplie les tirets donne l'impression d'un travail bacle. La colonne
+   entiere disparait quand AUCUNE typologie du programme n'a l'info (elle
+   dirait sinon une colonne vide, aussi genante qu'une rangee de tirets), et
+   une case reste vide plutot qu'un tiret quand seule cette typologie-la
+   manque. Ce qu'il a note, en revanche, s'affiche tel quel – jamais un
+   « environ » ou un point d'interrogation ajoute. */
 function surface(t) {
-  if (!t.surface_min) return '–';
+  if (!t.surface_min) return '';
   const a = Math.round(t.surface_min);
   const b = t.surface_max ? Math.round(t.surface_max) : a;
   return (a === b ? a : a + ' ' + T('à') + ' ' + b) + ' m²';
@@ -2801,6 +2811,10 @@ async function fiche(p) {
   compterVue(p.cle);
   E.typo = p.typologies[0].cle;
   E.prix = p.typologies[0].prix_min;
+  // Une colonne n'existe que si au moins une typologie a de quoi la
+  // remplir – voir la note au-dessus de `surface()`.
+  const aSurface = p.typologies.some(t => t.surface_min);
+  const aEquip = p.typologies.some(t => t.parking || t.cave);
   vue.innerHTML = `
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ›
       <a href="#/ville/${esc(cleVille(p.ville))}">${esc(T(p.ville))}</a> ›
@@ -2815,15 +2829,15 @@ async function fiche(p) {
         <div class="block-head"><span>${T('Les appartements')}</span></div>
         <div class="scroll" style="max-height:none">
         <table>
-          <thead><tr><th>${T('Typologies')}</th><th>${T('Surface')}</th><th>${T('Équipements')}</th>
+          <thead><tr><th>${T('Typologies')}</th>${aSurface ? `<th>${T('Surface')}</th>` : ''}${aEquip ? `<th>${T('Équipements')}</th>` : ''}
             <th class="num">${T('À partir de')}</th></tr></thead>
           <tbody>${p.typologies.map(t => `<tr>
             <td class="mtitle" data-label="${esc(T('Typologie'))}">${t.libelle}
               ${T('pièces')}${t.type ? ' · <b>' + esc(T(t.type)) + '</b>' : ''}</td>
-            <td data-label="${esc(T('Surface'))}">${surface(t)}</td>
-            <td data-label="${esc(T('Équipements'))}" class="dim">${
+            ${aSurface ? `<td data-label="${esc(T('Surface'))}">${surface(t)}</td>` : ''}
+            ${aEquip ? `<td data-label="${esc(T('Équipements'))}" class="dim">${
               [t.parking ? T('parking') : '', t.cave ? T('cave') : '']
-                .filter(Boolean).join(' · ') || '–'}</td>
+                .filter(Boolean).join(' · ')}</td>` : ''}
             <td class="num strong" data-label="${esc(T('À partir de'))}">${
               prixDouble(t.prix_min)}</td>
           </tr>`).join('')}</tbody>
