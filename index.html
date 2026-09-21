@@ -524,14 +524,22 @@ button,input,select,textarea{font:inherit;color:inherit}
    demande. Regle valable pour TOUTE fiche, dans toutes les langues — pas
    seulement celle qu'il regardait. La page dediee au simulateur seul
    (`#/simulateur`) n'est pas concernee : y arriver EST deja la demande. */
-.simu-resume{display:flex;align-items:center;justify-content:space-between;
- gap:12px;padding:18px 22px;cursor:pointer;font-size:15.5px;font-weight:700;
- color:var(--action);list-style:none}
+/* Redevenu un vrai bouton, gros et plein, le 21/09/2026 : replie en simple
+   lien texte, Hillel le manquait meme en le regardant (« on le loupe quand
+   on le voit »). Meme traitement visuel que `.b-or`, le bouton d'appel en
+   haut de la fiche — la meme couleur d'action dit la meme chose : « appuie
+   ici ». Reste un `<summary>` de `<details>` : replie par defaut (la fiche
+   ne doit pas peser plus lourd sur telephone, raison du repli d'origine),
+   mais impossible a manquer une fois qu'on scrolle jusque-la. */
+.simu-resume{display:flex;align-items:center;justify-content:center;
+ gap:10px;margin:18px 22px;padding:16px 20px;cursor:pointer;font-size:16px;
+ font-weight:750;color:#fff;background:var(--action);border-radius:999px;
+ list-style:none;text-align:center;transition:.16s var(--ease)}
+.simu-resume:hover{background:var(--action-vive)}
 .simu-resume::-webkit-details-marker{display:none}
-.simu-resume .chev{color:var(--gris);font-size:18px;line-height:1;flex:none;
+.simu-resume .chev{color:#fff;font-size:18px;line-height:1;flex:none;
  transition:transform .15s var(--ease)}
 .simu-plier[open] .simu-resume .chev{transform:rotate(180deg)}
-.simu-plier[open] .simu-resume{border-bottom:1px solid var(--trait-fin)}
 /* Le tableau des typologies n'est pas dans un `.pad` : il porte sa propre
    marge, sinon il se colle a l'intitule du bloc. */
 .block .scroll{padding:14px 22px 20px}
@@ -2793,7 +2801,7 @@ async function fiche(p) {
         </table></div>
       </div>
       <details class="block simu-plier">
-        <summary class="simu-resume"><span>${T('Simulez ici ce que ce bien vous coûte vraiment →')}</span>
+        <summary class="simu-resume"><span>${T('Simuler l’achat dans ce projet')}</span>
           <span class="chev" aria-hidden="true">⌄</span></summary>
         <div id="simu"></div>
       </details>
