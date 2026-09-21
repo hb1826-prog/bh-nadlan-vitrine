@@ -4283,6 +4283,13 @@ function formulaireSimulationFiche(zone, cible, p) {
         emprunt_pct: E.comptant ? 0 : E.ltv,
         emprunt_duree: E.comptant ? null : E.duree,
         typologie: typoChoisie ? (typoChoisie.libelle + ' ' + T('pièces')) : '',
+        // Les honoraires TELS QUE CHOISIS a l'ecran (E.frais, tenu a jour par
+        // `lireFrais()` a chaque changement) – sans eux, le mini-site
+        // retombait sur les tarifs par defaut du systeme, jamais sur ce que
+        // Hillel avait fixe a la place. Bug signale le 21/09/2026.
+        avocat: E.frais ? E.frais.avocat : undefined,
+        agence: E.frais ? E.frais.agence : undefined,
+        courtier: E.frais ? E.frais.courtier : undefined,
       });
       sessionStorage.setItem('bh-simu-envoyee', '1');
       sessionStorage.setItem('bh-simu-canal', canal);
@@ -4949,6 +4956,11 @@ function etapeCoordonnees(zone) {
         profil: TUNNEL.profil, cadre: TUNNEL.cadre,
         emprunt_pct: TUNNEL.comptant ? 0 : TUNNEL.ltv,
         emprunt_duree: TUNNEL.comptant ? null : TUNNEL.duree,
+        // Meme correctif que le simulateur d'une fiche : sans ceci, le
+        // mini-site ignorait les honoraires choisis a l'etape precedente.
+        avocat: TUNNEL.frais ? TUNNEL.frais.avocat : undefined,
+        agence: TUNNEL.frais ? TUNNEL.frais.agence : undefined,
+        courtier: TUNNEL.frais ? TUNNEL.frais.courtier : undefined,
       });
       etapeConfirmation(zone, canal);
     } catch (err) {
@@ -5368,6 +5380,15 @@ async function envoyerLead(champs, p, I, extra) {
       // La typologie choisie sur le simulateur d'une fiche (« 3 pieces ») –
       // vide partout ailleurs. Voir le mini-site (creer_et_envoyer_simulation).
       typologie: extra.typologie || '',
+      // Les honoraires CHOISIS a l'ecran (avocat/agence en %, courtier en ₪
+      // avant TVA) – 0 est une vraie reponse (« sans avocat », « sans
+      // courtier »), donc `!= null` comme emprunt_pct. Sans ces trois
+      // champs, le mini-site retombait sur les tarifs par defaut du systeme
+      // au lieu de ce que Hillel avait fixe a l'ecran – bug signale le
+      // 21/09/2026.
+      avocat: extra.avocat != null ? extra.avocat : '',
+      agence: extra.agence != null ? extra.agence : '',
+      courtier: extra.courtier != null ? extra.courtier : '',
       // De qui vient ce contact. Vide sur l'annuaire de Hillel, la cle du
       // partenaire sur sa page en marque blanche – c'est elle qui fait que le
       // lead lui revient dans le CRM. Elle est posee a la fabrication, jamais
