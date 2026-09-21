@@ -4243,6 +4243,12 @@ function formulaireSimulationFiche(zone, cible, p) {
       return;
     }
     const profilLabel = (DONNEES.profils || {})[E.profil] || '';
+    // La typologie choisie (« 3 pieces ») : ajoutee au nom du programme cote
+    // guichet, pour que le mini-site dise non seulement QUEL projet mais
+    // aussi QUEL appartement – demande par Hillel le 21/09/2026, qui veut
+    // qu'un client ne confonde jamais deux simulations faites sur deux
+    // programmes ou deux typologies differentes.
+    const typoChoisie = (p.typologies || []).find(x => x.cle === E.typo && !E.libre);
     const mot = 'Simulation sur ' + (p.nom || '') + ' – Budget : ' + shek(E.prix)
       + (E.comptant ? ' (achat comptant)'
         : ' (crédit jusqu’à ' + E.ltv + ' % sur ' + E.duree + ' ans)')
@@ -4259,6 +4265,7 @@ function formulaireSimulationFiche(zone, cible, p) {
         budget: E.prix, canal: canal, profil: E.profil, cadre: E.cadre,
         emprunt_pct: E.comptant ? 0 : E.ltv,
         emprunt_duree: E.comptant ? null : E.duree,
+        typologie: typoChoisie ? (typoChoisie.libelle + ' ' + T('pièces')) : '',
       });
       sessionStorage.setItem('bh-simu-envoyee', '1');
       sessionStorage.setItem('bh-simu-canal', canal);
@@ -5341,6 +5348,9 @@ async function envoyerLead(champs, p, I, extra) {
       // du temps (« aujourd'hui » reste le comportement par defaut cote
       // guichet), rempli quand il a ouvert le bloc « + choisir un horaire ».
       rappel_date: extra.rappel_date || '', rappel_heure: extra.rappel_heure || '',
+      // La typologie choisie sur le simulateur d'une fiche (« 3 pieces ») –
+      // vide partout ailleurs. Voir le mini-site (creer_et_envoyer_simulation).
+      typologie: extra.typologie || '',
       // De qui vient ce contact. Vide sur l'annuaire de Hillel, la cle du
       // partenaire sur sa page en marque blanche – c'est elle qui fait que le
       // lead lui revient dans le CRM. Elle est posee a la fabrication, jamais
