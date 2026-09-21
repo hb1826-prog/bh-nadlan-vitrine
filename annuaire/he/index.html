@@ -2477,8 +2477,7 @@ function carte(p) {
         <div class="carac">${typo}${surf}</div>
         <div class="lieu">◎ ${esc(p.quartier ? p.quartier + ' · ' + T(p.ville)
                                               : T(p.ville))}</div>
-        <span class="veux" role="button" tabindex="0"
-              data-veux="${esc(p.cle)}">${T('Plus d’informations')}</span>
+        <span class="veux">${T('Plus d’informations')}</span>
         <div class="bas">
           <span class="preuve">${preuve}</span>
           <span>${p.maj ? T('Prix du') + ' ' + jour(p.maj) : ''}</span>
@@ -2486,18 +2485,6 @@ function carte(p) {
       </div>
     </a>`;
 }
-
-/* Un clic sur « Je veux ce bien » : on ouvre la fiche du programme et on
-   descend droit au formulaire, avec le bon programme en objet. */
-document.addEventListener('click', e => {
-  const bouton = e.target.closest('[data-veux]');
-  if (!bouton) return;
-  e.preventDefault();
-  e.stopPropagation();
-  const cle = bouton.dataset.veux;
-  location.hash = '#/' + cle;
-  setTimeout(versContact, 260);
-});
 
 /* La carte du blog, posee tot dans la grille (position 2) : Hillel l'a
    demande le 18/09/2026 apres avoir vu le lien « Blog » range dans le menu
