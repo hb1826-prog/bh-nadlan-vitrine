@@ -1454,14 +1454,18 @@ table.ag th{width:64%}
 .cm span{display:block;font-size:13.5px;font-weight:600;margin-top:4px}
 .cm em{display:block;font-style:normal;font-size:12px;color:var(--gris);
  margin-top:3px;line-height:1.45}
-.autour-carte{display:grid;place-items:center}
-.autour-carte .carte-fond{max-width:190px}
-.autour-carte .pin.ici .halo{fill:var(--or);opacity:.25}
-.autour-carte .pin.ici .rond{fill:var(--or);stroke:#fff;stroke-width:3}
+/* La carte du quartier : un vrai fond OpenStreetMap qu'on zoome et deplace,
+   a la place du dessin fixe d'avant le 22/09/2026. Le lien "plein ecran"
+   compense ce qu'un iframe etroit ne peut pas montrer. */
+.autour-carte{display:grid;gap:8px;position:relative}
+.autour-carte .carte-osm{width:100%;height:280px;border:1px solid var(--trait);
+ border-radius:var(--r);background:var(--fond-2)}
+.autour-carte .carte-osm-lien{font-size:12.5px;font-weight:700;
+ color:var(--action);text-align:right}
 @media(max-width:900px){
  .autour-bloc{grid-template-columns:1fr;padding:20px 16px}
  .autour-carte{order:-1}
- .autour-carte .carte-fond{max-width:150px}
+ .autour-carte .carte-osm{height:220px}
  .carte-cadre{padding:12px}
  .carte-fond{max-width:320px}
 }
@@ -1469,17 +1473,9 @@ table.ag th{width:64%}
 /* La carte ne doit pas avaler la page : le pays est haut et etroit, on borne
    donc sa hauteur plutot que sa largeur. */
 .carte-fond{max-height:560px;width:auto;max-width:100%}
-.autour-carte .carte-fond{max-height:240px}
 @media(max-width:900px){
  .carte-fond{max-height:420px}
- .autour-carte .carte-fond{max-height:190px}
 }
-
-/* La mini-carte d'une fiche : un point seul dans un pays entier ne dit rien,
-   on nomme donc la ville a cote. */
-.autour-carte .carte-fond{max-height:320px}
-.autour-carte .pin.ici .ou{font-size:20px;font-weight:750;fill:var(--encre)}
-@media(max-width:900px){.autour-carte .carte-fond{max-height:230px}}
 
 /* ================== l'en-tete sur un telephone ==========================
    Hillel, le 19/09/2026, en deux temps. D'abord : « le menu il est a
