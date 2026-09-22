@@ -5896,17 +5896,43 @@ document.querySelectorAll('.theme button').forEach(b => {
   b.onclick = () => theme(b.dataset.t);
 });
 
-// La bulle d'aide (« ? ») se referme toute seule des qu'on reprend la
-// navigation, plutot que de rester collee a l'ecran pendant qu'on fait
-// defiler — meme regle que le mini-site client (espace_page.py). Un seul
-// ecouteur global : `fiche(p)`, `pageVille()` etc. remplacent `vue.innerHTML`
-// a chaque route, la requete se refait donc sur le DOM en place a chaque
-// declenchement, pas besoin de la rattacher a chaque rendu.
-function fermerAides() {
-  document.querySelectorAll('details.aide[open]').forEach(d => d.removeAttribute('open'));
-}
-window.addEventListener('scroll', fermerAides, {passive: true});
-document.addEventListener('touchmove', fermerAides, {passive: true});
+// Le bouton « ? » (identite.aide()) : la bulle est fabriquee et positionnee
+// ICI, au moment du clic, avec la position REELLE du bouton
+// (getBoundingClientRect) — jamais devinee a l'avance en CSS, meme regle que
+// le mini-site client (espace_page.py) qui l'a debloguee la premiere. Un
+// seul ecouteur global : `fiche(p)`, `pageVille()` etc. remplacent
+// `vue.innerHTML` a chaque route, pas besoin de le rattacher a chaque rendu.
+(function() {
+  var bulle = null, ouvertPour = null;
+  function fermer() {
+    if (bulle) { bulle.remove(); bulle = null; }
+    if (ouvertPour) { ouvertPour.classList.remove('ouvert'); ouvertPour = null; }
+  }
+  document.addEventListener('click', function(ev) {
+    var btn = ev.target.closest('.aide-btn');
+    if (btn) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (ouvertPour === btn) { fermer(); return; }
+      fermer();
+      bulle = document.createElement('div');
+      bulle.className = 'aide-bulle';
+      bulle.textContent = btn.getAttribute('data-aide');
+      document.body.appendChild(bulle);
+      var r = btn.getBoundingClientRect(), largeur = bulle.offsetWidth;
+      var x = Math.min(Math.max(8, r.left + r.width / 2 - largeur / 2),
+                        window.innerWidth - largeur - 8);
+      bulle.style.left = x + 'px';
+      bulle.style.top = (r.bottom + window.scrollY + 8) + 'px';
+      btn.classList.add('ouvert');
+      ouvertPour = btn;
+      return;
+    }
+    if (bulle && !ev.target.closest('.aide-bulle')) fermer();
+  });
+  window.addEventListener('scroll', fermer, {passive: true});
+  document.addEventListener('touchmove', fermer, {passive: true});
+})();
 
 router();
 </script>
