@@ -1728,7 +1728,6 @@ table.ag th{width:64%}
 </svg></a>
   <div class=grow></div>
   <div class="pub-flanc pub-flanc-d">
-    <div class=theme><button data-t='light' title='Clair'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19'/></svg></button><button data-t='auto' title='Comme le système'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='4' width='18' height='13' rx='2'/><path d='M8 21h8'/></svg></button><button data-t='dark' title='Sombre'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/></svg></button></div>
     <div class=langues-dd>
   <button type=button class=langues-actuel aria-haspopup=true aria-expanded=false>
     <svg viewBox="0 0 18 12" width="19" height="13" aria-hidden="true">
@@ -2236,18 +2235,6 @@ function livraisonEnClair(texte) {
   return brut;
 }
 
-/* ---------------- theme : clair / sombre / systeme, garde par appareil */
-function theme(choix) {
-  if (choix === 'auto') document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme', choix);
-  try { localStorage.setItem('bh-theme', choix); } catch (e) {}
-  document.querySelectorAll('.theme button').forEach(b =>
-    b.classList.toggle('on', b.dataset.t === choix));
-}
-// Au premier passage, le clair — pas le reglage du telephone. La page
-// s'ouvre en clair pour tout le monde, et seul un choix explicite du
-// visiteur, garde sur son appareil, la fait basculer.
-try { theme(localStorage.getItem('bh-theme') || 'light'); } catch (e) {}
 
 /* ---------------- la recherche
 
@@ -5967,10 +5954,6 @@ if (HAUT) {
   voir();
   HAUT.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 }
-
-document.querySelectorAll('.theme button').forEach(b => {
-  b.onclick = () => theme(b.dataset.t);
-});
 
 // Le bouton « ? » (identite.aide()) : la bulle est fabriquee et positionnee
 // ICI, au moment du clic, avec la position REELLE du bouton
