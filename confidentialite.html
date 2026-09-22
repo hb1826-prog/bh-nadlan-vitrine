@@ -1223,8 +1223,15 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
    carte ouvre le reseau ou la video est vraiment hebergee (YouTube, Instagram
    ou Facebook selon ce qui est disponible) : la page ne joue aucune video
    elle-meme, elle n'est que l'index. */
+/* Une seule colonne, les pastilles les unes SOUS les autres — demande de
+   Hillel le 22/09/2026, sur grand ecran : « il faut vraiment faire des
+   pastilles, une en dessous l'autre, pas cote a cote ».
+   Ce n'est pas qu'une question de gout, la grille creait un vrai defaut :
+   les articles sont des <details>, et deplier l'un etirait toute sa rangee,
+   donnant l'impression que les cartes voisines s'ouvraient toutes seules.
+   Une colonne unique supprime la rangee, donc le defaut avec elle. */
 .video-grille{display:grid;gap:14px;margin-top:20px;
- grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+ grid-template-columns:1fr;max-width:760px}
 /* La vraie image de la video (visage de Hillel), pas le rond generique —
    demande le 19/09/2026. Le rond redevient le repli si l'image casse. */
 .video-vignette{position:relative;flex:0 0 auto;width:88px;height:88px;

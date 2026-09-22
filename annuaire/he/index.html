@@ -1232,8 +1232,15 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
    carte ouvre le reseau ou la video est vraiment hebergee (YouTube, Instagram
    ou Facebook selon ce qui est disponible) : la page ne joue aucune video
    elle-meme, elle n'est que l'index. */
+/* Une seule colonne, les pastilles les unes SOUS les autres – demande de
+   Hillel le 22/09/2026, sur grand ecran : « il faut vraiment faire des
+   pastilles, une en dessous l'autre, pas cote a cote ».
+   Ce n'est pas qu'une question de gout, la grille creait un vrai defaut :
+   les articles sont des <details>, et deplier l'un etirait toute sa rangee,
+   donnant l'impression que les cartes voisines s'ouvraient toutes seules.
+   Une colonne unique supprime la rangee, donc le defaut avec elle. */
 .video-grille{display:grid;gap:14px;margin-top:20px;
- grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+ grid-template-columns:1fr;max-width:760px}
 /* La vraie image de la video (visage de Hillel), pas le rond generique –
    demande le 19/09/2026. Le rond redevient le repli si l'image casse. */
 .video-vignette{position:relative;flex:0 0 auto;width:88px;height:88px;
@@ -3473,6 +3480,11 @@ function pageNousContacter() {
    separees, un seul flux ou l'un et l'autre s'alternent. Rien n'est calcule
    ici : une nouvelle entree validee remonte seule, en haut de la page, a la
    prochaine fabrication du site. */
+/* Le `name` partage par tous les <details> en fait un accordeon : ouvrir un
+   article referme le precedent, sans une ligne de JavaScript. La liste reste
+   lisible au lieu de s'allonger indefiniment a mesure qu'on deplie. Les
+   navigateurs qui ne connaissent pas l'attribut l'ignorent, et on retombe
+   simplement sur l'ancien comportement. */
 /* Une pastille par theme d'article, plutot que le meme crayon repete a
    l'identique sur toute la liste : Hillel l'a demande le 19/09/2026 apres
    avoir vu que rien ne distinguait un article de fiscalite d'un article de
@@ -3512,7 +3524,7 @@ function pageBlog() {
           ${dateAff(it.date) ? `<span class="video-date">${dateAff(it.date)}</span>` : ''}
         </span>
       </a>` : `
-      <details class="article-carte theme-${esc(it.theme || 'marche')}${it.photo ? ' avec-photo' : ''}">
+      <details name="blog-article" class="article-carte theme-${esc(it.theme || 'marche')}${it.photo ? ' avec-photo' : ''}">
         <summary>
           ${it.photo ? `<span class="video-vignette"><img src="${esc(it.photo)}" alt="" loading="lazy" onerror="this.closest('details').classList.remove('avec-photo')"></span>` : ''}
           <span class="video-play">${iconeTheme(it.theme)}</span>
