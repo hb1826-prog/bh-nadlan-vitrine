@@ -973,6 +973,26 @@ body.sim-actif .onglets{padding-bottom:0}
 .mini b::before{content:"✓";color:var(--or-fonce);font-weight:900;margin-right:7px}
 .mini span{font-size:13.5px;color:var(--gris);line-height:1.55}
 
+/* Le repli generique des blocs secondaires d'une fiche — le quartier, ce
+   qu'il y a autour — demande par Hillel le 22/09/2026, meme principe que
+   `.simu-plier` : seuls le prix et les typologies restent ouverts d'emblee,
+   le reste se deroule sur demande. `.ville-bloc` et `.autour-bloc` gardent
+   leur grille interne telle quelle ; c'est seulement leur propre carte
+   (fond, bordure, ombre) qui est retiree pour ne pas en doubler une autour. */
+details.repli-carte{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre);margin:26px 0;overflow:hidden}
+details.repli-carte summary{cursor:pointer;list-style:none;padding:20px 26px;
+ display:flex;align-items:center;gap:10px;font-size:16px;font-weight:750;
+ color:var(--encre)}
+details.repli-carte summary::-webkit-details-marker{display:none}
+details.repli-carte summary .chev{margin-left:auto;color:var(--gris);
+ font-size:18px;line-height:1;flex:none;transition:transform .15s var(--ease)}
+details.repli-carte[open] summary .chev{transform:rotate(180deg)}
+details.repli-carte summary:hover{background:var(--fond-2)}
+details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
+ border:0;box-shadow:none;border-radius:0;border-top:1px solid var(--trait-fin)}
+@media(max-width:900px){details.repli-carte summary{padding:16px 16px}}
+
 /* ============================= les villes ==============================
    Ce que Hillel sait et que la page taisait : ou l'on est, qui y vit, a
    quelle distance du reste du pays. */
