@@ -3449,8 +3449,13 @@ function pageNousContacter() {
   // `id=qui` existe deja une fois dans le socle de la page (le bloc du bas,
   // que `basculer()` cache/montre par son id) : on le renomme ici pour ne
   // pas poser un second element avec le meme id dans le DOM.
+  //
+  // Et la bande de trois photos « Sur le terrain » qui suit le portrait est
+  // retiree : Hillel, le 23/09/2026, n'en veut que sur l'accueil — ici, sur
+  // une page ou l'on vient pour ecrire, son portrait seul suffit.
   const quiSansCollision = (DONNEES.bloc_qui || '')
-    .replace('id=qui', 'id=qui-nc').replace('id=preuve', 'id=preuve-nc');
+    .replace('id=qui', 'id=qui-nc')
+    .replace(/<section class=preuve-photos[\s\S]*?<\/section>/, '');
   vue.innerHTML = `
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T('Nous contacter')}</p>
     <article class="texte">
