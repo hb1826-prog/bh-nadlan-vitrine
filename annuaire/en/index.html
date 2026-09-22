@@ -520,47 +520,26 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* Le petit « ? » cliquable a cote d'un titre (identite.aide(), cote Python,
    pose par generer.py dans window.AIDES puis lu par aide() dans
    annuaire.js) — demande par Hillel le 22/09/2026 : « le ? est tres
-   important partout sur le site BH aussi ». Meme recette, recopiee a
-   l'identique depuis le mini-site client (espace_page.py) qui l'a debloguee
-   au prix de plusieurs allers-retours : trois pieges deja rencontres et
-   corriges la-bas, a ne pas reproduire ici.
-   1) `.aide` (un <details>) ne se pose JAMAIS a l'interieur d'un <summary> —
-      un element interactif imbrique dans un autre est invalide, et le clic
-      dessus rouvre/referme aussi le <details> parent.
-   2) un <details> ferme cache tout enfant direct qui n'est pas son
-      <summary> (regle standard du navigateur) : `.aide` doit donc vivre
-      HORS du <details> pliable qui peut se refermer, dans le `.porte-aide`
-      commun qui enveloppe les deux comme freres — jamais a l'interieur.
-   3) `.aide` est lui-meme un <details> : une regle generale du type
-      `details.repli-carte{overflow:hidden}` (plus bas, pour les coins
-      arrondis) s'appliquerait aussi a LUI et decoupe sa propre bulle avant
-      qu'elle s'affiche — d'ou son propre `overflow:visible` explicite ; et
-      `details[open] summary::after{content:"–"}` (le signe moins d'un
-      accordeon) a plus de poids qu'une seule regle `.aide summary::after`,
-      d'ou `.aide[open] summary::after` ecrit aussi.
+   important partout sur le site BH aussi ». Deuxieme dessin, recopie a
+   l'identique depuis le mini-site client (espace_page.py) : un premier
+   passage en position:absolute (coin du bloc) a coute plusieurs
+   allers-retours sans jamais retomber au meme endroit qu'un bouton voisin
+   sur un telephone reel. Le bouton vit maintenant DANS le flux normal,
+   colle juste apres le texte du titre — plus rien a positionner en CSS. Sa
+   bulle est fabriquee et placee par le script (cherche `.aide-btn` dans
+   annuaire.js), avec la position REELLE du bouton — jamais devinee.
    Fond de la bulle en couleur fixe (pas `var(--encre)`, qui devient presque
    blanc en theme sombre sur ce site — cf `.theme`) : elle doit rester lisible
    quel que soit le theme choisi, comme une infobulle. */
-.porte-aide{position:relative}
-.aide{position:absolute;top:14px;right:20px;z-index:3;overflow:visible;
- margin:0}
-.aide summary{padding:0;cursor:pointer;width:22px;height:22px;border-radius:50%;
- border:1.5px solid var(--trait);color:var(--gris);font-size:12px;font-weight:800;
- display:flex;align-items:center;justify-content:center;background:var(--carte)}
-.aide summary::-webkit-details-marker{display:none}
-.aide summary::after,.aide[open] summary::after{content:none}
-.aide[open] summary{border-color:var(--or);color:var(--or-fonce)}
-.aide .aide-corps{position:absolute;top:28px;right:0;width:260px;max-width:78vw;
+.aide-btn{display:inline-flex;align-items:center;justify-content:center;
+ width:22px;height:22px;border-radius:50%;border:1.5px solid var(--trait);
+ color:var(--gris);font-size:12px;font-weight:800;background:var(--carte);
+ cursor:pointer;flex:none;margin-left:6px;padding:0;vertical-align:middle}
+.aide-btn.ouvert{border-color:var(--or);color:var(--or-fonce)}
+.aide-bulle{position:absolute;z-index:50;width:260px;max-width:78vw;
  background:#0F172A;color:#fff;font-size:14.5px;line-height:1.55;font-weight:400;
- text-transform:none;letter-spacing:normal;text-align:left;
- padding:12px 14px;border-radius:10px;box-shadow:0 10px 24px rgba(15,23,42,.32)}
-/* Trois emplacements, trois formes d'entete autour du bouton — meme bouton,
-   position ajustee pour ne recouvrir ni le titre ni le chevron « ⌄ » deja
-   pousse a droite par `margin-left:auto` dans `details.repli-carte summary`
-   (voir plus bas). */
-.porte-aide.aide-repli .aide{top:17px;right:54px}
-.porte-aide.aide-prix .aide{top:2px;right:0}
-@media(max-width:900px){.porte-aide.aide-repli .aide{top:13px;right:44px}}
+ text-align:left;padding:12px 14px;border-radius:10px;
+ box-shadow:0 10px 24px rgba(15,23,42,.32)}
 /* Le simulateur sur la fiche d'un bien, replie par defaut : Hillel, le
    19/09/2026, apres avoir vu la fiche d'un telephone — « ca charge
    beaucoup trop la fiche ». On comprend deja la typologie et le prix dans
