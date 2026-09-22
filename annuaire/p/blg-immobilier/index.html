@@ -2729,8 +2729,8 @@ function offre(p) {
     </div>` : ''}
     <p class="offre-lieu">◎ ${esc(p.quartier ? p.quartier + ' · ' + T(p.ville)
                                              : T(p.ville))}</p>
-    <div class="offre-prix"><span>${T('à partir de')}</span>
-      <b>${shek(p.prix_min)}</b>${aide('prix')}
+    <div class="offre-prix"><span>${T('à partir de')}${aide('prix')}</span>
+      <b>${shek(p.prix_min)}</b>
       <i class="offre-eur">${eur(p.prix_min)}</i>
       <em>${T('prix promoteur · 0 frais d’agence')}</em></div>
     <dl class="offre-faits">${faits.map(l =>
