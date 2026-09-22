@@ -582,9 +582,14 @@ button,input,select,textarea{font:inherit;color:inherit}
  list-style:none;text-align:center;transition:.16s var(--ease)}
 .simu-resume:hover{background:var(--action-vive)}
 .simu-resume::-webkit-details-marker{display:none}
-.simu-resume .chev{color:#fff;font-size:18px;line-height:1;flex:none;
+.simu-resume .chev{color:#fff;flex:none;display:block;
  transition:transform .15s var(--ease)}
 .simu-plier[open] .simu-resume .chev{transform:rotate(180deg)}
+/* Second bouton "Simuler l'achat", sous le formulaire de coordonnees du bas
+   de la fiche (demande le 22/09/2026) — un vrai <button>, pas un <summary>,
+   donc sans largeur pleine ni police par defaut sans ce reset. */
+.simu-resume-bas{width:calc(100% - 44px);border:0;font-family:inherit;
+ appearance:none}
 /* Le tableau des typologies n'est pas dans un `.pad` : il porte sa propre
    marge, sinon il se colle a l'intitule du bloc. */
 .block .scroll{padding:14px 22px 20px}
@@ -1040,7 +1045,7 @@ details.repli-carte summary{cursor:pointer;list-style:none;padding:20px 26px;
  color:var(--encre)}
 details.repli-carte summary::-webkit-details-marker{display:none}
 details.repli-carte summary .chev{margin-left:auto;color:var(--gris);
- font-size:18px;line-height:1;flex:none;transition:transform .15s var(--ease)}
+ flex:none;display:block;transition:transform .15s var(--ease)}
 details.repli-carte[open] summary .chev{transform:rotate(180deg)}
 details.repli-carte summary:hover{background:var(--fond-2)}
 details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
@@ -2047,6 +2052,27 @@ const picto = nom => (typeof PICTOS !== 'undefined' && PICTOS[nom]) || '';
    que `picto()` juste au-dessus, meme repli silencieux. `AIDES` est depose
    par `generer.py` a cote de `PICTOS`. */
 const aide = nom => (typeof AIDES !== 'undefined' && AIDES[nom]) || '';
+/* Le chevron « v » des cartes repliables, en SVG plutot qu'en caractere
+   unicode (⌄) — demande le 22/09/2026 (photo de Hillel) : le caractere
+   rendait plus bas sur son iPhone que sur l'ecran de verification, cassant
+   l'alignement avec le rond du « ? » juste a cote. Un SVG a une position
+   fixe, identique sur tous les appareils. */
+const CHEV = '<svg class="chev" width="14" height="14" viewBox="0 0 24 24" ' +
+  'aria-hidden="true"><path fill="none" stroke="currentColor" ' +
+  'stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ' +
+  'd="M5 9l7 7 7-7"/></svg>';
+
+/* Demande par Hillel le 22/09/2026 : un second bouton « Simuler l'achat »,
+   juste sous le formulaire de coordonnees du bas de la fiche, sans dupliquer
+   le bloc du haut (son `id="simu"` doit rester UNIQUE dans la page, sinon le
+   second exemplaire ne se remplirait jamais). Ce bouton ouvre et rejoint le
+   bloc existant plutot que d'en fabriquer un second. */
+function ouvrirSimu() {
+  var bloc = document.getElementById('simu-bloc');
+  if (!bloc) return;
+  bloc.open = true;
+  bloc.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
 
 /* Un numero de telephone qui se lit dans le bon sens, meme en hebreu.
 
@@ -2865,9 +2891,9 @@ async function fiche(p) {
       ${offre(p)}
     </div>
     <div class="card">
-      <details class="block simu-plier">
+      <details class="block simu-plier" id="simu-bloc">
         <summary class="simu-resume">${picto('calculatrice')}<span>${T('Simuler l’achat dans ce projet')}</span>
-          <span class="chev" aria-hidden="true">⌄</span></summary>
+          ${CHEV}</summary>
         <div id="simu"></div>
       </details>
     </div>
@@ -2899,6 +2925,10 @@ async function fiche(p) {
     ${quartierHTML(p.ville)}
     ${autourHTML(p)}
     ${contactHTML(p, 'fiche')}
+    <div class="card">
+      <button class="simu-resume simu-resume-bas" type="button" onclick="ouvrirSimu()">
+        ${picto('calculatrice')}<span>${T('Simuler l’achat dans ce projet')}</span></button>
+    </div>
     ${ailleurs(p)}`;
   wireGalerie(p);
   wireContact(p, 'fiche');
@@ -3062,7 +3092,7 @@ function autourHTML(p) {
   return `
   <div class="porte-aide aide-repli">
   <details class="repli-carte">
-    <summary>${picto('quartier')}<span>${T('Ce qu’il y a autour')}</span><span class="chev" aria-hidden="true">⌄</span></summary>
+    <summary>${picto('quartier')}<span>${T('Ce qu’il y a autour')}</span>${CHEV}</summary>
   <section class="autour-bloc">
     <div class="autour-texte">
       <p class="dim">${precis
@@ -3144,7 +3174,7 @@ function quartierHTML(ville) {
   return `
   <div class="porte-aide aide-repli">
   <details class="repli-carte">
-    <summary>${picto('quartier')}<span>${T('Le quartier')} — ${esc(villeAffichee)}</span><span class="chev" aria-hidden="true">⌄</span></summary>
+    <summary>${picto('quartier')}<span>${T('Le quartier')} — ${esc(villeAffichee)}</span>${CHEV}</summary>
   <section class="ville-bloc${img ? ' avec-photo' : ''}">
     ${villePhoto(img, esc(villeAffichee))}
     <div class="ville-texte">

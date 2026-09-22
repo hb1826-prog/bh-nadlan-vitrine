@@ -573,9 +573,14 @@ button,input,select,textarea{font:inherit;color:inherit}
  list-style:none;text-align:center;transition:.16s var(--ease)}
 .simu-resume:hover{background:var(--action-vive)}
 .simu-resume::-webkit-details-marker{display:none}
-.simu-resume .chev{color:#fff;font-size:18px;line-height:1;flex:none;
+.simu-resume .chev{color:#fff;flex:none;display:block;
  transition:transform .15s var(--ease)}
 .simu-plier[open] .simu-resume .chev{transform:rotate(180deg)}
+/* Second bouton "Simuler l'achat", sous le formulaire de coordonnees du bas
+   de la fiche (demande le 22/09/2026) — un vrai <button>, pas un <summary>,
+   donc sans largeur pleine ni police par defaut sans ce reset. */
+.simu-resume-bas{width:calc(100% - 44px);border:0;font-family:inherit;
+ appearance:none}
 /* Le tableau des typologies n'est pas dans un `.pad` : il porte sa propre
    marge, sinon il se colle a l'intitule du bloc. */
 .block .scroll{padding:14px 22px 20px}
@@ -1031,7 +1036,7 @@ details.repli-carte summary{cursor:pointer;list-style:none;padding:20px 26px;
  color:var(--encre)}
 details.repli-carte summary::-webkit-details-marker{display:none}
 details.repli-carte summary .chev{margin-left:auto;color:var(--gris);
- font-size:18px;line-height:1;flex:none;transition:transform .15s var(--ease)}
+ flex:none;display:block;transition:transform .15s var(--ease)}
 details.repli-carte[open] summary .chev{transform:rotate(180deg)}
 details.repli-carte summary:hover{background:var(--fond-2)}
 details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
