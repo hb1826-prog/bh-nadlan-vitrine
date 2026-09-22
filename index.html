@@ -198,6 +198,11 @@ button,input,select,textarea{font:inherit;color:inherit}
  transition:transform .18s var(--ease)}
 .pub-logo:hover{transform:translateY(-1px)}
 .pub-logo svg{display:block}
+/* Sur ordinateur, le logo passe tout a gauche (avant le menu) — demande le
+   22/09/2026. Sur telephone il reste au milieu (voir le commentaire du
+   media 900px plus bas : deplace deux fois pour Safari, ne pas y toucher).
+   `order` seul suffit : aucun HTML a changer, aucun risque pour le mobile. */
+@media(min-width:901px){.pub-logo{order:-1;margin-right:8px}}
 /* Le logo garde la taille exacte de son propre attribut `height` (fixee
    cote Python), jamais recalculee ici : un `height` CSS qui lui laisse
    deviner sa largeur declenche, sur la page hebreu (dir=rtl), un bug de
