@@ -2146,6 +2146,45 @@ const mil = n => Math.round(Number(n) || 0).toLocaleString(MILLIERS);
 const shek = n => mil(n) + ' ₪';
 const pct = n => String(n).replace('.', ',') + ' %';
 
+/* ---------------- saisir un prix long sans s'y perdre
+
+   Hillel, le 23/09/2026 : « mets les points quand je saisis des chiffres
+   longs, qu'on ne s'embrouille pas ». Un `<input type=number>` ne PEUT pas
+   afficher de separateur – le navigateur refuse une valeur qui n'est pas un
+   nombre pur et vide le champ. D'ou `type=text` + `inputmode=numeric` : le
+   telephone ouvre le meme pave numerique, et c'est nous qui posons les
+   points de milliers a chaque frappe, avec `mil()` – le meme point que
+   partout ailleurs sur le site (1.735.000 ₪).
+
+   Consequence : la valeur d'un tel champ ne se lit plus avec `+champ.value`
+   (qui vaudrait NaN), mais avec `nombreSaisi()`. */
+function nombreSaisi(champ) {
+  return Math.max(0, +String((champ && champ.value) || '').replace(/\D/g, '') || 0);
+}
+
+/* Repeint le champ a chaque frappe en gardant le curseur au meme endroit VU
+   DU NOMBRE : on compte les CHIFFRES a gauche du curseur, jamais les
+   caracteres – les points se deplacent quand le nombre grandit, et compter
+   les caracteres ferait sauter le curseur d'un cran tous les trois chiffres.
+   Pose avant les autres `oninput` du champ, pour qu'ils lisent deja la
+   valeur nettoyee. */
+function poserMilliers(champ) {
+  if (!champ) return champ;
+  champ.addEventListener('input', () => {
+    const chiffresAGauche = champ.value.slice(0, champ.selectionStart || 0)
+      .replace(/\D/g, '').length;
+    const brut = champ.value.replace(/\D/g, '');
+    champ.value = brut ? mil(brut) : '';
+    let i = 0, vus = 0;
+    while (i < champ.value.length && vus < chiffresAGauche) {
+      if (champ.value[i] >= '0' && champ.value[i] <= '9') vus++;
+      i++;
+    }
+    try { champ.setSelectionRange(i, i); } catch (e) { /* champ non editable */ }
+  });
+  return champ;
+}
+
 /* La conversion en euros, a cote de chaque montant en shekels.
 
    Les clients gagnent en euros et achetent en shekels. Surtout, dans le neuf
@@ -4035,9 +4074,8 @@ async function simulateur(zone, p) {
   // qui l'interesse, pas le prix d'appel.
   const champPrix = `<div class="f"><label>${T('Prix du bien (₪)')}</label>
       <div class="qwrap has-val">
-        <input id="s-prix" type="number" inputmode="numeric" step="1000"
-               min="${DONNEES.prix_min || 100000}"
-               max="${DONNEES.prix_max || 20000000}" value="${Math.round(E.prix)}">
+        <input id="s-prix" type="text" inputmode="numeric"
+               autocomplete="off" value="${mil(E.prix)}">
         <button type="button" class="q-clear" id="s-prix-clear" aria-label="${T('Effacer')}">✕</button>
       </div>
       <span class="f-eur" id="s-prix-eur">${eur(E.prix)}</span></div>`;
@@ -4148,13 +4186,13 @@ async function simulateur(zone, p) {
     E.libre = false;               // on repart du prix d'appel de la typologie
     refaire();
   };
-  const prix = $('#s-prix', zone);
+  const prix = poserMilliers($('#s-prix', zone));
   if (prix) {
     // On redessine les CHIFFRES a chaque frappe, mais pas le formulaire :
     // redessiner le formulaire ferait perdre le curseur au milieu du nombre.
     prix.oninput = () => {
       $('.qwrap', zone).classList.toggle('has-val', !!prix.value);
-      const valeur = Math.max(0, +prix.value || 0);
+      const valeur = nombreSaisi(prix);
       if (!valeur) return;
       E.prix = valeur;
       E.libre = true;
@@ -4707,10 +4745,8 @@ function etapePrix(zone) {
     <div class="si-lab">${T('Le prix du bien')}</div>
     <div class="f"><label>${T('Prix (₪)')}</label>
       <div class="qwrap has-val">
-        <input id="t-prix" type="number" inputmode="numeric" step="1000"
-               min="${DONNEES.prix_min || 100000}"
-               max="${DONNEES.prix_max || 20000000}"
-               value="${Math.round(TUNNEL.prix)}">
+        <input id="t-prix" type="text" inputmode="numeric"
+               autocomplete="off" value="${mil(TUNNEL.prix)}">
         <button type="button" class="q-clear" id="t-prix-clear" aria-label="${T('Effacer')}">✕</button>
       </div>
       <span class="f-eur" id="t-prix-eur">${eur(TUNNEL.prix)}</span></div>
@@ -4719,10 +4755,10 @@ function etapePrix(zone) {
       <button type="button" class="suivant" id="t-suivant">${T('Suivant')}</button>
     </div>`;
 
-  const prix = $('#t-prix', zone);
+  const prix = poserMilliers($('#t-prix', zone));
   const majClear = () => $('.qwrap', zone).classList.toggle('has-val', !!prix.value);
   prix.oninput = () => {
-    const v = Math.max(0, +prix.value || 0);
+    const v = nombreSaisi(prix);
     TUNNEL.prix = v;
     const cote = $('#t-prix-eur', zone);
     if (cote) cote.textContent = eur(v);
@@ -4734,7 +4770,7 @@ function etapePrix(zone) {
     majClear(); prix.focus();
   };
   $('#t-suivant', zone).onclick = () => {
-    TUNNEL.prix = Math.max(0, +prix.value || 0);
+    TUNNEL.prix = nombreSaisi(prix);
     if (!TUNNEL.prix) { prix.focus(); return; }
     dessinerEtape(2);
   };
