@@ -209,6 +209,13 @@ button,input,select,textarea{font:inherit;color:inherit}
  color:var(--encre-2);transition:background .16s var(--ease)}
 .nav a:hover{background:var(--fond-2);color:var(--encre)}
 .grow{flex:1;min-width:0}
+/* `.pub-flanc-g`/`.pub-flanc-d` n'avaient de regle QUE dans le media du
+   telephone (plus bas) — jamais de mise en ligne sur ordinateur, ou leurs
+   enfants (bouton theme, langues, « Un conseiller vous rappelle ») tombaient
+   donc les uns sous les autres au lieu de tenir sur la meme ligne que le
+   logo. Trouve le 22/09/2026 (photo de Hillel, grand ecran). */
+.pub-flanc{display:flex;align-items:center}
+.pub-flanc-d{justify-content:flex-end;gap:14px}
 .cta{background:var(--encre);color:var(--fond);border:0;border-radius:999px;
  padding:11px 20px;font-size:14.5px;font-weight:650;cursor:pointer;
  white-space:nowrap;transition:transform .16s var(--ease),opacity .16s}
