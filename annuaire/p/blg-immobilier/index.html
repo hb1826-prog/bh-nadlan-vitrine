@@ -2532,7 +2532,11 @@ function basculer(mode) {
   if (mode === false) mode = 'fiche';
   const sim = mode === 'simulateur';
   const liste = mode === 'liste';
-  ['hero', 'entete', 'modele', 'qui', 'avis', 'rassure'].forEach(id => {
+  // 'preuve' = la bande de photos « Sur le terrain » sous le portrait.
+  // Elle n'avait pas d'id et restait donc affichee sur le simulateur, ou
+  // Hillel n'en veut pas (23/09/2026) : on la cache avec le bloc « qui »,
+  // dont elle est la suite.
+  ['hero', 'entete', 'modele', 'qui', 'preuve', 'avis', 'rassure'].forEach(id => {
     const bloc = document.getElementById(id);
     if (bloc) bloc.style.display = liste ? '' : 'none';
   });
@@ -3342,7 +3346,8 @@ function pageNousContacter() {
   // `id=qui` existe deja une fois dans le socle de la page (le bloc du bas,
   // que `basculer()` cache/montre par son id) : on le renomme ici pour ne
   // pas poser un second element avec le meme id dans le DOM.
-  const quiSansCollision = (DONNEES.bloc_qui || '').replace('id=qui', 'id=qui-nc');
+  const quiSansCollision = (DONNEES.bloc_qui || '')
+    .replace('id=qui', 'id=qui-nc').replace('id=preuve', 'id=preuve-nc');
   vue.innerHTML = `
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T('Nous contacter')}</p>
     <article class="texte">
