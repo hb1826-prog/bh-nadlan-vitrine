@@ -3970,7 +3970,7 @@ async function simulateur(zone, p) {
     : '';
 
   zone.innerHTML = `
-    <div class="block-head"><span>${p ? T('Ce que ce bien coûte vraiment')
+    <div class="block-head" style="display:flex;align-items:center;gap:8px">${picto('recu')}<span>${p ? T('Ce que ce bien coûte vraiment')
       : T('Ce que ce budget coûte vraiment')}</span></div>
     <div class="pad">
       <div class="fgrid">
