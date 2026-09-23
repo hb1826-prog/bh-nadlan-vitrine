@@ -649,6 +649,39 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .tunnel-jauge .seg.cliquable{cursor:pointer}
 .tunnel-jauge .seg.cliquable:hover{height:10px}
 
+/* Les deux simulations, tenues a part (Hillel, 23/09/2026) : deux grands
+   onglets au-dessus du parcours, jamais un bouton de plus perdu dans la
+   rangee des pourcentages. */
+.simu-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+.simu-modes button{display:flex;flex-direction:column;gap:4px;text-align:left;
+ cursor:pointer;padding:14px 16px;border-radius:var(--r);
+ background:var(--fond);border:1px solid var(--trait);color:inherit;font:inherit}
+.simu-modes button b{font-size:15px}
+.simu-modes button span{font-size:12.5px;opacity:.72;line-height:1.4}
+.simu-modes button:hover{border-color:var(--gris-clair)}
+.simu-modes button.on{border:2px solid var(--action);padding:13px 15px;
+ box-shadow:0 0 0 3px color-mix(in srgb,var(--action) 12%,transparent)}
+.simu-modes button.on b{color:var(--action)}
+@media (max-width:560px){.simu-modes button span{display:none}}
+
+/* La page a part du simulateur : ni banniere, ni recherche, ni liste. Il
+   reste le logo et un lien bien visible vers les programmes, pour qu'on ne
+   se sente jamais sorti du site. */
+body.simulateur-seul #hero,body.simulateur-seul #cherche,
+body.simulateur-seul #entete,body.simulateur-seul #modele{display:none!important}
+.retour-site{display:none}
+body.simulateur-seul .retour-site{display:inline-flex;align-items:center;gap:6px;
+ font-weight:600;font-size:14px;color:var(--action);text-decoration:none;
+ padding:8px 12px;border:1px solid var(--trait);border-radius:999px;white-space:nowrap;
+ margin-inline-end:8px}
+body.simulateur-seul .retour-site:hover{border-color:var(--action)}
+.retour-site .court{display:none}
+@media (max-width:560px){
+ .retour-site .long{display:none}
+ .retour-site .court{display:inline}
+ body.simulateur-seul .retour-site{padding:7px 10px;font-size:13px}
+}
+
 /* Les cartes de profil fiscal, cliquables. L'explication de chacune reste
    repliee derriere un petit « + » (demande par Hillel le 10/09/2026) : la
    liste tient sur moins de hauteur et le bouton Suivant reste visible sans

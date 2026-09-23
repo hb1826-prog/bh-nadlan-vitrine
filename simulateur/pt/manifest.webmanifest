@@ -1,0 +1,28 @@
+{
+ "name": "BH — Novos empreendimentos em Israel",
+ "short_name": "BH Annuaire",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#414A5C",
+ "lang": "pt",
+ "icons": [
+  {
+   "src": "/annuaire/icone-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/annuaire/icone-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "/annuaire/icone-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
