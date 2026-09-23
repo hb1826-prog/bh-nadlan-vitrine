@@ -2147,7 +2147,7 @@ const $ = (s, r) => (r || document).querySelector(s);
 const vue = $('#vue');
 const F = {ville: '', budget: '', pieces: [], types: []};
 const E = {profil: 'israelien_unique', cadre: 'nom_propre',
-           ltv: 70, duree: 25, typo: null,
+           ltv: 50, duree: 25, typo: null,
            // Achat comptant : un etat a part, jamais une valeur de plus dans
            // la grille LTV (0 % s'y confondrait avec « pas encore choisi »).
            comptant: false,
@@ -2187,7 +2187,7 @@ let TUNNEL = {
   etape: 1,
   prix: 2500000,
   comptant: false,
-  ltv: 70,
+  ltv: 50,
   // La duree du pret : `null` tant que le visiteur n'y touche pas, pour
   // repartir de la duree la plus longue autorisee par le cadre choisi
   // (voir `etapeFinancement`) plutot que d'une valeur figee ici.
