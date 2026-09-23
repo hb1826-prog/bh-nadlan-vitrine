@@ -265,9 +265,24 @@ button,input,select,textarea{font:inherit;color:inherit}
  border-bottom:1px solid var(--trait)}
 .hero .photo{position:absolute;inset:0}
 .hero .photo img{width:100%;height:100%;object-fit:cover;display:block}
+/* Jour / nuit (Hillel, 24/09/2026). De jour : l'image la plus claire, et un
+   voile qui n'assombrit que la colonne du texte — le texte blanc et le zero
+   dore restent lisibles, le reste de la photo respire. De nuit (22 h 30 -
+   6 h, classe `nuit` posee dans le <head>) : l'image et le voile d'avant. */
+.hero .ph-nuit{display:none}
+.nuit .hero .ph-nuit{display:block}
+.nuit .hero .ph-jour{display:none}
 .hero .voile{position:absolute;inset:0;
+ background:linear-gradient(90deg,rgba(6,12,24,.66) 0%,rgba(6,12,24,.46) 38%,
+                            rgba(6,12,24,.10) 68%,rgba(6,12,24,0) 100%),
+            linear-gradient(0deg,rgba(6,12,24,.35),rgba(6,12,24,0) 30%)}
+.nuit .hero .voile{
  background:linear-gradient(180deg,rgba(6,12,24,.72),rgba(6,12,24,.52) 45%,
                             rgba(6,12,24,.78))}
+@media(max-width:900px){
+ .hero .voile{background:linear-gradient(180deg,rgba(6,12,24,.58),
+   rgba(6,12,24,.30) 38%,rgba(6,12,24,.12) 60%,rgba(6,12,24,.30))}
+}
 .hero .dedans{position:relative;max-width:1240px;margin:0 auto;
  padding:64px 22px 78px;color:#fff}
 .hero h1{font-size:40px;line-height:1.12;font-weight:750;max-width:16em;

@@ -274,9 +274,24 @@ button,input,select,textarea{font:inherit;color:inherit}
  border-bottom:1px solid var(--trait)}
 .hero .photo{position:absolute;inset:0}
 .hero .photo img{width:100%;height:100%;object-fit:cover;display:block}
+/* Jour / nuit (Hillel, 24/09/2026). De jour : l'image la plus claire, et un
+   voile qui n'assombrit que la colonne du texte — le texte blanc et le zero
+   dore restent lisibles, le reste de la photo respire. De nuit (22 h 30 -
+   6 h, classe `nuit` posee dans le <head>) : l'image et le voile d'avant. */
+.hero .ph-nuit{display:none}
+.nuit .hero .ph-nuit{display:block}
+.nuit .hero .ph-jour{display:none}
 .hero .voile{position:absolute;inset:0;
+ background:linear-gradient(90deg,rgba(6,12,24,.66) 0%,rgba(6,12,24,.46) 38%,
+                            rgba(6,12,24,.10) 68%,rgba(6,12,24,0) 100%),
+            linear-gradient(0deg,rgba(6,12,24,.35),rgba(6,12,24,0) 30%)}
+.nuit .hero .voile{
  background:linear-gradient(180deg,rgba(6,12,24,.72),rgba(6,12,24,.52) 45%,
                             rgba(6,12,24,.78))}
+@media(max-width:900px){
+ .hero .voile{background:linear-gradient(180deg,rgba(6,12,24,.58),
+   rgba(6,12,24,.30) 38%,rgba(6,12,24,.12) 60%,rgba(6,12,24,.30))}
+}
 .hero .dedans{position:relative;max-width:1240px;margin:0 auto;
  padding:64px 22px 78px;color:#fff}
 .hero h1{font-size:40px;line-height:1.12;font-weight:750;max-width:16em;
@@ -1841,6 +1856,11 @@ table.ag th{width:64%}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){ --or:#7ac4be; --or-fonce:#5ab6ae; --or-clair:#021b18; --or-trait:#053834; --action:#93c1be; --action-vive:#b7d6d4; --action-lavis:#031816;}}
 :root[data-theme=dark]{ --or:#7ac4be; --or-fonce:#5ab6ae; --or-clair:#021b18; --or-trait:#053834; --action:#93c1be; --action-vive:#b7d6d4; --action-lavis:#031816;}
 </style>
+<script>/* La banniere de nuit, de 22 h 30 a 6 h a l'heure du visiteur ; claire le
+reste du temps (Hillel, 24/09/2026). ?nuit=1 / ?jour=1 pour la voir a toute heure. */
+(function(){var q=location.search,d=new Date(),m=d.getHours()*60+d.getMinutes(),
+n=/[?&]nuit=1/.test(q)||(!/[?&]jour=1/.test(q)&&(m>=1350||m<360));
+if(n)document.documentElement.classList.add('nuit');})();</script>
 </head><body>
 
 <header class=pub-top><div class="pub-in pub-bar">
@@ -1874,8 +1894,10 @@ table.ag th{width:64%}
 </header>
 
 <section class=hero id=hero>
-  <div class=photo><img src="../../img/bavli-tel-aviv.v4a78441b.jpg" alt=""
-       onerror="this.remove()"></div>
+  <div class=photo>
+    <img class=ph-jour src="../../img/bavli-tel-aviv.v4a78441b.jpg" alt="" onerror="this.remove()">
+    <img class=ph-nuit src="../../img/bavli-tel-aviv.v4a78441b.jpg" alt="" loading=lazy onerror="this.remove()">
+  </div>
   <div class=voile></div>
   <div class=dedans>
    <div class=hero-texte>
