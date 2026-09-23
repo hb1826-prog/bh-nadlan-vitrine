@@ -311,6 +311,81 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves span{font-size:11px}
 }
 
+/* Le simulateur dans la banniere — le premier argument du site (Hillel,
+   23/09/2026). Sur ordinateur, il prend la moitie droite, ou la photo seule
+   occupait la place ; sur telephone, il remplace le long chapeau. Dans les
+   deux cas la banniere ne grandit pas : la recherche reste au premier ecran. */
+.hero .dedans{display:grid;grid-template-columns:minmax(0,1fr) 380px;
+ gap:48px;align-items:center}
+.hero-texte{min-width:0}
+.hero-simu{background:var(--carte);color:var(--encre);border-radius:var(--r-xl);
+ box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 22px 20px;
+ display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--or)}
+.hs-sur{display:inline-block;align-self:flex-start;font-size:11.5px;font-weight:750;
+ letter-spacing:.08em;text-transform:uppercase;color:var(--action);
+ background:var(--action-lavis);padding:4px 10px;border-radius:999px}
+.hs-titre{font-size:21px;line-height:1.2;font-weight:750;margin-top:2px}
+.hs-sous{margin:0;font-size:13.5px;line-height:1.45;color:var(--gris)}
+.hs-lab{margin-top:6px;font-size:12px;font-weight:700;letter-spacing:.04em;
+ text-transform:uppercase;color:var(--gris)}
+.hero-simu input{width:100%;box-sizing:border-box;font:inherit;font-size:18px;
+ font-weight:650;padding:12px 14px;border:1px solid var(--trait);
+ border-radius:var(--r);background:var(--fond);color:var(--encre)}
+.hero-simu input:focus{outline:2px solid var(--action);outline-offset:1px}
+.hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+.hs-modes button{font:inherit;font-size:14px;font-weight:650;cursor:pointer;
+ padding:10px 8px;border-radius:999px;border:1px solid var(--trait);
+ background:var(--fond);color:var(--encre-2)}
+.hs-modes button.on{background:var(--action-lavis);border-color:var(--action);
+ color:var(--action)}
+.hs-go{font:inherit;font-size:16px;font-weight:750;cursor:pointer;border:0;
+ background:var(--action);color:#fff;border-radius:999px;padding:14px 18px;
+ margin-top:6px;box-shadow:0 6px 18px color-mix(in srgb,var(--action) 35%,transparent)}
+.hs-go:hover{background:var(--action-vive)}
+@media(max-width:900px){
+ .hero .dedans{grid-template-columns:1fr;gap:22px}
+ .hero-simu{max-width:460px}
+}
+@media(max-width:640px){
+ .hero p.chapeau{display:none}
+ /* Les quatre chiffres cedent aussi leur place sur telephone : la carte du
+    simulateur doit tenir au premier ecran SANS pousser la recherche dessous
+    (le « 0 frais d'agence » reste dit par la pastille du haut). */
+ .hero .hero-preuves{display:none}
+ .hero .dedans{padding:26px 20px 58px}
+ .hero-simu{padding:16px 16px 14px;gap:6px}
+ .hs-titre{font-size:18px}
+ .hs-sous{display:none}
+ .hero-simu input{font-size:17px;padding:10px 12px}
+ .hs-go{padding:12px 16px}
+}
+
+/* L'onglet « Simuler mon achat » de la boite de recherche, et le lien du
+   menu : visibles au premier coup d'oeil, pas un mot gris parmi d'autres. */
+#onglet-simuler{color:var(--action);border:1px solid var(--action)}
+#onglet-simuler.on{border-color:transparent}
+.nav a.nav-simu{color:var(--action);background:var(--action-lavis);font-weight:700}
+.nav a.nav-simu:hover{background:var(--action);color:#fff}
+.nav-mobile a.nav-simu{color:var(--action);font-weight:750}
+
+/* Le bandeau, sous la liste des programmes. */
+.simu-bande{margin:34px 0 10px;display:grid;grid-template-columns:minmax(0,1fr) auto;
+ gap:28px;align-items:center;background:var(--carte);border:1px solid var(--trait);
+ border-left:5px solid var(--or);border-radius:var(--r-xl);padding:26px 28px;
+ box-shadow:var(--ombre-3)}
+.simu-bande h3{margin:10px 0 14px;font-size:24px;line-height:1.2}
+.simu-bande ul{list-style:none;margin:0;padding:0;display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.simu-bande li{display:flex;flex-direction:column;gap:3px}
+.simu-bande li b{font-size:15px}
+.simu-bande li span{font-size:13.5px;line-height:1.45;color:var(--gris)}
+.sb-actions{display:flex;flex-direction:column;gap:10px;min-width:250px}
+@media(max-width:900px){
+ .simu-bande{grid-template-columns:1fr;padding:20px 18px}
+ .simu-bande ul{grid-template-columns:1fr;gap:10px}
+ .sb-actions{min-width:0}
+}
+
 /* la carte de recherche, posee sur la banniere */
 .cherche{position:relative;max-width:1240px;margin:-46px auto 0;
  padding:0 22px;z-index:5}
@@ -1753,7 +1828,7 @@ table.ag th{width:64%}
     <nav class=nav>
       <a href="#/">Programmes neufs</a>
       <a href="#/blog">Blog</a>
-      <a href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
+      <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
       <a href="#/nous-contacter">Nous contacter</a>
     </nav>
   </div>
@@ -1810,7 +1885,7 @@ table.ag th{width:64%}
 <nav class="nav-mobile" id=nav-mobile hidden>
   <a href="#/">Programmes neufs</a>
   <a href="#/blog">Blog</a>
-  <a href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
+  <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
   <a href="#/nous-contacter" onclick="fermerMenuMobile()">Nous contacter</a>
   <a class=wa href="https://wa.me/972585678926?text=Bonjour+BH+Nadlan%2C+je+suis+int%C3%A9ress%C3%A9%2C+je+voudrais+%C3%A9changer+avec+vous."><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 22c-1.836 0-3.63-.494-5.198-1.43l-.373-.222-3.865 1.014 1.033-3.769-.243-.386A9.937 9.937 0 0 1 2.05 12c0-5.523 4.494-10 10.05-10 2.685 0 5.208 1.043 7.106 2.941A9.933 9.933 0 0 1 22.1 12c0 5.523-4.494 10-10.05 10zm8.413-18.363A11.815 11.815 0 0 0 12.05 0C5.495 0 .15 5.35.15 11.9c0 2.097.547 4.145 1.588 5.945L0 24l6.304-1.654a11.87 11.87 0 0 0 5.744 1.464h.005c6.554 0 11.9-5.35 11.9-11.9 0-3.181-1.24-6.169-3.49-8.273z"/></svg> WhatsApp</a>
 </nav>
@@ -1821,10 +1896,21 @@ table.ag th{width:64%}
        onerror="this.remove()"></div>
   <div class=voile></div>
   <div class=dedans>
+   <div class=hero-texte>
     <span class=promesse>0 frais d'agence</span>
     <h1>Acheter en Israël sans y être,<br>sans parler hébreu,<br>sans frais d’agence.</h1>
     <p class=chapeau>Douze ans passés chez les promoteurs israéliens. Aujourd’hui, ce métier travaille pour vous : le prix est négocié avant que vous n’entriez, le chiffrage complet vous est remis avant que vous ne signiez, et l’accompagnement ne vous coûte rien.</p>
     <ul class=hero-preuves><li><b>33</b><span>programmes suivis</span></li><li><b>16</b><span>villes</span></li><li><b>12</b><span>ans chez les promoteurs</span></li><li><b>0 %</b><span>de frais d’agence</span></li></ul>
+   </div>
+   <form class=hero-simu id=hero-simu novalidate>
+    <span class=hs-sur>Simulateur gratuit</span>
+    <b class=hs-titre>Combien votre achat vous coûtera vraiment ?</b>
+    <p class=hs-sous>Taxe d’acquisition, frais, mensualité et coût total : le chiffrage complet, en deux minutes.</p>
+    <label class=hs-lab for=hs-prix>Prix du bien (₪)</label>
+    <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000">
+    <div class=hs-modes role=group><button type=button data-hs-mode=comptant>Sans crédit</button><button type=button data-hs-mode=credit class=on>Avec crédit</button></div>
+    <button type=submit class=hs-go>Lancer ma simulation <span aria-hidden=true>→</span></button>
+  </form>
   </div>
 </section>
 
@@ -1875,6 +1961,22 @@ table.ag th{width:64%}
     <div class=pub-count id=pub-count></div>
   </div>
   <div id=vue></div>
+
+  <section class=simu-bande id=simu-bande>
+    <div class=sb-texte>
+      <span class=hs-sur>Simulateur gratuit</span>
+      <h3>Le vrai coût de votre achat, avant de vous engager</h3>
+      <ul>
+        <li><b>À la signature</b><span>Ce que vous sortez le jour J : apport, taxe d’acquisition, avocat.</span></li>
+        <li><b>Tous les mois</b><span>La mensualité du prêt, et ce qu’il vous coûte vraiment en intérêts.</span></li>
+        <li><b>À la revente</b><span>L’impôt sur la plus-value, selon votre situation.</span></li>
+      </ul>
+    </div>
+    <div class=sb-actions>
+      <button type=button class=hs-go data-simu-ouvrir=comptant>Simulation sans crédit</button>
+      <button type=button class=hs-go data-simu-ouvrir=credit>Simulation avec crédit</button>
+    </div>
+  </section>
 
   <section class=qui id=qui>
     <img src="img/hillel-portrait-bureau.ee7f4dfd.jpg" alt="Hillel Bijaoui"
@@ -1948,7 +2050,7 @@ table.ag th{width:64%}
     <div class=pied-col>
       <b>Acheter</b>
       <a href="#/">Tous les programmes</a>
-      <a href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
+      <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
       <a href="#/" onclick="versContact(this);return false">Un conseiller vous rappelle aujourd’hui</a>
     </div>
     <div class=pied-col id=pied-villes><b>Où acheter</b></div>
@@ -2060,6 +2162,38 @@ function choisirModeSimu(mode) {
   MODE_SIMU = mode === 'comptant' ? 'comptant' : 'credit';
   TUNNEL = TUNNELS[MODE_SIMU];
 }
+/* Arrivee depuis la carte de la banniere ou le bandeau du site :
+   `?mode=comptant|credit&prix=2500000`. Le prix deja donne, on part
+   directement de l'etape suivante — lui redemander ce qu'il vient de taper
+   serait le meilleur moyen de le perdre. */
+(function () {
+  let q;
+  try { q = new URLSearchParams(location.search); } catch (e) { return; }
+  if (q.get('mode')) choisirModeSimu(q.get('mode'));
+  const prix = Math.round(+String(q.get('prix') || '').replace(/\D/g, '') || 0);
+  if (prix > 0) {
+    TUNNELS.credit.prix = TUNNELS.comptant.prix = prix;
+    TUNNEL.etape = 2;
+  }
+})();
+
+/* Ouvre le simulateur, depuis n'importe quel bouton du site. Sur le site de
+   BH : sa page a part, dans un nouvel onglet. Sur une page partenaire (pas
+   de page a part) : la vue du simulateur, dans la page. */
+function ouvrirSimulateur(mode, prix) {
+  if (DONNEES.simulateur_url) {
+    const q = '?mode=' + (mode === 'comptant' ? 'comptant' : 'credit')
+      + (prix > 0 ? '&prix=' + prix : '');
+    const w = window.open(DONNEES.simulateur_url + q, '_blank', 'noopener');
+    if (!w) location.href = DONNEES.simulateur_url + q;
+    return;
+  }
+  choisirModeSimu(mode);
+  if (prix > 0) { TUNNEL.prix = prix; TUNNEL.etape = 2; }
+  location.hash = '#/simulateur';
+  window.scrollTo(0, 0);
+}
+
 /* Les etapes du parcours ouvert : sans credit, pas d'etape 3 (financement). */
 const etapesDuTunnel = () => TUNNEL.comptant ? [1, 2, 4, 5] : [1, 2, 3, 4, 5];
 
@@ -2690,7 +2824,7 @@ function basculer(mode) {
   // Elle n'avait pas d'id et restait donc affichee sur le simulateur, ou
   // Hillel n'en veut pas (23/09/2026) : on la cache avec le bloc « qui »,
   // dont elle est la suite.
-  ['hero', 'entete', 'modele', 'qui', 'preuve', 'avis', 'rassure'].forEach(id => {
+  ['hero', 'entete', 'modele', 'simu-bande', 'qui', 'preuve', 'avis', 'rassure'].forEach(id => {
     const bloc = document.getElementById(id);
     if (bloc) bloc.style.display = liste ? '' : 'none';
   });
@@ -5988,6 +6122,29 @@ function accueil() {
 }
 
 const LOGO = document.querySelector('.pub-logo');
+/* La carte du simulateur dans la banniere, et le bandeau sous la liste. */
+(function () {
+  const carte = document.getElementById('hero-simu');
+  if (carte) {
+    const prix = poserMilliers(carte.querySelector('#hs-prix'));
+    let mode = 'credit';
+    carte.querySelectorAll('[data-hs-mode]').forEach(b => {
+      b.onclick = () => {
+        mode = b.dataset.hsMode;
+        carte.querySelectorAll('[data-hs-mode]').forEach(x =>
+          x.classList.toggle('on', x === b));
+      };
+    });
+    carte.onsubmit = e => {
+      e.preventDefault();
+      ouvrirSimulateur(mode, nombreSaisi(prix));
+    };
+  }
+  document.querySelectorAll('[data-simu-ouvrir]').forEach(b => {
+    b.onclick = () => ouvrirSimulateur(b.dataset.simuOuvrir, 0);
+  });
+})();
+
 // Sur la page seule du simulateur, le logo mene aux programmes, pour de vrai.
 if (LOGO && DONNEES.seul !== 'simulateur')
   LOGO.onclick = e => { e.preventDefault(); accueil(); };

@@ -302,6 +302,81 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves span{font-size:11px}
 }
 
+/* Le simulateur dans la banniere — le premier argument du site (Hillel,
+   23/09/2026). Sur ordinateur, il prend la moitie droite, ou la photo seule
+   occupait la place ; sur telephone, il remplace le long chapeau. Dans les
+   deux cas la banniere ne grandit pas : la recherche reste au premier ecran. */
+.hero .dedans{display:grid;grid-template-columns:minmax(0,1fr) 380px;
+ gap:48px;align-items:center}
+.hero-texte{min-width:0}
+.hero-simu{background:var(--carte);color:var(--encre);border-radius:var(--r-xl);
+ box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 22px 20px;
+ display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--or)}
+.hs-sur{display:inline-block;align-self:flex-start;font-size:11.5px;font-weight:750;
+ letter-spacing:.08em;text-transform:uppercase;color:var(--action);
+ background:var(--action-lavis);padding:4px 10px;border-radius:999px}
+.hs-titre{font-size:21px;line-height:1.2;font-weight:750;margin-top:2px}
+.hs-sous{margin:0;font-size:13.5px;line-height:1.45;color:var(--gris)}
+.hs-lab{margin-top:6px;font-size:12px;font-weight:700;letter-spacing:.04em;
+ text-transform:uppercase;color:var(--gris)}
+.hero-simu input{width:100%;box-sizing:border-box;font:inherit;font-size:18px;
+ font-weight:650;padding:12px 14px;border:1px solid var(--trait);
+ border-radius:var(--r);background:var(--fond);color:var(--encre)}
+.hero-simu input:focus{outline:2px solid var(--action);outline-offset:1px}
+.hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+.hs-modes button{font:inherit;font-size:14px;font-weight:650;cursor:pointer;
+ padding:10px 8px;border-radius:999px;border:1px solid var(--trait);
+ background:var(--fond);color:var(--encre-2)}
+.hs-modes button.on{background:var(--action-lavis);border-color:var(--action);
+ color:var(--action)}
+.hs-go{font:inherit;font-size:16px;font-weight:750;cursor:pointer;border:0;
+ background:var(--action);color:#fff;border-radius:999px;padding:14px 18px;
+ margin-top:6px;box-shadow:0 6px 18px color-mix(in srgb,var(--action) 35%,transparent)}
+.hs-go:hover{background:var(--action-vive)}
+@media(max-width:900px){
+ .hero .dedans{grid-template-columns:1fr;gap:22px}
+ .hero-simu{max-width:460px}
+}
+@media(max-width:640px){
+ .hero p.chapeau{display:none}
+ /* Les quatre chiffres cedent aussi leur place sur telephone : la carte du
+    simulateur doit tenir au premier ecran SANS pousser la recherche dessous
+    (le « 0 frais d'agence » reste dit par la pastille du haut). */
+ .hero .hero-preuves{display:none}
+ .hero .dedans{padding:26px 20px 58px}
+ .hero-simu{padding:16px 16px 14px;gap:6px}
+ .hs-titre{font-size:18px}
+ .hs-sous{display:none}
+ .hero-simu input{font-size:17px;padding:10px 12px}
+ .hs-go{padding:12px 16px}
+}
+
+/* L'onglet « Simuler mon achat » de la boite de recherche, et le lien du
+   menu : visibles au premier coup d'oeil, pas un mot gris parmi d'autres. */
+#onglet-simuler{color:var(--action);border:1px solid var(--action)}
+#onglet-simuler.on{border-color:transparent}
+.nav a.nav-simu{color:var(--action);background:var(--action-lavis);font-weight:700}
+.nav a.nav-simu:hover{background:var(--action);color:#fff}
+.nav-mobile a.nav-simu{color:var(--action);font-weight:750}
+
+/* Le bandeau, sous la liste des programmes. */
+.simu-bande{margin:34px 0 10px;display:grid;grid-template-columns:minmax(0,1fr) auto;
+ gap:28px;align-items:center;background:var(--carte);border:1px solid var(--trait);
+ border-left:5px solid var(--or);border-radius:var(--r-xl);padding:26px 28px;
+ box-shadow:var(--ombre-3)}
+.simu-bande h3{margin:10px 0 14px;font-size:24px;line-height:1.2}
+.simu-bande ul{list-style:none;margin:0;padding:0;display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.simu-bande li{display:flex;flex-direction:column;gap:3px}
+.simu-bande li b{font-size:15px}
+.simu-bande li span{font-size:13.5px;line-height:1.45;color:var(--gris)}
+.sb-actions{display:flex;flex-direction:column;gap:10px;min-width:250px}
+@media(max-width:900px){
+ .simu-bande{grid-template-columns:1fr;padding:20px 18px}
+ .simu-bande ul{grid-template-columns:1fr;gap:10px}
+ .sb-actions{min-width:0}
+}
+
 /* la carte de recherche, posee sur la banniere */
 .cherche{position:relative;max-width:1240px;margin:-46px auto 0;
  padding:0 22px;z-index:5}
