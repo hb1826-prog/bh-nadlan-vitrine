@@ -323,16 +323,13 @@ button,input,select,textarea{font:inherit;color:inherit}
  letter-spacing:.01em;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.4)}
 .zf-mots small{font-size:17px;font-weight:650;color:var(--or);
  text-shadow:0 1px 8px rgba(0,0,0,.45)}
-.hero .zero-frais + h1{font-size:38px;font-weight:750;line-height:1.14}
+.hero .zero-frais + h1{font-size:36px;font-weight:750;line-height:1.16;max-width:none}
 @media(max-width:640px){
  .zero-frais{gap:12px;margin-bottom:12px}
  .zf-zero{font-size:92px}
  .zf-mots b{font-size:27px}
  .zf-mots small{font-size:14px}
- .hero .zero-frais + h1{font-size:25px;line-height:1.18}
- /* Le chapeau est redevenu une phrase courte qui designe la carte du
-    simulateur juste dessous : il a sa place sur telephone. */
- .hero .zero-frais ~ p.chapeau{display:block;font-size:14.5px;margin-top:8px}
+ .hero .zero-frais + h1{font-size:21.5px;line-height:1.22}
 }
 
 /* Le simulateur dans la banniere — le premier argument du site (Hillel,
@@ -340,7 +337,7 @@ button,input,select,textarea{font:inherit;color:inherit}
    occupait la place ; sur telephone, il remplace le long chapeau. Dans les
    deux cas la banniere ne grandit pas : la recherche reste au premier ecran. */
 .hero .dedans{display:grid;grid-template-columns:minmax(0,1fr) 380px;
- gap:48px;align-items:center}
+ gap:48px;align-items:start}
 .hero-texte{min-width:0}
 .hero-simu{background:var(--carte);color:var(--encre);border-radius:var(--r-xl);
  box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 22px 20px;
@@ -348,7 +345,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hs-sur{display:inline-block;align-self:flex-start;font-size:11.5px;font-weight:750;
  letter-spacing:.08em;text-transform:uppercase;color:var(--action);
  background:var(--action-lavis);padding:4px 10px;border-radius:999px}
-.hs-titre{font-size:21px;line-height:1.2;font-weight:750;margin-top:2px}
+.hs-titre{font-size:26px;line-height:1.15;font-weight:800;margin-top:4px}
 .hs-sous{margin:0;font-size:13.5px;line-height:1.45;color:var(--gris)}
 .hs-lab{margin-top:6px;font-size:12px;font-weight:700;letter-spacing:.04em;
  text-transform:uppercase;color:var(--gris)}
@@ -378,8 +375,8 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero .hero-preuves{display:none}
  .hero .dedans{padding:26px 20px 58px}
  .hero-simu{padding:16px 16px 14px;gap:6px}
- .hs-titre{font-size:18px}
- .hs-sous{display:none}
+ .hs-titre{font-size:21px}
+ .hs-sous{font-size:12.5px}
  .hero-simu input{font-size:17px;padding:10px 12px}
  .hs-go{padding:12px 16px}
 }
@@ -1924,19 +1921,17 @@ table.ag th{width:64%}
     <div class=zero-frais>
       <span class=zf-zero aria-hidden=true>0</span>
       <span class=zf-mots><b>frais d’agence</b>
-        <small>sur votre achat. Vraiment zéro.</small></span>
+        <small>sur votre achat.</small></span>
     </div>
-    <h1>Le prix du promoteur.<br>Le vrai coût, calculé.<br>Négocié pour vous.</h1>
-    <p class=chapeau>Commencez par simuler votre achat : c’est gratuit, et ça prend deux minutes.</p>
+    <h1>Le prix du promoteur, négocié<br>et le vrai coût, simulé pour vous.</h1>
     <ul class=hero-preuves><li><b>33</b><span>programmes suivis</span></li><li><b>16</b><span>villes</span></li><li><b>12</b><span>ans chez les promoteurs</span></li></ul>
    </div>
    <form class=hero-simu id=hero-simu novalidate>
     <span class=hs-sur>Simulateur gratuit</span>
     <b class=hs-titre>Combien votre achat vous coûtera vraiment ?</b>
-    <p class=hs-sous>Taxe d’acquisition, frais, mensualité et coût total : le chiffrage complet, en deux minutes.</p>
+    <p class=hs-sous>Gratuit, en deux minutes : taxe d’acquisition, frais, mensualité et coût total.</p>
     <label class=hs-lab for=hs-prix>Prix du bien (₪)</label>
     <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000">
-    <div class=hs-modes role=group><button type=button data-hs-mode=comptant>Sans crédit</button><button type=button data-hs-mode=credit class=on>Avec crédit</button></div>
     <button type=submit class=hs-go>Lancer ma simulation <span aria-hidden=true>→</span></button>
   </form>
   </div>
@@ -2185,7 +2180,10 @@ const TUNNELS = {
   credit: TUNNEL,
   comptant: Object.assign(JSON.parse(JSON.stringify(TUNNEL)), {comptant: true}),
 };
-let MODE_SIMU = 'credit';
+// `null` tant que le visiteur n'a pas choisi : « sans ou avec credit » est
+// le premier ecran du simulateur (Hillel, 24/09/2026), pas un reglage
+// pre-coche qu'on ne remarque pas.
+let MODE_SIMU = null;
 function choisirModeSimu(mode) {
   MODE_SIMU = mode === 'comptant' ? 'comptant' : 'credit';
   TUNNEL = TUNNELS[MODE_SIMU];
@@ -2201,7 +2199,7 @@ function choisirModeSimu(mode) {
   const prix = Math.round(+String(q.get('prix') || '').replace(/\D/g, '') || 0);
   if (prix > 0) {
     TUNNELS.credit.prix = TUNNELS.comptant.prix = prix;
-    TUNNEL.etape = 2;
+    TUNNELS.credit.etape = TUNNELS.comptant.etape = 2;
   }
 })();
 
@@ -2210,14 +2208,19 @@ function choisirModeSimu(mode) {
    de page a part) : la vue du simulateur, dans la page. */
 function ouvrirSimulateur(mode, prix) {
   if (DONNEES.simulateur_url) {
-    const q = '?mode=' + (mode === 'comptant' ? 'comptant' : 'credit')
-      + (prix > 0 ? '&prix=' + prix : '');
+    const p = [];
+    if (mode) p.push('mode=' + (mode === 'comptant' ? 'comptant' : 'credit'));
+    if (prix > 0) p.push('prix=' + prix);
+    const q = p.length ? '?' + p.join('&') : '';
     const w = window.open(DONNEES.simulateur_url + q, '_blank', 'noopener');
     if (!w) location.href = DONNEES.simulateur_url + q;
     return;
   }
-  choisirModeSimu(mode);
-  if (prix > 0) { TUNNEL.prix = prix; TUNNEL.etape = 2; }
+  if (mode) choisirModeSimu(mode); else MODE_SIMU = null;
+  if (prix > 0) {
+    TUNNELS.credit.prix = TUNNELS.comptant.prix = prix;
+    TUNNELS.credit.etape = TUNNELS.comptant.etape = 2;
+  }
   location.hash = '#/simulateur';
   window.scrollTo(0, 0);
 }
@@ -4858,7 +4861,7 @@ async function vueSimulateurEtapes() {
       <p class="sub">${T("Un prix, votre situation, et on vous envoie le chiffrage complet : à la signature, tous les mois, et à la revente.")}</p>
       </div>
     </div>
-    <div class="simu-modes" role="tablist">
+    ${MODE_SIMU ? `<div class="simu-modes" role="tablist">
       <button type="button" role="tab" data-mode="comptant"
               class="${MODE_SIMU === 'comptant' ? 'on' : ''}"
               aria-selected="${MODE_SIMU === 'comptant'}">
@@ -4869,7 +4872,7 @@ async function vueSimulateurEtapes() {
               aria-selected="${MODE_SIMU === 'credit'}">
         <b>${T('Simulation avec crédit')}</b>
         <span>${T('Une part financée par la banque : apport, mensualité, coût du crédit.')}</span></button>
-    </div>
+    </div>` : ''}
     <div class="card"><div class="block"><div class="pad" id="tunnel"></div></div></div>`;
   document.querySelectorAll('.simu-modes [data-mode]').forEach(b => {
     b.onclick = () => {
@@ -4878,7 +4881,8 @@ async function vueSimulateurEtapes() {
       vueSimulateurEtapes();
     };
   });
-  dessinerEtape(TUNNEL.etape || 1);
+  if (!MODE_SIMU) etapeChoixMode($('#tunnel'));
+  else dessinerEtape(TUNNEL.etape || 1);
   // Revenir directement a une etape DEJA remplie, sans repasser par
   // « Precedent » autant de fois : Hillel, le 19/09/2026, « la possibilite
   // de revenir en arriere a chaque etape pour modifier les informations ».
@@ -4893,6 +4897,26 @@ async function vueSimulateurEtapes() {
     const cible = +seg.dataset.etape;
     if (cible < TUNNEL.etape) dessinerEtape(cible);
   };
+}
+
+/* Le premier ecran : sans ou avec credit. Deux cartes, rien d'autre — le
+   prix deja tape sur la page d'accueil est garde et ne se redemande pas. */
+function etapeChoixMode(zone) {
+  const prix = TUNNELS.credit.prix;
+  zone.innerHTML = `
+    <div class="si-lab">${T('Comment financez-vous cet achat ?')}</div>
+    ${TUNNELS.credit.etape === 2 && prix ? `<p class="dim si-note" style="margin:-4px 0 12px">${T('Prix du bien')} : <b>${mil(prix)} ₪</b> · ${eur(prix)}</p>` : ''}
+    <button type="button" class="etape-carte" data-choix="comptant">
+      <span class="etape-carte-corps"><b>${T('Simulation sans crédit')}</b>
+        <span class="note">${T('Vous payez comptant : le prix, les frais et la taxe.')}</span></span>
+      <span class="radio" aria-hidden="true"></span></button>
+    <button type="button" class="etape-carte" data-choix="credit">
+      <span class="etape-carte-corps"><b>${T('Simulation avec crédit')}</b>
+        <span class="note">${T('Une part financée par la banque : apport, mensualité, coût du crédit.')}</span></span>
+      <span class="radio" aria-hidden="true"></span></button>`;
+  zone.querySelectorAll('[data-choix]').forEach(b => {
+    b.onclick = () => { choisirModeSimu(b.dataset.choix); vueSimulateurEtapes(); };
+  });
 }
 
 /* La jauge : cinq segments, jamais un chiffre. `n` est l'etape ATTEINTE
@@ -6155,17 +6179,9 @@ const LOGO = document.querySelector('.pub-logo');
   const carte = document.getElementById('hero-simu');
   if (carte) {
     const prix = poserMilliers(carte.querySelector('#hs-prix'));
-    let mode = 'credit';
-    carte.querySelectorAll('[data-hs-mode]').forEach(b => {
-      b.onclick = () => {
-        mode = b.dataset.hsMode;
-        carte.querySelectorAll('[data-hs-mode]').forEach(x =>
-          x.classList.toggle('on', x === b));
-      };
-    });
     carte.onsubmit = e => {
       e.preventDefault();
-      ouvrirSimulateur(mode, nombreSaisi(prix));
+      ouvrirSimulateur(null, nombreSaisi(prix));
     };
   }
   document.querySelectorAll('[data-simu-ouvrir]').forEach(b => {
