@@ -302,6 +302,30 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves span{font-size:11px}
 }
 
+/* « 0 frais d'agence », le titre visuel de la banniere (Hillel, 24/09/2026 :
+   « le plus evident possible »). Un zero geant, dore — l'or porte du texte
+   ici parce que le fond est sombre (voile de la photo), jamais sur fond
+   clair. Le h1 passe en second : il dit ce que le zero veut dire. */
+.zero-frais{display:flex;align-items:center;gap:16px;margin:0 0 18px}
+.zf-zero{font-size:132px;line-height:.78;font-weight:800;color:var(--or);
+ letter-spacing:-.04em;text-shadow:0 4px 24px rgba(0,0,0,.45)}
+.zf-mots{display:flex;flex-direction:column;gap:6px}
+.zf-mots b{font-size:40px;line-height:1;font-weight:800;text-transform:uppercase;
+ letter-spacing:.01em;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.zf-mots small{font-size:17px;font-weight:650;color:var(--or);
+ text-shadow:0 1px 8px rgba(0,0,0,.45)}
+.hero .zero-frais + h1{font-size:38px;font-weight:750;line-height:1.14}
+@media(max-width:640px){
+ .zero-frais{gap:12px;margin-bottom:12px}
+ .zf-zero{font-size:92px}
+ .zf-mots b{font-size:27px}
+ .zf-mots small{font-size:14px}
+ .hero .zero-frais + h1{font-size:25px;line-height:1.18}
+ /* Le chapeau est redevenu une phrase courte qui designe la carte du
+    simulateur juste dessous : il a sa place sur telephone. */
+ .hero .zero-frais ~ p.chapeau{display:block;font-size:14.5px;margin-top:8px}
+}
+
 /* Le simulateur dans la banniere — le premier argument du site (Hillel,
    23/09/2026). Sur ordinateur, il prend la moitie droite, ou la photo seule
    occupait la place ; sur telephone, il remplace le long chapeau. Dans les
