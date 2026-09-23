@@ -382,6 +382,24 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero .dedans{grid-template-columns:1fr;gap:22px}
  .hero-simu{max-width:460px}
 }
+/* Le champ et le bouton : l'un sous l'autre sur ordinateur, cote a cote sur
+   telephone — la carte y devient un bandeau large et bas plutot qu'un
+   carre (Hillel, 24/09/2026), pour laisser voir les biens dessous. */
+.hs-ligne{display:flex;flex-direction:column;gap:6px}
+.hs-court{display:none}
+@media(max-width:640px){
+ .hs-ligne{flex-direction:row;align-items:stretch;gap:8px;margin-top:4px}
+ .hs-ligne input{flex:1;min-width:0}
+ .hs-ligne .hs-go{margin-top:0;flex:none;padding:10px 16px;white-space:nowrap}
+ .hs-long{display:none}
+ .hs-court{display:inline}
+ .hero-simu .hs-lab,.hero-simu .hs-sous{display:none}
+ .hero-simu .hs-sur{font-size:10.5px;padding:3px 9px}
+ /* Memes bords que la boite de recherche juste dessous (14 px). */
+ .hero .dedans{padding-left:14px;padding-right:14px}
+ .hero-texte{padding:0 6px}
+ .hero-simu{max-width:none}
+}
 @media(max-width:640px){
  .hero p.chapeau{display:none}
  /* Les quatre chiffres cedent aussi leur place sur telephone : la carte du
@@ -1948,11 +1966,13 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
    </div>
    <form class=hero-simu id=hero-simu novalidate>
     <span class=hs-sur>Simulateur gratuit</span>
-    <b class=hs-titre>Combien votre achat vous coûtera vraiment ?</b>
+    <b class=hs-titre>Combien vous coûtera réellement votre bien ?</b>
     <p class=hs-sous>Gratuit, en deux minutes : taxe d’acquisition, frais, mensualité et coût total.</p>
     <label class=hs-lab for=hs-prix>Prix du bien (₪)</label>
-    <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000">
-    <button type=submit class=hs-go>Lancer ma simulation <span aria-hidden=true>→</span></button>
+    <div class=hs-ligne>
+      <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000" aria-label="Prix du bien (₪)">
+      <button type=submit class=hs-go><span class=hs-long>Lancer ma simulation</span><span class=hs-court>Simuler</span> <span aria-hidden=true>→</span></button>
+    </div>
   </form>
   </div>
 </section>
