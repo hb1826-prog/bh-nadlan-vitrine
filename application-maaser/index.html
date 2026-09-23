@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Votre application de maasser, clé en main</title>
+<meta name="description" content="Indépendant ou salarié : une application de maasser construite pour vos revenus, vos dépenses et vos engagements. Audit gratuit d'une heure.">
+<meta property="og:title" content="Votre application de maasser, clé en main">
+<meta property="og:description" content="Vos revenus, vos dépenses, votre dixième — au shekel près, chaque mois. Audit gratuit d'une heure.">
+<meta property="og:image" content="captures/ecran-maasser.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap">
+<style>
+  :root {
+    --ardoise:#0F172A; --ardoise-2:#1B2540; --or:#C9A227; --tekhelet:#0038B8;
+    --fond:#F6F5F1; --blanc:#FFFFFF; --texte:#0F172A; --gris:#56607A; --trait:#E4E1D8;
+    --vert:#1E6B3A;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--fond); color:var(--texte);
+         font-family:"Rubik",-apple-system,"Segoe UI",Arial,sans-serif; font-size:17px; line-height:1.55; }
+  img { max-width:100%; display:block; }
+  .enveloppe { max-width:1080px; margin:0 auto; padding-inline:20px; }
+
+  /* ---- haut ---- */
+  .hero { background:var(--ardoise); color:#EEF0F5; padding-block:28px 64px; overflow:hidden; }
+  .barre-haut { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:44px; }
+  .marque { display:flex; align-items:center; gap:10px; color:#EEF0F5; text-decoration:none; font-weight:700; letter-spacing:.02em; }
+  .marque svg { flex:0 0 auto; }
+  .lien-audit { color:var(--or); text-decoration:none; font-weight:500; font-size:.95rem; border-bottom:1px solid rgba(201,162,39,.5); }
+  .hero-grille { display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center; }
+  .verset { font-size:2.1rem; color:var(--or); line-height:1.2; margin:0 0 6px; direction:rtl; text-align:left; unicode-bidi:isolate; font-weight:500; }
+  .verset-ref { font-size:.82rem; color:#9AA3B5; letter-spacing:.08em; text-transform:uppercase; margin:0 0 26px; }
+  h1 { font-size:clamp(2rem, 4.4vw, 3.1rem); line-height:1.08; margin:0 0 18px; font-weight:800; text-wrap:balance; }
+  h1 em { font-style:normal; color:var(--or); }
+  .chapo { font-size:1.12rem; color:#C9CEDA; max-width:34em; margin:0 0 30px; }
+  .bouton { display:inline-block; background:var(--tekhelet); color:#fff; text-decoration:none; font-weight:700;
+            padding:15px 26px; border-radius:10px; font-size:1rem; border:none; cursor:pointer; font-family:inherit; }
+  .bouton:hover { background:#002C92; }
+  .sous-bouton { display:block; margin-top:12px; font-size:.88rem; color:#9AA3B5; }
+  .telephone { width:min(300px, 100%); margin-left:auto; border-radius:34px; padding:10px; background:#060A14;
+               box-shadow:0 30px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.08); }
+  .telephone img { border-radius:26px; }
+
+  /* ---- sections ---- */
+  section { padding-block:72px; }
+  .surtitre { font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--gris); margin:0 0 10px; font-weight:500; }
+  h2 { font-size:clamp(1.6rem, 3vw, 2.2rem); line-height:1.15; margin:0 0 16px; text-wrap:balance; }
+  .texte { max-width:40em; color:#333B4F; }
+
+  .sages { background:var(--blanc); border-top:1px solid var(--trait); border-bottom:1px solid var(--trait); }
+  .sages-grille { display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:start; }
+  blockquote { margin:0; padding-left:20px; border-left:3px solid var(--or); font-size:1.25rem; line-height:1.45; }
+  blockquote cite { display:block; margin-top:10px; font-size:.85rem; color:var(--gris); font-style:normal; }
+
+  .casse-tete { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:34px; }
+  .casse-tete div { background:var(--blanc); border:1px solid var(--trait); border-radius:12px; padding:18px; }
+  .casse-tete b { display:block; margin-bottom:4px; }
+  .casse-tete span { color:var(--gris); font-size:.95rem; }
+
+  .ecrans { display:grid; grid-template-columns:repeat(3, 1fr); gap:28px; margin-top:40px; }
+  .ecran figure { margin:0; }
+  .ecran .cadre { border-radius:22px; padding:7px; background:var(--ardoise); box-shadow:0 18px 40px rgba(15,23,42,.18); }
+  .ecran .cadre img { border-radius:16px; }
+  .ecran figcaption { margin-top:16px; }
+  .ecran figcaption b { display:block; font-size:1.05rem; margin-bottom:2px; }
+  .ecran figcaption span { color:var(--gris); font-size:.95rem; }
+
+  .etapes { background:var(--ardoise); color:#EEF0F5; }
+  .etapes .surtitre { color:#9AA3B5; }
+  .etapes-liste { list-style:none; margin:34px 0 0; padding:0; display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; counter-reset:etape; }
+  .etapes-liste li { counter-increment:etape; background:var(--ardoise-2); border-radius:14px; padding:22px; }
+  .etapes-liste li::before { content:counter(etape); display:inline-flex; width:32px; height:32px; border-radius:50%;
+                             align-items:center; justify-content:center; background:var(--or); color:var(--ardoise);
+                             font-weight:800; margin-bottom:12px; }
+  .etapes-liste b { display:block; font-size:1.08rem; margin-bottom:4px; }
+  .etapes-liste span { color:#C9CEDA; font-size:.96rem; }
+  .gratuit { color:var(--or); font-weight:700; }
+
+  /* ---- formulaire ---- */
+  .contact-grille { display:grid; grid-template-columns:.85fr 1.15fr; gap:48px; align-items:start; }
+  form { background:var(--blanc); border:1px solid var(--trait); border-radius:16px; padding:26px; display:grid; gap:14px; }
+  .deux { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  label { font-size:.85rem; color:var(--gris); display:block; margin-bottom:5px; }
+  input, select, textarea { width:100%; font:inherit; font-size:1rem; padding:12px 13px; border-radius:9px;
+                            border:1px solid #D3D0C6; background:#fff; color:var(--texte); }
+  textarea { min-height:92px; resize:vertical; }
+  input:focus, select:focus, textarea:focus, .bouton:focus-visible { outline:2px solid var(--tekhelet); outline-offset:1px; }
+  .piege { position:absolute; left:-5000px; width:1px; height:1px; overflow:hidden; }
+  .confirmation { display:none; background:#E8F5EC; color:var(--vert); border-radius:12px; padding:18px; font-weight:500; }
+  .erreur { display:none; color:#A3271F; font-size:.92rem; }
+  .garanties { list-style:none; padding:0; margin:22px 0 0; display:grid; gap:10px; }
+  .garanties li { padding-left:26px; position:relative; color:#333B4F; }
+  .garanties li::before { content:""; position:absolute; left:0; top:.55em; width:12px; height:2px; background:var(--or); }
+
+  footer { padding-block:30px; color:var(--gris); font-size:.85rem; border-top:1px solid var(--trait); }
+
+  @media (max-width:860px) {
+    .hero-grille, .sages-grille, .contact-grille { grid-template-columns:1fr; gap:34px; }
+    .telephone { margin:0 auto; width:min(270px, 80%); }
+    .casse-tete, .ecrans, .etapes-liste { grid-template-columns:1fr; }
+    .ecrans { gap:40px; }
+    .ecran .cadre { max-width:320px; }
+    section { padding-block:54px; }
+  }
+  @media (max-width:480px) { .deux { grid-template-columns:1fr; } .verset { font-size:1.7rem; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="enveloppe">
+    <div class="barre-haut">
+      <a class="marque" href="#">
+        <svg width="36" height="36" viewBox="0 0 100 100" aria-hidden="true">
+          <rect width="100" height="100" rx="22" fill="#1B2540"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#C9A227" stroke-width="2.4"/>
+          <text x="50" y="57" text-anchor="middle" font-family="Rubik, Arial, sans-serif" font-weight="700" font-size="19" fill="#C9A227">MaaseR</text>
+        </svg>
+        MaaseR
+      </a>
+      <a class="lien-audit" href="#audit">Audit gratuit</a>
+    </div>
+    <div class="hero-grille">
+      <div>
+        <p class="verset" lang="he">עַשֵּׂר תְּעַשֵּׂר</p>
+        <p class="verset-ref">« Tu prélèveras la dîme » · Devarim 14, 22</p>
+        <h1>Votre application de maasser, <em>maîtrisée et clé en main.</em></h1>
+        <p class="chapo">Indépendant ou salarié, vos revenus ne ressemblent à ceux de personne. Nous construisons
+          l'application qui compte comme vous : vous notez ce qui entre et ce qui sort, elle vous dit à chaque
+          instant où vous en êtes de votre dixième.</p>
+        <a class="bouton" href="#audit">Réserver mon audit gratuit d'une heure</a>
+        <span class="sous-bouton">Une heure pour comprendre votre façon de compter. Sans engagement.</span>
+      </div>
+      <div class="telephone"><img src="captures/ecran-maasser.png" alt="L'écran principal de l'application : le maasser du mois, l'objectif et les dons" width="780" height="1612"></div>
+    </div>
+  </div>
+</header>
+
+<section class="sages">
+  <div class="enveloppe sages-grille">
+    <div>
+      <p class="surtitre">Le principe</p>
+      <h2>Donner le dixième, encore faut-il savoir combien il fait.</h2>
+    </div>
+    <div>
+      <blockquote>« Asser te'asser — donne le dixième, afin de t'enrichir. »
+        <cite>Talmud, traité Taanit 9a</cite></blockquote>
+      <p class="texte" style="margin-top:22px">Nos Sages lisent dans le doublement du verset une promesse. La mitsva, elle,
+        demande de la rigueur : le maasser se calcule sur ce qui reste vraiment, une fois l'impôt, les charges et le
+        comptable payés. Et d'un mois à l'autre, rien n'est jamais pareil.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="enveloppe">
+    <p class="surtitre">Le calcul que personne n'a le temps de refaire</p>
+    <h2>Chaque mois, les mêmes questions.</h2>
+    <div class="casse-tete">
+      <div><b>Qu'est-ce que je déduis ?</b><span>Impôt, Bitouah Leoumi, caisse de retraite, comptable : chacun sa liste.</span></div>
+      <div><b>Euros ou shekels ?</b><span>Une facture en France, un salaire en Israël : le taux change tous les jours.</span></div>
+      <div><b>Suis-je en avance ?</b><span>Le mois où l'on donne plus, celui où l'on donne moins : tout doit se reporter.</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="enveloppe">
+    <p class="surtitre">Ce que vous voyez sur votre téléphone</p>
+    <h2>Un seul chiffre, en grand. Le détail juste en dessous.</h2>
+    <div class="ecrans">
+      <div class="ecran"><figure>
+        <div class="cadre"><img src="captures/ecran-maasser.png" alt="Le maasser du mois, l'objectif et les dons côte à côte" width="780" height="1612" loading="lazy"></div>
+        <figcaption><b>Où vous en êtes, tout de suite</b><span>Ce qu'il reste à donner, ou votre avance, à l'ouverture. À côté, votre engagement du mois.</span></figcaption>
+      </figure></div>
+      <div class="ecran"><figure>
+        <div class="cadre"><img src="captures/ecran-calcul.png" alt="Revenus du mois moins les dépenses, puis 10 %" width="780" height="1612" loading="lazy"></div>
+        <figcaption><b>Vos dépenses, déduites à votre façon</b><span>Revenus moins impôt, charges et frais : le dixième se calcule sur ce qui reste vraiment.</span></figcaption>
+      </figure></div>
+      <div class="ecran"><figure>
+        <div class="cadre"><img src="captures/ecran-lignes.png" alt="La liste des revenus, dépenses et dons du mois" width="780" height="1612" loading="lazy"></div>
+        <figcaption><b>Tout se reporte d'un mois sur l'autre</b><span>Retard ou avance, rien ne se perd. Chaque ligne se corrige en un geste.</span></figcaption>
+      </figure></div>
+    </div>
+  </div>
+</section>
+
+<section class="etapes">
+  <div class="enveloppe">
+    <p class="surtitre">Comment ça se passe</p>
+    <h2>Votre application, construite pour vous.</h2>
+    <ol class="etapes-liste">
+      <li><b>Un audit d'une heure, <span class="gratuit">offert</span></b><span>Nous écoutons comment vous comptez : vos revenus, vos déductions, vos engagements, vos habitudes de don.</span></li>
+      <li><b>Le développement</b><span>Nous construisons l'application selon vos règles, et pas l'inverse. Les montants en euros sont convertis au taux du jour.</span></li>
+      <li><b>La remise, clé en main</b><span>Un lien privé, une icône sur votre téléphone, vos chiffres gardés en sécurité. Il n'y a plus qu'à noter.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="audit">
+  <div class="enveloppe contact-grille">
+    <div>
+      <p class="surtitre">Audit gratuit d'une heure</p>
+      <h2>Parlons de votre façon de compter.</h2>
+      <p class="texte">Laissez vos coordonnées : nous vous rappelons pour fixer l'heure qui vous convient.</p>
+      <ul class="garanties">
+        <li>Pour les indépendants comme pour les salariés</li>
+        <li>Une application à vous, pas un modèle tout fait</li>
+        <li>Vos chiffres ne sont visibles que par vous</li>
+      </ul>
+    </div>
+    <div>
+      <form id="formulaire" novalidate>
+        <div class="deux">
+          <div><label for="prenom">Prénom</label><input id="prenom" name="prenom" autocomplete="given-name" required></div>
+          <div><label for="nom">Nom</label><input id="nom" name="nom" autocomplete="family-name"></div>
+        </div>
+        <div class="deux">
+          <div><label for="telephone">Téléphone</label><input id="telephone" name="telephone" type="tel" autocomplete="tel" inputmode="tel"></div>
+          <div><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email"></div>
+        </div>
+        <div><label for="profil">Vous êtes</label>
+          <select id="profil" name="profil">
+            <option value="independant">Indépendant</option>
+            <option value="salarie">Salarié</option>
+            <option value="les-deux">Les deux</option>
+          </select></div>
+        <div><label for="message">Un mot sur votre situation (facultatif)</label><textarea id="message" name="message" maxlength="1500"></textarea></div>
+        <div class="piege" aria-hidden="true"><label for="site">Site</label><input id="site" name="site" tabindex="-1" autocomplete="off"></div>
+        <p class="erreur" id="erreur"></p>
+        <button class="bouton" type="submit" id="envoyer">Demander mon audit gratuit</button>
+      </form>
+      <div class="confirmation" id="confirmation">Merci, votre demande est bien arrivée. Nous vous rappelons très vite pour fixer votre heure d'audit.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="enveloppe">MaaseR · applications de maasser sur mesure</div>
+</footer>
+
+<script>
+(function () {
+  var ADRESSE = "https://appli.62-238-114-208.sslip.io/demande";
+  var form = document.getElementById("formulaire");
+  var erreur = document.getElementById("erreur");
+  var bouton = document.getElementById("envoyer");
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var d = {};
+    ["prenom", "nom", "telephone", "email", "profil", "message", "site"].forEach(function (k) {
+      d[k] = (form.elements[k].value || "").trim();
+    });
+    erreur.style.display = "none";
+    if (!d.prenom) { erreur.textContent = "Indiquez votre prénom."; erreur.style.display = "block"; return; }
+    if (!d.telephone && !d.email) { erreur.textContent = "Laissez un téléphone ou un e-mail pour qu'on puisse vous rappeler."; erreur.style.display = "block"; return; }
+    bouton.disabled = true; bouton.textContent = "Envoi…";
+    fetch(ADRESSE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function () {
+        form.style.display = "none";
+        document.getElementById("confirmation").style.display = "block";
+      })
+      .catch(function () {
+        bouton.disabled = false; bouton.textContent = "Demander mon audit gratuit";
+        erreur.textContent = "L'envoi n'est pas passé. Vérifiez votre connexion et réessayez dans un instant.";
+        erreur.style.display = "block";
+      });
+  });
+})();
+</script>
+</body>
+</html>
