@@ -1324,20 +1324,39 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
 .pied-marque svg{display:block;margin-bottom:14px}
 .pied-marque p{margin:0;max-width:34em;line-height:1.7}
 .pied-tel{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
-.pied-tel a{display:inline-flex;align-items:center;gap:7px;
+.pied-tel a{display:inline-flex;align-items:center;gap:8px;
  color:var(--encre-2);font-weight:700;font-size:14.5px}
-.pied-tel svg{flex:none;border-radius:2px;
+.pied-tel svg{flex:none}
+.pied-tel img{flex:none;border-radius:2px;
  box-shadow:0 0 0 1px rgba(15,23,42,.12)}
-.pied-reseaux{display:flex;align-items:center;gap:10px;margin-top:16px}
+/* Les vraies icones de marque (couleur propre a chaque reseau) : un fond
+   uni derriere ne fait que les etouffer, elles se suffisent a elles-memes
+   sur la pierre ou sur l'ardoise. Grossies le 24/09/2026 (Hillel : « mets-les
+   en plus gros ») et repetees en haut de page (`.entete-reseaux`) en plus
+   du pied, pour qu'on les voie sans avoir a tout descendre — le blog les
+   porte aussi, puisque l'entete est commune a toutes les pages. */
+.pied-reseaux{display:flex;align-items:center;gap:14px;margin-top:18px;
+ flex-wrap:wrap}
 .pied-reseaux a{display:flex;align-items:center;justify-content:center;
- width:34px;height:34px;border-radius:999px;border:1px solid var(--trait);
- color:var(--encre-2);transition:border-color .15s,color .15s}
-.pied-reseaux a:hover{border-color:var(--action);color:var(--action)}
-.pied-reseaux a svg{width:17px;height:17px}
-.pied-reseaux button{margin-left:4px;background:var(--fond);
- border:1px solid var(--trait);border-radius:999px;padding:8px 14px;
- font-size:13px;font-weight:650;color:var(--encre);cursor:pointer}
+ width:40px;height:40px;border-radius:999px;background:var(--carte);
+ border:1px solid var(--trait);transition:transform .15s,box-shadow .15s}
+.pied-reseaux a:hover{transform:translateY(-2px);box-shadow:var(--ombre)}
+.pied-reseaux a svg{width:22px;height:22px}
+.pied-reseaux button{margin-left:2px;background:var(--fond);
+ border:1px solid var(--trait);border-radius:999px;padding:9px 16px;
+ font-size:13.5px;font-weight:650;color:var(--encre);cursor:pointer}
 .pied-reseaux button:hover{border-color:var(--action);color:var(--action)}
+
+.entete-reseaux{display:flex;align-items:center;gap:8px;margin-right:4px}
+.entete-reseaux a{display:flex;align-items:center;justify-content:center;
+ width:30px;height:30px;border-radius:999px;transition:transform .15s}
+.entete-reseaux a:hover{transform:translateY(-1px)}
+.entete-reseaux a svg{width:18px;height:18px}
+@media (max-width:860px){
+  /* Sur telephone, la barre du haut est deja dense (burger, logo, CTA) —
+     les reseaux restent au pied, pleine largeur, plus faciles a toucher. */
+  .entete-reseaux{display:none}
+}
 .pied-col{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
 .pied-col b{font-size:12px;font-weight:750;letter-spacing:.07em;
  text-transform:uppercase;color:var(--encre);margin-bottom:2px}
