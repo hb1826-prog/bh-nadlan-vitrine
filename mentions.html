@@ -355,7 +355,12 @@ button,input,select,textarea{font:inherit;color:inherit}
  color:#fff}
 .zf-pct{color:var(--or);font-weight:900;font-size:76px;
  line-height:1}
-.hero .zf-bandeau + h1{font-size:36px;font-weight:750;line-height:1.16;max-width:none}
+/* Le h1 reprend la couleur or du zero au-dessus (plutot que le blanc uni
+   d'avant, peu lisible sur la photo) et une largeur bornee — sans elle la
+   phrase s'etirait sur toute la largeur en une seule ligne desequilibree
+   plutot que de se plier proprement (Hillel, 24/09/2026). */
+.hero .zf-bandeau + h1{font-size:36px;font-weight:750;line-height:1.16;
+ max-width:16em;text-align:left;color:var(--or)}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
  padding:11px 14px;font-size:15px;cursor:pointer}
@@ -882,11 +887,13 @@ body.simulateur-seul .retour-site:hover{border-color:var(--action)}
 /* Les cartes de profil fiscal, cliquables. L'explication de chacune reste
    repliee derriere un petit « + » (demande par Hillel le 10/09/2026) : la
    liste tient sur moins de hauteur et le bouton Suivant reste visible sans
-   avoir a faire defiler. */
+   avoir a faire defiler. Texte un peu plus grand, padding un peu resserre
+   pour compenser (Hillel, 24/09/2026) : les quatre cartes ET le bouton
+   Suivant doivent rester visibles sur un ecran d'iPhone sans defiler. */
 .etape-carte{display:flex;align-items:flex-start;justify-content:space-between;
  gap:14px;width:100%;text-align:left;cursor:pointer;
  background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
- padding:16px 18px;margin-bottom:10px}
+ padding:14px 18px;margin-bottom:8px}
 .etape-carte:hover{border-color:var(--gris-clair)}
 /* Hillel, le 19/09/2026 : « c'est pas clair qu'on a selectionne le bon
    statut ». Le seul signal etait une bordure a peine plus foncee — un vrai
@@ -902,7 +909,7 @@ body.simulateur-seul .retour-site:hover{border-color:var(--action)}
 .etape-carte.on .radio{border-color:var(--action)}
 .etape-carte.on .radio::after{content:"";position:absolute;inset:4px;
  border-radius:50%;background:var(--action)}
-.etape-carte b{display:block;font-size:15.5px;font-weight:750}
+.etape-carte b{display:block;font-size:17px;font-weight:750}
 .etape-carte span{display:block;font-size:13.5px;color:var(--gris);
  line-height:1.5;margin-top:4px}
 .etape-carte .plus{color:var(--action);font-weight:700}
