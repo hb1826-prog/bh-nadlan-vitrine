@@ -460,16 +460,33 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero .dedans{display:grid;grid-template-columns:minmax(0,1fr) 380px;
  gap:48px;align-items:start}
 .hero-texte{min-width:0}
-/* Alignee sur le bloc de la grande phrase, pas sur le "0 %" au-dessus
-   (Hillel, capture d'ecran a l'appui, 24/09/2026 : « ca fait un peu fou »
-   sinon) — le bandeau "Frais d'agence" n'a pas d'equivalent a droite, la
-   carte doit donc descendre d'autant pour demarrer au meme niveau que le
-   panneau vitre. Seulement au-dessus de 900px : en colonne unique, les deux
-   blocs se suivent et cet ecart ne veut plus rien dire. */
 .hero-simu{background:var(--carte);color:var(--encre);border-radius:var(--r-xl);
  box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 22px 20px;
- display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--or);
- margin-top:96px}
+ display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--or)}
+/* Carte et panneau de la grande phrase au cordeau : meme haut, meme bas
+   (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
+   Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
+   ici c'est la grille qui aligne. `.hero-texte` s'efface (display:contents)
+   pour que le bandeau « Frais d'agence », le panneau et les chiffres
+   deviennent trois lignes de la meme grille que la carte : le bandeau seul
+   en haut a gauche, panneau et carte cote a cote et etires a la meme
+   hauteur, les chiffres sur toute la largeur et centres dessous. */
+@media(min-width:901px){
+ .hero .dedans{grid-template-areas:"zf ." "h1 simu" "pr pr";
+  column-gap:40px;row-gap:0;align-items:stretch}
+ .hero-texte{display:contents}
+ .hero .zf-bandeau{grid-area:zf}
+ .hero .zf-bandeau + h1{grid-area:h1;max-width:none;margin:0;display:flex;
+  align-items:center;justify-content:center;padding:22px 28px}
+ .hero-simu{grid-area:simu;justify-content:center}
+ .hero-preuves{grid-area:pr;justify-content:center;gap:0 72px;margin-top:34px}
+ .hero-preuves li{align-items:center;text-align:center}
+ .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
+}
+@media(min-width:901px) and (max-width:1180px){
+ .hero .zf-bandeau + h1{font-size:34px}
+ .hero-preuves{gap:0 44px}
+}
 .hs-sur{display:inline-block;align-self:flex-start;font-size:11.5px;font-weight:750;
  letter-spacing:.08em;text-transform:uppercase;color:var(--action);
  background:var(--action-lavis);padding:4px 10px;border-radius:999px}
