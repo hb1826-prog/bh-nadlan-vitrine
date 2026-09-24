@@ -503,6 +503,21 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves li{align-items:center;text-align:center}
  .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
 }
+/* Tablette et telephone : tout centre aussi (Hillel, 24/09/2026) — le
+   bandeau au-dessus du panneau, les chiffres, la carte. Sur telephone, le
+   « 0 % » passe seul sur sa ligne, en tres gros : c'est le premier
+   argument, il doit se voir avant la phrase. */
+@media(max-width:900px){
+ .hero .zf-bandeau{text-align:center;text-shadow:0 2px 16px rgba(0,0,0,.45)}
+ .hero-preuves{justify-content:center;gap:16px 44px}
+ .hero-preuves li{align-items:center;text-align:center}
+ .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
+ .hero-simu{margin-left:auto;margin-right:auto;width:100%}
+}
+@media(max-width:640px){
+ .hero .zf-bandeau{margin:0 0 12px;line-height:1}
+ .hero .zf-pct{display:block;font-size:104px;line-height:.9;margin-top:4px}
+}
 @media(min-width:901px) and (max-width:1180px){
  .hero .zf-bandeau + h1{font-size:34px}
  .hero-preuves{gap:0 44px}
@@ -748,7 +763,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  background:linear-gradient(140deg,var(--fond-2),var(--or-clair));
  color:var(--or-fonce);font-size:30px;font-weight:800;letter-spacing:.1em}
 .badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;
- flex-wrap:wrap;max-width:calc(100% - 24px);z-index:2}
+ flex-wrap:wrap;max-width:calc(100% - 68px);z-index:2}
 .badge{background:rgba(9,14,26,.82);color:#fff;font-size:11.5px;font-weight:650;
  padding:5px 10px;border-radius:999px;backdrop-filter:blur(6px)}
 .badge.or{background:var(--or);color:#1a1405}
@@ -6074,6 +6089,48 @@ function initMailSuggestions(id, zone) {
   champ.addEventListener('blur', () => setTimeout(() => { boite.hidden = true; }, 150));
 }
 
+/* D'ou vient le visiteur — demande du 24/09/2026, avant la premiere campagne
+   payante : sans cela, on saurait combien de contacts arrivent, jamais ce que
+   la publicite en a amene. Lu UNE fois, au chargement de la page d'arrivee :
+   les parametres d'une pub (utm_source, utm_medium, utm_campaign,
+   utm_content, ou les marqueurs fbclid/gclid), a defaut la page d'ou l'on
+   vient (Google, Instagram...). Garde 30 jours dans ce navigateur : un
+   visiteur qui revient plus tard reste attribue a ce qui l'a fait venir,
+   sauf si une autre source connue l'a ramene depuis — une visite directe
+   n'efface jamais rien. Aucune donnee personnelle : une source, une
+   campagne, une page. Le guichet la range (`data/sources/provenance.py`). */
+const provenanceVisite = (() => {
+  const CLE = 'bh-provenance', DUREE = 30 * 864e5;
+  let gardee = null;
+  try {
+    gardee = JSON.parse(localStorage.getItem(CLE) || 'null');
+    if (gardee && Date.now() - (gardee.t || 0) > DUREE) gardee = null;
+  } catch (e) { gardee = null; }
+  let neuve = null;
+  try {
+    const q = new URLSearchParams(location.search);
+    const u = k => (q.get('utm_' + k) || '').slice(0, 120);
+    if (u('source') || q.get('fbclid') || q.get('gclid')) {
+      neuve = {
+        source: u('source') || (q.get('gclid') ? 'google' : 'facebook'),
+        support: u('medium') || (q.get('gclid') ? 'cpc' : 'lien'),
+        campagne: u('campaign'), contenu: u('content')};
+    } else if (document.referrer) {
+      const hote = new URL(document.referrer).hostname.replace(/^www\./, '');
+      if (hote && !/(^|\.)bh-nadlan\.com$|github\.io$|sslip\.io$/.test(hote))
+        neuve = {source: hote, support: 'lien', campagne: '', contenu: ''};
+    }
+  } catch (e) { neuve = null; }
+  if (neuve) {
+    neuve.arrivee = (location.pathname + location.hash).slice(0, 120);
+    neuve.vu_le = new Date().toISOString().slice(0, 16);
+    neuve.t = Date.now();
+    gardee = neuve;
+    try { localStorage.setItem(CLE, JSON.stringify(neuve)); } catch (e) {}
+  }
+  return gardee;
+})();
+
 async function envoyerLead(champs, p, I, extra) {
   extra = extra || {};
   const r = await fetch(DONNEES.guichet + '/lead', {
@@ -6121,6 +6178,8 @@ async function envoyerLead(champs, p, I, extra) {
       // fait que le message qu'on lui remet (simulation, mini-site) lui
       // revient dans SA langue, pas systematiquement en francais.
       langue: DONNEES.langue || 'fr',
+      // D'ou vient ce visiteur (pub, Google, lien) — voir `provenanceVisite`.
+      provenance: provenanceVisite || {},
       t: Date.now() - DEPART
     })
   });
