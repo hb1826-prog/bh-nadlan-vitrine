@@ -1377,16 +1377,15 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
  font-size:13.5px;font-weight:650;color:var(--encre);cursor:pointer}
 .pied-reseaux button:hover{border-color:var(--action);color:var(--action)}
 
-.entete-reseaux{display:flex;align-items:center;gap:8px;margin-right:4px}
+/* Sa propre ligne, sous la barre principale — pas dans la barre elle-meme :
+   coincee entre le burger et le logo, elle passait par-dessus (signale par
+   Hillel le 24/09/2026, capture a l'appui). Toujours en haut de page (donc
+   visible sur le blog aussi), jamais en concurrence avec le logo. */
+.entete-reseaux{display:flex;align-items:center;justify-content:center;
+ gap:14px;padding:8px 22px;border-top:1px solid var(--trait)}
 .entete-reseaux a{display:flex;line-height:0;transition:transform .15s}
 .entete-reseaux a:hover{transform:translateY(-1px)}
 .entete-reseaux a svg{display:block}
-/* Visibles y compris sur telephone (demande le 24/09/2026, Hillel : « en
-   haut, dans un coin, on les voit bien ») — juste plus petits pour tenir a
-   cote du burger, du logo et du bouton d'appel. */
-@media (max-width:640px){
-  .entete-reseaux{gap:5px}
-}
 .pied-col{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
 .pied-col b{font-size:12px;font-weight:750;letter-spacing:.07em;
  text-transform:uppercase;color:var(--encre);margin-bottom:2px}
