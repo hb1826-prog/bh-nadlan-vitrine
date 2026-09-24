@@ -944,6 +944,24 @@ body.simulateur-seul .retour-site:hover{border-color:var(--action)}
    avoir a faire defiler. Texte un peu plus grand, padding un peu resserre
    pour compenser (Hillel, 24/09/2026) : les quatre cartes ET le bouton
    Suivant doivent rester visibles sur un ecran d'iPhone sans defiler. */
+/* Les 4 statuts fiscaux cote a cote plutot qu'empiles (Hillel, 24/09/2026,
+   deuxieme retour) : c'est ce qui liberait assez de hauteur pour que le
+   bouton Suivant reste visible sans defiler, sur telephone. Uniquement pour
+   cet ecran – le choix comptant/credit (2 cartes avec une phrase sous le
+   titre) reste empile, une grille a 2 colonnes l'aurait rendu illisible. */
+.etape-cartes-grille{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+ margin-bottom:8px}
+.etape-cartes-grille .etape-carte{margin-bottom:0}
+/* La carte dont l'explication est ouverte reprend toute la largeur : une
+   phrase d'explication dans une colonne de 150px serait illisible. */
+.etape-cartes-grille .etape-carte.aide-ouverte{grid-column:1 / -1}
+.etape-cartes-grille .etape-carte b{font-size:14.5px;line-height:1.25}
+.etape-cartes-grille .etape-carte .radio{width:18px;height:18px}
+@media(max-width:420px){
+ .etape-cartes-grille{gap:6px}
+ .etape-cartes-grille .etape-carte{padding:10px 12px}
+ .etape-cartes-grille .etape-carte b{font-size:13.5px}
+}
 .etape-carte{display:flex;align-items:flex-start;justify-content:space-between;
  gap:14px;width:100%;text-align:left;cursor:pointer;
  background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
@@ -5587,11 +5605,18 @@ async function etapeFrais(zone) {
 function etapeProfil(zone) {
   const profils = DONNEES.profils || {};
   const notes = DONNEES.profils_note || {};
+  // Les 4 cartes en grille 2x2 (Hillel, 24/09/2026, deuxieme retour) : en
+  // liste verticale, meme repliees, elles poussaient le bouton Suivant hors
+  // de l'ecran sur telephone – personne ne comprenait qu'il fallait
+  // defiler apres avoir choisi. Cote a cote, les 4 statuts ET les boutons
+  // Precedent/Suivant tiennent ensemble, sans defilement.
   zone.innerHTML = `
     ${jaugeHTML(2)}
     <div class="si-lab">${T('Votre situation')}</div>
+    <div class="etape-cartes-grille">
     ${Object.entries(profils).map(([cle, libelle]) => `
-      <button type="button" class="etape-carte ${TUNNEL.profil === cle ? 'on' : ''}"
+      <button type="button" class="etape-carte ${TUNNEL.profil === cle ? 'on' : ''} ${
+                TUNNEL.aideProfil === cle ? 'aide-ouverte' : ''}"
               data-profil="${cle}" role="radio" aria-checked="${TUNNEL.profil === cle}">
         <span class="etape-carte-corps">
           <b>${esc(libelle)}</b>
@@ -5602,6 +5627,7 @@ function etapeProfil(zone) {
         </span>
         <span class="radio" aria-hidden="true"></span>
       </button>`).join('')}
+    </div>
 
     <div class="etape-nav">
       <button type="button" class="precedent" id="t-precedent">${T('Précédent')}</button>
