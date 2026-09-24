@@ -311,6 +311,12 @@ button,input,select,textarea{font:inherit;color:inherit}
  color:var(--encre);border-bottom:1px solid var(--trait-fin);
  display:flex;align-items:center;gap:10px}
 .nav-mobile a.wa{color:#128c3e}
+/* L'installation de l'application, proposee ici plutot qu'en bandeau qui
+   surgit (Hillel, 24/09/2026). Meme allure qu'une ligne du menu. */
+.nav-mobile .nav-installer{padding:14px 22px;font:inherit;font-size:15.5px;
+ font-weight:600;color:var(--action);background:none;border:0;
+ border-bottom:1px solid var(--trait-fin);text-align:start;cursor:pointer}
+.nav-mobile .nav-installer[hidden]{display:none}
 
 /* le selecteur de theme, discret, a droite */
 .theme{display:inline-flex;gap:2px;flex:none;background:var(--fond-2);
@@ -975,7 +981,7 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 /* Les deux simulations, tenues a part (Hillel, 23/09/2026) : deux grands
    onglets au-dessus du parcours, jamais un bouton de plus perdu dans la
    rangee des pourcentages. */
-.simu-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+.simu-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
 .simu-modes button{display:flex;flex-direction:column;gap:4px;text-align:left;
  cursor:pointer;padding:14px 16px;border-radius:var(--r);
  background:var(--fond);border:1px solid var(--trait);color:inherit;font:inherit}
@@ -1851,6 +1857,21 @@ table.ag th{width:64%}
  .flottant.wa{bottom:calc(158px + env(safe-area-inset-bottom))}
  .flottant.mail{bottom:calc(216px + env(safe-area-inset-bottom))}
 }
+/* Pendant une simulation, sur telephone et tablette, le trio flottant se
+   retire (Hillel, 24/09/2026 : « sur des petits mobiles, le bouton flottant
+   est derangeant »). Il cachait les champs et les boutons « Suivant » :
+   - dans le tunnel du simulateur (page seule ou #/simulateur) ;
+   - quand le simulateur d'une fiche occupe l'ecran (`simu-en-vue`, pose par
+     annuaire.js) ;
+   - partout, des qu'on tape dans un champ : le clavier mange deja la moitie
+     de l'ecran. Le contact reste a portee : il revient des qu'on en sort. */
+@media(max-width:900px){
+ body.tunnel-plein .flottant,body.tunnel-plein .remonter,
+ body.sim-actif .flottant,body.sim-actif .remonter,
+ body.simu-en-vue .flottant,body.simu-en-vue .remonter,
+ body:has(input:focus,select:focus,textarea:focus) .flottant,
+ body:has(input:focus,select:focus,textarea:focus) .remonter{display:none}
+}
 
 /* ===================== l'echeancier sur mesure ===========================
    Hillel negocie l'echelonnement autant que le prix : il doit pouvoir poser
@@ -2313,6 +2334,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <div class=sb-actions>
       <button type=button class=hs-go data-simu-ouvrir=comptant>Simulation sans crédit</button>
       <button type=button class=hs-go data-simu-ouvrir=credit>Simulation avec crédit</button>
+      <button type=button class=hs-go data-simu-ouvrir=apport>Je pars de mon apport</button>
     </div>
   </section>
 
@@ -2500,13 +2522,35 @@ let TUNNEL = {
 const TUNNELS = {
   credit: TUNNEL,
   comptant: Object.assign(JSON.parse(JSON.stringify(TUNNEL)), {comptant: true}),
+  // La question a l'envers (Hillel, 24/09/2026) : « j'ai 200.000 €, qu'est-ce
+  // que je peux acheter ? ». On part de la somme disponible, pas d'un prix ;
+  // le prix maximum se calcule sur le guichet (`fiscalite.prix_max_pour_apport`),
+  // jamais ici. `ltv: null` : la premiere fois, le financement part du
+  // plafond de sa situation — c'est la vraie reponse a « jusqu'ou je peux
+  // aller ».
+  apport: Object.assign(JSON.parse(JSON.stringify(TUNNEL)),
+    {apport: true, montant: 200000, devise: 'EUR', ltv: null}),
 };
+/* La somme disponible, toujours en shekels pour le calcul. Saisie en euros,
+   elle passe par le taux de la Banque d'Israel fige a la fabrication ; sans
+   taux, on ne convertit rien et l'on demande des shekels. */
+function apportIls() {
+  const t = tauxEuro();
+  if (TUNNEL.devise === 'EUR' && t) return Math.round((TUNNEL.montant || 0) * t);
+  return Math.round(TUNNEL.montant || 0);
+}
+/* Le prix qui sert seulement a lire le plafond de credit et les honoraires
+   proposes dans sim.json, tant que le vrai prix n'est pas calcule. Ces deux
+   donnees ne dependent pas (ou presque pas) du prix. */
+function prixDeReference() {
+  return TUNNEL.apport ? Math.max(500000, apportIls() * 2) : TUNNEL.prix;
+}
 // `null` tant que le visiteur n'a pas choisi : « sans ou avec credit » est
 // le premier ecran du simulateur (Hillel, 24/09/2026), pas un reglage
 // pre-coche qu'on ne remarque pas.
 let MODE_SIMU = null;
 function choisirModeSimu(mode) {
-  MODE_SIMU = mode === 'comptant' ? 'comptant' : 'credit';
+  MODE_SIMU = (mode === 'comptant' || mode === 'apport') ? mode : 'credit';
   TUNNEL = TUNNELS[MODE_SIMU];
 }
 /* Arrivee depuis la carte de la banniere ou le bandeau du site :
@@ -2531,7 +2575,7 @@ function choisirModeSimu(mode) {
 function ouvrirSimulateur(mode, prix, projet) {
   if (DONNEES.simulateur_url) {
     const p = [];
-    if (mode) p.push('mode=' + (mode === 'comptant' ? 'comptant' : 'credit'));
+    if (mode) p.push('mode=' + ((mode === 'comptant' || mode === 'apport') ? mode : 'credit'));
     if (prix > 0) p.push('prix=' + prix);
     if (projet) p.push('projet=' + encodeURIComponent(projet));
     const q = p.length ? '?' + p.join('&') : '';
@@ -2554,7 +2598,10 @@ function ouvrirSimulateur(mode, prix, projet) {
 }
 
 /* Les etapes du parcours ouvert : sans credit, pas d'etape 3 (financement). */
-const etapesDuTunnel = () => TUNNEL.comptant ? [1, 2, 4, 5] : [1, 2, 3, 4, 5];
+// Le parcours « apport » garde l'etape du financement meme sans credit :
+// c'est la qu'on dit si l'on veut emprunter.
+const etapesDuTunnel = () => (TUNNEL.comptant && !TUNNEL.apport)
+  ? [1, 2, 4, 5] : [1, 2, 3, 4, 5];
 
 /* La traduction, cote page.
 
@@ -5285,6 +5332,11 @@ async function vueSimulateurEtapes() {
               aria-selected="${MODE_SIMU === 'credit'}">
         <b>${T('Simulation avec crédit')}</b>
         <span>${T('Une part financée par la banque : apport, mensualité, coût du crédit.')}</span></button>
+      <button type="button" role="tab" data-mode="apport"
+              class="${MODE_SIMU === 'apport' ? 'on' : ''}"
+              aria-selected="${MODE_SIMU === 'apport'}">
+        <b>${T('Je pars de mon apport')}</b>
+        <span>${T('Vous donnez la somme que vous avez : on calcule le prix que vous pouvez viser.')}</span></button>
     </div>` : ''}
     <div class="card"><div class="block"><div class="pad" id="tunnel"></div></div></div>`;
   document.querySelectorAll('.simu-modes [data-mode]').forEach(b => {
@@ -5329,10 +5381,14 @@ function etapeChoixMode(zone) {
     <button type="button" class="etape-carte" data-choix="credit">
       <span class="etape-carte-corps"><b>${T('Simulation avec crédit')}</b>
         <span class="note">${T('Une part financée par la banque : apport, mensualité, coût du crédit.')}</span></span>
+      <span class="radio" aria-hidden="true"></span></button>
+    <button type="button" class="etape-carte" data-choix="apport">
+      <span class="etape-carte-corps"><b>${T('Je pars de mon apport')}</b>
+        <span class="note">${T('« J’ai 200.000 €, qu’est-ce que je peux acheter ? » Vous donnez la somme que vous avez, on calcule le prix que vous pouvez viser.')}</span></span>
       <span class="radio" aria-hidden="true"></span></button>`;
   zone.querySelectorAll('[data-choix]').forEach(b => {
     b.onclick = () => {
-      compterVue('simu-' + (b.dataset.choix === 'comptant' ? 'comptant' : 'credit'));
+      compterVue('simu-' + b.dataset.choix);
       choisirModeSimu(b.dataset.choix); vueSimulateurEtapes();
     };
   });
@@ -5363,15 +5419,72 @@ function jaugeHTML(n) {
 
 function dessinerEtape(n) {
   // Sans credit, l'etape du financement n'existe pas.
-  if (n === 3 && TUNNEL.comptant) n = 4;
+  if (n === 3 && TUNNEL.comptant && !TUNNEL.apport) n = 4;
   TUNNEL.etape = n;
   const zone = $('#tunnel');
   if (!zone) return;
-  if (n === 1) return etapePrix(zone);
+  if (n === 1) return TUNNEL.apport ? etapeApport(zone) : etapePrix(zone);
   if (n === 2) return etapeProfil(zone);
   if (n === 3) return etapeFinancement(zone);
   if (n === 4) return etapeFrais(zone);
   return etapeCoordonnees(zone);
+}
+
+/* Etape 1 du parcours « apport » : la somme dont on dispose, en euros ou en
+   shekels. Les clients de Hillel pensent en euros ; la conversion se voit
+   tout de suite dessous, au taux de la Banque d'Israel. */
+function etapeApport(zone) {
+  if (!tauxEuro()) TUNNEL.devise = 'ILS';
+  const enEur = TUNNEL.devise === 'EUR';
+  const cote = () => enEur ? mil(apportIls()) + ' ₪' : eur(apportIls());
+  zone.innerHTML = `
+    ${jaugeHTML(1)}
+    <div class="si-lab">${T('La somme dont vous disposez')}</div>
+    ${tauxEuro() ? `<div class="seg" style="margin-bottom:10px">
+      <button type="button" data-devise="EUR" class="${enEur ? 'on' : ''}">${T('En euros (€)')}</button>
+      <button type="button" data-devise="ILS" class="${enEur ? '' : 'on'}">${T('En shekels (₪)')}</button>
+    </div>` : ''}
+    <div class="f"><label>${enEur ? T('Votre apport (€)') : T('Votre apport (₪)')}</label>
+      <div class="qwrap has-val">
+        <input id="t-apport" type="text" inputmode="numeric"
+               autocomplete="off" value="${mil(TUNNEL.montant)}">
+        <button type="button" class="q-clear" id="t-apport-clear" aria-label="${T('Effacer')}">✕</button>
+      </div>
+      <span class="f-eur" id="t-apport-cote">${cote()}</span></div>
+    <p class="dim si-note">${T('Tout ce que vous pouvez mettre sur la table le jour de la signature : c’est de là que nous partons pour calculer le prix du bien que vous pouvez viser, taxe et frais compris.')}</p>
+
+    <div class="etape-nav">
+      <button type="button" class="suivant" id="t-suivant">${T('Suivant')}</button>
+    </div>`;
+
+  const champ = poserMilliers($('#t-apport', zone));
+  const majClear = () => $('.qwrap', zone).classList.toggle('has-val', !!champ.value);
+  champ.oninput = () => {
+    TUNNEL.montant = nombreSaisi(champ);
+    $('#t-apport-cote', zone).textContent = cote();
+    majClear();
+  };
+  $('#t-apport-clear', zone).onclick = () => {
+    champ.value = ''; TUNNEL.montant = 0;
+    $('#t-apport-cote', zone).textContent = cote();
+    majClear(); champ.focus();
+  };
+  zone.querySelectorAll('[data-devise]').forEach(b => {
+    b.onclick = () => {
+      if (b.dataset.devise === TUNNEL.devise) return;
+      // On garde la meme somme, exprimee dans l'autre monnaie.
+      const ils = apportIls();
+      TUNNEL.devise = b.dataset.devise;
+      TUNNEL.montant = TUNNEL.devise === 'EUR'
+        ? Math.round(ils / tauxEuro() / 1000) * 1000 : ils;
+      etapeApport(zone);
+    };
+  });
+  $('#t-suivant', zone).onclick = () => {
+    TUNNEL.montant = nombreSaisi(champ);
+    if (!TUNNEL.montant) { champ.focus(); return; }
+    dessinerEtape(2);
+  };
 }
 
 /* Etape 1 : le prix du bien, seul — rien d'autre. Demande par Hillel le
@@ -5423,8 +5536,11 @@ async function etapeFinancement(zone) {
   zone.innerHTML = jaugeHTML(3) + '<p class="dim si-note">' + T('Chargement…') + '</p>';
   await charger();
   const cle = TUNNEL.profil + '|' + TUNNEL.cadre;
-  const f = blocAuPrix(TUNNEL.prix, cle) || {};
+  const f = blocAuPrix(prixDeReference(), cle) || {};
   const plafond = f.plafond || 75;
+  // Parcours « apport » : la premiere fois, on part du plafond — c'est ce
+  // qui repond a « jusqu'ou je peux aller ».
+  if (TUNNEL.ltv == null) TUNNEL.ltv = plafond;
   if (!TUNNEL.comptant && TUNNEL.ltv > plafond) TUNNEL.ltv = plafond;
   const ltvs = (DONNEES.ltv || []).filter(v => v <= plafond);
   // Meme regle que le simulateur classique : les durees offertes viennent du
@@ -5436,6 +5552,8 @@ async function etapeFinancement(zone) {
     ${jaugeHTML(3)}
     <div class="si-lab">${T('Part financée par le prêt')}</div>
     <div class="seg">
+      ${TUNNEL.apport ? '<button type="button" data-ltv="0" class="'
+        + (TUNNEL.comptant ? 'on' : '') + '">' + T('Sans crédit') + '</button>' : ''}
       ${ltvs.map(v =>
         '<button type="button" data-ltv="' + v + '" class="'
         + (!TUNNEL.comptant && v === TUNNEL.ltv ? 'on' : '') + '">'
@@ -5459,7 +5577,10 @@ async function etapeFinancement(zone) {
 
   zone.querySelectorAll('[data-ltv]').forEach(b => {
     b.onclick = () => {
-      TUNNEL.comptant = false; TUNNEL.ltv = +b.dataset.ltv; etapeFinancement(zone);
+      const v = +b.dataset.ltv;
+      TUNNEL.comptant = v === 0;
+      if (v) TUNNEL.ltv = v;
+      etapeFinancement(zone);
     };
   });
   zone.querySelectorAll('[data-duree]').forEach(b => {
@@ -5489,8 +5610,11 @@ async function etapeFrais(zone) {
   zone.innerHTML = jaugeHTML(4) + '<p class="dim si-note">' + T('Chargement…') + '</p>';
   await charger();
   const cle = TUNNEL.profil + '|' + TUNNEL.cadre;
-  const f = blocAuPrix(TUNNEL.prix, cle) || {};
+  const f = blocAuPrix(prixDeReference(), cle) || {};
   const defaut = f.taux || {avocat: 0, agence: 0, courtier: 0};
+  // Sans prix connu (parcours « apport »), un courtier « en % du prix » ne
+  // veut rien dire : son tarif se donne en shekels.
+  if (TUNNEL.apport) TUNNEL.courtierLibreType = 'montant';
   const notes = DONNEES.frais_notes || {};
 
   // Etat par defaut : l'avocat et le courtier recommandes sont deja
@@ -5547,7 +5671,7 @@ async function etapeFrais(zone) {
         <button data-courtier="libre" class="${TUNNEL.courtierMode === 'libre' ? 'on' : ''}">${T('Votre courtier')}</button>
         <button data-courtier="non" class="${TUNNEL.courtierMode === 'non' ? 'on' : ''}">${T('Sans courtier')}</button>
       </div>
-      ${TUNNEL.courtierMode === 'libre' ? `
+      ${TUNNEL.courtierMode === 'libre' && !TUNNEL.apport ? `
       <div class="seg" style="margin-top:10px">
         <button data-courtier-type="montant" class="${TUNNEL.courtierLibreType === 'montant' ? 'on' : ''}">${T('Montant (₪)')}</button>
         <button data-courtier-type="pct" class="${TUNNEL.courtierLibreType === 'pct' ? 'on' : ''}">${T('% du prix')}</button>
@@ -5614,7 +5738,8 @@ async function etapeFrais(zone) {
   if (libreChamp) libreChamp.oninput = lire;
   const courtierLibreChamp = $('#t-courtier-libre', zone);
   if (courtierLibreChamp) courtierLibreChamp.oninput = lire;
-  $('#t-precedent', zone).onclick = () => dessinerEtape(TUNNEL.comptant ? 2 : 3);
+  $('#t-precedent', zone).onclick = () =>
+    dessinerEtape(TUNNEL.comptant && !TUNNEL.apport ? 2 : 3);
   $('#t-suivant', zone).onclick = () => { lire(); dessinerEtape(5); };
 }
 
@@ -5670,7 +5795,7 @@ function etapeProfil(zone) {
   });
   $('#t-precedent', zone).onclick = () => dessinerEtape(1);
   $('#t-suivant', zone).onclick = () => {
-    if (TUNNEL.profil) dessinerEtape(TUNNEL.comptant ? 4 : 3);
+    if (TUNNEL.profil) dessinerEtape(TUNNEL.comptant && !TUNNEL.apport ? 4 : 3);
   };
 }
 
@@ -5683,7 +5808,8 @@ function etapeProfil(zone) {
    `build/serveur-vps/leads/service.py::enregistrer()`. */
 function etapeCoordonnees(zone) {
   compterVue('simu-coordonnees');
-  const eco = economieAgence(TUNNEL.prix);
+  // Parcours « apport » : le prix n'est pas encore connu, pas d'avant-gout.
+  const eco = TUNNEL.apport ? 0 : economieAgence(TUNNEL.prix);
   zone.innerHTML = `
     ${jaugeHTML(5)}
     ${eco > 0 ? `<div class="eco-teaser"><b>${T('Bonne nouvelle : vous économisez')} ${mil(eco)} ₪ · ${eur(eco)}</b>
@@ -5739,7 +5865,10 @@ function etapeCoordonnees(zone) {
     }
     const canal = TUNNEL.canal === 'mail' ? 'mail' : 'whatsapp';
     const profilLabel = (DONNEES.profils || {})[TUNNEL.profil] || '';
-    const mot = 'Simulation par étapes — Budget : ' + shek(TUNNEL.prix)
+    const mot = (TUNNEL.apport
+      ? 'Simulation depuis un apport — Apport : ' + shek(apportIls())
+        + (TUNNEL.devise === 'EUR' ? ' (' + mil(TUNNEL.montant) + ' €)' : '')
+      : 'Simulation par étapes — Budget : ' + shek(TUNNEL.prix))
       + (TUNNEL.comptant ? ' (achat comptant)'
         : ' (crédit jusqu’à ' + TUNNEL.ltv + ' % sur ' + TUNNEL.duree + ' ans)')
       + ' — Profil : ' + profilLabel
@@ -5748,11 +5877,12 @@ function etapeCoordonnees(zone) {
     bouton.disabled = true;
     bouton.textContent = T('Envoi…');
     try {
-      await envoyerLead({
+      const reponse = await envoyerLead({
         prenom: val('t-prenom'), nom: val('t-nom'), tel: tel, mail: mail,
         mot: mot, societe: val('t-societe'),
-      }, programmeDuTunnel(), 'simulateur', {
-        budget: TUNNEL.prix, canal: canal,
+      }, TUNNEL.apport ? null : programmeDuTunnel(), 'simulateur', {
+        budget: TUNNEL.apport ? '' : TUNNEL.prix,
+        apport: TUNNEL.apport ? apportIls() : '', canal: canal,
         profil: TUNNEL.profil, cadre: TUNNEL.cadre,
         emprunt_pct: TUNNEL.comptant ? 0 : TUNNEL.ltv,
         emprunt_duree: TUNNEL.comptant ? null : TUNNEL.duree,
@@ -5763,7 +5893,7 @@ function etapeCoordonnees(zone) {
         courtier: TUNNEL.frais ? TUNNEL.frais.courtier : undefined,
       });
       compterVue('simu-envoye');
-      etapeConfirmation(zone, canal);
+      etapeConfirmation(zone, canal, TUNNEL.apport ? (reponse || {}).prix_max : null);
     } catch (err) {
       bouton.disabled = false;
       bouton.textContent = etiquette;
@@ -5778,8 +5908,28 @@ function etapeCoordonnees(zone) {
    chiffrage complet vit uniquement dans le mini-site que le guichet vient
    d'envoyer — cohérent avec la règle de l'espace client (rien de chiffré ne
    fuit avant que le lien soit ouvert). */
-function etapeConfirmation(zone, canal) {
+function etapeConfirmation(zone, canal, prixMax) {
   const moyen = canal === 'mail' ? T('par mail') : T('par WhatsApp');
+  // Parcours « apport » : sous la confirmation, ce qu'on peut acheter avec.
+  // Jamais une liste vide : sans programme a sa portee, les moins chers du
+  // site, annonces comme tels.
+  let portee = '';
+  if (prixMax) {
+    const tous = (DONNEES.projets || []).slice()
+      .sort((a, b) => a.prix_min - b.prix_min);
+    const dedans = tous.filter(p => p.prix_min <= prixMax)
+      .sort((a, b) => b.prix_min - a.prix_min).slice(0, 6);
+    const choix = dedans.length ? dedans : tous.slice(0, 3);
+    if (choix.length) portee = `
+    <section class="autour">
+      <h2>${dedans.length ? T('Les programmes à la portée de votre apport')
+                          : T('Nos programmes les plus accessibles')}</h2>
+      <p class="autour-note">${dedans.length
+        ? T('Leur premier prix entre dans ce que votre apport permet, taxe et frais compris.')
+        : T('Aucun programme en ligne n’entre encore tout à fait dans votre apport. Voici les plus proches — nous en trouvons régulièrement d’autres chez les promoteurs, parlons-en.')}</p>
+      <div class="progs">${choix.map(carte).join('')}</div>
+    </section>`;
+  }
   zone.innerHTML = `
     ${jaugeHTML(5)}
     <div class="merci">
@@ -5792,7 +5942,16 @@ function etapeConfirmation(zone, canal) {
           T('Bonjour, je viens de faire une simulation sur votre site.'))}"
           target="_blank" rel="noopener">${T('Écrivez sur WhatsApp')}</a>
         ${T('ou par mail à')} <a href="mailto:${DONNEES.mail}">${DONNEES.mail}</a>.</p>
-    </div>`;
+    </div>${portee}`;
+  if (!portee) return;
+  // Pas de « Simuler ce bien » ici : on sort d'une simulation. Et sur la page
+  // a part du simulateur, la fiche d'un programme vit sur le site.
+  zone.querySelectorAll('.simu-carte').forEach(x => x.remove());
+  if (DONNEES.seul === 'simulateur' && DONNEES.site_url) {
+    zone.querySelectorAll('a.tile').forEach(a => {
+      a.href = DONNEES.site_url + a.getAttribute('href');
+    });
+  }
 }
 
 /* ---------------- le formulaire de contact, sur toutes les pages
@@ -6206,7 +6365,10 @@ async function envoyerLead(champs, p, I, extra) {
       societe: champs.societe || '',
       projet: p ? p.nom + ' — ' + p.ville : '',
       ville: p ? p.ville : (F.ville || ''),
-      budget: extra.budget || F.budget || '', page: I,
+      budget: extra.budget || (extra.apport ? '' : F.budget) || '', page: I,
+      // La somme disponible, en shekels (parcours « Je pars de mon apport ») :
+      // le guichet en tire le prix maximum.
+      apport: extra.apport || '',
       // Comment le prospect veut recevoir sa simulation, et avec quel
       // chiffrage : vide pour les deux autres formulaires, qui ne creent pas
       // de mini-site.
@@ -6248,7 +6410,7 @@ async function envoyerLead(champs, p, I, extra) {
     })
   });
   if (!r.ok) throw new Error('refus ' + r.status);
-  return true;
+  return r.json().catch(() => ({ok: true}));
 }
 
 function wireContact(p, intention) {
@@ -6904,8 +7066,6 @@ router();
   if (!iOS && !android) return;                    // un ordinateur n'installe rien ici
 
   const CLE = 'bh_install_masque_jusqua';
-  const masque = +(localStorage.getItem(CLE) || 0);
-  if (Date.now() < masque) return;
 
   let promptEvent = null;
   window.addEventListener('beforeinstallprompt', e => {
@@ -6913,16 +7073,30 @@ router();
     promptEvent = e;
   });
 
-  let montre = false;
-  window.addEventListener('scroll', () => {
-    if (montre) return;
-    const bas = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
-    if (bas > 0.5) { montre = true; afficher(); }
-  }, {passive: true});
+  // Plus de bandeau qui surgit tout seul (Hillel, 24/09/2026 : « meme s'il
+  // n'apparait qu'une fois, il derange aussi », surtout en pleine
+  // simulation). L'installation se propose dans le menu du telephone :
+  // c'est le visiteur qui la demande. Android installe directement ; iOS,
+  // qui n'a pas de bouton natif, affiche le bandeau qui explique le geste.
+  const entree = document.getElementById('nav-installer');
+  if (entree) {
+    entree.hidden = false;
+    entree.onclick = async () => {
+      if (typeof fermerMenuMobile === 'function') fermerMenuMobile();
+      if (promptEvent) {
+        promptEvent.prompt();
+        const choix = await promptEvent.userChoice;
+        if (choix.outcome === 'accepted') entree.hidden = true;
+        promptEvent = null;
+        return;
+      }
+      if (!document.querySelector('.install-bandeau')) afficher();
+    };
+  }
 
   function fermer(zone, jours) {
     zone.classList.remove('on');
-    localStorage.setItem(CLE, Date.now() + jours * 86400000);
+    try { localStorage.setItem(CLE, Date.now() + jours * 86400000); } catch (e) { /* rien */ }
     setTimeout(() => zone.remove(), 300);
   }
 
@@ -6959,6 +7133,28 @@ router();
       fermer(zone, choix.outcome === 'accepted' ? 365 : 7);
     };
   }
+})();
+
+/* `simu-en-vue` : le simulateur d'une fiche occupe l'ecran. Sur telephone,
+   `portail.css` retire alors les boutons flottants qui masquaient ses
+   champs (Hillel, 24/09/2026). Recalcule au defilement et a chaque page :
+   le bloc #simu est redessine a chaque fiche. */
+(function simuEnVue() {
+  let attente = 0;
+  const maj = () => {
+    attente = 0;
+    const z = document.getElementById('simu');
+    let vu = false;
+    if (z && z.offsetParent) {
+      const r = z.getBoundingClientRect(), h = window.innerHeight;
+      vu = r.top < h * 0.7 && r.bottom > h * 0.3;
+    }
+    document.body.classList.toggle('simu-en-vue', vu);
+  };
+  const plus_tard = () => { if (!attente) attente = requestAnimationFrame(maj); };
+  addEventListener('scroll', plus_tard, {passive: true});
+  addEventListener('resize', plus_tard);
+  addEventListener('hashchange', () => setTimeout(maj, 400));
 })();
 </script>
 </body></html>

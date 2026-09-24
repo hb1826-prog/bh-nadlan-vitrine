@@ -299,6 +299,12 @@ button,input,select,textarea{font:inherit;color:inherit}
  color:var(--encre);border-bottom:1px solid var(--trait-fin);
  display:flex;align-items:center;gap:10px}
 .nav-mobile a.wa{color:#128c3e}
+/* L'installation de l'application, proposee ici plutot qu'en bandeau qui
+   surgit (Hillel, 24/09/2026). Meme allure qu'une ligne du menu. */
+.nav-mobile .nav-installer{padding:14px 22px;font:inherit;font-size:15.5px;
+ font-weight:600;color:var(--action);background:none;border:0;
+ border-bottom:1px solid var(--trait-fin);text-align:start;cursor:pointer}
+.nav-mobile .nav-installer[hidden]{display:none}
 
 /* le selecteur de theme, discret, a droite */
 .theme{display:inline-flex;gap:2px;flex:none;background:var(--fond-2);
@@ -963,7 +969,7 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 /* Les deux simulations, tenues a part (Hillel, 23/09/2026) : deux grands
    onglets au-dessus du parcours, jamais un bouton de plus perdu dans la
    rangee des pourcentages. */
-.simu-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+.simu-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
 .simu-modes button{display:flex;flex-direction:column;gap:4px;text-align:left;
  cursor:pointer;padding:14px 16px;border-radius:var(--r);
  background:var(--fond);border:1px solid var(--trait);color:inherit;font:inherit}
@@ -1838,6 +1844,21 @@ table.ag th{width:64%}
  .flottant{right:14px}
  .flottant.wa{bottom:calc(158px + env(safe-area-inset-bottom))}
  .flottant.mail{bottom:calc(216px + env(safe-area-inset-bottom))}
+}
+/* Pendant une simulation, sur telephone et tablette, le trio flottant se
+   retire (Hillel, 24/09/2026 : « sur des petits mobiles, le bouton flottant
+   est derangeant »). Il cachait les champs et les boutons « Suivant » :
+   - dans le tunnel du simulateur (page seule ou #/simulateur) ;
+   - quand le simulateur d'une fiche occupe l'ecran (`simu-en-vue`, pose par
+     annuaire.js) ;
+   - partout, des qu'on tape dans un champ : le clavier mange deja la moitie
+     de l'ecran. Le contact reste a portee : il revient des qu'on en sort. */
+@media(max-width:900px){
+ body.tunnel-plein .flottant,body.tunnel-plein .remonter,
+ body.sim-actif .flottant,body.sim-actif .remonter,
+ body.simu-en-vue .flottant,body.simu-en-vue .remonter,
+ body:has(input:focus,select:focus,textarea:focus) .flottant,
+ body:has(input:focus,select:focus,textarea:focus) .remonter{display:none}
 }
 
 /* ===================== l'echeancier sur mesure ===========================
