@@ -421,7 +421,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  font-size:42px;font-weight:600;line-height:1.32;letter-spacing:.002em;
  max-width:16em;text-align:left;color:var(--or-clair);
  background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
- backdrop-filter:blur(6px);border-radius:14px;padding:14px 18px;
+ backdrop-filter:blur(6px);border-radius:var(--r-lg);padding:14px 18px;
  box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
@@ -628,7 +628,7 @@ button,input,select,textarea{font:inherit;color:inherit}
    Hillel sur un chantier, casque sur la tete. Une vignette ronde se lit comme
    un avatar, c'est-a-dire comme un element d'interface ; un portrait se lit
    comme une personne, et c'est tout l'objet de cette page. */
-.qui img{width:176px;height:220px;border-radius:14px;object-fit:cover;
+.qui img{width:176px;height:220px;border-radius:var(--r-lg);object-fit:cover;
  object-position:center 28%;flex:none;border:3px solid var(--or)}
 /* Seul le NOM est un titre. Sans ce fils-direct, le gras d'une phrase
    (« chez les promoteurs ») passait a la ligne en corps 19. */
@@ -1994,7 +1994,7 @@ table.ag th{width:64%}
    pas comme cassé — il se lit comme un bouton qui ne marche pas. */
 .rappel{position:fixed;z-index:60;width:min(320px,calc(100vw - 20px));
   background:var(--carte,#ffffff);color:var(--encre,#0F172A);
-  border:1px solid var(--trait,#E7E2D8);border-radius:14px;
+  border:1px solid var(--trait,#E7E2D8);border-radius:var(--r-lg,8px);
   padding:16px 16px 12px;
   box-shadow:var(--ombre-3,0 18px 44px -12px rgba(15,23,42,.28));
   opacity:1;animation:rappel-entre .16s ease-out}
@@ -2173,12 +2173,12 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   <div class=dedans>
    <div class=hero-texte>
     <p class=zf-bandeau>Frais d’agence : <span class=zf-pct>0 %</span></p>
-    <h1>Enfin le premier site d’achat direct promoteur où vous pouvez simuler votre achat et connaître tous vos frais annexes.</h1>
+    <h1>Enfin le premier site d’achat sur plan en Israël, direct promoteur, où vous pouvez simuler votre achat et connaître tous vos frais annexes.</h1>
     <ul class=hero-preuves><li><b>34</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li><b>12</b><span>ans chez les promoteurs</span></li></ul>
    </div>
    <form class=hero-simu id=hero-simu novalidate>
     <span class=hs-sur>Simulateur gratuit</span>
-    <b class=hs-titre>Combien coûte réellement votre bien ?</b>
+    <b class=hs-titre>Simulez ici le prix réel de votre bien, frais compris</b>
     <p class=hs-sous>Gratuit, en deux minutes : taxe d’acquisition, frais, mensualité et coût total.</p>
     <label class=hs-lab for=hs-prix>Prix du bien (₪)</label>
     <div class=hs-ligne>
