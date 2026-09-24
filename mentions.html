@@ -614,6 +614,22 @@ button,input,select,textarea{font:inherit;color:inherit}
  padding:5px 10px;border-radius:999px;backdrop-filter:blur(6px)}
 .badge.or{background:var(--or);color:#1a1405}
 .badge.blanc{background:rgba(255,255,255,.94);color:var(--encre)}
+/* Le bouton de partage : discret sur la tuile (un rond, coin oppose aux
+   badges), plus visible sur la fiche (une pilule avec son mot). Demande le
+   24/09/2026. */
+.partager{display:inline-flex;align-items:center;gap:6px;border:none;
+ cursor:pointer;font:inherit;font-weight:650}
+.partager svg{width:16px;height:16px;flex:0 0 auto}
+.partager-discret{position:absolute;top:12px;right:12px;z-index:2;
+ width:32px;height:32px;border-radius:999px;justify-content:center;
+ background:rgba(9,14,26,.72);color:#fff;backdrop-filter:blur(6px);
+ transition:background .15s}
+.partager-discret:hover{background:rgba(9,14,26,.92)}
+.offre-in h1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.offre-in h1 .partager{background:var(--fond);color:var(--encre);
+ border:1px solid var(--trait);border-radius:999px;padding:6px 12px;
+ font-size:13px}
+.offre-in h1 .partager:hover{border-color:var(--action);color:var(--action)}
 .tile .corps{padding:15px 16px 17px;display:flex;flex-direction:column;
  gap:6px;flex:1}
 .tile .prix{font-size:24px;font-weight:750;letter-spacing:-.03em;
@@ -1312,6 +1328,16 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
  color:var(--encre-2);font-weight:700;font-size:14.5px}
 .pied-tel svg{flex:none;border-radius:2px;
  box-shadow:0 0 0 1px rgba(15,23,42,.12)}
+.pied-reseaux{display:flex;align-items:center;gap:10px;margin-top:16px}
+.pied-reseaux a{display:flex;align-items:center;justify-content:center;
+ width:34px;height:34px;border-radius:999px;border:1px solid var(--trait);
+ color:var(--encre-2);transition:border-color .15s,color .15s}
+.pied-reseaux a:hover{border-color:var(--action);color:var(--action)}
+.pied-reseaux a svg{width:17px;height:17px}
+.pied-reseaux button{margin-left:4px;background:var(--fond);
+ border:1px solid var(--trait);border-radius:999px;padding:8px 14px;
+ font-size:13px;font-weight:650;color:var(--encre);cursor:pointer}
+.pied-reseaux button:hover{border-color:var(--action);color:var(--action)}
 .pied-col{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
 .pied-col b{font-size:12px;font-weight:750;letter-spacing:.07em;
  text-transform:uppercase;color:var(--encre);margin-bottom:2px}
