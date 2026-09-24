@@ -6640,17 +6640,28 @@ if (LOGO && DONNEES.seul !== 'simulateur')
    retour du telephone, par exemple). */
 const BURGER = document.getElementById('burger');
 const NAV_MOBILE = document.getElementById('nav-mobile');
+// Se referme aussi au premier scroll (Hillel, 24/09/2026) : le menu est
+// dans le fil de la page, pas une fenetre a part – descendre dans l'ecran
+// ou "dans le menu" est le meme geste. L'ecouteur n'est branche QUE pendant
+// que le menu est ouvert, pour ne pas ecouter le scroll en permanence, et
+// se debranche quelle que soit la facon dont le menu s'est ferme.
 function fermerMenuMobile() {
   if (!NAV_MOBILE) return;
   NAV_MOBILE.classList.remove('ouvert');
   NAV_MOBILE.hidden = true;
   if (BURGER) BURGER.setAttribute('aria-expanded', 'false');
+  removeEventListener('scroll', fermerMenuMobile);
 }
 if (BURGER && NAV_MOBILE) {
   BURGER.onclick = () => {
     const ouvert = NAV_MOBILE.classList.toggle('ouvert');
     NAV_MOBILE.hidden = !ouvert;
     BURGER.setAttribute('aria-expanded', String(ouvert));
+    if (ouvert) {
+      addEventListener('scroll', fermerMenuMobile, {passive: true});
+    } else {
+      removeEventListener('scroll', fermerMenuMobile);
+    }
   };
   NAV_MOBILE.querySelectorAll('a').forEach(a =>
     a.addEventListener('click', fermerMenuMobile));
