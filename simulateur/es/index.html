@@ -3351,6 +3351,12 @@ async function fiche(p) {
   const prixM2 = typoGrande
     ? Math.round(typoGrande.prix_min / (typoGrande.surface_max || typoGrande.surface_min))
     : 0;
+  // Meme regle que partout ailleurs sur le site (`eur()`) : le taux vient de
+  // la Banque d'Israel, fige a la derniere fabrication de la page — jamais
+  // invente dans le navigateur. Sans taux, l'euro disparait plutot que
+  // d'afficher un chiffre faux.
+  const tauxM2 = tauxEuro();
+  const eurM2 = tauxM2 ? mil(prixM2 / tauxM2) + ' €/m²' : '';
   vue.innerHTML = `
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ›
       <a href="#/ville/${esc(cleVille(p.ville))}">${esc(T(p.ville))}</a> ›
@@ -3370,7 +3376,7 @@ async function fiche(p) {
     <div class="card">
       <div class="block">
         <div class="block-head" style="display:flex;align-items:center;gap:8px">${picto('immeuble')}<span>${T('Les appartements')}</span>${aide('appartements')}</div>
-        ${typoGrande ? `<p class="m2-projet">${T('Prix au m²')} : ${T('à partir de')} ${mil(prixM2)} ₪/m²</p>` : ''}
+        ${typoGrande ? `<p class="m2-projet">${T('Prix au m²')} : ${T('à partir de')} ${mil(prixM2)} ₪/m²${eurM2 ? `<small class="eu">${eurM2}</small>` : ''}</p>` : ''}
         <div class="scroll" style="max-height:none">
         <table>
           <thead><tr><th>${T('Typologies')}</th>${aSurface ? `<th>${T('Surface')}</th>` : ''}${aEquip ? `<th>${T('Équipements')}</th>` : ''}
