@@ -786,6 +786,12 @@ button,input,select,textarea{font:inherit;color:inherit}
  transition:background .15s}
 .partager-discret:hover{background:rgba(9,14,26,.92)}
 .offre-in h1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* Le partage du simulateur, au bout de son titre : un petit rond discret. */
+h1.h1-partage{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.partager-titre{width:34px;height:34px;border-radius:999px;justify-content:center;
+ background:var(--fond);color:var(--action);border:1px solid var(--trait);
+ flex:none;padding:0}
+.partager-titre:hover{border-color:var(--action);background:var(--action-lavis)}
 .offre-in h1 .partager{background:var(--fond);color:var(--encre);
  border:1px solid var(--trait);border-radius:999px;padding:6px 12px;
  font-size:13px}
@@ -2237,7 +2243,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 </div>
 <div class="pub-in entete-reseaux">
   <button type=button id=global-retour class=global-retour hidden
-    onclick="history.back()">‹ Retour</button>
+    onclick="history.back()"><span class=fl>‹</span> Retour</button>
   
   <a href="https://instagram.com/bhnadlan" target=_blank rel=noopener aria-label="instagram"><svg viewBox="0 0 24 24" width="26" height="26" fill="#E4405F"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a><a href="https://facebook.com/1281717678360566" target=_blank rel=noopener aria-label="facebook"><svg viewBox="0 0 24 24" width="26" height="26" fill="#1877F2"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a><a href="https://www.youtube.com/channel/UCci0sliDNQ3JmSjDUvuiEkg" target=_blank rel=noopener aria-label="youtube"><svg viewBox="0 0 24 24" width="26" height="26" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a><a href="https://www.linkedin.com/in/hillel-bijaoui-a7101048" target=_blank rel=noopener aria-label="linkedin"><svg viewBox="0 0 24 24" width="26" height="26" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a><a href="https://www.tiktok.com/@hillel.bijaoui.bh" target=_blank rel=noopener aria-label="tiktok"><svg viewBox="0 0 24 24" width="26" height="26" fill="#000000"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
 </div>
@@ -2270,7 +2276,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <label class=hs-lab for=hs-prix>Prix du bien (₪)</label>
     <div class=hs-ligne>
       <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000" aria-label="Prix du bien (₪)">
-      <button type=submit class=hs-go><span class=hs-long>Lancer ma simulation</span><span class=hs-court>Simuler</span> <span aria-hidden=true>→</span></button>
+      <button type=submit class=hs-go><span class=hs-long>Lancer ma simulation</span><span class=hs-court>Simuler</span> <span aria-hidden=true class=fl>→</span></button>
     </div>
   </form>
   </div>
@@ -2616,7 +2622,16 @@ const etapesDuTunnel = () => (TUNNEL.comptant && !TUNNEL.apport)
 
    `langues.py` sait dire ce qu'il reste a traduire :
        python build/annuaire-projets/langues.py */
-const T = phrase => ((DONNEES.i18n || {})[phrase] || phrase);
+/* En hebreu, les fleches pointent dans le sens de la lecture : « suivant »
+   vers la gauche, « retour » vers la droite (Hillel, 24/09/2026 : « tout ce
+   que tu as a droite, il faut le mettre a gauche »). */
+const RTL = document.documentElement.dir === 'rtl';
+const FLECHES = {'→': '←', '←': '→', '›': '‹', '‹': '›'};
+const sens = t => RTL ? String(t).replace(/[→←›‹]/g, c => FLECHES[c]) : t;
+const SEP = RTL ? '‹' : '›';
+// Une traduction hebraique a deja ses fleches dans le bon sens : seule la
+// phrase francaise de repli (pas encore traduite) est retournee.
+const T = phrase => (DONNEES.i18n || {})[phrase] || sens(phrase);
 
 /* Partager une fiche, une tuile, ou le site entier — demande le 24/09/2026.
    `navigator.share` ouvre le menu natif du telephone (WhatsApp y figure
@@ -2668,6 +2683,16 @@ function boutonPartage(titre, cheminOuUrl, discret) {
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <path d="M8.6 10.5 15.4 6.5M8.6 13.5 15.4 17.5"/>
             </svg>${discret ? '' : `<span>${T('Partager')}</span>`}</button>`;
+}
+/* Envoyer le simulateur a quelqu'un — « tres, tres important », Hillel,
+   24/09/2026, mais discret : un petit rond au bout du titre « Simulateur
+   d'achat ». Sur la page d'un partenaire, le lien reste le sien
+   (`#/simulateur` de sa propre page). */
+function boutonPartageSimulateur() {
+  const url = DONNEES.simulateur_url || '#/simulateur';
+  return boutonPartage(T('Regarde ce simulateur : tu calcules le vrai coût '
+    + 'd’un achat sur plan en Israël, frais et taxe compris, en deux minutes.'),
+    url, true).replace('partager partager-discret', 'partager partager-titre');
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('.partager[data-partage-titre]');
@@ -3580,8 +3605,8 @@ async function fiche(p) {
   const tauxM2 = tauxEuro();
   const eurM2 = tauxM2 ? mil(prixM2 / tauxM2) + ' €/m²' : '';
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ›
-      <a href="#/ville/${esc(cleVille(p.ville))}">${esc(T(p.ville))}</a> ›
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP}
+      <a href="#/ville/${esc(cleVille(p.ville))}">${esc(T(p.ville))}</a> ${SEP}
       ${esc(p.nom)}</p>
     <div class="fiche-tete">
       ${galerie(p)}
@@ -3871,7 +3896,7 @@ function quartierHTML(ville) {
     <div class="ville-texte">
       <h2>${esc(villeAffichee)} — ${esc(T(n.titre))}</h2>
       <p>${esc(T(n.texte))}</p>
-      <a class="ville-lien" href="#/ville/${esc(cleVille(ville))}">${T('Voir tous les programmes à')} ${esc(villeAffichee)} →</a>
+      <a class="ville-lien" href="#/ville/${esc(cleVille(ville))}">${T('Voir tous les programmes à')} ${esc(villeAffichee)} ${sens('→')}</a>
     </div>
     <dl class="ville-reperes">${(n.reperes || []).map(r =>
       '<div><dt>' + esc(T(r[0])) + '</dt><dd>' + esc(T(r[1])) + '</dd></div>'
@@ -3909,7 +3934,7 @@ function pageVille(cle) {
     .sort((a, b) => a.prix_min - b.prix_min).slice(0, 6));
 
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${esc(nomAffiche)}</p>
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${esc(nomAffiche)}</p>
     ${villeBanniere(photoVille(nom), esc(nomAffiche))}
     <div class="ville-tete">
       <h1>${T('Acheter un appartement neuf à')} ${esc(nomAffiche)}</h1>
@@ -4097,7 +4122,7 @@ function pageTexte(cle) {
     .split('{TEL_AFF}').join(telHTML(DONNEES.tel))
     .split('{TEL}').join(esc(DONNEES.wa));
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${esc(page.titre)}</p>
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${esc(page.titre)}</p>
     <article class="texte">
       <h1>${esc(page.titre)}</h1>
       ${corps}
@@ -4130,7 +4155,7 @@ function pageNousContacter() {
     .replace('id=qui', 'id=qui-nc')
     .replace(/<section class=preuve-photos[\s\S]*?<\/section>/, '');
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T('Nous contacter')}</p>
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${T('Nous contacter')}</p>
     <article class="texte">
       <h1>${T('Nous contacter')}</h1>
     </article>
@@ -4208,7 +4233,7 @@ function pageBlog() {
       </details>`
   ).join('') : `<p>${T('Les premières vidéos arrivent bientôt.')}</p>`;
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> › ${T('Blog')}</p>
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${T('Blog')}</p>
     <article class="texte">
       <h1>${T('Blog')}</h1>
       <p>${T("L'actualité de l'immobilier en Israël, en français : nouveaux permis, fiscalité, taux, quartiers qui montent.")}</p>
@@ -5293,7 +5318,7 @@ async function vueSimulateur() {
   vue.innerHTML = `
     <div class="pub-head">
       <div>
-      <h1>${T("Simulateur d'achat")}</h1>
+      <h1 class="h1-partage">${T("Simulateur d'achat")}${boutonPartageSimulateur()}</h1>
       <p class="sub">${T("Un prix, votre situation, vos frais, un crédit, et ce que le bien coûte vraiment : à la signature, tous les mois, et à la revente.")}</p>
       </div>
     </div>
@@ -5322,7 +5347,7 @@ async function vueSimulateurEtapes() {
   vue.innerHTML = `
     <div class="pub-head">
       <div>
-      <h1>${T("Simulateur d'achat")}</h1>
+      <h1 class="h1-partage">${T("Simulateur d'achat")}${boutonPartageSimulateur()}</h1>
       <p class="sub">${T("Un prix, votre situation, et on vous envoie le chiffrage complet : à la signature, tous les mois, et à la revente.")}</p>
       </div>
     </div>
