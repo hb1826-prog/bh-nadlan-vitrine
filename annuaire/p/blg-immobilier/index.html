@@ -171,9 +171,17 @@
 /* Ce qui n'est pas de la couleur reste ecrit ici : les rayons, les ombres et
    la courbe d'animation appartiennent a cette page-la. Une vitrine arrondit
    plus large qu'un outil de travail — c'est voulu, et ca ne regarde pas la
-   marque. */
+   marque.
+
+   Rayons resserres le 24/09/2026 (Hillel : « un peu plus carre », dans
+   l'esprit des agences immobilieres haut de gamme plutot que d'un site
+   SaaS) — SEULEMENT les grandes surfaces (cartes, gros blocs, photo
+   d'accueil), qui passent tous par ces trois variables. Les boutons ronds
+   n'y touchent pas : ils ecrivent `border-radius:999px` en dur, exactement
+   pour rester intacts a ce changement — un bouton carre donne moins envie
+   de cliquer, l'objectif inverse d'un site qui vit des demandes de rappel. */
 :root{
- --r:12px; --r-lg:18px; --r-xl:26px;
+ --r:6px; --r-lg:8px; --r-xl:10px;
  --ombre:0 1px 2px rgba(15,23,42,.05);
  --ombre-2:0 4px 14px -4px rgba(15,23,42,.12),0 2px 5px -2px rgba(15,23,42,.06);
  --ombre-3:0 18px 44px -12px rgba(15,23,42,.28);
@@ -413,7 +421,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  font-size:42px;font-weight:600;line-height:1.32;letter-spacing:.002em;
  max-width:16em;text-align:left;color:var(--or-clair);
  background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
- backdrop-filter:blur(6px);border-radius:14px;padding:14px 18px;
+ backdrop-filter:blur(6px);border-radius:var(--r-lg);padding:14px 18px;
  box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
