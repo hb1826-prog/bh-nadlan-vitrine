@@ -321,13 +321,14 @@ button,input,select,textarea{font:inherit;color:inherit}
    « le plus evident possible »). Un zero geant, dore — l'or porte du texte
    ici parce que le fond est sombre (voile de la photo), jamais sur fond
    clair. Le h1 passe en second : il dit ce que le zero veut dire. */
-.zf-pourquoi{margin:-6px 0 16px;color:#fff;max-width:36em}
-.zf-pourquoi summary{cursor:pointer;display:inline-block;font-size:14px;font-weight:650;
- color:#fff;border-bottom:1px dashed rgba(255,255,255,.6);list-style:none}
-.zf-pourquoi summary::-webkit-details-marker{display:none}
-.zf-pourquoi p{margin:8px 0 0;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.92);
- background:rgba(6,12,24,.55);padding:10px 12px;border-radius:10px}
-.hero .zf-pourquoi + h1{font-size:36px;font-weight:750;line-height:1.16;max-width:none}
+/* Un bandeau fixe, plus un bouton a deplier — demande le 24/09/2026,
+   Hillel : direct, sans clic, le « comment c'est possible » (0 % + achat
+   direct promoteur + simulation des frais annexes) se lit d'un coup. */
+.zf-bandeau{margin:-6px 0 16px;max-width:36em;font-size:14.5px;line-height:1.5;
+ color:rgba(255,255,255,.92);background:rgba(6,12,24,.55);
+ padding:10px 12px;border-radius:10px}
+.zf-bandeau b{display:block;color:#fff;font-size:15px;margin-bottom:2px}
+.hero .zf-bandeau + h1{font-size:36px;font-weight:750;line-height:1.16;max-width:none}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
  padding:11px 14px;font-size:15px;cursor:pointer}
@@ -337,9 +338,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .eco-teaser b{display:block;font-size:17px;margin-bottom:2px}
 .eco-teaser span{font-size:13.5px;opacity:.85}
 @media(max-width:640px){
- .zf-pourquoi{margin:-4px 0 10px}
- .zf-pourquoi summary{font-size:13px}
- .hero .zf-pourquoi + h1{font-size:21.5px;line-height:1.22}
+ .zf-bandeau{margin:-4px 0 10px;font-size:13px}
+ .hero .zf-bandeau + h1{font-size:21.5px;line-height:1.22}
 }
 .zero-frais{display:flex;align-items:center;gap:16px;margin:0 0 18px}
 .zf-zero{font-size:132px;line-height:.78;font-weight:800;color:var(--or);
