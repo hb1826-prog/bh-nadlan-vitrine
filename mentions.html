@@ -1840,10 +1840,12 @@ table.ag th{width:64%}
 .flottant svg{width:22px;height:22px;display:block}
 .flottant.wa{bottom:98px;background:#25d366;color:#052e16}
 .flottant.mail{bottom:156px;background:var(--encre);color:var(--fond)}
+/* Sur telephone et tablette, plus de bulles WhatsApp et mail (Hillel,
+   24/09/2026 : « ca derange plus qu'autre chose »). Le contact y reste a
+   portee par la barre fixe du bas et par le menu ; seule la fleche
+   « remonter » flotte encore. Sur ordinateur, rien ne change. */
 @media(max-width:900px){
- .flottant{right:14px}
- .flottant.wa{bottom:calc(158px + env(safe-area-inset-bottom))}
- .flottant.mail{bottom:calc(216px + env(safe-area-inset-bottom))}
+ .flottant{display:none!important}
 }
 /* Pendant une simulation, sur telephone et tablette, le trio flottant se
    retire (Hillel, 24/09/2026 : « sur des petits mobiles, le bouton flottant
