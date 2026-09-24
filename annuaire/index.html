@@ -333,13 +333,14 @@ button,input,select,textarea{font:inherit;color:inherit}
    « le plus evident possible »). Un zero geant, dore — l'or porte du texte
    ici parce que le fond est sombre (voile de la photo), jamais sur fond
    clair. Le h1 passe en second : il dit ce que le zero veut dire. */
-.zf-pourquoi{margin:-6px 0 16px;color:#fff;max-width:36em}
-.zf-pourquoi summary{cursor:pointer;display:inline-block;font-size:14px;font-weight:650;
- color:#fff;border-bottom:1px dashed rgba(255,255,255,.6);list-style:none}
-.zf-pourquoi summary::-webkit-details-marker{display:none}
-.zf-pourquoi p{margin:8px 0 0;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.92);
- background:rgba(6,12,24,.55);padding:10px 12px;border-radius:10px}
-.hero .zf-pourquoi + h1{font-size:36px;font-weight:750;line-height:1.16;max-width:none}
+/* Un bandeau fixe, plus un bouton a deplier — demande le 24/09/2026,
+   Hillel : direct, sans clic, le « comment c'est possible » (0 % + achat
+   direct promoteur + simulation des frais annexes) se lit d'un coup. */
+.zf-bandeau{margin:-6px 0 16px;max-width:36em;font-size:14.5px;line-height:1.5;
+ color:rgba(255,255,255,.92);background:rgba(6,12,24,.55);
+ padding:10px 12px;border-radius:10px}
+.zf-bandeau b{display:block;color:#fff;font-size:15px;margin-bottom:2px}
+.hero .zf-bandeau + h1{font-size:36px;font-weight:750;line-height:1.16;max-width:none}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
  padding:11px 14px;font-size:15px;cursor:pointer}
@@ -349,9 +350,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .eco-teaser b{display:block;font-size:17px;margin-bottom:2px}
 .eco-teaser span{font-size:13.5px;opacity:.85}
 @media(max-width:640px){
- .zf-pourquoi{margin:-4px 0 10px}
- .zf-pourquoi summary{font-size:13px}
- .hero .zf-pourquoi + h1{font-size:21.5px;line-height:1.22}
+ .zf-bandeau{margin:-4px 0 10px;font-size:13px}
+ .hero .zf-bandeau + h1{font-size:21.5px;line-height:1.22}
 }
 .zero-frais{display:flex;align-items:center;gap:16px;margin:0 0 18px}
 .zf-zero{font-size:132px;line-height:.78;font-weight:800;color:var(--or);
@@ -2059,8 +2059,8 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
       <span class=zf-mots><b>frais d’agence</b>
         <small>sur votre achat.</small></span>
     </div>
-    <details class=zf-pourquoi><summary>Comment c’est possible ?</summary>
-      <p>Nous sommes commercialisateurs de programmes : c’est le promoteur qui nous rémunère, jamais l’acheteur. Vous payez le prix du bureau de vente, négocié pour vous.</p></details>
+    <p class=zf-bandeau><b>0 % de frais d’agence</b><br>
+      Achat direct promoteur — le 1er site qui calcule exactement tous vos frais annexes.</p>
     <h1>Le prix du promoteur négocié<br>et le vrai coût simulé pour vous.</h1>
     <ul class=hero-preuves><li><b>34</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li><b>12</b><span>ans chez les promoteurs</span></li></ul>
    </div>
