@@ -240,31 +240,30 @@ button,input,select,textarea{font:inherit;color:inherit}
    jusqu'ici sans aucun repli, et ou « Blog » devait pourtant rester
    accessible depuis l'entete. */
 /* Le bouton Retour global : present sur CHAQUE page (sauf l'accueil), pose
-   une fois dans l'entete plutot que recopie page par page — Hillel,
-   24/09/2026, apres l'avoir cherche plusieurs fois sur des pages qui ne
-   l'avaient pas encore. Il rejoue l'historique du navigateur : contrairement
-   a un lien fixe, il retombe exactement sur la page quittee, filtres et
-   defilement compris.
+   une fois dans l'entete plutot que recopie page par page. Il rejoue
+   l'historique du navigateur : contrairement a un lien fixe, il retombe
+   exactement sur la page quittee, filtres et defilement compris.
 
-   `router()` bascule la classe `.voir`, jamais `[hidden]` : avec `hidden`
-   (donc `display:none`), le bouton retirait sa place a chaque navigation et
-   tout le reste de l'entete — logo, reseaux sociaux — se decalait d'un cran.
-   `visibility` garde la meme largeur reservee tout le temps, invisible ou
-   pas : rien d'autre ne bouge (signale par Hillel le 24/09/2026). Fond
-   teinte + bordure pleine plutot qu'un filet gris : le premier essai, trop
-   discret, se voyait mal sur la barre claire. */
+   Pose dans la bande des reseaux sociaux, PAS a cote du logo/burger — un
+   premier essai la-bas decalait tout le haut de page a chaque navigation, ce
+   qui « ne faisait pas beau » (Hillel, 24/09/2026). Ici, un leger decalage
+   des icones reseaux quand le bouton apparait est accepte : `router()`
+   bascule simplement `[hidden]`. Fond teinte + bordure pleine plutot qu'un
+   filet gris, pour bien se voir. */
 .global-retour{display:inline-flex;align-items:center;gap:4px;flex:none;
  font-weight:700;font-size:13.5px;color:var(--action);
  background:var(--action-lavis);padding:8px 10px;border:1.5px solid var(--action);
- border-radius:999px;white-space:nowrap;cursor:pointer;margin-inline-end:8px;
- visibility:hidden;pointer-events:none}
-.global-retour.voir{visibility:visible;pointer-events:auto}
+ border-radius:999px;white-space:nowrap;cursor:pointer}
+.global-retour[hidden]{display:none}
 .global-retour:hover{background:var(--action);color:#fff}
 @media(max-width:560px){.global-retour{padding:7px 9px;font-size:13px}}
 
 .burger{display:none;flex:none;width:40px;height:40px;border:0;background:none;
  cursor:pointer;flex-direction:column;align-items:center;justify-content:center;
- gap:5px}
+ gap:5px;
+ /* Colle au bord vrai de l'ecran plutot qu'a celui du conteneur (padding de
+    `.pub-in`) : Hillel, 24/09/2026, « remets-les a gauche completement ». */
+ margin-inline-start:-22px}
 .burger span{display:block;width:22px;height:2px;background:var(--encre);
  border-radius:2px}
 .nav-mobile{display:none}
@@ -358,9 +357,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* Le h1 reprend la couleur or du zero au-dessus (plutot que le blanc uni
    d'avant, peu lisible sur la photo) et une largeur bornee — sans elle la
    phrase s'etirait sur toute la largeur en une seule ligne desequilibree
-   plutot que de se plier proprement (Hillel, 24/09/2026). */
-.hero .zf-bandeau + h1{font-size:36px;font-weight:750;line-height:1.16;
- max-width:16em;text-align:left;color:var(--or)}
+   plutot que de se plier proprement (Hillel, 24/09/2026). Le premier essai
+   restait illisible a l'endroit precis ou la photo est claire (capture a
+   l'appui, meme jour) : plus grand, plus gras, et une ombre portee FONCEE
+   et marquee — elle cree un halo sombre qui garde le texte lisible quel
+   que soit ce qu'il y a derriere sur la photo, pas juste a cet endroit-la. */
+.hero .zf-bandeau + h1{font-size:42px;font-weight:850;line-height:1.16;
+ max-width:16em;text-align:left;color:var(--or);
+ text-shadow:0 2px 3px rgba(0,0,0,.85),0 4px 14px rgba(0,0,0,.75)}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
  padding:11px 14px;font-size:15px;cursor:pointer}
@@ -372,7 +376,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 @media(max-width:640px){
  .zf-bandeau{margin:0 0 10px;font-size:26px}
  .zf-pct{font-size:52px}
- .hero .zf-bandeau + h1{font-size:21.5px;line-height:1.22}
+ .hero .zf-bandeau + h1{font-size:25px;line-height:1.24}
 }
 .zero-frais{display:flex;align-items:center;gap:16px;margin:0 0 18px}
 .zf-zero{font-size:132px;line-height:.78;font-weight:800;color:var(--or);
@@ -1074,7 +1078,7 @@ body.sim-actif .onglets{padding-bottom:0}
 @media(max-width:900px){
  .pub-bar{height:62px;gap:0}
  .nav{display:none}
- .burger{display:flex}
+ .burger{display:flex;margin-inline-start:-14px}  /* padding de .pub-in ici : 14px */
  .cta{padding:9px 12px;font-size:12.5px}
  .wa-nav{width:34px;height:34px}
  /* Le logo au milieu, le menu et les langues aux deux bouts : Hillel, le
