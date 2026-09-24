@@ -484,10 +484,14 @@ button,input,select,textarea{font:inherit;color:inherit}
    en haut a gauche, panneau et carte cote a cote et etires a la meme
    hauteur, les chiffres sur toute la largeur et centres dessous. */
 @media(min-width:901px){
- .hero .dedans{grid-template-areas:"zf ." "h1 simu" "pr pr";
+ .hero .dedans{grid-template-areas:"zf zf" "h1 simu" "pr pr";
   column-gap:40px;row-gap:0;align-items:stretch}
  .hero-texte{display:contents}
- .hero .zf-bandeau{grid-area:zf}
+ /* « Frais d'agence : 0 % » centre au-dessus des DEUX blocs, en echo a la
+    ligne des chiffres centree dessous (Hillel, 24/09/2026). Au centre, il
+    passe sur une partie plus claire de la photo : l'ombre le garde lisible. */
+ .hero .zf-bandeau{grid-area:zf;text-align:center;
+  text-shadow:0 2px 16px rgba(0,0,0,.45)}
  .hero .zf-bandeau + h1{grid-area:h1;max-width:none;margin:0;display:flex;
   align-items:center;justify-content:center;padding:22px 28px}
  .hero-simu{grid-area:simu;justify-content:center}
