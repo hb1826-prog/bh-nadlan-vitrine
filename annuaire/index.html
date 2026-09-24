@@ -674,6 +674,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* ============================== la fiche ============================== */
 .fil{font-size:13.5px;color:var(--gris);padding:22px 0 0}
 .fil a:hover{color:var(--action)}
+/* Le bouton Retour d'une fiche : contrairement au fil d'Ariane (qui ramene
+   toujours au meme endroit fixe), il rejoue l'historique du navigateur et
+   retombe donc exactement sur la page quittee, filtres et defilement
+   compris (Hillel, 24/09/2026). */
+.fil .lien-retour{background:none;border:0;padding:0;margin:0 10px 0 0;
+ font:inherit;color:inherit;cursor:pointer}
+.fil .lien-retour:hover{color:var(--action)}
 /* La photo est posee EN ABSOLU dans son cadre : en flux, sa hauteur propre
    commande, le rapport de forme du cadre ne s'applique plus, et un rendu de
    1200x900 occupe tout l'ecran. */
@@ -3341,7 +3348,8 @@ async function fiche(p) {
   const aSurface = p.typologies.some(t => t.surface_min);
   const aEquip = p.typologies.some(t => t.parking || t.cave);
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ›
+    <p class="fil"><button type="button" class="lien-retour" onclick="history.back()">‹ ${T('Retour')}</button>
+      <a href="#/">${T('Programmes neufs')}</a> ›
       <a href="#/ville/${esc(cleVille(p.ville))}">${esc(T(p.ville))}</a> ›
       ${esc(p.nom)}</p>
     <div class="fiche-tete">
@@ -3986,15 +3994,15 @@ function pageBlog() {
    raccourcis sont fabriques depuis le stock — les villes ou il y a le plus de
    programmes, deux paliers de budget reels, et la livraison immediate si elle
    existe. Rien n'est ecrit en dur : une ville qui sort du stock disparait. */
-function raccourcis() {
+function raccourcis(toutesLesVilles) {
   const zone = $('#raccourcis');
   if (!zone) return;
   const parVille = {};
   DONNEES.projets.forEach(p => {
     parVille[p.ville] = (parVille[p.ville] || 0) + 1;
   });
-  const villes = Object.keys(parVille)
-    .sort((a, b) => parVille[b] - parVille[a]).slice(0, 6);
+  let villes = Object.keys(parVille).sort((a, b) => parVille[b] - parVille[a]);
+  if (!toutesLesVilles) villes = villes.slice(0, 6);
   // Rien que des villes. Le palier de budget (« Moins de 2 500 000 ₪ ») etait
   // arbitraire — une mediane arrondie — et il melangeait deux questions dans
   // une meme rangee. Le budget se regle dans les filtres, ou il a sa place.
@@ -4002,13 +4010,19 @@ function raccourcis() {
   // seul le texte du bouton est traduit.
   const puces = villes.map(v =>
     '<button type="button" data-ville="' + esc(v) + '">' + esc(T(v)) + '</button>');
+  // « Tout voir » ne descendait plus aux resultats mais les melangeait
+  // toutes villes confondues — Hillel voulait plutot y voir les AUTRES
+  // villes ou il a des biens, pas un defilement force (24/09/2026). Le
+  // clic deplie donc la liste complete des villes a la place du raccourci
+  // « Tout voir », qui disparait puisqu'il n'y a alors plus rien a deplier.
   zone.innerHTML = '<span class="rac-lab">' + T('En un clic') + '</span>'
     + puces.join('')
-    + '<button type="button" data-tout="1" class="rac-tout">'
-    + T('Tout voir') + '</button>';
+    + (toutesLesVilles ? '' : '<button type="button" data-tout="1" class="rac-tout">'
+    + T('Tout voir') + '</button>');
 
   zone.querySelectorAll('button').forEach(b => {
     b.onclick = () => {
+      if (b.dataset.tout) { raccourcis(true); return; }
       F.ville = b.dataset.ville || '';
       F.budget = b.dataset.budget || '';
       const cv = document.getElementById('f-ville');
@@ -4016,27 +4030,9 @@ function raccourcis() {
       if (cv) cv.value = F.ville;
       if (cb) cb.value = F.budget;
       zone.querySelectorAll('button').forEach(x => x.classList.remove('on'));
-      if (!b.dataset.tout) b.classList.add('on');
-      // « Tout voir » : contrairement a une ville, il ne reste rien a
-      // affiner apres — les pieces et types choisis avant de cliquer
-      // laissaient sinon la liste filtree en douce, et le clic semblait ne
-      // rien faire (signale par Hillel le 24/09/2026). On repart a zero et
-      // on descend directement aux resultats, comme le bouton « Voir les
-      // biens » juste apres.
-      if (b.dataset.tout) {
-        F.pieces = [];
-        F.types = [];
-        document.querySelectorAll('#f-pieces button').forEach(x =>
-          x.classList.remove('on'));
-      }
+      b.classList.add('on');
       if (location.hash && location.hash !== '#/') location.hash = '#/';
       else liste();
-      if (b.dataset.tout) {
-        const cible = document.getElementById('entete')
-          || document.querySelector('.wrap');
-        if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'start'});
-        return;
-      }
       // Aucun defilement ici : on reste dans la boite de recherche pour
       // pouvoir ajouter les pieces et le budget. C'est le bouton
       // « Rechercher », juste dessous, qui emmene aux resultats.

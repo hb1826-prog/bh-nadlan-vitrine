@@ -674,6 +674,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* ============================== la fiche ============================== */
 .fil{font-size:13.5px;color:var(--gris);padding:22px 0 0}
 .fil a:hover{color:var(--action)}
+/* Le bouton Retour d'une fiche : contrairement au fil d'Ariane (qui ramene
+   toujours au meme endroit fixe), il rejoue l'historique du navigateur et
+   retombe donc exactement sur la page quittee, filtres et defilement
+   compris (Hillel, 24/09/2026). */
+.fil .lien-retour{background:none;border:0;padding:0;margin:0 10px 0 0;
+ font:inherit;color:inherit;cursor:pointer}
+.fil .lien-retour:hover{color:var(--action)}
 /* La photo est posee EN ABSOLU dans son cadre : en flux, sa hauteur propre
    commande, le rapport de forme du cadre ne s'applique plus, et un rendu de
    1200x900 occupe tout l'ecran. */
@@ -3341,7 +3348,8 @@ async function fiche(p) {
   const aSurface = p.typologies.some(t => t.surface_min);
   const aEquip = p.typologies.some(t => t.parking || t.cave);
   vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ›
+    <p class="fil"><button type="button" class="lien-retour" onclick="history.back()">‹ ${T('Retour')}</button>
+      <a href="#/">${T('Programmes neufs')}</a> ›
       <a href="#/ville/${esc(cleVille(p.ville))}">${esc(T(p.ville))}</a> ›
       ${esc(p.nom)}</p>
     <div class="fiche-tete">
