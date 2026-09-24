@@ -244,13 +244,22 @@ button,input,select,textarea{font:inherit;color:inherit}
    24/09/2026, apres l'avoir cherche plusieurs fois sur des pages qui ne
    l'avaient pas encore. Il rejoue l'historique du navigateur : contrairement
    a un lien fixe, il retombe exactement sur la page quittee, filtres et
-   defilement compris. `router()` bascule `[hidden]` a chaque navigation. */
+   defilement compris.
+
+   `router()` bascule la classe `.voir`, jamais `[hidden]` : avec `hidden`
+   (donc `display:none`), le bouton retirait sa place a chaque navigation et
+   tout le reste de l'entete — logo, reseaux sociaux — se decalait d'un cran.
+   `visibility` garde la meme largeur reservee tout le temps, invisible ou
+   pas : rien d'autre ne bouge (signale par Hillel le 24/09/2026). Fond
+   teinte + bordure pleine plutot qu'un filet gris : le premier essai, trop
+   discret, se voyait mal sur la barre claire. */
 .global-retour{display:inline-flex;align-items:center;gap:4px;flex:none;
- font-weight:600;font-size:13.5px;color:var(--action);background:none;
- padding:8px 10px;border:1px solid var(--trait);border-radius:999px;
- white-space:nowrap;cursor:pointer;margin-inline-end:8px}
-.global-retour[hidden]{display:none}
-.global-retour:hover{border-color:var(--action)}
+ font-weight:700;font-size:13.5px;color:var(--action);
+ background:var(--action-lavis);padding:8px 10px;border:1.5px solid var(--action);
+ border-radius:999px;white-space:nowrap;cursor:pointer;margin-inline-end:8px;
+ visibility:hidden;pointer-events:none}
+.global-retour.voir{visibility:visible;pointer-events:auto}
+.global-retour:hover{background:var(--action);color:#fff}
 @media(max-width:560px){.global-retour{padding:7px 9px;font-size:13px}}
 
 .burger{display:none;flex:none;width:40px;height:40px;border:0;background:none;
