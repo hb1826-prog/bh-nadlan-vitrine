@@ -5,6 +5,9 @@
 <link rel=icon type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel=apple-touch-icon href="icone-180.png">
 <link rel=manifest href="manifest.webmanifest">
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
+<meta name=apple-mobile-web-app-title content="BH Annuaire">
 <link rel=alternate hreflang='fr' href='https://bh-nadlan.com/'><link rel=alternate hreflang='en' href='https://bh-nadlan.com/annuaire/en/'><link rel=alternate hreflang='he' href='https://bh-nadlan.com/annuaire/he/'><link rel=alternate hreflang='es' href='https://bh-nadlan.com/annuaire/es/'><link rel=alternate hreflang='pt' href='https://bh-nadlan.com/annuaire/pt/'><link rel=alternate hreflang='ru' href='https://bh-nadlan.com/annuaire/ru/'><link rel=alternate hreflang='x-default' href='https://bh-nadlan.com/'><link rel=canonical href='https://bh-nadlan.com/'>
 <meta name=theme-color content="#414A5C">
 <title>BH — Programmes neufs · Israël</title>
@@ -1349,6 +1352,32 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
    ajouter le survol. Une seule taille de rond partout dans un meme bloc
    supprime l'ecart d'un reseau a l'autre (TikTok/Instagram paraissaient
    plus petits que YouTube a densite d'encre egale, corrige le 24/09/2026). */
+/* Le bandeau d'installation : pose au ras du bas, jamais par-dessus le
+   bouton flottant WhatsApp/mail (voir la marge a droite). Une seule
+   information, un seul geste — rien qui ressemble a une publicite. */
+.install-bandeau{position:fixed;left:12px;right:12px;bottom:-100px;
+ z-index:70;background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre-2);
+ transition:bottom .3s var(--ease);padding-bottom:env(safe-area-inset-bottom)}
+.install-bandeau.on{bottom:12px}
+.install-in{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 16px}
+.install-picto{flex:none;width:38px;height:38px;border-radius:10px;
+ background:var(--or-lavis);color:var(--or-fonce);display:flex;
+ align-items:center;justify-content:center}
+.install-picto svg{width:20px;height:20px}
+.install-texte{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.install-texte b{font-size:14px;line-height:1.3}
+.install-texte span{font-size:12.5px;color:var(--gris);line-height:1.4}
+.install-go{flex:none;background:var(--action);color:#fff;border:none;
+ border-radius:999px;padding:9px 15px;font-size:13px;font-weight:650;
+ cursor:pointer}
+.install-fermer{flex:none;width:26px;height:26px;border:none;background:none;
+ color:var(--gris);font-size:20px;line-height:1;cursor:pointer}
+@media (max-width:640px){
+  .install-in{padding:12px}
+  .install-texte span{display:none}
+}
+
 .pied-reseaux{display:flex;align-items:center;gap:12px;margin-top:18px;
  flex-wrap:wrap}
 .pied-reseaux a{display:flex;line-height:0;transition:transform .15s}
@@ -6636,9 +6665,12 @@ router();
   function afficher() {
     const zone = document.createElement('div');
     zone.className = 'install-bandeau';
+    // Le vrai logo de la marque du telephone (Apple/Android), demande le
+    // 24/09/2026 -- Hillel : « Application disponible sur BH Nadlan »,
+    // avec le logo qui dit tout de suite de quel telephone on parle.
     const picto = iOS
-      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M10 7h4M9 17.5h6"/></svg>';
+      ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z"/></svg>';
     const texte = iOS
       ? T('Appuyez sur le bouton Partager, puis « Sur l’écran d’accueil ».')
       : T('Ajoutez-la en un geste, comme une vraie application.');
@@ -6646,7 +6678,7 @@ router();
       <div class=install-in>
         <span class=install-picto>${picto}</span>
         <div class=install-texte>
-          <b>${T('Installez BH sur votre écran d’accueil')}</b>
+          <b>${T('Application disponible sur BH Nadlan')}</b>
           <span>${texte}</span>
         </div>
         ${android ? `<button type=button class=install-go>${T('Installer')}</button>` : ''}
