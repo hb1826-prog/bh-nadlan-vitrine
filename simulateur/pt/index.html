@@ -53,11 +53,14 @@
    (Hillel, 24/09/2026). Meme logique d'hebergement que Rubik : un fichier
    local, jamais une requete vers Google Fonts. Ne couvre pas l'hebreu —
    sans consequence ici, la chaine de secours (Georgia/serif) prend le
-   relais uniquement caractere par caractere si besoin. */
+   relais uniquement caractere par caractere si besoin.
+   Graisse 600 (semi-gras), pas 800 (extra-gras) : le noir epais faisait
+   encore « trop cheap » (Hillel, 24/09/2026, deuxieme retour) — un trait
+   plus fin est ce qui lit « classieux » a cette taille, pas plus de gras. */
 @font-face{
  font-family:'Titre Accroche';
  src:url('playfair.woff2') format('woff2');
- font-weight:800;
+ font-weight:600;
  font-style:normal;
  font-display:swap;
 }
@@ -398,9 +401,17 @@ button,input,select,textarea{font:inherit;color:inherit}
    le texte, qui garantit le contraste quelle que soit la photo en dessous —
    le meme procede qu'utilisent Stripe/Notion sur leurs pages d'accueil.
    `text-align:justify` aligne le texte des deux cotes (gauche ET droit). */
+/* Deuxieme retour de Hillel le meme jour : le titre restait « trop cheap »
+   malgre le fond vitre. Trois changements, pas un seul — le poids (800,
+   noir et epais, plus 600, semi-gras), la justification (`justify` sur un
+   serif etroit ouvrait des blancs irreguliers entre les mots, l'effet
+   « prospectus » precisement vise), et le blanc pur (trop dur, trop
+   « ecran » pour un serif elegant — remplace par le blanc casse chaud de
+   la marque, --or-clair, qui reste largement assez lisible sur le fond
+   vitre sombre). */
 .hero .zf-bandeau + h1{font-family:'Titre Accroche',Georgia,'Times New Roman',serif;
- font-size:42px;font-weight:800;line-height:1.32;letter-spacing:.002em;
- max-width:16em;text-align:justify;color:#fff;
+ font-size:42px;font-weight:600;line-height:1.32;letter-spacing:.002em;
+ max-width:16em;text-align:left;color:var(--or-clair);
  background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
  backdrop-filter:blur(6px);border-radius:14px;padding:14px 18px;
  box-shadow:0 8px 24px rgba(0,0,0,.25)}
