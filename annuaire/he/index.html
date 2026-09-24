@@ -393,8 +393,12 @@ button,input,select,textarea{font:inherit;color:inherit}
    grossi le meme jour, ce bandeau doit rester le premier repere de l'oeil. */
 .zf-bandeau{margin:0 0 14px;font-size:48px;font-weight:800;line-height:1.05;
  color:#fff;text-transform:uppercase}
+/* `white-space:nowrap` (Hillel, 24/09/2026, capture d'ecran a l'appui) :
+   sans lui, l'espace entre le chiffre et le signe pouvait tomber en fin de
+   ligne et le "%" repartait seul dessous – "0" et "%" doivent rester
+   colles ensemble. */
 .zf-pct{color:var(--or);font-weight:900;font-size:92px;
- line-height:1}
+ line-height:1;white-space:nowrap}
 /* Le h1 reprend la couleur or du zero au-dessus (plutot que le blanc uni
    d'avant, peu lisible sur la photo) et une largeur bornee – sans elle la
    phrase s'etirait sur toute la largeur en une seule ligne desequilibree
@@ -422,7 +426,7 @@ button,input,select,textarea{font:inherit;color:inherit}
    vitre sombre). */
 .hero .zf-bandeau + h1{font-family:'Titre Accroche',Georgia,'Times New Roman',serif;
  font-size:42px;font-weight:600;line-height:1.32;letter-spacing:.002em;
- max-width:16em;text-align:left;color:var(--or-clair);
+ max-width:16em;text-align:center;color:var(--or-clair);
  background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
  backdrop-filter:blur(6px);border-radius:var(--r-lg);padding:14px 18px;
  box-shadow:0 8px 24px rgba(0,0,0,.25)}
