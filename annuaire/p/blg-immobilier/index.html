@@ -4627,7 +4627,9 @@ async function simulateur(zone, p) {
   // tout le reste ». Meme etat par defaut, meme constante de courtier.
   if (!E.avocatMode) E.avocatMode = 'notre';
   if (E.avocatLibre == null) E.avocatLibre = f.taux.avocat || 0.5;
-  if (!E.accompagnementMode) E.accompagnementMode = 'non';
+  // L'accompagnement a 1 % est coche d'office (Hillel, 24/09/2026) : on
+  // le retire si l'on veut, on n'a pas a penser a l'ajouter.
+  if (!E.accompagnementMode) E.accompagnementMode = 'oui';
   if (!E.courtierMode) E.courtierMode = 'notre';
   if (!E.courtierLibreType) E.courtierLibreType = 'montant';
   if (E.courtierLibre == null) E.courtierLibre = COURTIER_RECOMMANDE;
@@ -5555,11 +5557,12 @@ async function etapeFrais(zone) {
   const notes = DONNEES.frais_notes || {};
 
   // Etat par defaut : l'avocat et le courtier recommandes sont deja
-  // choisis (c'est le conseil d'Hillel), l'accompagnement demarre a zero —
-  // « tu laisses a zero », c'est au visiteur de le cocher s'il le veut.
+  // choisis (c'est le conseil d'Hillel), et l'accompagnement a 1 % aussi —
+  // Hillel, 24/09/2026 : « par defaut, 1 % d'accompagnement compris ». Le
+  // visiteur reste libre de choisir « Sans accompagnement ».
   if (!TUNNEL.avocatMode) TUNNEL.avocatMode = 'notre';
   if (TUNNEL.avocatLibre == null) TUNNEL.avocatLibre = defaut.avocat || 0.5;
-  if (!TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'non';
+  if (!TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'oui';
   if (!TUNNEL.courtierMode) TUNNEL.courtierMode = 'notre';
   if (!TUNNEL.courtierLibreType) TUNNEL.courtierLibreType = 'montant';
   if (TUNNEL.courtierLibre == null) TUNNEL.courtierLibre = COURTIER_RECOMMANDE;
