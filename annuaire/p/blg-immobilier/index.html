@@ -2355,6 +2355,15 @@ function partager(titre, cheminOuUrl, e) {
   } catch (err) { /* on retombe sur WhatsApp juste en dessous */ }
   repli();
 }
+/* Le message d'un bien partage — demande le 24/09/2026, meme esprit que
+   « Partager le site » : une phrase toute prete, pas juste le nom du
+   programme, pour que celui qui recoit comprenne d'un coup pourquoi on la
+   lui envoie. */
+function messagePartageBien(nom) {
+  return T('Regarde ce bien que j’ai trouvé — {nom} — sur ce site '
+    + 'incroyable : tu peux simuler ton achat en temps réel, en direct '
+    + 'promoteur, sans frais d’agence.').replace('{nom}', nom);
+}
 function boutonPartage(titre, cheminOuUrl, discret) {
   // `data-*` plutot qu'un `onclick` compose a la main : un titre de
   // programme comme HaKouzari passe par JSON.stringify, qui rend des
@@ -2909,7 +2918,7 @@ function carte(p) {
     <a class="tile" href="#/${p.cle}">
       <div class="shot">
         <div class="badges">${badges.join('')}</div>
-        ${boutonPartage(p.nom, '#/' + p.cle, true)}
+        ${boutonPartage(messagePartageBien(p.nom), '#/' + p.cle, true)}
         <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
         <img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">
       </div>
@@ -3187,7 +3196,7 @@ function offre(p) {
 
   return `
   <aside class="offre"><div class="offre-in">
-    <h1>${esc(p.nom)}${boutonPartage(p.nom, '#/' + p.cle, false)}</h1>
+    <h1>${esc(p.nom)}${boutonPartage(messagePartageBien(p.nom), '#/' + p.cle, false)}</h1>
     ${p.promoteur ? `<div class="offre-promo">
       ${p.promoteur.logo_src
         ? `<img src="${esc(p.promoteur.logo_src)}" alt=""
