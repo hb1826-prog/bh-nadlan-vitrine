@@ -35,6 +35,21 @@
  font-display:swap;
 }
 
+/* Une seconde police, reservee au SEUL titre de la banniere d'accueil — un
+   serif elegant pour la phrase d'accroche, la ou Rubik (fonctionnelle,
+   partout ailleurs) faisait « trop cheap » pour une promesse marketing
+   (Hillel, 24/09/2026). Meme logique d'hebergement que Rubik : un fichier
+   local, jamais une requete vers Google Fonts. Ne couvre pas l'hebreu —
+   sans consequence ici, la chaine de secours (Georgia/serif) prend le
+   relais uniquement caractere par caractere si besoin. */
+@font-face{
+ font-family:'Titre Accroche';
+ src:url('playfair.woff2') format('woff2');
+ font-weight:800;
+ font-style:normal;
+ font-display:swap;
+}
+
 /* IDENTITE:debut — ecrit par `python data/sources/identite.py --portail --ecrire`.
    Ne pas retoucher a la main : la source est `identite.py`, et une
    valeur corrigee ici serait effacee au prochain passage. */
@@ -371,7 +386,8 @@ button,input,select,textarea{font:inherit;color:inherit}
    le texte, qui garantit le contraste quelle que soit la photo en dessous —
    le meme procede qu'utilisent Stripe/Notion sur leurs pages d'accueil.
    `text-align:justify` aligne le texte des deux cotes (gauche ET droit). */
-.hero .zf-bandeau + h1{font-size:42px;font-weight:850;line-height:1.32;
+.hero .zf-bandeau + h1{font-family:'Titre Accroche',Georgia,'Times New Roman',serif;
+ font-size:42px;font-weight:800;line-height:1.32;letter-spacing:.002em;
  max-width:16em;text-align:justify;color:#fff;
  background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
  backdrop-filter:blur(6px);border-radius:14px;padding:14px 18px;
