@@ -2419,12 +2419,21 @@ function partager(titre, cheminOuUrl, e) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
   const url = /^https?:\/\//.test(cheminOuUrl) ? cheminOuUrl
     : location.origin + location.pathname + cheminOuUrl;
-  if (navigator.share) {
-    navigator.share({title: titre, url: url}).catch(() => {});
-    return;
-  }
-  open('https://wa.me/?text=' + encodeURIComponent(titre + ' – ' + url),
-       '_blank', 'noopener');
+  const repli = () => open('https://wa.me/?text='
+    + encodeURIComponent(titre + ' – ' + url), '_blank', 'noopener');
+  // `navigator.share` peut REFUSER tout de suite (pas seulement rejeter sa
+  // promesse) selon le navigateur et le contexte du clic – un `.catch()`
+  // seul laissait alors le bouton « ne rien faire » sans repli, signale par
+  // Hillel le 24/09/2026. Le try/catch couvre les deux facons d'echouer.
+  try {
+    if (navigator.share) {
+      navigator.share({title: titre, url: url}).catch(err => {
+        if (err && err.name !== 'AbortError') repli();
+      });
+      return;
+    }
+  } catch (err) { /* on retombe sur WhatsApp juste en dessous */ }
+  repli();
 }
 function boutonPartage(titre, cheminOuUrl, discret) {
   // `data-*` plutot qu'un `onclick` compose a la main : un titre de

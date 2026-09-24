@@ -1351,16 +1351,19 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
    plus petits que YouTube a densite d'encre egale, corrige le 24/09/2026). */
 .pied-reseaux{display:flex;align-items:center;gap:12px;margin-top:18px;
  flex-wrap:wrap}
-.pied-reseaux a{display:flex;transition:transform .15s}
+.pied-reseaux a{display:flex;line-height:0;transition:transform .15s}
 .pied-reseaux a:hover{transform:translateY(-2px)}
+.pied-reseaux a span{vertical-align:top}
+.pied-reseaux a svg{display:block}
 .pied-reseaux button{margin-left:6px;background:var(--fond);
  border:1px solid var(--trait);border-radius:999px;padding:9px 16px;
  font-size:13.5px;font-weight:650;color:var(--encre);cursor:pointer}
 .pied-reseaux button:hover{border-color:var(--action);color:var(--action)}
 
 .entete-reseaux{display:flex;align-items:center;gap:8px;margin-right:4px}
-.entete-reseaux a{display:flex;transition:transform .15s}
+.entete-reseaux a{display:flex;line-height:0;transition:transform .15s}
 .entete-reseaux a:hover{transform:translateY(-1px)}
+.entete-reseaux a svg{display:block}
 @media (max-width:860px){
   /* Sur telephone, la barre du haut est deja dense (burger, logo, CTA) —
      les reseaux restent au pied, pleine largeur, plus faciles a toucher. */
@@ -2304,12 +2307,21 @@ function partager(titre, cheminOuUrl, e) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
   const url = /^https?:\/\//.test(cheminOuUrl) ? cheminOuUrl
     : location.origin + location.pathname + cheminOuUrl;
-  if (navigator.share) {
-    navigator.share({title: titre, url: url}).catch(() => {});
-    return;
-  }
-  open('https://wa.me/?text=' + encodeURIComponent(titre + ' — ' + url),
-       '_blank', 'noopener');
+  const repli = () => open('https://wa.me/?text='
+    + encodeURIComponent(titre + ' — ' + url), '_blank', 'noopener');
+  // `navigator.share` peut REFUSER tout de suite (pas seulement rejeter sa
+  // promesse) selon le navigateur et le contexte du clic — un `.catch()`
+  // seul laissait alors le bouton « ne rien faire » sans repli, signale par
+  // Hillel le 24/09/2026. Le try/catch couvre les deux facons d'echouer.
+  try {
+    if (navigator.share) {
+      navigator.share({title: titre, url: url}).catch(err => {
+        if (err && err.name !== 'AbortError') repli();
+      });
+      return;
+    }
+  } catch (err) { /* on retombe sur WhatsApp juste en dessous */ }
+  repli();
 }
 function boutonPartage(titre, cheminOuUrl, discret) {
   // `data-*` plutot qu'un `onclick` compose a la main : un titre de
