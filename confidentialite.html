@@ -1340,6 +1340,32 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
    ajouter le survol. Une seule taille de rond partout dans un meme bloc
    supprime l'ecart d'un reseau a l'autre (TikTok/Instagram paraissaient
    plus petits que YouTube a densite d'encre egale, corrige le 24/09/2026). */
+/* Le bandeau d'installation : pose au ras du bas, jamais par-dessus le
+   bouton flottant WhatsApp/mail (voir la marge a droite). Une seule
+   information, un seul geste — rien qui ressemble a une publicite. */
+.install-bandeau{position:fixed;left:12px;right:12px;bottom:-100px;
+ z-index:70;background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre-2);
+ transition:bottom .3s var(--ease);padding-bottom:env(safe-area-inset-bottom)}
+.install-bandeau.on{bottom:12px}
+.install-in{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 16px}
+.install-picto{flex:none;width:38px;height:38px;border-radius:10px;
+ background:var(--or-lavis);color:var(--or-fonce);display:flex;
+ align-items:center;justify-content:center}
+.install-picto svg{width:20px;height:20px}
+.install-texte{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.install-texte b{font-size:14px;line-height:1.3}
+.install-texte span{font-size:12.5px;color:var(--gris);line-height:1.4}
+.install-go{flex:none;background:var(--action);color:#fff;border:none;
+ border-radius:999px;padding:9px 15px;font-size:13px;font-weight:650;
+ cursor:pointer}
+.install-fermer{flex:none;width:26px;height:26px;border:none;background:none;
+ color:var(--gris);font-size:20px;line-height:1;cursor:pointer}
+@media (max-width:640px){
+  .install-in{padding:12px}
+  .install-texte span{display:none}
+}
+
 .pied-reseaux{display:flex;align-items:center;gap:12px;margin-top:18px;
  flex-wrap:wrap}
 .pied-reseaux a{display:flex;line-height:0;transition:transform .15s}

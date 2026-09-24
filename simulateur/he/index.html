@@ -1349,6 +1349,32 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
    ajouter le survol. Une seule taille de rond partout dans un meme bloc
    supprime l'ecart d'un reseau a l'autre (TikTok/Instagram paraissaient
    plus petits que YouTube a densite d'encre egale, corrige le 24/09/2026). */
+/* Le bandeau d'installation : pose au ras du bas, jamais par-dessus le
+   bouton flottant WhatsApp/mail (voir la marge a droite). Une seule
+   information, un seul geste – rien qui ressemble a une publicite. */
+.install-bandeau{position:fixed;left:12px;right:12px;bottom:-100px;
+ z-index:70;background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre-2);
+ transition:bottom .3s var(--ease);padding-bottom:env(safe-area-inset-bottom)}
+.install-bandeau.on{bottom:12px}
+.install-in{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 16px}
+.install-picto{flex:none;width:38px;height:38px;border-radius:10px;
+ background:var(--or-lavis);color:var(--or-fonce);display:flex;
+ align-items:center;justify-content:center}
+.install-picto svg{width:20px;height:20px}
+.install-texte{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.install-texte b{font-size:14px;line-height:1.3}
+.install-texte span{font-size:12.5px;color:var(--gris);line-height:1.4}
+.install-go{flex:none;background:var(--action);color:#fff;border:none;
+ border-radius:999px;padding:9px 15px;font-size:13px;font-weight:650;
+ cursor:pointer}
+.install-fermer{flex:none;width:26px;height:26px;border:none;background:none;
+ color:var(--gris);font-size:20px;line-height:1;cursor:pointer}
+@media (max-width:640px){
+  .install-in{padding:12px}
+  .install-texte span{display:none}
+}
+
 .pied-reseaux{display:flex;align-items:center;gap:12px;margin-top:18px;
  flex-wrap:wrap}
 .pied-reseaux a{display:flex;line-height:0;transition:transform .15s}
@@ -6620,5 +6646,77 @@ if (HAUT) {
 })();
 
 router();
+
+/* Le bandeau « installer sur l'ecran d'accueil » – demande le 24/09/2026,
+   Hillel : « pas un truc du tout agressif ». Trois regles pour ca :
+   1. jamais avant que le visiteur ait descendu la moitie de son premier
+      ecran (il vient de lire le pitch, pas encore de choisir) ;
+   2. une fermeture qui tient (30 jours), jamais reproposee a chaque page ;
+   3. jamais sous la charte d'un partenaire – c'est l'app BH, pas la sienne.
+   iOS n'a pas de bouton natif « installer » (Apple ne l'expose pas au web) :
+   la seule voie est d'expliquer le geste (Partager -> Sur l'ecran d'accueil).
+   Android, lui, sait le proposer directement via `beforeinstallprompt`. */
+(function bandeauInstaller() {
+  if (DONNEES.marque) return;
+  if (window.matchMedia('(display-mode: standalone)').matches
+      || navigator.standalone === true) return;   // deja installe
+  const iOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const android = /Android/.test(navigator.userAgent);
+  if (!iOS && !android) return;                    // un ordinateur n'installe rien ici
+
+  const CLE = 'bh_install_masque_jusqua';
+  const masque = +(localStorage.getItem(CLE) || 0);
+  if (Date.now() < masque) return;
+
+  let promptEvent = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    promptEvent = e;
+  });
+
+  let montre = false;
+  window.addEventListener('scroll', () => {
+    if (montre) return;
+    const bas = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
+    if (bas > 0.5) { montre = true; afficher(); }
+  }, {passive: true});
+
+  function fermer(zone, jours) {
+    zone.classList.remove('on');
+    localStorage.setItem(CLE, Date.now() + jours * 86400000);
+    setTimeout(() => zone.remove(), 300);
+  }
+
+  function afficher() {
+    const zone = document.createElement('div');
+    zone.className = 'install-bandeau';
+    const picto = iOS
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M10 7h4M9 17.5h6"/></svg>';
+    const texte = iOS
+      ? T('Appuyez sur le bouton Partager, puis « Sur l’écran d’accueil ».')
+      : T('Ajoutez-la en un geste, comme une vraie application.');
+    zone.innerHTML = `
+      <div class=install-in>
+        <span class=install-picto>${picto}</span>
+        <div class=install-texte>
+          <b>${T('Installez BH sur votre écran d’accueil')}</b>
+          <span>${texte}</span>
+        </div>
+        ${android ? `<button type=button class=install-go>${T('Installer')}</button>` : ''}
+        <button type=button class=install-fermer aria-label="${T('Fermer')}">&times;</button>
+      </div>`;
+    document.body.appendChild(zone);
+    requestAnimationFrame(() => zone.classList.add('on'));
+    zone.querySelector('.install-fermer').onclick = () => fermer(zone, 30);
+    const go = zone.querySelector('.install-go');
+    if (go) go.onclick = async () => {
+      if (!promptEvent) return fermer(zone, 3);
+      promptEvent.prompt();
+      const choix = await promptEvent.userChoice;
+      fermer(zone, choix.outcome === 'accepted' ? 365 : 7);
+    };
+  }
+})();
 </script>
 </body></html>
