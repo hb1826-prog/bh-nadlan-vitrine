@@ -363,13 +363,19 @@ button,input,select,textarea{font:inherit;color:inherit}
    et marquee — elle cree un halo sombre qui garde le texte lisible quel
    que soit ce qu'il y a derriere sur la photo, pas juste a cet endroit-la. */
 /* Le dore etait deja pris par le zero au-dessus : le reprendre ici faisait
-   « dore, dore, dore » (Hillel, 24/09/2026). Blanc net a la place — l'or
-   reste reserve au chiffre, le blanc porte la phrase, les deux roles se
-   distinguent d'un coup d'oeil. `text-align:justify` aligne le texte des
-   deux cotes (gauche ET droit), plutot que des lignes en escalier a droite. */
-.hero .zf-bandeau + h1{font-size:42px;font-weight:850;line-height:1.16;
+   « dore, dore, dore » (Hillel, 24/09/2026). Le blanc pur revenait ensuite
+   « blanc sur blanc » a l'endroit precis ou la photo est claire — un
+   troisieme essai de couleur pleine aurait le meme risque a un autre
+   endroit de la photo. Solution robuste plutot qu'une nouvelle couleur a
+   deviner : un panneau vitre sombre (fond fonce translucide + flou) derriere
+   le texte, qui garantit le contraste quelle que soit la photo en dessous —
+   le meme procede qu'utilisent Stripe/Notion sur leurs pages d'accueil.
+   `text-align:justify` aligne le texte des deux cotes (gauche ET droit). */
+.hero .zf-bandeau + h1{font-size:42px;font-weight:850;line-height:1.32;
  max-width:16em;text-align:justify;color:#fff;
- text-shadow:0 2px 3px rgba(0,0,0,.85),0 4px 14px rgba(0,0,0,.75)}
+ background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
+ backdrop-filter:blur(6px);border-radius:14px;padding:14px 18px;
+ box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
  padding:11px 14px;font-size:15px;cursor:pointer}
@@ -381,7 +387,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 @media(max-width:640px){
  .zf-bandeau{margin:0 0 10px;font-size:26px}
  .zf-pct{font-size:52px}
- .hero .zf-bandeau + h1{font-size:25px;line-height:1.24}
+ .hero .zf-bandeau + h1{font-size:25px;line-height:1.38;padding:10px 14px}
 }
 .zero-frais{display:flex;align-items:center;gap:16px;margin:0 0 18px}
 .zf-zero{font-size:132px;line-height:.78;font-weight:800;color:var(--or);
