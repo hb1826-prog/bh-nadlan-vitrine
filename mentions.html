@@ -1381,10 +1381,11 @@ details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
 .entete-reseaux a{display:flex;line-height:0;transition:transform .15s}
 .entete-reseaux a:hover{transform:translateY(-1px)}
 .entete-reseaux a svg{display:block}
-@media (max-width:860px){
-  /* Sur telephone, la barre du haut est deja dense (burger, logo, CTA) —
-     les reseaux restent au pied, pleine largeur, plus faciles a toucher. */
-  .entete-reseaux{display:none}
+/* Visibles y compris sur telephone (demande le 24/09/2026, Hillel : « en
+   haut, dans un coin, on les voit bien ») — juste plus petits pour tenir a
+   cote du burger, du logo et du bouton d'appel. */
+@media (max-width:640px){
+  .entete-reseaux{gap:5px}
 }
 .pied-col{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
 .pied-col b{font-size:12px;font-weight:750;letter-spacing:.07em;
