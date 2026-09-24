@@ -239,6 +239,20 @@ button,input,select,textarea{font:inherit;color:inherit}
    ecran), il n'apparait qu'en dessous de 900px — la ou `.nav` disparaissait
    jusqu'ici sans aucun repli, et ou « Blog » devait pourtant rester
    accessible depuis l'entete. */
+/* Le bouton Retour global : present sur CHAQUE page (sauf l'accueil), pose
+   une fois dans l'entete plutot que recopie page par page — Hillel,
+   24/09/2026, apres l'avoir cherche plusieurs fois sur des pages qui ne
+   l'avaient pas encore. Il rejoue l'historique du navigateur : contrairement
+   a un lien fixe, il retombe exactement sur la page quittee, filtres et
+   defilement compris. `router()` bascule `[hidden]` a chaque navigation. */
+.global-retour{display:inline-flex;align-items:center;gap:4px;flex:none;
+ font-weight:600;font-size:13.5px;color:var(--action);background:none;
+ padding:8px 10px;border:1px solid var(--trait);border-radius:999px;
+ white-space:nowrap;cursor:pointer;margin-inline-end:8px}
+.global-retour[hidden]{display:none}
+.global-retour:hover{border-color:var(--action)}
+@media(max-width:560px){.global-retour{padding:7px 9px;font-size:13px}}
+
 .burger{display:none;flex:none;width:40px;height:40px;border:0;background:none;
  cursor:pointer;flex-direction:column;align-items:center;justify-content:center;
  gap:5px}
@@ -662,13 +676,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* ============================== la fiche ============================== */
 .fil{font-size:13.5px;color:var(--gris);padding:22px 0 0}
 .fil a:hover{color:var(--action)}
-/* Le bouton Retour d'une fiche : contrairement au fil d'Ariane (qui ramene
-   toujours au meme endroit fixe), il rejoue l'historique du navigateur et
-   retombe donc exactement sur la page quittee, filtres et defilement
-   compris (Hillel, 24/09/2026). */
-.fil .lien-retour{background:none;border:0;padding:0;margin:0 10px 0 0;
- font:inherit;color:inherit;cursor:pointer}
-.fil .lien-retour:hover{color:var(--action)}
 /* La photo est posee EN ABSOLU dans son cadre : en flux, sa hauteur propre
    commande, le rapport de forme du cadre ne s'applique plus, et un rendu de
    1200x900 occupe tout l'ecran. */
