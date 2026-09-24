@@ -537,6 +537,15 @@ button,input,select,textarea{font:inherit;color:inherit}
  background:var(--fond);color:var(--encre-2)}
 .hs-modes button.on{background:var(--action-lavis);border-color:var(--action);
  color:var(--action)}
+/* La monnaie de l'apport, toujours visible et au choix (Hillel,
+   24/09/2026 : il avait tape 500.000 sans savoir si c'etait des euros). */
+.hs-devise{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+.hs-devise[hidden]{display:none}
+.hs-devise span{font-size:12.5px;font-weight:700;color:var(--gris)}
+.hs-devise button{font:inherit;font-size:14px;font-weight:700;cursor:pointer;
+ padding:6px 14px;border-radius:999px;border:1px solid var(--trait);
+ background:var(--fond);color:var(--encre-2)}
+.hs-devise button.on{background:var(--action);border-color:var(--action);color:#fff}
 .hs-go{font:inherit;font-size:16px;font-weight:750;cursor:pointer;border:0;
  background:var(--action);color:#fff;border-radius:999px;padding:14px 18px;
  margin-top:6px;box-shadow:0 6px 18px color-mix(in srgb,var(--action) 35%,transparent)}
