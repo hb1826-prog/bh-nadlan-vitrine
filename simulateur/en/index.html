@@ -263,8 +263,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  white-space:nowrap;cursor:pointer;margin-inline-end:8px}
 .global-retour[hidden]{display:none}
 .global-retour:hover{border-color:var(--action)}
-@media(max-width:560px){.global-retour{padding:7px 9px;font-size:0}
- .global-retour::before{content:"‹";font-size:16px}}
+@media(max-width:560px){.global-retour{padding:7px 9px;font-size:13px}}
 
 .burger{display:none;flex:none;width:40px;height:40px;border:0;background:none;
  cursor:pointer;flex-direction:column;align-items:center;justify-content:center;
@@ -2007,6 +2006,8 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 
 <header class=pub-top><div class="pub-in pub-bar">
   <div class="pub-flanc pub-flanc-g">
+    <button type=button id=global-retour class=global-retour hidden
+      onclick="history.back()">‹ Back</button>
     <button class=burger type=button id=burger aria-label="Menu" aria-expanded=false>
       <span></span><span></span><span></span>
     </button>
@@ -6398,6 +6399,12 @@ async function router() {
   // barre mobile, le bouton « Etre rappele » et les liens du haut, le pied de
   // page — voir les regles `body.tunnel-plein` de `portail.css`.
   document.body.classList.toggle('tunnel-plein', cle === 'simulateur');
+  // Le bouton Retour global : visible sur toutes les pages sauf l'accueil et
+  // le simulateur autonome (qui a deja son propre lien de retour vers les
+  // programmes). Recalcule a chaque navigation plutot qu'une fois pour
+  // toutes, puisque `cle` change sans recharger la page.
+  const boutonRetour = document.getElementById('global-retour');
+  if (boutonRetour) boutonRetour.hidden = seul || !cle || cle === '/';
   // Sans bien choisi, le simulateur autonome est un tunnel par etapes
   // (budget -> profil -> coordonnees) depuis le 09/09/2026 — voir
   // `vueSimulateurEtapes()`. `vueSimulateur()` (tout affiche d'un coup) reste
