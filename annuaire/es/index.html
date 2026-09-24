@@ -3869,8 +3869,26 @@ function raccourcis() {
       if (cb) cb.value = F.budget;
       zone.querySelectorAll('button').forEach(x => x.classList.remove('on'));
       if (!b.dataset.tout) b.classList.add('on');
+      // « Tout voir » : contrairement a une ville, il ne reste rien a
+      // affiner apres — les pieces et types choisis avant de cliquer
+      // laissaient sinon la liste filtree en douce, et le clic semblait ne
+      // rien faire (signale par Hillel le 24/09/2026). On repart a zero et
+      // on descend directement aux resultats, comme le bouton « Voir les
+      // biens » juste apres.
+      if (b.dataset.tout) {
+        F.pieces = [];
+        F.types = [];
+        document.querySelectorAll('#f-pieces button').forEach(x =>
+          x.classList.remove('on'));
+      }
       if (location.hash && location.hash !== '#/') location.hash = '#/';
       else liste();
+      if (b.dataset.tout) {
+        const cible = document.getElementById('entete')
+          || document.querySelector('.wrap');
+        if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'start'});
+        return;
+      }
       // Aucun defilement ici : on reste dans la boite de recherche pour
       // pouvoir ajouter les pieces et le budget. C'est le bouton
       // « Rechercher », juste dessous, qui emmene aux resultats.
