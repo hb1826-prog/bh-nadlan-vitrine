@@ -1858,11 +1858,18 @@ table.ag th{width:64%}
 .ligne-pieces .pastilles{gap:7px}
 .ligne-pieces .pastilles button{height:42px;min-width:46px;padding:0 14px;
  font-size:14.5px}
+/* Le champ Ville, sorti du sous-menu « Affiner ma recherche » pour rester
+   visible d'entree, a cote du nombre de pieces (Hillel, 24/09/2026 : il
+   fallait pouvoir changer de ville sans ouvrir un sous-menu). Une largeur
+   fixe plutot que le `width:100%` herite de `.champ select` : sinon il
+   s'etire jusqu'a occuper toute la place laissee par les pastilles. */
+.ligne-pieces .champ-ville{flex:0 0 auto;width:190px;margin-left:auto}
 @media(max-width:900px){
  .ligne-pieces{gap:7px;padding-bottom:10px}
  .ligne-pieces .rac-lab{width:100%;margin-bottom:2px}
  .ligne-pieces .pastilles button{height:40px;min-width:42px;padding:0 12px;
   font-size:14px}
+ .ligne-pieces .champ-ville{width:100%;margin-left:0}
 }
 
 /* ---------------- « Être rappelé », sur place
@@ -2078,12 +2085,12 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   <div class=ligne-pieces>
     <span class=rac-lab>Nombre de pièces</span>
     <div class=pastilles id=f-pieces><button type=button data-p='2.0'>2<small>p.</small></button><button type=button data-p='2.5'>2,5<small>p.</small></button><button type=button data-p='3.0'>3<small>p.</small></button><button type=button data-p='3.5'>3,5<small>p.</small></button><button type=button data-p='4.0'>4<small>p.</small></button><button type=button data-p='4.5'>4,5<small>p.</small></button><button type=button data-p='5.0'>5<small>p.</small></button><button type=button data-p='6' data-et-plus='1'>6+<small>p.</small></button><span class=pastilles-sep></span><button type=button data-type='Duplex'>Duplex</button><button type=button data-type='Mini penthouse'>Mini penthouse</button><button type=button data-type='Penthouse'>Penthouse</button><button type=button data-type='Rez-de-jardin'>Rez-de-jardin</button></div>
+    <div class="champ champ-ville"><label for=f-ville>Ville</label>
+      <select id=f-ville><option value="">Toutes les villes</option>
+        <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Givat Shmuel'>Givat Shmuel</option><option value='Givatayim'>Givatayim</option><option value='Herzliya'>Herzliya</option><option value='Jerusalem'>Jerusalem</option><option value='Kiryat Bialik'>Kiryat Bialik</option><option value='Kiryat Gat'>Kiryat Gat</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Ofakim'>Ofakim</option><option value='Or Yehuda'>Or Yehuda</option><option value='Petah Tikva'>Petah Tikva</option><option value='Ramat Gan'>Ramat Gan</option><option value='Tel Aviv'>Tel Aviv</option></select></div>
   </div>
   <button type=button class=filtres-toggle id=filtres-toggle>Affiner ma recherche <span class=chev>▾</span></button>
   <div class=champs id=pub-filtres hidden>
-    <div class=champ><label for=f-ville>Ville</label>
-      <select id=f-ville><option value="">Toutes les villes</option>
-        <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Givat Shmuel'>Givat Shmuel</option><option value='Givatayim'>Givatayim</option><option value='Herzliya'>Herzliya</option><option value='Jerusalem'>Jerusalem</option><option value='Kiryat Bialik'>Kiryat Bialik</option><option value='Kiryat Gat'>Kiryat Gat</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Ofakim'>Ofakim</option><option value='Or Yehuda'>Or Yehuda</option><option value='Petah Tikva'>Petah Tikva</option><option value='Ramat Gan'>Ramat Gan</option><option value='Tel Aviv'>Tel Aviv</option></select></div>
     <div class=champ><label for=f-budget>Budget maximum</label>
       <select id=f-budget><option value="">Indifférent</option>
         <option value='1500000'>jusqu'à 1 500 000 ₪</option><option value='2000000'>jusqu'à 2 000 000 ₪</option><option value='2500000'>jusqu'à 2 500 000 ₪</option><option value='3000000'>jusqu'à 3 000 000 ₪</option><option value='4000000'>jusqu'à 4 000 000 ₪</option><option value='5000000'>jusqu'à 5 000 000 ₪</option><option value='7000000'>jusqu'à 7 000 000 ₪</option><option value='8700000'>jusqu'à 8 700 000 ₪</option></select></div>
