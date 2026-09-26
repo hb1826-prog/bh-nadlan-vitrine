@@ -2529,8 +2529,8 @@ const TUNNELS = {
    elle passe par le taux de la Banque d'Israel fige a la fabrication ; sans
    taux, on ne convertit rien et l'on demande des shekels. */
 function apportIls() {
-  const t = tauxEuro();
-  if (TUNNEL.devise === 'EUR' && t) return Math.round((TUNNEL.montant || 0) * t);
+  const t = tauxDevise(TUNNEL.devise);
+  if (TUNNEL.devise !== 'ILS' && t) return Math.round((TUNNEL.montant || 0) * t);
   return Math.round(TUNNEL.montant || 0);
 }
 /* Le prix qui sert seulement a lire le plafond de credit et les honoraires
@@ -2822,6 +2822,14 @@ function poserMilliers(champ) {
 function tauxEuro() {
   return ((DONNEES.change || {}).taux || {}).EUR || 0;
 }
+/* Meme lecture pour une devise quelconque — l'euro reste le cas particulier
+   ci-dessus, garde tel quel partout ou il sert deja (les prix affiches en
+   double sur les fiches). */
+function tauxDevise(code) {
+  if (code === 'ILS') return 1;
+  return ((DONNEES.change || {}).taux || {})[code] || 0;
+}
+const DEVISE_SYMB = {EUR: '€', USD: '$', ILS: '₪'};
 function eur(n) {
   const t = tauxEuro();
   if (!t) return '';

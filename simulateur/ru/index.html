@@ -2852,6 +2852,14 @@ function poserMilliers(champ) {
 function tauxEuro() {
   return ((DONNEES.change || {}).taux || {}).EUR || 0;
 }
+/* Meme lecture pour une devise quelconque — l'euro reste le cas particulier
+   ci-dessus, garde tel quel partout ou il sert deja (les prix affiches en
+   double sur les fiches). */
+function tauxDevise(code) {
+  if (code === 'ILS') return 1;
+  return ((DONNEES.change || {}).taux || {})[code] || 0;
+}
+const DEVISE_SYMB = {EUR: '€', USD: '$', ILS: '₪'};
 function eur(n) {
   const t = tauxEuro();
   if (!t) return '';
