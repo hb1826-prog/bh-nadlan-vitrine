@@ -378,6 +378,11 @@ button,input,select,textarea{font:inherit;color:inherit}
  gap:30px;flex-wrap:wrap;margin:30px 0 0;padding:0;
  list-style:none}
 .hero-preuves li{display:flex;flex-direction:column;gap:2px}
+/* Le chiffre « 15 ans d'experience », seul sur sa ligne, sous les deux
+   autres (Hillel, 26/09/2026). `flex-basis:100%` force le retour a la ligne
+   dans un conteneur en `flex-wrap:wrap`, meme quand les deux precedents
+   tiendraient encore cote a cote. */
+.hero-preuves .pr-ligne{flex-basis:100%}
 .hero-preuves b{font-size:26px;font-weight:750;line-height:1.1;color:var(--or);
  text-shadow:0 2px 10px rgba(0,0,0,.4)}
 .hero-preuves span{font-size:12.5px;letter-spacing:.05em;
@@ -2275,9 +2280,10 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <div class=hs-devise id=hs-devise hidden>
       <span>Montant en</span>
       <button type=button data-hs-devise=EUR>€ euros</button>
+      <button type=button data-hs-devise=USD>$ dollars</button>
       <button type=button data-hs-devise=ILS>₪ shekels</button>
     </div>
-    <label class=hs-lab for=hs-prix id=hs-lab data-prix="Prix du bien (₪)" data-eur="Votre apport (€)" data-ils="Votre apport (₪)">Prix du bien (₪)</label>
+    <label class=hs-lab for=hs-prix id=hs-lab data-prix="Prix du bien (₪)" data-eur="Votre apport (€)" data-usd="Votre apport ($)" data-ils="Votre apport (₪)">Prix du bien (₪)</label>
     <div class=hs-ligne>
       <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000" aria-label="Prix du bien (₪)">
       <button type=submit class=hs-go><span class=hs-long>Lancer ma simulation</span><span class=hs-court>Simuler</span> <span aria-hidden=true class=fl>→</span></button>
@@ -2529,8 +2535,8 @@ const TUNNELS = {
    elle passe par le taux de la Banque d'Israel fige a la fabrication ; sans
    taux, on ne convertit rien et l'on demande des shekels. */
 function apportIls() {
-  const t = tauxDevise(TUNNEL.devise);
-  if (TUNNEL.devise !== 'ILS' && t) return Math.round((TUNNEL.montant || 0) * t);
+  const t = tauxEuro();
+  if (TUNNEL.devise === 'EUR' && t) return Math.round((TUNNEL.montant || 0) * t);
   return Math.round(TUNNEL.montant || 0);
 }
 /* Le prix qui sert seulement a lire le plafond de credit et les honoraires
@@ -2822,14 +2828,6 @@ function poserMilliers(champ) {
 function tauxEuro() {
   return ((DONNEES.change || {}).taux || {}).EUR || 0;
 }
-/* Meme lecture pour une devise quelconque — l'euro reste le cas particulier
-   ci-dessus, garde tel quel partout ou il sert deja (les prix affiches en
-   double sur les fiches). */
-function tauxDevise(code) {
-  if (code === 'ILS') return 1;
-  return ((DONNEES.change || {}).taux || {})[code] || 0;
-}
-const DEVISE_SYMB = {EUR: '€', USD: '$', ILS: '₪'};
 function eur(n) {
   const t = tauxEuro();
   if (!t) return '';
