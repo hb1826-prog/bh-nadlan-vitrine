@@ -695,8 +695,19 @@ button,input,select,textarea{font:inherit;color:inherit}
  box-shadow:0 6px 18px -6px rgba(0,0,0,.5)}
 
 /* ===================== le modele economique, sous la recherche =========== */
+/* Deplace juste sous le hero le 25/09/2026 (avant : dans .wrap, apres la
+   boite de recherche) : ce bloc de confiance n'est plus imbrique dans
+   .wrap et doit donc porter lui-meme la largeur et les marges laterales
+   que .wrap donnait avant. */
 .modele{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
- padding:26px 0 30px;border-bottom:1px solid var(--trait);margin-bottom:26px}
+ max-width:1180px;margin:0 auto 26px;padding:26px 20px 30px;
+ border-bottom:1px solid var(--trait)}
+/* La preuve chiffree (programmes, villes, annees d'experience) : toujours
+   visible ici, meme sur telephone ou l'equivalent dans la banniere est
+   cache pour laisser la place au simulateur (Hillel, 25/09/2026). */
+.modele-preuve{grid-column:1/-1;margin:0 0 4px;text-align:center;
+ font-size:14px;color:var(--gris);letter-spacing:.01em}
+.modele-preuve b{color:var(--or-fonce);font-weight:800}
 /* Fils direct seulement : sans cela, un gras a l'interieur d'une phrase
    (« 0 frais d'agence ») passait a la ligne avec sa propre coche. */
 .modele > div > b{display:block;font-size:16.5px;font-weight:700;
@@ -2271,9 +2282,26 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
       <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000" aria-label="Prix du bien (₪)">
       <button type=submit class=hs-go><span class=hs-long>Lancer ma simulation</span><span class=hs-court>Simuler</span> <span aria-hidden=true class=fl>→</span></button>
     </div>
+    <p class=hs-note>Résultat immédiat : on vous demande juste où vous l’envoyer.</p>
   </form>
   </div>
 </section>
+
+<section class=modele id=modele>
+    <p class=modele-preuve><b>35</b> programmes suivis · <b>17</b> villes</p>
+    <div>
+      <b>Le prix du promoteur, pas un centime de plus</b>
+      <span><b>Zéro frais d’agence</b> sur votre achat : vous signez au prix que vous auriez obtenu en poussant vous-même la porte du bureau de vente. Sauf que la porte, nous l’avons déjà poussée.</span>
+    </div>
+    <div>
+      <b>Sauf que le prix, lui, est négocié</b>
+      <span>Remise, étage, orientation, cuisine, échéancier de paiement : tout ce qui se discute est discuté en hébreu, et avant vous.</span>
+    </div>
+    <div>
+      <b>Le vrai coût, avant de vous engager</b>
+      <span>Taxe d'acquisition, honoraires d'avocat, échéancier du promoteur, mensualité du prêt : vous avez le chiffrage complet dès le premier rendez-vous, et pas le jour de la signature.</span>
+    </div>
+  </section>
 
 <div class=cherche id=cherche><div class=boite>
   <div class=onglets>
@@ -2301,21 +2329,6 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 </div></div>
 
 <main class=wrap>
-
-  <section class=modele id=modele>
-    <div>
-      <b>Le prix du promoteur, pas un centime de plus</b>
-      <span><b>Zéro frais d’agence</b> sur votre achat : vous signez au prix que vous auriez obtenu en poussant vous-même la porte du bureau de vente. Sauf que la porte, nous l’avons déjà poussée.</span>
-    </div>
-    <div>
-      <b>Sauf que le prix, lui, est négocié</b>
-      <span>Remise, étage, orientation, cuisine, échéancier de paiement : tout ce qui se discute est discuté en hébreu, et avant vous.</span>
-    </div>
-    <div>
-      <b>Le vrai coût, avant de vous engager</b>
-      <span>Taxe d'acquisition, honoraires d'avocat, échéancier du promoteur, mensualité du prêt : vous avez le chiffrage complet dès le premier rendez-vous, et pas le jour de la signature.</span>
-    </div>
-  </section>
 
   <div class=entete id=entete>
     <h2 id=pub-titre>Nos programmes neufs</h2>
