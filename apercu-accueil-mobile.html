@@ -26,8 +26,9 @@ header svg{display:block}
 .page{max-width:460px;margin:0 auto}
 
 .intro{padding:22px 20px 6px;text-align:center}
-.intro h1{font-size:21px;line-height:1.3;margin:0 0 6px;font-weight:800}
-.intro p{margin:0;color:var(--gris);font-size:14px}
+.intro .zf{font-size:15px;font-weight:800;margin:0 0 8px}
+.intro .zf b{color:var(--or-fonce);font-size:19px}
+.intro h1{font-size:17.5px;line-height:1.4;margin:0;font-weight:700;color:var(--encre-2)}
 
 .choix{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:18px}
 .carte{background:var(--carte);border:1px solid var(--trait);border-radius:20px;
@@ -44,6 +45,10 @@ header svg{display:block}
  border-radius:999px;width:100%}
 .carte.simu .btn{background:var(--action);color:#fff}
 .carte.progs .btn{background:var(--encre);color:#fff}
+.carte .chiffres{display:flex;gap:10px;margin-top:2px}
+.carte .chiffres div{display:flex;flex-direction:column;align-items:center}
+.carte .chiffres b{font-size:16px;font-weight:800;color:var(--or-fonce);line-height:1.1}
+.carte .chiffres span{font-size:9px;color:var(--gris);text-transform:uppercase;letter-spacing:.03em}
 
 .section-titre{padding:30px 20px 10px;font-size:12.5px;font-weight:700;
  letter-spacing:.06em;text-transform:uppercase;color:var(--gris);text-align:center}
@@ -80,21 +85,26 @@ header svg{display:block}
 <div class=page>
 
   <div class=intro>
-    <h1>Qu'est-ce qui vous intéresse ?</h1>
-    <p>Deux chemins, droit au but — choisissez le vôtre</p>
+    <p class=zf>Frais d'agence : <b>0 %</b></p>
+    <h1>Enfin le premier site d'achat sur plan en Israël, direct promoteur et au prix négocié pour nos clients, où vous pouvez simuler votre achat et connaître tous vos frais annexes.</h1>
   </div>
 
   <div class=choix>
     <a class="carte simu" href="https://bh-nadlan.com/simulateur/">
       <div class=ic>🧮</div>
       <h2>Simulateur</h2>
-      <p>Combien ça coûte vraiment, mensualité comprise</p>
+      <p>Simulez à partir du prix du bien ou à partir de votre apport</p>
       <span class=btn>Simuler mon achat</span>
     </a>
     <a class="carte progs" href="#programmes-demo">
       <div class=ic>🏢</div>
       <h2>Nos programmes</h2>
       <p>Les biens neufs disponibles en Israël</p>
+      <div class=chiffres>
+        <div><b>17</b><span>villes</span></div>
+        <div><b>35</b><span>programmes</span></div>
+        <div><b>15</b><span>ans d'exp.</span></div>
+      </div>
       <span class=btn>Découvrir nos programmes</span>
     </a>
   </div>
