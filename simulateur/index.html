@@ -5450,49 +5450,50 @@ async function vueSimulateurEtapes() {
 }
 
 /* Le premier ecran, en DEUX questions separees plutot qu'un choix a trois
-   dans le meme tas (Hillel, 03/10/2026 : « d'abord avec ou sans credit,
-   ensuite a partir de mon apport ou du montant du bien »). La question du
-   depart (prix ou apport) ne se pose que si un credit est implique — sans
-   credit, il n'y a qu'une seule facon de chiffrer : le prix, point. */
+   dans le meme tas. Ordre inversé par Hillel le 03/10/2026 (après un premier
+   essai l'autre sens) : d'abord le point de depart (apport ou prix du
+   bien), ensuite — seulement si « prix du bien » — avec ou sans credit.
+   Partir de l'apport implique deja un credit (sinon l'apport, c'est juste
+   le prix) : pas de question en plus sur cette branche. */
 function etapeChoixMode(zone) {
   const prix = TUNNELS.credit.prix;
   const prog = programmeDuTunnel();
   compterVue('simu-ouvert');
   zone.innerHTML = `
     ${prog ? `<p class="si-note" style="margin:0 0 6px"><b>${esc(prog.nom)}</b> · ${esc(T(prog.ville))}</p>` : ''}
-    <div class="si-lab">${T('Avec ou sans crédit ?')}</div>
-    ${TUNNELS.credit.etape === 2 && prix ? `<p class="dim si-note" style="margin:-4px 0 12px">${T('Prix du bien')} : <b>${mil(prix)} ₪</b> · ${eur(prix)}</p>` : ''}
-    <button type="button" class="etape-carte" data-choix="comptant">
-      <span class="etape-carte-corps"><b>${T('Sans crédit')}</b>
-        <span class="note">${T('Vous payez comptant : le prix, les frais et la taxe.')}</span></span>
-      <span class="radio" aria-hidden="true"></span></button>
-    <button type="button" class="etape-carte" data-choix="avec-credit">
-      <span class="etape-carte-corps"><b>${T('Avec crédit')}</b>
-        <span class="note">${T('Une part financée par la banque : apport, mensualité, coût du crédit.')}</span></span>
-      <span class="radio" aria-hidden="true"></span></button>`;
-  zone.querySelectorAll('[data-choix]').forEach(b => {
-    b.onclick = () => {
-      if (b.dataset.choix === 'avec-credit') { etapeChoixDepart(zone); return; }
-      compterVue('simu-' + b.dataset.choix);
-      choisirModeSimu(b.dataset.choix); vueSimulateurEtapes();
-    };
-  });
-}
-
-/* Deuxieme question, seulement si « avec credit » — le prix ou l'apport
-   deviennent alors les deux points de depart possibles d'un meme calcul. */
-function etapeChoixDepart(zone) {
-  const prog = programmeDuTunnel();
-  zone.innerHTML = `
-    ${prog ? `<p class="si-note" style="margin:0 0 6px"><b>${esc(prog.nom)}</b> · ${esc(T(prog.ville))}</p>` : ''}
     <div class="si-lab">${T('À partir de votre apport, ou du montant du bien ?')}</div>
-    <button type="button" class="etape-carte" data-choix="credit">
+    ${TUNNELS.credit.etape === 2 && prix ? `<p class="dim si-note" style="margin:-4px 0 12px">${T('Prix du bien')} : <b>${mil(prix)} ₪</b> · ${eur(prix)}</p>` : ''}
+    <button type="button" class="etape-carte" data-choix="prix-du-bien">
       <span class="etape-carte-corps"><b>${T('À partir du montant du bien')}</b>
         <span class="note">${T('Vous donnez le prix du bien, on calcule mensualité, apport nécessaire et coût du crédit.')}</span></span>
       <span class="radio" aria-hidden="true"></span></button>
     <button type="button" class="etape-carte" data-choix="apport">
       <span class="etape-carte-corps"><b>${T('À partir de mon apport')}</b>
         <span class="note">${T('« J’ai 200.000 €, qu’est-ce que je peux acheter ? » Vous donnez la somme que vous avez, on calcule le prix que vous pouvez viser.')}</span></span>
+      <span class="radio" aria-hidden="true"></span></button>`;
+  zone.querySelectorAll('[data-choix]').forEach(b => {
+    b.onclick = () => {
+      if (b.dataset.choix === 'prix-du-bien') { etapeChoixCredit(zone); return; }
+      compterVue('simu-' + b.dataset.choix);
+      choisirModeSimu(b.dataset.choix); vueSimulateurEtapes();
+    };
+  });
+}
+
+/* Deuxieme question, seulement si « a partir du montant du bien » — avec ou
+   sans credit devient alors la vraie question, le prix etant deja acquis. */
+function etapeChoixCredit(zone) {
+  const prog = programmeDuTunnel();
+  zone.innerHTML = `
+    ${prog ? `<p class="si-note" style="margin:0 0 6px"><b>${esc(prog.nom)}</b> · ${esc(T(prog.ville))}</p>` : ''}
+    <div class="si-lab">${T('Avec ou sans crédit ?')}</div>
+    <button type="button" class="etape-carte" data-choix="comptant">
+      <span class="etape-carte-corps"><b>${T('Sans crédit')}</b>
+        <span class="note">${T('Vous payez comptant : le prix, les frais et la taxe.')}</span></span>
+      <span class="radio" aria-hidden="true"></span></button>
+    <button type="button" class="etape-carte" data-choix="credit">
+      <span class="etape-carte-corps"><b>${T('Avec crédit')}</b>
+        <span class="note">${T('Une part financée par la banque : apport, mensualité, coût du crédit.')}</span></span>
       <span class="radio" aria-hidden="true"></span></button>
     <div class="etape-nav">
       <button type="button" class="precedent" id="t-precedent-mode">${T('Précédent')}</button>
