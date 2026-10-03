@@ -487,11 +487,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero .dedans{display:grid;grid-template-columns:minmax(0,1fr) 380px;
  gap:48px;align-items:start}
 .hero-texte{min-width:0}
-/* Deux volets "Simulateur" / "Nos programmes" – telephone uniquement (voir
-   @media(max-width:900px) plus bas). Cache par defaut : sur ordinateur, le
-   simulateur integre et la liste de preuves existants restent inchanges
-   (Hillel, 03/10/2026 : "tu touches pas" au reste). */
-.hero-choix{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+/* Deux volets "Simulateur" / "Nos programmes" – telephone ET ordinateur
+   (etendu le 04/10/2026, Hillel : "il faut la meme chose sur... la version
+   PC"). Remplace le formulaire integre et la liste de preuves partout,
+   pas seulement sur mobile. */
+.hero-choix{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.hero-simu,.hero-preuves,.hero-decouvrir{display:none}
 .hc-carte{background:var(--carte);border-radius:var(--r-xl);padding:20px 14px;
  text-align:center;text-decoration:none;color:var(--encre);
  display:flex;flex-direction:column;align-items:center;gap:8px;
@@ -532,6 +533,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero .zf-bandeau + h1{grid-area:h1;max-width:none;margin:0;display:flex;
   align-items:center;justify-content:center;padding:22px 28px}
  .hero-simu{grid-area:simu;justify-content:center}
+ .hero-choix{grid-area:simu;align-self:center}
  .hero-preuves{grid-area:pr;justify-content:center;gap:0 72px;margin-top:34px}
  .hero-preuves li{align-items:center;text-align:center}
  .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
@@ -546,12 +548,6 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves li{align-items:center;text-align:center}
  .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
  .hero-simu{margin-left:auto;margin-right:auto;width:100%}
- /* Les deux volets remplacent, sur telephone seulement, le long formulaire
-    et la liste de preuves – approuve par Hillel le 03/10/2026 sur maquette
-    avant implementation. Rien n'est supprime : juste cache a cette largeur,
-    donc toujours intact pour l'ordinateur. */
- .hero-simu,.hero-preuves,.hero-decouvrir{display:none}
- .hero-choix{display:grid}
  /* Compresse le "0 %" et la phrase pour que les deux cartes tiennent sans
     defiler sur la premiere vue (Hillel, 03/10/2026, capture a l'appui) –
     seulement ici, ou les deux volets prennent deja la place du formulaire. */
