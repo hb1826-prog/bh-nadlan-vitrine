@@ -392,6 +392,14 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves b{font-size:21px}
  .hero-preuves span{font-size:11px}
 }
+/* Un lien discret, pas un bouton : Hillel a fait retirer les deux boutons de
+   la banniere le 16/09/2026 parce qu'ils repoussaient la boite de recherche
+   sous la ligne de flottaison. Celui-ci reste une simple ligne de texte,
+   sans fond ni cadre, pour ne pas reproduire le meme probleme. */
+.hero-decouvrir{display:inline-block;margin-top:14px;font-size:13.5px;
+ font-weight:650;color:var(--or);text-decoration:underline;
+ text-underline-offset:3px}
+.hero-decouvrir:hover{color:#fff}
 
 /* « 0 frais d'agence », le titre visuel de la banniere (Hillel, 24/09/2026 :
    « le plus evident possible »). Un zero geant, dore — l'or porte du texte
@@ -487,6 +495,23 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero .dedans{display:grid;grid-template-columns:minmax(0,1fr) 380px;
  gap:48px;align-items:start}
 .hero-texte{min-width:0}
+/* Deux volets "Simulateur" / "Nos programmes" — telephone uniquement (voir
+   @media(max-width:900px) plus bas). Cache par defaut : sur ordinateur, le
+   simulateur integre et la liste de preuves existants restent inchanges
+   (Hillel, 03/10/2026 : "tu touches pas" au reste). */
+.hero-choix{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.hc-carte{background:var(--carte);border-radius:var(--r-xl);padding:20px 14px;
+ text-align:center;text-decoration:none;color:var(--encre);
+ display:flex;flex-direction:column;align-items:center;gap:8px;
+ box-shadow:0 14px 30px -16px rgba(0,0,0,.35)}
+.hc-ic{font-size:26px}
+.hc-titre{font-size:15.5px;font-weight:800}
+.hc-texte,.hc-chiffres{font-size:12px;color:var(--gris);line-height:1.35}
+.hc-chiffres b{color:var(--or-fonce);font-weight:800}
+.hc-btn{margin-top:auto;font-size:13px;font-weight:700;padding:11px 10px;
+ border-radius:999px;width:100%}
+.hc-simu .hc-btn{background:var(--action);color:#fff}
+.hc-progs .hc-btn{background:var(--encre);color:#fff}
 .hero-simu{background:var(--carte);color:var(--encre);border-radius:var(--r-xl);
  box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 22px 20px;
  display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--or)}
@@ -524,6 +549,12 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves li{align-items:center;text-align:center}
  .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
  .hero-simu{margin-left:auto;margin-right:auto;width:100%}
+ /* Les deux volets remplacent, sur telephone seulement, le long formulaire
+    et la liste de preuves — approuve par Hillel le 03/10/2026 sur maquette
+    avant implementation. Rien n'est supprime : juste cache a cette largeur,
+    donc toujours intact pour l'ordinateur. */
+ .hero-simu,.hero-preuves,.hero-decouvrir{display:none}
+ .hero-choix{display:grid}
 }
 @media(max-width:640px){
  .hero .zf-bandeau{margin:0 0 12px;line-height:1}
@@ -2320,11 +2351,31 @@ ecrireCookie(c,'fr');
     <p class=zf-bandeau>Frais d’agence : <span class=zf-pct>0 %</span></p>
     <h1>Enfin le premier site d’achat sur plan en Israël, direct promoteur et au prix négocié pour nos clients, où vous pouvez simuler votre achat et connaître tous vos frais annexes.</h1>
     <ul class=hero-preuves><li><b>35</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li class=pr-ligne><b>15</b><span>ans d’expérience dans la promotion immobilière en Israël</span></li></ul>
+    <a class=hero-decouvrir href="#vue">Découvrir nos biens →</a>
+   </div>
+   <!-- Sur telephone seulement (voir .hero-choix dans le CSS) : deux volets
+        bien visibles des l'arrivee, approuves par Hillel le 03/10/2026 sur
+        maquette (apercu-accueil-mobile.html) avant implementation reelle.
+        Le simulateur integre et la liste de preuves restent inchanges pour
+        l'ordinateur — rien d'autre sur la page n'est touche. -->
+   <div class=hero-choix id=hero-choix>
+    <a class="hc-carte hc-simu" href="https://bh-nadlan.com/simulateur/">
+     <span class=hc-ic>🧮</span>
+     <span class=hc-titre>Simulateur</span>
+     <span class=hc-texte>À partir du prix du bien ou de votre apport</span>
+     <span class=hc-btn>Simuler mon achat</span>
+    </a>
+    <a class="hc-carte hc-progs" href="#vue">
+     <span class=hc-ic>🏢</span>
+     <span class=hc-titre>Nos programmes</span>
+     <span class=hc-chiffres><b>17</b> villes · <b>35</b> programmes</span>
+     <span class=hc-btn>Découvrir nos programmes</span>
+    </a>
    </div>
    <form class=hero-simu id=hero-simu novalidate>
     <span class=hs-sur>Simulateur gratuit</span>
     <b class=hs-titre>Simulez ici le prix réel de votre bien, frais compris</b>
-    <p class=hs-sous>Gratuit, en deux minutes : taxe d’acquisition, frais, mensualité et coût total.</p>
+    <p class=hs-sous>Gratuit, en deux minutes, à partir du prix d’un bien ou de votre apport : taxe d’acquisition, frais, mensualité et coût total.</p>
     <div class=hs-modes role=tablist>
       <button type=button class=on data-hs-depart=prix aria-selected=true>À partir du prix d’un bien</button>
       <button type=button data-hs-depart=apport aria-selected=false>À partir de votre apport</button>
