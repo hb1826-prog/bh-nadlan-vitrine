@@ -7,7 +7,7 @@
 <link rel=manifest href="manifest.webmanifest">
 <meta name=apple-mobile-web-app-capable content=yes>
 <meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
-<meta name=apple-mobile-web-app-title content="BH Home">
+<meta name=apple-mobile-web-app-title content="BH">
 <link rel=alternate hreflang='fr' href='https://bh-nadlan.com/simulateur/'><link rel=alternate hreflang='en' href='https://bh-nadlan.com/simulateur/en/'><link rel=alternate hreflang='he' href='https://bh-nadlan.com/simulateur/he/'><link rel=alternate hreflang='es' href='https://bh-nadlan.com/simulateur/es/'><link rel=alternate hreflang='pt' href='https://bh-nadlan.com/simulateur/pt/'><link rel=alternate hreflang='ru' href='https://bh-nadlan.com/simulateur/ru/'>
 <meta name=theme-color content="#414A5C">
 <title>סימולטור רכישה – BH · ישראל</title>
@@ -2582,7 +2582,12 @@ const E = {profil: 'israelien_unique', cadre: 'nom_propre',
            // Achat comptant : un etat a part, jamais une valeur de plus dans
            // la grille LTV (0 % s'y confondrait avec « pas encore choisi »).
            comptant: false,
-           prix: 2500000, frais: null,
+           // Pas de prix par defaut (Hillel, 04/10/2026) : meme logique que
+           // `profil`/`duree` plus bas – un choix explicite, jamais un
+           // chiffre deja la qu'on ne remarque pas et qu'on simule sans le
+           // vouloir. Rempli automatiquement UNIQUEMENT quand un bien precis
+           // est choisi (voir plus bas, `E.prix = p.typologies[0].prix_min`).
+           prix: 0, frais: null,
            // L'echeancier du promoteur. `signature` est le pourcentage verse
            // a la signature ; `promoteur` la part avancee par la banque
            // partenaire du promoteur (le halvaat kablan), qui ne reduit rien
@@ -2616,7 +2621,7 @@ const COURTIER_RECOMMANDE = 7000;
 
 let TUNNEL = {
   etape: 1,
-  prix: 2500000,
+  prix: 0,
   comptant: false,
   ltv: 50,
   // La duree du pret : `null` tant que le visiteur n'y touche pas, pour

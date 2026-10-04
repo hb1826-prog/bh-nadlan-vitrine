@@ -7,7 +7,7 @@
 <link rel=manifest href="manifest.webmanifest">
 <meta name=apple-mobile-web-app-capable content=yes>
 <meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
-<meta name=apple-mobile-web-app-title content="BH Home">
+<meta name=apple-mobile-web-app-title content="BH">
 
 <meta name=theme-color content="#414A5C">
 <title>BLG Immobilier — Programmes neufs · Israël</title>
@@ -2485,7 +2485,12 @@ const E = {profil: 'israelien_unique', cadre: 'nom_propre',
            // Achat comptant : un etat a part, jamais une valeur de plus dans
            // la grille LTV (0 % s'y confondrait avec « pas encore choisi »).
            comptant: false,
-           prix: 2500000, frais: null,
+           // Pas de prix par defaut (Hillel, 04/10/2026) : meme logique que
+           // `profil`/`duree` plus bas — un choix explicite, jamais un
+           // chiffre deja la qu'on ne remarque pas et qu'on simule sans le
+           // vouloir. Rempli automatiquement UNIQUEMENT quand un bien precis
+           // est choisi (voir plus bas, `E.prix = p.typologies[0].prix_min`).
+           prix: 0, frais: null,
            // L'echeancier du promoteur. `signature` est le pourcentage verse
            // a la signature ; `promoteur` la part avancee par la banque
            // partenaire du promoteur (le halvaat kablan), qui ne reduit rien
@@ -2519,7 +2524,7 @@ const COURTIER_RECOMMANDE = 7000;
 
 let TUNNEL = {
   etape: 1,
-  prix: 2500000,
+  prix: 0,
   comptant: false,
   ltv: 50,
   // La duree du pret : `null` tant que le visiteur n'y touche pas, pour
@@ -4796,11 +4801,12 @@ async function simulateur(zone, p) {
   // qui l'interesse, pas le prix d'appel.
   const champPrix = `<div class="f"><label>${T('Prix du bien (₪)')}</label>
       <div class="qwrap has-val">
-        <input id="s-prix" type="text" inputmode="numeric"
-               autocomplete="off" value="${mil(E.prix)}">
+        <input id="s-prix" type="text" inputmode="numeric" autocomplete="off"
+               placeholder="${T('Saisissez le montant ici')}"
+               value="${E.prix ? mil(E.prix) : ''}">
         <button type="button" class="q-clear" id="s-prix-clear" aria-label="${T('Effacer')}">✕</button>
       </div>
-      <span class="f-eur" id="s-prix-eur">${eur(E.prix)}</span></div>`;
+      <span class="f-eur" id="s-prix-eur">${E.prix ? eur(E.prix) : ''}</span></div>`;
   const choix = p
     ? `<div class="f"><label>${T('Appartement')}</label><select id="s-typo">${
         p.typologies.map(x => '<option value="' + x.cle + '"'
@@ -5626,11 +5632,12 @@ function etapePrix(zone) {
     <div class="si-lab">${T('Le prix du bien')}</div>
     <div class="f"><label>${T('Prix (₪)')}</label>
       <div class="qwrap has-val">
-        <input id="t-prix" type="text" inputmode="numeric"
-               autocomplete="off" value="${mil(TUNNEL.prix)}">
+        <input id="t-prix" type="text" inputmode="numeric" autocomplete="off"
+               placeholder="${T('Saisissez le montant ici')}"
+               value="${TUNNEL.prix ? mil(TUNNEL.prix) : ''}">
         <button type="button" class="q-clear" id="t-prix-clear" aria-label="${T('Effacer')}">✕</button>
       </div>
-      <span class="f-eur" id="t-prix-eur">${eur(TUNNEL.prix)}</span></div>
+      <span class="f-eur" id="t-prix-eur">${TUNNEL.prix ? eur(TUNNEL.prix) : ''}</span></div>
 
     <div class="etape-nav">
       <button type="button" class="suivant" id="t-suivant">${T('Suivant')}</button>
