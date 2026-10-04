@@ -4881,6 +4881,7 @@ async function simulateur(zone, p) {
   // (`etapeFrais`) – Hillel, le 19/09/2026 : « dans le simulateur et dans
   // tout le reste ». Meme etat par defaut, meme constante de courtier.
   if (!E.avocatMode) E.avocatMode = 'notre';
+  if (!E.avocatLibreType) E.avocatLibreType = 'pct';
   if (E.avocatLibre == null) E.avocatLibre = f.taux.avocat || 0.5;
   // L'accompagnement a 1 % est coche d'office (Hillel, 24/09/2026) : on
   // le retire si l'on veut, on n'a pas a penser a l'ajouter.
@@ -4955,8 +4956,14 @@ async function simulateur(zone, p) {
           <button data-s-avocat="non" class="${E.avocatMode === 'non' ? 'on' : ''}">${T('Sans avocat')}</button>
         </div>
         ${E.avocatMode === 'libre' ? `
-        <div class="f" style="margin-top:10px"><label>${T('Votre avocat (% du prix)')}</label>
-          <input id="s-avocat-libre" type="number" step="0.1" min="0" max="10" value="${E.avocatLibre}"></div>` : ''}
+        <div class="seg" style="margin-top:10px">
+          <button data-s-avocat-type="montant" class="${E.avocatLibreType === 'montant' ? 'on' : ''}">${T('Montant (₪)')}</button>
+          <button data-s-avocat-type="pct" class="${E.avocatLibreType === 'pct' ? 'on' : ''}">${T('% du prix')}</button>
+        </div>
+        <div class="f" style="margin-top:10px">
+          <label>${E.avocatLibreType === 'pct' ? T('Votre avocat (% du prix)') : T('Votre avocat (₪)')}</label>
+          <input id="s-avocat-libre" type="number" step="${E.avocatLibreType === 'pct' ? '0.1' : '500'}" min="0"
+                 ${E.avocatLibreType === 'pct' ? 'max="10"' : ''} value="${E.avocatLibre}"></div>` : ''}
         ${E.avocatMode === 'non' ? `
         <p class="dim si-note" style="margin-top:8px">⚠ ${T('Nous recommandons vivement de prendre un avocat, surtout si vous ne parlez pas hébreu : c’est lui qui relit le contrat et vous protège avant la signature.')}</p>` : ''}
       </div>
@@ -5042,8 +5049,16 @@ async function simulateur(zone, p) {
   const lireFrais = () => {
     const avLibre = $('#s-avocat-libre', zone);
     if (avLibre) E.avocatLibre = Math.max(0, +avLibre.value || 0);
-    const avocat = E.avocatMode === 'notre' ? (f.taux.avocat || 0.5)
-      : E.avocatMode === 'libre' ? E.avocatLibre : 0;
+    // Le serveur attend TOUJOURS un pourcentage pour l'avocat (il le
+    // plafonne a 10 %, voir fiscalite.py) – un montant fixe choisi ici est
+    // donc converti en son equivalent en % du prix avant d'etre envoye,
+    // exactement comme le courtier fait l'inverse (pct -> montant).
+    let avocat = 0;
+    if (E.avocatMode === 'notre') avocat = f.taux.avocat || 0.5;
+    else if (E.avocatMode === 'libre') {
+      avocat = (E.avocatLibreType === 'montant' && E.prix)
+        ? (E.avocatLibre / E.prix * 100) : E.avocatLibre;
+    }
     const agence = E.accompagnementMode === 'oui' ? (f.taux.agence || 1) : 0;
     const coLibre = $('#s-courtier-libre', zone);
     if (coLibre) E.courtierLibre = Math.max(0, +coLibre.value || 0);
@@ -5069,6 +5084,9 @@ async function simulateur(zone, p) {
   });
   zone.querySelectorAll('[data-s-courtier-type]').forEach(b => {
     b.onclick = () => { E.courtierLibreType = b.dataset.sCourtierType; lireFrais(); refaire(); };
+  });
+  zone.querySelectorAll('[data-s-avocat-type]').forEach(b => {
+    b.onclick = () => { E.avocatLibreType = b.dataset.sAvocatType; lireFrais(); refaire(); };
   });
   zone.querySelectorAll('[data-s-aide]').forEach(b => {
     b.onclick = (e) => {
@@ -5855,6 +5873,12 @@ async function etapeFrais(zone) {
   // Hillel, 24/09/2026 : « par defaut, 1 % d'accompagnement compris ». Le
   // visiteur reste libre de choisir « Sans accompagnement ».
   if (!TUNNEL.avocatMode) TUNNEL.avocatMode = 'notre';
+  // Contrairement au courtier, le serveur attend TOUJOURS un pourcentage
+  // pour l'avocat (plafonne a 10 %, voir fiscalite.py) : sans prix connu
+  // (parcours « apport »), un montant fixe ne peut pas se convertir – donc
+  // "pct" reste la seule option sur cette branche.
+  if (TUNNEL.apport) TUNNEL.avocatLibreType = 'pct';
+  if (!TUNNEL.avocatLibreType) TUNNEL.avocatLibreType = 'pct';
   if (TUNNEL.avocatLibre == null) TUNNEL.avocatLibre = defaut.avocat || 0.5;
   if (!TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'oui';
   if (!TUNNEL.courtierMode) TUNNEL.courtierMode = 'notre';
@@ -5876,11 +5900,16 @@ async function etapeFrais(zone) {
         <button data-avocat="libre" class="${TUNNEL.avocatMode === 'libre' ? 'on' : ''}">${T('Votre avocat')}</button>
         <button data-avocat="non" class="${TUNNEL.avocatMode === 'non' ? 'on' : ''}">${T('Sans avocat')}</button>
       </div>
+      ${TUNNEL.avocatMode === 'libre' && !TUNNEL.apport ? `
+      <div class="seg" style="margin-top:10px">
+        <button data-avocat-type="montant" class="${TUNNEL.avocatLibreType === 'montant' ? 'on' : ''}">${T('Montant (₪)')}</button>
+        <button data-avocat-type="pct" class="${TUNNEL.avocatLibreType === 'pct' ? 'on' : ''}">${T('% du prix')}</button>
+      </div>` : ''}
       ${TUNNEL.avocatMode === 'libre' ? `
       <div class="f" style="margin-top:10px">
-        <label>${T('Votre avocat (% du prix)')}</label>
-        <input id="t-avocat-libre" type="number" step="0.1" min="0" max="10"
-               value="${TUNNEL.avocatLibre}">
+        <label>${TUNNEL.avocatLibreType === 'pct' ? T('Votre avocat (% du prix)') : T('Votre avocat (₪)')}</label>
+        <input id="t-avocat-libre" type="number" step="${TUNNEL.avocatLibreType === 'pct' ? '0.1' : '500'}" min="0"
+               ${TUNNEL.avocatLibreType === 'pct' ? 'max="10"' : ''} value="${TUNNEL.avocatLibre}">
       </div>` : ''}
       ${TUNNEL.avocatMode === 'non' ? `
       <p class="dim si-note" style="margin-top:8px">⚠ ${T('Nous recommandons vivement de prendre un avocat, surtout si vous ne parlez pas hébreu : c’est lui qui relit le contrat et vous protège avant la signature.')}</p>` : ''}
@@ -5927,8 +5956,15 @@ async function etapeFrais(zone) {
   const lire = () => {
     const libreChamp = $('#t-avocat-libre', zone);
     if (libreChamp) TUNNEL.avocatLibre = Math.max(0, +libreChamp.value || 0);
-    const avocat = TUNNEL.avocatMode === 'notre' ? (defaut.avocat || 0.5)
-      : TUNNEL.avocatMode === 'libre' ? TUNNEL.avocatLibre : 0;
+    // Meme conversion que pour le simulateur en une page : le serveur veut
+    // toujours un pourcentage pour l'avocat, un montant fixe choisi ici
+    // devient donc son equivalent en % du prix avant d'etre garde.
+    let avocat = 0;
+    if (TUNNEL.avocatMode === 'notre') avocat = defaut.avocat || 0.5;
+    else if (TUNNEL.avocatMode === 'libre') {
+      avocat = (TUNNEL.avocatLibreType === 'montant' && TUNNEL.prix)
+        ? (TUNNEL.avocatLibre / TUNNEL.prix * 100) : TUNNEL.avocatLibre;
+    }
     const agence = TUNNEL.accompagnementMode === 'oui' ? (defaut.agence || 1) : 0;
     const courtierLibreChamp = $('#t-courtier-libre', zone);
     if (courtierLibreChamp) TUNNEL.courtierLibre = Math.max(0, +courtierLibreChamp.value || 0);
