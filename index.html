@@ -500,6 +500,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  display:flex;flex-direction:column;align-items:center;gap:8px;
  box-shadow:0 14px 30px -16px rgba(0,0,0,.35)}
 .hc-ic{font-size:26px}
+.hc-ic svg{width:28px;height:28px;display:block}
 .hc-titre{font-size:15.5px;font-weight:800}
 .hc-texte,.hc-chiffres{font-size:12px;color:var(--gris);line-height:1.35}
 .hc-chiffres b{color:var(--or-fonce);font-weight:800}
@@ -566,7 +567,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 }
 @media(max-width:640px){
  .hero .zf-bandeau{margin:0 0 12px;line-height:1}
- .hero .zf-pct{display:block;font-size:104px;line-height:.9;margin-top:4px}
+ .hero .zf-pct{display:block!important;font-size:104px!important;line-height:.9!important;margin-top:4px!important}
 }
 @media(min-width:901px) and (max-width:1180px){
  .hero .zf-bandeau + h1{font-size:34px}
@@ -2248,6 +2249,99 @@ table.ag th{width:64%}
  border:0;padding:9px 10px;font-size:14px;cursor:pointer;border-radius:8px;
  color:var(--encre-2)}
 .mail-suggestions button:hover{background:var(--fond-2)}
+
+/* ===================== Home ordinateur, 05/10/2026 =====================
+   Maquette validee par Hillel : l'accroche a gauche, le simulateur a
+   droite, la recherche posee juste dessous (donc dans le premier ecran),
+   puis une bande « Ou acheter » dont les villes s'ouvrent au survol.
+   Reserve a l'ordinateur : sur telephone rien ne change. */
+.ou{display:none}
+@media(min-width:901px){
+ .hero .dedans{grid-template-columns:minmax(0,1fr) 400px;
+  grid-template-areas:"zf simu" "h1 simu";grid-template-rows:auto 1fr;
+  column-gap:56px;align-items:start;padding:34px 22px 104px}
+ .hero .zf-bandeau{text-align:start;font-size:42px;margin:0 0 20px}
+ .hero .zf-bandeau + h1{background:none;-webkit-backdrop-filter:none;
+  backdrop-filter:none;box-shadow:none;border-radius:0;padding:0;
+  display:block;justify-content:flex-start;text-align:start;max-width:30em;
+  font-size:clamp(22px,1.9vw,27px);font-weight:700;line-height:1.38;
+  color:var(--or-clair)}
+ .hero h1 .h1-a{display:block}
+ .hero h1 .h1-b{display:block;font-weight:400;opacity:.94;font-size:.84em;
+  line-height:1.35;margin-top:10px;padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.28)}
+ .hero h1 em{font-style:normal;color:var(--or)}
+ .hero-simu{align-self:start}
+ /* la recherche d'abord, le modele ensuite */
+ .bloc-accueil{display:flex;flex-direction:column}
+ .bloc-accueil .cherche{order:-1;margin-top:-76px;width:100%}
+ .bloc-accueil .modele{order:1;margin-top:8px}
+ .bloc-accueil .ou{order:2;display:block}
+ body.simulateur-seul .ou{display:none}
+ /* le moteur : pieces | ville | budget | bouton, sur une seule ligne */
+ .cherche .boite{display:grid;column-gap:22px;row-gap:6px;
+  grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr) auto;
+  padding:10px 26px 22px;align-items:end}
+ .cherche .onglets{grid-column:1/-1;padding:0;margin:0 -8px 12px;
+  border-bottom:1px solid var(--trait)}
+ .cherche .onglets button{border-radius:0;padding:14px 20px;font-size:15px;
+  border-bottom:3px solid transparent;margin-bottom:-1px;background:none}
+ .cherche .onglets button.on{background:none;color:var(--action);
+  border-bottom-color:var(--action)}
+ .cherche #raccourcis{display:none}
+ .cherche .ligne-pieces{display:contents}
+ .cherche .ligne-pieces .rac-lab{grid-column:1;grid-row:2;width:auto}
+ .cherche .ligne-pieces .pastilles{grid-column:1;grid-row:3;flex-wrap:nowrap}
+ .cherche .ligne-pieces .champ-ville{grid-column:2;grid-row:2/4;align-self:end}
+ .cherche .filtres-toggle,.cherche .voir-res{display:none}
+ .cherche .champs,.cherche .champs[hidden]{display:contents}
+ .cherche .champs .champ{grid-column:3;grid-row:2/4;align-self:end}
+ .cherche .champs .chercher{grid-column:4;grid-row:3;border-radius:999px;
+  padding:0 34px;box-shadow:0 6px 18px color-mix(in srgb,var(--action) 35%,transparent)}
+ /* « Ou acheter » : les villes s'ouvrent au survol */
+ .ou{max-width:1240px;margin:8px auto 0;padding:26px 22px 0;width:100%}
+ .ou-tete{margin-bottom:14px}
+ .ou h2{font-size:26px;font-weight:750}
+ .accord{display:flex;gap:12px;height:280px}
+ .pan{position:relative;flex:1 1 0;min-width:0;border-radius:18px;overflow:hidden;
+  cursor:pointer;color:#fff;background:#1b2438 center/cover;border:0;
+  padding:0;text-align:start;font:inherit;box-shadow:var(--ombre-2, 0 10px 28px rgba(15,23,42,.18));
+  transition:flex-grow .55s cubic-bezier(.2,.8,.2,1)}
+ .pan::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(15,23,42,0) 35%,rgba(15,23,42,.88))}
+ .pan.on{flex-grow:4}
+ .pan .v{position:absolute;inset-inline-start:18px;bottom:16px;font-weight:750;
+  font-size:17px;white-space:nowrap;transition:opacity .2s}
+ .pan.on .v{opacity:0}
+ .pan .d{position:absolute;inset-inline:24px;bottom:20px;display:flex;
+  justify-content:space-between;align-items:flex-end;gap:14px;opacity:0;
+  transform:translateY(12px);white-space:nowrap;
+  transition:opacity .35s .15s,transform .4s .15s}
+ .pan.on .d{opacity:1;transform:none}
+ .pan .d b{display:block;font-size:28px;font-weight:800;line-height:1.1}
+ .pan .d span{font-size:14.5px;opacity:.93}
+ .pan .d em{font-style:normal;flex:none;background:#fff;color:#0F172A;
+  font-weight:700;font-size:13.5px;padding:10px 16px;border-radius:999px}
+ .pan .ville-credit{opacity:0;transition:opacity .3s}
+ .pan.on .ville-credit{opacity:1}
+}
+@keyframes zoom-lent{from{transform:scale(1)}to{transform:scale(1.07)}}
+@media(min-width:901px) and (prefers-reduced-motion:no-preference){
+ .hero .photo img{animation:zoom-lent 22s ease-out forwards}
+}
+@media(prefers-reduced-motion:reduce){.pan,.pan .d{transition:none}}
+@media(min-width:901px){
+ .cherche .onglets button,.cherche #onglet-simuler{border:0;border-bottom:3px solid transparent;border-radius:0}
+ .cherche .onglets button.on{border-bottom-color:var(--action)}
+}
+/* Sans panneau derriere l'accroche, le voile porte seul la lisibilite : il
+   est plus dense du cote du texte (a gauche, a droite en hebreu). */
+@media(min-width:901px){
+ .hero .voile{background:linear-gradient(90deg,rgba(6,12,24,.80) 0%,rgba(6,12,24,.62) 55%,rgba(6,12,24,.40) 100%)}
+ [dir=rtl] .hero .voile{background:linear-gradient(270deg,rgba(6,12,24,.80) 0%,rgba(6,12,24,.62) 55%,rgba(6,12,24,.40) 100%)}
+ .nuit .hero .voile{background:linear-gradient(180deg,rgba(6,12,24,.72),rgba(6,12,24,.52) 45%,rgba(6,12,24,.78))}
+ .hero .zf-bandeau + h1{text-shadow:0 2px 14px rgba(0,0,0,.45)}
+}
 </style>
 <script>/* La banniere de nuit, de 22 h 30 a 6 h a l'heure du visiteur ; claire le
 reste du temps (Hillel, 24/09/2026). ?nuit=1 / ?jour=1 pour la voir a toute heure. */
@@ -2357,19 +2451,19 @@ ecrireCookie(c,'fr');
   <div class=dedans>
    <div class=hero-texte>
     <p class=zf-bandeau>Frais d’agence&nbsp;: <span class=zf-pct>0 %</span></p>
-    <h1>Enfin le premier site d’achat sur plan en Israël, direct promoteur et au prix négocié pour nos clients, où vous pouvez simuler votre achat et connaître tous vos frais annexes.</h1>
+    <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
     <ul class=hero-preuves><li><b>35</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li class=pr-ligne><b>15</b><span>ans d’expérience dans la promotion immobilière en Israël</span></li></ul>
     <a class=hero-decouvrir href="#vue">Découvrir nos biens →</a>
    </div>
    <div class=hero-choix id=hero-choix>
     <a class="hc-carte hc-simu" href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">
-     <span class=hc-ic>🧮</span>
+     <span class=hc-ic><svg viewBox="0 0 24 24" aria-hidden=true><rect x=3 y=2 width=18 height=20 rx=3 style="fill:none;stroke:var(--encre);stroke-width:1.6"/><rect x=6 y=5 width=12 height=5 rx=1 style="fill:var(--or)"/><circle cx=7.5 cy=14 r=1.3 style="fill:var(--encre)"/><circle cx=12 cy=14 r=1.3 style="fill:var(--encre)"/><circle cx=16.5 cy=14 r=1.3 style="fill:var(--encre)"/><circle cx=7.5 cy=18 r=1.3 style="fill:var(--encre)"/><circle cx=12 cy=18 r=1.3 style="fill:var(--encre)"/><circle cx=16.5 cy=18 r=1.3 style="fill:var(--encre)"/></svg></span>
      <span class=hc-titre>Simulateur</span>
      <span class=hc-texte>À partir du prix du bien ou de votre apport</span>
      <span class=hc-btn>Simulez<br>gratuitement</span>
     </a>
     <a class="hc-carte hc-progs" href="#vue">
-     <span class=hc-ic>🏢</span>
+     <span class=hc-ic><svg viewBox="0 0 24 24" aria-hidden=true><rect x=3 y=12 width=5 height=10 rx=1 style="fill:var(--encre)"/><rect x=9.5 y=7 width=5 height=15 rx=1 style="fill:var(--encre)"/><rect x=16 y=10 width=5 height=12 rx=1 style="fill:var(--encre)"/><rect x=9.5 y=7 width=5 height=4 rx=1 style="fill:var(--or)"/></svg></span>
      <span class=hc-titre>Nos programmes</span>
      <span class=hc-chiffres><b>17</b> villes · <b>35</b> programmes</span>
      <span class=hc-btn>Découvrir nos programmes</span>
@@ -2398,6 +2492,7 @@ ecrireCookie(c,'fr');
   </div>
 </section>
 
+<div class=bloc-accueil>
 <section class=modele id=modele>
     <p class=modele-preuve><b>35</b> programmes suivis · <b>17</b> villes · <b>15</b> ans d’expérience dans la promotion immobilière en Israël</p>
     <div>
@@ -2438,6 +2533,12 @@ ecrireCookie(c,'fr');
       .scrollIntoView({behavior:'smooth'})">Voir les biens</button>
   </div>
 </div></div>
+
+<section class=ou id=ou data-dep="À partir de">
+  <div class=ou-tete><h2>Où acheter</h2></div>
+  <div class=accord id=accord></div>
+</section>
+</div>
 
 <main class=wrap>
 
@@ -3461,7 +3562,7 @@ function basculer(mode) {
   // Elle n'avait pas d'id et restait donc affichee sur le simulateur, ou
   // Hillel n'en veut pas (23/09/2026) : on la cache avec le bloc « qui »,
   // dont elle est la suite.
-  ['hero', 'entete', 'modele', 'simu-bande', 'qui', 'preuve', 'avis', 'rassure'].forEach(id => {
+  ['hero', 'entete', 'modele', 'ou', 'simu-bande', 'qui', 'preuve', 'avis', 'rassure'].forEach(id => {
     const bloc = document.getElementById(id);
     if (bloc) bloc.style.display = liste ? '' : 'none';
   });
@@ -7264,6 +7365,86 @@ if (FTOG && FPAN) FTOG.onclick = () => {
   if (open) FPAN.removeAttribute('hidden'); else FPAN.setAttribute('hidden', '');
   FTOG.classList.toggle('open', open);
 };
+
+/* « Ou acheter » (ordinateur, 05/10/2026) : les cinq villes qui comptent le
+   plus de programmes, en bandes qui s'ouvrent au survol. Un clic filtre la
+   liste, comme la puce de ville de la boite de recherche. La photo est celle
+   de la ville (credit compris, obligation de sa licence), jamais celle d'un
+   bien : un programme se montre avec le rendu de son promoteur. */
+(function() {
+  const zone = document.getElementById('accord');
+  const bloc = document.getElementById('ou');
+  if (!zone || !bloc) return;
+  const par = {};
+  DONNEES.projets.forEach(p => { (par[p.ville] = par[p.ville] || []).push(p); });
+  const villes = Object.keys(par).map(v => ({
+    ville: v, n: par[v].length, img: photoVille(v),
+    prix: Math.min.apply(null, par[v].map(p => p.prix_min))
+  })).filter(x => x.img).sort((a, b) => b.n - a.n || a.prix - b.prix).slice(0, 5);
+  if (villes.length < 3) { bloc.remove(); return; }
+  const dep = bloc.dataset.dep || '';
+  zone.innerHTML = villes.map((x, i) =>
+    '<div class="pan' + (i === 0 ? ' on' : '') + '" role="button" tabindex="0" '
+    + 'data-ville="' + esc(x.ville) + '" style="background-image:url(\''
+    + esc(x.img.photo) + '\')">'
+    + '<span class="v">' + esc(T(x.ville)) + '</span>'
+    + '<div class="d"><div><b>' + esc(T(x.ville)) + '</b><span>' + esc(dep)
+    + ' ' + shek(x.prix) + (eur(x.prix) ? ' · ≈ ' + eur(x.prix) : '')
+    + '</span></div><em>' + T('Voir les biens') + ' →</em></div>'
+    + creditHTML(x.img) + '</div>').join('');
+  const ouvrir = t => zone.querySelectorAll('.pan').forEach(c =>
+    c.classList.toggle('on', c === t));
+  zone.addEventListener('mouseover', e => {
+    const t = e.target.closest('.pan'); if (t) ouvrir(t);
+  });
+  zone.addEventListener('focusin', e => {
+    const t = e.target.closest('.pan'); if (t) ouvrir(t);
+  });
+  const aller = t => {
+    F.ville = t.dataset.ville;
+    const cv = document.getElementById('f-ville');
+    if (cv) cv.value = F.ville;
+    if (location.hash && location.hash !== '#/') location.hash = '#/';
+    else liste();
+    const cible = document.getElementById('entete')
+      || document.querySelector('.wrap');
+    if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'start'});
+  };
+  zone.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    const t = e.target.closest('.pan'); if (t) aller(t);
+  });
+  zone.addEventListener('keydown', e => {
+    const t = e.target.closest('.pan');
+    if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); aller(t); }
+  });
+})();
+
+/* Les chiffres de la ligne de preuve montent jusqu'a leur valeur quand on
+   arrive dessus. Sans mouvement pour qui l'a coupe dans son systeme. */
+(function() {
+  const bs = document.querySelectorAll('.modele-preuve b');
+  if (!bs.length || !window.IntersectionObserver
+      || (window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches)) return;
+  const io = new IntersectionObserver(es => {
+    if (!es.some(e => e.isIntersecting)) return;
+    io.disconnect();
+    bs.forEach(b => {
+      const fin = parseInt(b.textContent, 10);
+      if (!(fin > 0)) return;
+      let t0 = null;
+      const pas = t => {
+        if (!t0) t0 = t;
+        const k = Math.min(1, (t - t0) / 1200);
+        b.textContent = Math.round(fin * (1 - Math.pow(1 - k, 3)));
+        if (k < 1) requestAnimationFrame(pas); else b.textContent = fin;
+      };
+      requestAnimationFrame(pas);
+    });
+  }, {threshold: .6});
+  io.observe(document.querySelector('.modele-preuve'));
+})();
+
 /* Remonter en haut.
 
    Le bouton n'apparait qu'une fois qu'on a vraiment descendu — sinon il
