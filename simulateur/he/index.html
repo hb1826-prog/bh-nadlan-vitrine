@@ -4199,8 +4199,18 @@ function pageSecondeMain() {
     .sort((a, b) => a.prix_min - b.prix_min);
   const prix = items.length
     ? Math.min.apply(null, items.map(p => p.prix_min)) : 0;
+  // La ville de couverture : celle qui domine la liste du jour (Hillel,
+  // 07/10/2026, « belle photo moderne de ma ville en image de couverture »)
+  // – jamais un visuel du bien lui-meme ici, uniquement dans sa propre
+  // fiche (meme principe que `pageVille`, voir `villeBanniere`/`_images_source`
+  // : le filet ville et la galerie du bien ne se melangent jamais).
+  const comptesVilles = {};
+  items.forEach(p => { comptesVilles[p.ville] = (comptesVilles[p.ville] || 0) + 1; });
+  const villePrincipale = Object.keys(comptesVilles)
+    .sort((a, b) => comptesVilles[b] - comptesVilles[a])[0];
   vue.innerHTML = `
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${T('Seconde main')}</p>
+    ${villeBanniere(photoVille(villePrincipale), T('Seconde main'))}
     <div class="ville-tete">
       <h1>${T('Biens en revente, proposés par des particuliers')}</h1>
       <p class="sub">${items.length
@@ -7118,7 +7128,8 @@ window.addEventListener('scroll', suivreRappel, true);
 /* De quel programme parle-t-on quand on clique ? De celui qu'on regarde. */
 function projetCourant() {
   const cle = location.hash.replace(/^#\/?/, '');
-  return DONNEES.projets.find(x => x.cle === cle) || null;
+  return DONNEES.projets.find(x => x.cle === cle)
+    || (DONNEES.reventes || []).find(x => x.cle === cle) || null;
 }
 
 function intentionCourante() {
@@ -7210,7 +7221,8 @@ async function router() {
   langueGardeLaPage();
   // Compte avant de dessiner : une page lente ne doit pas faire perdre la
   // visite. Un programme s'en charge lui-meme, sous son propre nom.
-  if (!DONNEES.projets.some(x => x.cle === cle)) compterVue(cleDeVue(cle));
+  if (!DONNEES.projets.some(x => x.cle === cle)
+      && !(DONNEES.reventes || []).some(x => x.cle === cle)) compterVue(cleDeVue(cle));
   // Repli generique par defaut ; `fiche(p)` le personnalise juste apres si
   // la route resolue en est une.
   majFlottantWa(null);
@@ -7239,7 +7251,12 @@ async function router() {
   if (cle === 'nous-contacter') return pageNousContacter();
   if (cle.indexOf('ville/') === 0) return pageVille(cle.slice(6));
   if (PAGES[cle]) return pageTexte(cle);
-  const p = DONNEES.projets.find(x => x.cle === cle);
+  // Un bien en seconde main a sa fiche exactement comme un programme neuf –
+  // seule sa liste d'origine differe (Hillel, 07/10/2026 : en cliquant sur
+  // une annonce de seconde main, il atterrissait sur la fiche d'un produit
+  // neuf, parce que cette recherche ne regardait jamais DONNEES.reventes).
+  const p = DONNEES.projets.find(x => x.cle === cle)
+    || (DONNEES.reventes || []).find(x => x.cle === cle);
   if (p) { await fiche(p); window.scrollTo(0, 0); } else { liste(); }
 }
 
