@@ -7309,7 +7309,20 @@ if (BURGER && NAV_MOBILE) {
     NAV_MOBILE.hidden = !ouvert;
     BURGER.setAttribute('aria-expanded', String(ouvert));
     if (ouvert) {
-      addEventListener('scroll', fermerMenuMobile, {passive: true});
+      // Le menu est dans le fil de la page (pas une fenetre a part) : le
+      // reveler pousse le contenu en dessous et, au milieu de la page, le
+      // navigateur compense en ajustant lui-meme la position de defilement
+      // — ce qui emet un evenement 'scroll' DANS LA MEME FRAME que
+      // l'ouverture. Brancher l'ecouteur tout de suite le faisait fermer
+      // avant meme que Hillel le voie ouvert (bug repere le 07/10/2026,
+      // apparu en ajoutant une ligne au menu — assez pour declencher ce
+      // decalage). On attend la frame suivante : le decalage du layout est
+      // deja passe, seul un vrai geste de defilement ferme le menu ensuite.
+      requestAnimationFrame(() => {
+        if (NAV_MOBILE.classList.contains('ouvert')) {
+          addEventListener('scroll', fermerMenuMobile, {passive: true});
+        }
+      });
     } else {
       removeEventListener('scroll', fermerMenuMobile);
     }
