@@ -3714,7 +3714,7 @@ function offre(p) {
     <div class="offre-prix"><span>${T('à partir de')}${aide('prix')}</span>
       <b>${shek(p.prix_min)}</b>
       <i class="offre-eur">${eur(p.prix_min)}</i>
-      <em>${p.revente ? T('proposé par un particulier · 1 % de frais d’agence')
+      <em>${p.revente ? T('proposé par un particulier · 2 % de frais d’agence')
                        : T('prix promoteur · 0 frais d’agence')}</em></div>
     <dl class="offre-faits">${faits.map(l =>
       '<div><dt>' + l[0] + '</dt><dd>' + esc(l[1]) + '</dd></div>').join('')}</dl>
@@ -3748,7 +3748,7 @@ function rassureMini(revente) {
   // (Hillel, 07/10/2026 — vu sur la version espagnole : « sin comisión »
   // affiche alors que les 1 % sont obligatoires sur une revente).
   const premier = revente
-    ? `<div><b>${T('1 % de frais d’agence, affichés d’avance')}</b><span>${T('Ce bien vous est confié par son propriétaire : nos frais sont indiqués sur la fiche, sans surprise.')}</span></div>`
+    ? `<div><b>${T('2 % de frais d’agence, affichés d’avance')}</b><span>${T('Ce bien vous est confié par son propriétaire : nos frais sont indiqués sur la fiche, sans surprise.')}</span></div>`
     : `<div><b>${T('0 frais d’agence')}</b><span>${T('Vous signez au prix du promoteur.')}</span></div>`;
   return `
   <div class="mini">
@@ -5070,11 +5070,11 @@ async function simulateur(zone, p) {
       <div class="f-choix" style="margin-top:18px">
         <b>${accompagnementImpose ? T("Frais d'agence") : T('Accompagnement après la signature')}</b>${aideHTML('Accompagnement', accompagnementImpose ? '' : (notesFrais.agence || ''))}
         <div class="seg">
-          <button data-s-accompagnement="oui" class="${accompagnementImpose || E.accompagnementMode === 'oui' ? 'on' : ''}">${T('Oui, 1 % du prix')}</button>
+          <button data-s-accompagnement="oui" class="${accompagnementImpose || E.accompagnementMode === 'oui' ? 'on' : ''}">${accompagnementImpose ? T('Oui, 2 % du prix') : T('Oui, 1 % du prix')}</button>
           ${accompagnementImpose ? '' : `<button data-s-accompagnement="non" class="${E.accompagnementMode === 'non' ? 'on' : ''}">${T('Sans accompagnement')}</button>`}
         </div>
         ${accompagnementImpose ? `
-        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'agence de 1 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>`
+        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'agence de 2 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>`
         : (E.accompagnementMode === 'non' ? `
         <p class="dim si-note" style="margin-top:8px">⚠ ${T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')}</p>` : '')}
       </div>
@@ -5160,7 +5160,8 @@ async function simulateur(zone, p) {
       avocat = (E.avocatLibreType === 'montant' && E.prix)
         ? (E.avocatLibre / E.prix * 100) : E.avocatLibre;
     }
-    const agence = E.accompagnementMode === 'oui' ? (f.taux.agence || 1) : 0;
+    const agence = E.accompagnementMode === 'oui'
+      ? (accompagnementImpose ? 2 : (f.taux.agence || 1)) : 0;
     const coLibre = $('#s-courtier-libre', zone);
     if (coLibre) E.courtierLibre = Math.max(0, +coLibre.value || 0);
     let courtier = 0;

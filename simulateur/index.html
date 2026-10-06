@@ -5193,7 +5193,8 @@ async function simulateur(zone, p) {
       avocat = (E.avocatLibreType === 'montant' && E.prix)
         ? (E.avocatLibre / E.prix * 100) : E.avocatLibre;
     }
-    const agence = E.accompagnementMode === 'oui' ? (f.taux.agence || 1) : 0;
+    const agence = E.accompagnementMode === 'oui'
+      ? (accompagnementImpose ? 2 : (f.taux.agence || 1)) : 0;
     const coLibre = $('#s-courtier-libre', zone);
     if (coLibre) E.courtierLibre = Math.max(0, +coLibre.value || 0);
     let courtier = 0;
