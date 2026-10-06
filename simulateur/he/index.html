@@ -3502,13 +3502,20 @@ function carte(p) {
                     onerror="this.remove()">` : ''}
           <span>${esc(p.promoteur.nom)}</span>
         </div>` : '';
+  // Carte d'un bien en seconde main : la photo du bien reste DANS sa fiche
+  // (galerie reelle), jamais sur la carte – une seule mauvaise photo
+  // (eclairage, cadrage, parfois une image tiree d'une video) suffit a
+  // donner une impression de petite annonce. La vignette montre une belle
+  // photo de la ville du bien a la place, une par ville (Hillel, 07/10/2026).
+  const photoVilleBien = p.revente ? photoVille(p.ville) : null;
+  const imgSrc = photoVilleBien ? photoVilleBien.photo : p.image;
   return `
     <a class="tile" href="#/${p.cle}">
       <div class="shot">
         <div class="badges">${badges.join('')}</div>
         ${boutonPartage(messagePartageBien(p.nom), '#/' + p.cle, true)}
         <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
-        <img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">
+        <img src="${esc(imgSrc)}" alt="" loading="lazy" onerror="this.remove()">
       </div>
       <div class="corps">
         <div class="prix"><small>${T('à partir de')}</small>${prixDouble(p.prix_min)}</div>
@@ -4137,10 +4144,20 @@ function photoVille(ville) {
    Pas de photo pour cette ville -> rien du tout, jamais un cadre gris. */
 function creditHTML(img) {
   if (!img || !img.credit) return '';
+  // Le nom de l'auteur, tel que Wikimedia Commons le fournit, est parfois
+  // ecrit dans sa propre langue (l'auteur de la photo de Beer Sheva signe en
+  // hebreu) – correct sur une page hebraique, mais un mot hebreu au milieu
+  // d'une page francaise/anglaise/etc. detonne et n'est pas une faute de
+  // traduction a corriger : ce n'est le nom de PERSONNE d'autre que cet
+  // auteur (Hillel, 07/10/2026). On garde le lien (l'attribution reste
+  // verifiable), mais on affiche un libelle neutre a la place du nom quand
+  // il n'est pas en ecriture latine.
+  const latin = !/[֐-׿؀-ۿЀ-ӿ]/.test(img.credit);
+  const libelle = latin ? img.credit : 'Wikimedia Commons';
   return '<span class="ville-credit" dir="auto">' + (img.credit_url
     ? '<a href="' + esc(img.credit_url) + '" target="_blank" rel="noopener">'
-      + esc(img.credit) + '</a>'
-    : esc(img.credit)) + '</span>';
+      + esc(libelle) + '</a>'
+    : esc(libelle)) + '</span>';
 }
 
 function villePhoto(img, alt) {
