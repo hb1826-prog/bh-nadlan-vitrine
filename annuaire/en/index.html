@@ -5054,7 +5054,7 @@ async function simulateur(zone, p) {
           ${accompagnementImpose ? '' : `<button data-s-accompagnement="non" class="${E.accompagnementMode === 'non' ? 'on' : ''}">${T('Sans accompagnement')}</button>`}
         </div>
         ${accompagnementImpose ? `
-        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier qui l'a lui-même acheté au promoteur. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'agence de 1 %, non modifiables. (Agent immobilier homologué, licence n° 39322921)")}</p>`
+        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier qui l'a lui-même acheté au promoteur. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'agence de 1 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>`
         : (E.accompagnementMode === 'non' ? `
         <p class="dim si-note" style="margin-top:8px">⚠ ${T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')}</p>` : '')}
       </div>
