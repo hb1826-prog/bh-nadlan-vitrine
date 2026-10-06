@@ -3747,7 +3747,8 @@ function offre(p) {
     <div class="offre-prix"><span>${T('à partir de')}${aide('prix')}</span>
       <b>${shek(p.prix_min)}</b>
       <i class="offre-eur">${eur(p.prix_min)}</i>
-      <em>${T('prix promoteur · 0 frais d’agence')}</em></div>
+      <em>${p.revente ? T('proposé par un particulier · 1 % de frais d’agence')
+                       : T('prix promoteur · 0 frais d’agence')}</em></div>
     <dl class="offre-faits">${faits.map(l =>
       '<div><dt>' + l[0] + '</dt><dd>' + esc(l[1]) + '</dd></div>').join('')}</dl>
     ${vues(p.cle)}${demande(p.ville)}
@@ -3759,9 +3760,12 @@ function offre(p) {
         <a class="b-ghost" href="mailto:${DONNEES.mail}">${T('Par mail')}</a>
       </div>
     </div>
-    <p class="offre-note">${T('Réponse le jour même, en français. Vous n’êtes '
-      + 'engagé à rien : il n’y a aucun frais d’agence, ni à notre charge ni à '
-      + 'la vôtre.')}</p>
+    <p class="offre-note">${p.revente
+      ? T('Réponse le jour même, en français. Ce bien est proposé par son '
+        + 'propriétaire actuel, avec un accompagnement complet de notre part.')
+      : T('Réponse le jour même, en français. Vous n’êtes '
+        + 'engagé à rien : il n’y a aucun frais d’agence, ni à notre charge ni à '
+        + 'la vôtre.')}</p>
   </div></aside>`;
 }
 
@@ -3769,10 +3773,17 @@ function offre(p) {
    Un visiteur arrive ici par un lien direct et n'a jamais lu l'argumentaire ;
    le lui resservir en entier le ferait defiler avant de voir le bien, le lui
    cacher tout a fait le laisserait sans savoir a qui il parle. */
-function rassureMini() {
+function rassureMini(revente) {
+  // Un bien en seconde main n'a pas de promoteur a signer en direct : le
+  // premier encart (« 0 frais d'agence ») mentait pour ces fiches-la
+  // (Hillel, 07/10/2026 — vu sur la version espagnole : « sin comisión »
+  // affiche alors que les 1 % sont obligatoires sur une revente).
+  const premier = revente
+    ? `<div><b>${T('1 % de frais d’agence, affichés d’avance')}</b><span>${T('Ce bien vous est confié par son propriétaire : nos frais sont indiqués sur la fiche, sans surprise.')}</span></div>`
+    : `<div><b>${T('0 frais d’agence')}</b><span>${T('Vous signez au prix du promoteur.')}</span></div>`;
   return `
   <div class="mini">
-    <div><b>${T('0 frais d’agence')}</b><span>${T('Vous signez au prix du promoteur.')}</span></div>
+    ${premier}
     <div><b>${T('Le prix, lui, est négocié')}</b><span>${T('Remise, étage, échéancier : '
       + 'discutés en hébreu, avant vous.')}</span></div>
     <div><b>${T('Le vrai coût, avant de vous engager')}</b>
@@ -3844,7 +3855,7 @@ async function fiche(p) {
         <div id="simu"></div>
       </details>
     </div>
-    ${rassureMini()}
+    ${rassureMini(p.revente)}
     <div class="card">
       <div class="block">
         <div class="block-head" style="display:flex;align-items:center;gap:8px">${picto('immeuble')}<span>${T('Les appartements')}</span>${aide('appartements')}</div>
@@ -4181,7 +4192,7 @@ function pageSecondeMain() {
     </div>
     <div class="progs">${items.map(carte).join('')}</div>
     ${contactHTML(null, 'seconde-main')}
-    ${rassureMini()}`;
+    ${rassureMini(true)}`;
   wireContact(null, 'seconde-main');
   window.scrollTo(0, 0);
 }
@@ -7288,7 +7299,13 @@ const LOGO = document.querySelector('.pub-logo');
     e.preventDefault();
     e.stopPropagation();
     const p = DONNEES.projets.find(x => x.cle === b.dataset.simuCle);
-    if (p) ouvrirSimulateur(null, p.prix_min, p.cle);
+    if (p) { ouvrirSimulateur(null, p.prix_min, p.cle); return; }
+    // Un bien en seconde main n'ouvre pas ce tunnel generique : il ne connait
+    // pas les 1 % obligatoires d'une revente (Hillel, 07/10/2026). Sa fiche a
+    // deja son propre simulateur, deja correct — on y envoie directement
+    // plutot que de laisser le bouton ne rien faire du tout.
+    const r = (DONNEES.reventes || []).find(x => x.cle === b.dataset.simuCle);
+    if (r) location.hash = '#/' + r.cle;
   }, true);
   document.querySelectorAll('[data-simu-ouvrir]').forEach(b => {
     b.onclick = () => ouvrirSimulateur(b.dataset.simuOuvrir, 0);

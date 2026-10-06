@@ -7266,7 +7266,13 @@ const LOGO = document.querySelector('.pub-logo');
     e.preventDefault();
     e.stopPropagation();
     const p = DONNEES.projets.find(x => x.cle === b.dataset.simuCle);
-    if (p) ouvrirSimulateur(null, p.prix_min, p.cle);
+    if (p) { ouvrirSimulateur(null, p.prix_min, p.cle); return; }
+    // Un bien en seconde main n'ouvre pas ce tunnel generique : il ne connait
+    // pas les 1 % obligatoires d'une revente (Hillel, 07/10/2026). Sa fiche a
+    // deja son propre simulateur, deja correct — on y envoie directement
+    // plutot que de laisser le bouton ne rien faire du tout.
+    const r = (DONNEES.reventes || []).find(x => x.cle === b.dataset.simuCle);
+    if (r) location.hash = '#/' + r.cle;
   }, true);
   document.querySelectorAll('[data-simu-ouvrir]').forEach(b => {
     b.onclick = () => ouvrirSimulateur(b.dataset.simuOuvrir, 0);
