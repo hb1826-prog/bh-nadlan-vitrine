@@ -3753,7 +3753,9 @@ function offre(p) {
       '<div><dt>' + l[0] + '</dt><dd>' + esc(l[1]) + '</dd></div>').join('')}</dl>
     ${vues(p.cle)}${demande(p.ville)}
     <div class="offre-actions">
-      <button class="b-or" type="button" onclick="versContact(this)">${T('Recevoir les prix réels et les lots disponibles')}</button>
+      <button class="b-or" type="button" onclick="versContact(this)">${p.revente
+        ? T('Contactez-nous pour plus d’informations sur ce bien')
+        : T('Recevoir les prix réels et les lots disponibles')}</button>
       <div class="offre-duo">
         <a class="b-wa" href="https://wa.me/${DONNEES.wa}?text=${bonjour}"
            >WhatsApp</a>
@@ -3850,7 +3852,7 @@ async function fiche(p) {
     </div>
     <div class="card">
       <details class="block simu-plier" id="simu-bloc">
-        <summary class="simu-resume">${picto('calculatrice')}<span>${T('Simuler l’achat dans ce projet')}</span>
+        <summary class="simu-resume">${picto('calculatrice')}<span>${(p.revente ? T('Simulation gratuite pour ce bien') : T('Simuler l’achat dans ce projet'))}</span>
           ${CHEV}</summary>
         <div id="simu"></div>
       </details>
@@ -3883,7 +3885,7 @@ async function fiche(p) {
     ${contactHTML(p, 'fiche')}
     <div class="card">
       <button class="simu-resume simu-resume-bas" type="button" onclick="ouvrirSimu()">
-        ${picto('calculatrice')}<span>${T('Simuler l’achat dans ce projet')}</span></button>
+        ${picto('calculatrice')}<span>${(p.revente ? T('Simulation gratuite pour ce bien') : T('Simuler l’achat dans ce projet'))}</span></button>
     </div>
     ${ailleurs(p)}`;
   wireGalerie(p);
@@ -5105,7 +5107,7 @@ async function simulateur(zone, p) {
           ${accompagnementImpose ? '' : `<button data-s-accompagnement="non" class="${E.accompagnementMode === 'non' ? 'on' : ''}">${T('Sans accompagnement')}</button>`}
         </div>
         ${accompagnementImpose ? `
-        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier qui l'a lui-même acheté au promoteur. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'agence de 1 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>`
+        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'agence de 1 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>`
         : (E.accompagnementMode === 'non' ? `
         <p class="dim si-note" style="margin-top:8px">⚠ ${T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')}</p>` : '')}
       </div>
