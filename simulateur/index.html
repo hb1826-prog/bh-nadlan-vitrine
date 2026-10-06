@@ -6347,6 +6347,10 @@ function contactHTML(p, intention) {
       titre: T('Écrivez-nous'),
       texte: T('Dites-nous ce que vous cherchez, ou posez votre question. Nous vous répondons personnellement.'),
       bouton: T('Envoyer')},
+    'seconde-main': {
+      titre: T('Dites-nous ce que vous cherchez'),
+      texte: T('Ces biens sont proposés par des particuliers, avec un accompagnement complet de notre part. Dites-nous votre budget et ce que vous cherchez : nous revenons vers vous avec une sélection.'),
+      bouton: T('Un conseiller vous rappelle aujourd’hui')},
   }[I];
 
   return `
@@ -6412,6 +6416,7 @@ const OBJETS = {
   simulateur: T('Demande : sa simulation complète (mini-site personnalisé)'),
   liste: T('Demande : une sélection de biens'),
   contact: T('Demande de contact'),
+  'seconde-main': T('Demande : un bien en seconde main'),
 };
 
 /* ---------------- l'horaire de rappel prefere
@@ -7272,7 +7277,18 @@ function fermerMenuMobile() {
   removeEventListener('scroll', fermerMenuMobile);
 }
 if (BURGER && NAV_MOBILE) {
+  // Garde-fou contre un double declenchement du MEME tap (certains
+  // navigateurs mobiles emettent un clic synthetique en plus du clic natif
+  // pres de 300ms apres le toucher) : sans lui, un seul appui pouvait ouvrir
+  // PUIS refermer le menu dans la foulee — vu comme « s'ouvre et se referme
+  // tres vite » (Hillel, 07/10/2026). Le premier correctif (reporter
+  // l'ecoute du scroll a la frame suivante) etait necessaire mais pas
+  // suffisant : ce garde-fou couvre l'autre cause, indépendamment.
+  let dernierBascule = 0;
   BURGER.onclick = () => {
+    const maintenant = Date.now();
+    if (maintenant - dernierBascule < 400) return;
+    dernierBascule = maintenant;
     const ouvert = NAV_MOBILE.classList.toggle('ouvert');
     NAV_MOBILE.hidden = !ouvert;
     BURGER.setAttribute('aria-expanded', String(ouvert));
@@ -7280,17 +7296,18 @@ if (BURGER && NAV_MOBILE) {
       // Le menu est dans le fil de la page (pas une fenetre a part) : le
       // reveler pousse le contenu en dessous et, au milieu de la page, le
       // navigateur compense en ajustant lui-meme la position de defilement
-      // — ce qui emet un evenement 'scroll' DANS LA MEME FRAME que
-      // l'ouverture. Brancher l'ecouteur tout de suite le faisait fermer
-      // avant meme que Hillel le voie ouvert (bug repere le 07/10/2026,
-      // apparu en ajoutant une ligne au menu — assez pour declencher ce
-      // decalage). On attend la frame suivante : le decalage du layout est
-      // deja passe, seul un vrai geste de defilement ferme le menu ensuite.
-      requestAnimationFrame(() => {
+      // — ce qui peut emettre un evenement 'scroll' juste apres l'ouverture.
+      // Brancher l'ecouteur tout de suite le faisait fermer avant meme que
+      // Hillel le voie ouvert (bug repere le 07/10/2026, apparu en ajoutant
+      // une ligne au menu — assez pour declencher ce decalage). Un delai
+      // franc (pas juste la frame suivante, insuffisant en pratique) laisse
+      // le temps a ce reajustement de se terminer avant d'ecouter pour de
+      // vrai.
+      setTimeout(() => {
         if (NAV_MOBILE.classList.contains('ouvert')) {
           addEventListener('scroll', fermerMenuMobile, {passive: true});
         }
-      });
+      }, 300);
     } else {
       removeEventListener('scroll', fermerMenuMobile);
     }

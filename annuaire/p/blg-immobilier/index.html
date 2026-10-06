@@ -6314,6 +6314,10 @@ function contactHTML(p, intention) {
       titre: T('Écrivez-nous'),
       texte: T('Dites-nous ce que vous cherchez, ou posez votre question. Nous vous répondons personnellement.'),
       bouton: T('Envoyer')},
+    'seconde-main': {
+      titre: T('Dites-nous ce que vous cherchez'),
+      texte: T('Ces biens sont proposés par des particuliers, avec un accompagnement complet de notre part. Dites-nous votre budget et ce que vous cherchez : nous revenons vers vous avec une sélection.'),
+      bouton: T('Un conseiller vous rappelle aujourd’hui')},
   }[I];
 
   return `
@@ -6379,6 +6383,7 @@ const OBJETS = {
   simulateur: T('Demande : sa simulation complète (mini-site personnalisé)'),
   liste: T('Demande : une sélection de biens'),
   contact: T('Demande de contact'),
+  'seconde-main': T('Demande : un bien en seconde main'),
 };
 
 /* ---------------- l'horaire de rappel prefere
