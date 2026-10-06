@@ -2258,20 +2258,22 @@ table.ag th{width:64%}
 .ou{display:none}
 @media(min-width:901px){
  .hero .dedans{grid-template-columns:minmax(0,1fr) 400px;
-  grid-template-areas:"zf simu" "h1 simu" "pr simu";grid-template-rows:auto 1fr auto;
-  column-gap:56px;align-items:start;padding:34px 22px 104px}
- .hero .zf-bandeau{text-align:start;font-size:42px;margin:0 0 20px}
+  grid-template-areas:"sp simu" "zf simu" "h1 simu" "pr simu";
+  grid-template-rows:1fr auto auto 1fr;
+  column-gap:44px;align-items:start;padding:40px 22px 112px}
+ .hero .zf-bandeau{text-align:start;font-size:clamp(44px,4vw,58px);margin:0 0 22px}
  .hero .zf-bandeau + h1{background:none;-webkit-backdrop-filter:none;
   backdrop-filter:none;box-shadow:none;border-radius:0;padding:0;
   display:block;justify-content:flex-start;text-align:start;max-width:30em;
-  font-size:clamp(22px,1.9vw,27px);font-weight:700;line-height:1.38;
+  font-size:clamp(21px,1.7vw,27px);font-weight:700;line-height:1.38;
   color:var(--or-clair)}
  .hero h1 .h1-a{display:block}
- .hero h1 .h1-b{display:block;font-weight:400;opacity:.94;font-size:.84em;
-  line-height:1.35;margin-top:10px;padding-top:10px;
+ @media(min-width:1180px){.hero h1 .h1-a{white-space:nowrap}}
+ .hero h1 .h1-b{display:block;font-weight:400;opacity:.95;font-size:.86em;
+  line-height:1.38;margin-top:14px;padding-top:14px;
   border-top:1px solid rgba(255,255,255,.28)}
  .hero h1 em{font-style:normal;color:var(--or)}
- .hero-simu{align-self:start}
+ .hero-simu{align-self:center}
  /* la recherche d'abord, le modele ensuite */
  .bloc-accueil{display:flex;flex-direction:column}
  .bloc-accueil .cherche{order:-1;margin-top:-76px;width:100%}
@@ -2280,8 +2282,8 @@ table.ag th{width:64%}
  body.simulateur-seul .ou{display:none}
  /* le moteur : pieces | ville | budget | bouton, sur une seule ligne */
  .cherche .boite{display:grid;column-gap:22px;row-gap:6px;
-  grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr) auto;
-  padding:10px 26px 22px;align-items:end}
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+  padding:10px 28px 26px;align-items:end}
  .cherche .onglets{grid-column:1/-1;padding:0;margin:0 -8px 12px;
   border-bottom:1px solid var(--trait)}
  .cherche .onglets button{border-radius:0;padding:14px 20px;font-size:15px;
@@ -2290,13 +2292,15 @@ table.ag th{width:64%}
   border-bottom-color:var(--action)}
  .cherche #raccourcis{display:none}
  .cherche .ligne-pieces{display:contents}
- .cherche .ligne-pieces .rac-lab{grid-column:1;grid-row:2;width:auto}
- .cherche .ligne-pieces .pastilles{grid-column:1;grid-row:3;flex-wrap:wrap}
- .cherche .ligne-pieces .champ-ville{grid-column:2;grid-row:2/4;align-self:end}
+ .cherche .ligne-pieces .rac-lab{grid-column:1/-1;grid-row:2;width:auto;margin-top:6px}
+ .cherche .ligne-pieces .pastilles{grid-column:1/-1;grid-row:3;display:grid;
+  grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:10px;margin-bottom:14px}
+ .cherche .ligne-pieces .pastilles button{padding:0 4px;min-height:46px;text-align:center}
+ .cherche .ligne-pieces .champ-ville{grid-column:1;grid-row:4;align-self:end;max-width:none;width:100%}
  .cherche .filtres-toggle,.cherche .voir-res{display:none}
  .cherche .champs,.cherche .champs[hidden]{display:contents}
- .cherche .champs .champ{grid-column:3;grid-row:2/4;align-self:end}
- .cherche .champs .chercher{grid-column:4;grid-row:3;border-radius:999px;
+ .cherche .champs .champ{grid-column:2;grid-row:4;align-self:end}
+ .cherche .champs .chercher{grid-column:3;grid-row:4;height:50px;font-size:16px;border-radius:999px;
   padding:0 34px;box-shadow:0 6px 18px color-mix(in srgb,var(--action) 35%,transparent)}
  /* « Ou acheter » : les villes s'ouvrent au survol */
  .ou{max-width:1240px;margin:8px auto 0;padding:26px 22px 0;width:100%}
