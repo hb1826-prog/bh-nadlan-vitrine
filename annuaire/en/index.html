@@ -3445,11 +3445,14 @@ function carte(p) {
     ? pieces[0] + ' ' + T('à') + ' ' + pieces[pieces.length - 1] + ' ' + T('pièces')
     : pieces[0] + ' ' + T('pièces');
   const surfaces = p.typologies.map(t => t.surface_min).filter(Boolean);
+  const surfMin = surfaces.length ? Math.round(Math.min.apply(null, surfaces)) : 0;
+  const surfMax = surfaces.length ? Math.round(Math.max.apply(null,
+      p.typologies.map(t => t.surface_max || t.surface_min).filter(Boolean))) : 0;
+  // Un bien en seconde main n'a qu'un seul lot : min et max sont le meme
+  // chiffre, et « 50 à 50 m² » ne veut rien dire (Hillel, 07/10/2026) —
+  // meme garde-fou que `_ligneSurface` plus bas dans ce fichier.
   const surf = surfaces.length
-    ? ' · ' + Math.round(Math.min.apply(null, surfaces)) + ' ' + T('à') + ' '
-      + Math.round(Math.max.apply(null,
-          p.typologies.map(t => t.surface_max || t.surface_min).filter(Boolean)))
-      + ' m²'
+    ? ' · ' + (surfMin === surfMax ? surfMin : surfMin + ' ' + T('à') + ' ' + surfMax) + ' m²'
     : '';
   const badges = [p.revente
     ? '<span class="badge">' + T('Revente') + '</span>'
@@ -3739,9 +3742,12 @@ function offre(p) {
   const mini = p.typologies.map(t => t.surface_min).filter(Boolean);
   const maxi = p.typologies.map(t => t.surface_max || t.surface_min)
                            .filter(Boolean);
+  const surfMin2 = mini.length ? Math.round(Math.min.apply(null, mini)) : 0;
+  const surfMax2 = mini.length ? Math.round(Math.max.apply(null, maxi)) : 0;
+  // Meme garde-fou que `carte()` : un seul lot (typique d'un bien en
+  // seconde main) ne doit jamais s'afficher « 50 à 50 m² ».
   const surf = mini.length
-    ? Math.round(Math.min.apply(null, mini)) + ' ' + T('à') + ' '
-      + Math.round(Math.max.apply(null, maxi)) + ' m²'
+    ? (surfMin2 === surfMax2 ? surfMin2 : surfMin2 + ' ' + T('à') + ' ' + surfMax2) + ' m²'
     : '';
   const faits = [
     [T('Typologies'), typo],

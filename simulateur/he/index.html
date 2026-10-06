@@ -3478,11 +3478,14 @@ function carte(p) {
     ? pieces[0] + ' ' + T('à') + ' ' + pieces[pieces.length - 1] + ' ' + T('pièces')
     : pieces[0] + ' ' + T('pièces');
   const surfaces = p.typologies.map(t => t.surface_min).filter(Boolean);
+  const surfMin = surfaces.length ? Math.round(Math.min.apply(null, surfaces)) : 0;
+  const surfMax = surfaces.length ? Math.round(Math.max.apply(null,
+      p.typologies.map(t => t.surface_max || t.surface_min).filter(Boolean))) : 0;
+  // Un bien en seconde main n'a qu'un seul lot : min et max sont le meme
+  // chiffre, et « 50 à 50 m² » ne veut rien dire (Hillel, 07/10/2026) –
+  // meme garde-fou que `_ligneSurface` plus bas dans ce fichier.
   const surf = surfaces.length
-    ? ' · ' + Math.round(Math.min.apply(null, surfaces)) + ' ' + T('à') + ' '
-      + Math.round(Math.max.apply(null,
-          p.typologies.map(t => t.surface_max || t.surface_min).filter(Boolean)))
-      + ' m²'
+    ? ' · ' + (surfMin === surfMax ? surfMin : surfMin + ' ' + T('à') + ' ' + surfMax) + ' m²'
     : '';
   const badges = [p.revente
     ? '<span class="badge">' + T('Revente') + '</span>'
@@ -3682,14 +3685,16 @@ function galerie(p) {
     <div class="galerie" id="galerie">
       <div class="grand">
         <img id="g-grand" src="${esc(images[0])}"
-             alt="${esc(p.nom)}${p.visuel_ville ? '' : ' – vue d’artiste'}">
+             alt="${esc(p.nom)}${p.visuel_ville || p.revente ? '' : ' – vue d’artiste'}">
         <span class="g-compte">1 / ${images.length}</span>
         ${fleches}
       </div>
       ${vignettes}
       <p class="g-note">${p.visuel_ville
         ? T('Photographie de la ville. Les visuels du programme sont disponibles sur demande.')
-        : T("Vues d’artiste fournies par le promoteur, non contractuelles.")}</p>
+        : (p.revente
+          ? T('Photos réelles du bien, transmises par son propriétaire.')
+          : T("Vues d’artiste fournies par le promoteur, non contractuelles."))}</p>
     </div>`;
 }
 
@@ -3772,9 +3777,12 @@ function offre(p) {
   const mini = p.typologies.map(t => t.surface_min).filter(Boolean);
   const maxi = p.typologies.map(t => t.surface_max || t.surface_min)
                            .filter(Boolean);
+  const surfMin2 = mini.length ? Math.round(Math.min.apply(null, mini)) : 0;
+  const surfMax2 = mini.length ? Math.round(Math.max.apply(null, maxi)) : 0;
+  // Meme garde-fou que `carte()` : un seul lot (typique d'un bien en
+  // seconde main) ne doit jamais s'afficher « 50 à 50 m² ».
   const surf = mini.length
-    ? Math.round(Math.min.apply(null, mini)) + ' ' + T('à') + ' '
-      + Math.round(Math.max.apply(null, maxi)) + ' m²'
+    ? (surfMin2 === surfMax2 ? surfMin2 : surfMin2 + ' ' + T('à') + ' ' + surfMax2) + ' m²'
     : '';
   const faits = [
     [T('Typologies'), typo],
@@ -3826,10 +3834,17 @@ function offre(p) {
    Un visiteur arrive ici par un lien direct et n'a jamais lu l'argumentaire ;
    le lui resservir en entier le ferait defiler avant de voir le bien, le lui
    cacher tout a fait le laisserait sans savoir a qui il parle. */
-function rassureMini() {
+function rassureMini(revente) {
+  // Un bien en seconde main n'a pas de promoteur a signer en direct : le
+  // premier encart (« 0 frais d'agence ») mentait pour ces fiches-la
+  // (Hillel, 07/10/2026 – vu sur la version espagnole : « sin comisión »
+  // affiche alors que les 1 % sont obligatoires sur une revente).
+  const premier = revente
+    ? `<div><b>${T('1 % de frais d’agence, affichés d’avance')}</b><span>${T('Ce bien vous est confié par son propriétaire : nos frais sont indiqués sur la fiche, sans surprise.')}</span></div>`
+    : `<div><b>${T('0 frais d’agence')}</b><span>${T('Vous signez au prix du promoteur.')}</span></div>`;
   return `
   <div class="mini">
-    <div><b>${T('0 frais d’agence')}</b><span>${T('Vous signez au prix du promoteur.')}</span></div>
+    ${premier}
     <div><b>${T('Le prix, lui, est négocié')}</b><span>${T('Remise, étage, échéancier : '
       + 'discutés en hébreu, avant vous.')}</span></div>
     <div><b>${T('Le vrai coût, avant de vous engager')}</b>
@@ -3901,7 +3916,7 @@ async function fiche(p) {
         <div id="simu"></div>
       </details>
     </div>
-    ${rassureMini()}
+    ${rassureMini(p.revente)}
     <div class="card">
       <div class="block">
         <div class="block-head" style="display:flex;align-items:center;gap:8px">${picto('immeuble')}<span>${T('Les appartements')}</span>${aide('appartements')}</div>
