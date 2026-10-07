@@ -256,8 +256,9 @@ button,input,select,textarea{font:inherit;color:inherit}
    fichier : a specificite egale, c'est elle qui gagnait sur telephone et
    annulait purement et simplement l'agrandissement (bug trouve le
    07/10/2026, le bouton ne bougeait pas du tout sur l'ecran de Hillel). */
-.cta.cta-grand{display:block;width:100%;padding:26px 20px;font-size:23px;
- line-height:1.25;font-weight:800;text-wrap:balance;border-radius:28px}
+.cta.cta-grand{display:block;width:100%;box-sizing:border-box;padding:26px 20px;
+ font-size:23px;line-height:1.25;font-weight:800;white-space:normal;
+ text-wrap:balance;border-radius:28px}
 @media(max-width:900px){
  .cta.cta-grand{padding:24px 18px;font-size:21px}
 }
