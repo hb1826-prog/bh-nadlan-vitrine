@@ -1974,6 +1974,15 @@ table.ag th{width:64%}
  body.simu-en-vue .flottant,body.simu-en-vue .remonter,
  body:has(input:focus,select:focus,textarea:focus) .flottant,
  body:has(input:focus,select:focus,textarea:focus) .remonter{display:none}
+ /* La VRAIE barre du bas sur telephone est `.barre-mobile` (large, « Un
+    conseiller vous rappelle aujourd'hui » + WhatsApp) – pas `.flottant`
+    (les deux ronds mail/WhatsApp, discrets). La regle ci-dessus ne cachait
+    jamais que les ronds : la grande barre restait collee sous le bouton
+    « Envoyer » de la simulation, au point de faire appuyer sur WhatsApp par
+    erreur – vrai bug trouve le 07/10/2026, signale par Hillel apres que le
+    correctif precedent n'avait change que les ronds, jamais remarque. */
+ body.sim-actif .barre-mobile,
+ body.simu-en-vue .barre-mobile{display:none}
 }
 
 /* ===================== l'echeancier sur mesure ===========================
@@ -5581,7 +5590,7 @@ function formulaireSimulationFiche(zone, cible, p) {
       <p class="si-note" id="fs-note">${T('Nom, téléphone et e-mail sont nécessaires : '
         + 'votre simulation part sur le canal choisi, l’autre nous sert à vous '
         + 'rappeler.')}</p>
-      <button type="button" class="cta or" id="fs-envoi">${T('Envoyer')}</button>
+      <button type="button" class="cta or cta-grand" id="fs-envoi">${T('Envoyer')}</button>
     </div>`;
 
   let canal = 'whatsapp';
