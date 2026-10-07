@@ -960,6 +960,11 @@ h1.h1-partage{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
  gap:10px;margin:18px 22px;padding:16px 20px;cursor:pointer;font-size:16px;
  font-weight:750;color:#fff;background:var(--action);border-radius:999px;
  list-style:none;text-align:center;transition:.16s var(--ease)}
+/* Sur deux lignes, un texte qui remplit la premiere au maximum laisse un
+   mot seul et perdu sur la seconde (vu sur "Simulation gratuite pour ce
+   bien", Hillel, 07/10/2026) : `text-wrap:balance` repartit les mots entre
+   les deux lignes au lieu de les tasser au plus large d'abord. */
+.simu-resume span{text-wrap:balance}
 .simu-resume:hover{background:var(--action-vive)}
 .simu-resume::-webkit-details-marker{display:none}
 .simu-resume .chev{color:#fff;flex:none;display:block;
