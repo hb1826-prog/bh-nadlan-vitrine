@@ -1065,6 +1065,7 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
    cinq segments du meme bleu tekhelet de la marque (`--action`), du plus
    clair au plus fonce a mesure qu'on avance — jamais une nouvelle couleur,
    jamais un chiffre. */
+.tunnel-type-bien{margin:0 0 16px}
 .tunnel-jauge{display:flex;gap:6px;margin:0 0 22px}
 .tunnel-jauge .seg{flex:1;height:7px;border-radius:999px;
  background:var(--fond-2);border:1px solid var(--trait)}
@@ -2675,6 +2676,13 @@ let TUNNEL = {
   // Hillel (`f.taux`, voir `etapeFrais`) plutot que d'un chiffre fige ici.
   frais: null,
   canal: 'whatsapp',
+  // Simulation « a main levee » (sans bien reel choisi) : par defaut un
+  // projet neuf, comme avant — Hillel peut la basculer sur « seconde main »
+  // en haut de chaque etape, auquel cas le mini-site se construit comme
+  // pour un vrai bien de seconde main (2 % de frais d'agence non
+  // retirables, paiement integral a la signature, pas d'echeancier de
+  // chantier). Demande le 07/10/2026.
+  revente: false,
 };
 
 /* Deux simulations tenues A PART — Hillel, le 23/09/2026 : « une simulation
@@ -5819,6 +5827,13 @@ async function vueSimulateurEtapes() {
   // avant : sauter a une etape non remplie afficherait un chiffrage sur
   // des reponses qui n'existent pas encore.
   $('#tunnel').onclick = (e) => {
+    const typeBien = e.target.closest('[data-tunnel-revente]');
+    if (typeBien) {
+      TUNNEL.revente = typeBien.dataset.tunnelRevente === 'oui';
+      if (MODE_SIMU) dessinerEtape(TUNNEL.etape);
+      else etapeChoixMode($('#tunnel'));
+      return;
+    }
     const seg = e.target.closest('[data-etape]');
     if (!seg) return;
     const cible = +seg.dataset.etape;
@@ -5837,7 +5852,7 @@ function etapeChoixMode(zone) {
   const prog = programmeDuTunnel();
   compterVue('simu-ouvert');
   zone.innerHTML = `
-    ${prog ? `<p class="si-note" style="margin:0 0 6px"><b>${esc(prog.nom)}</b> · ${esc(T(prog.ville))}</p>` : ''}
+    ${prog ? `<p class="si-note" style="margin:0 0 6px"><b>${esc(prog.nom)}</b> · ${esc(T(prog.ville))}</p>` : typeDeBienHTML()}
     <div class="si-lab">${T('À partir de votre apport, ou du montant du bien ?')}</div>
     ${TUNNELS.credit.etape === 2 && prix ? `<p class="dim si-note" style="margin:-4px 0 12px">${T('Prix du bien')} : <b>${mil(prix)} ₪</b> · ${eur(prix)}</p>` : ''}
     <button type="button" class="etape-carte" data-choix="prix-du-bien">
@@ -5901,8 +5916,26 @@ function economieAgence(prix) {
 /* La jauge : cinq segments, jamais un chiffre. `n` est l'etape ATTEINTE
    (1 a 5) — les segments jusqu'a `n` sont pleins, et les segments deja
    remplis (avant l'etape courante) sont cliquables pour y revenir. */
+/* Le choix « projet neuf / seconde main », en haut de chaque etape — demande
+   par Hillel le 07/10/2026 : une simulation a main levee (sans bien choisi
+   sur une fiche) doit pouvoir dire elle aussi qu'elle porte sur une revente,
+   pour que le mini-site se construise avec les memes regles qu'un vrai bien
+   de seconde main (2 % de frais d'agence non retirables, tout paye a la
+   signature, pas d'echeancier de chantier). */
+function typeDeBienHTML() {
+  return `<div class="seg tunnel-type-bien">
+    <button type="button" data-tunnel-revente="non" class="${!TUNNEL.revente ? 'on' : ''}">${T('Projet neuf')}</button>
+    <button type="button" data-tunnel-revente="oui" class="${TUNNEL.revente ? 'on' : ''}">${T('Seconde main')}</button>
+  </div>`;
+}
+
 function jaugeHTML(n) {
-  const jauge = '<div class="tunnel-jauge">' + etapesDuTunnel().map(i =>
+  // Seulement a main levee : un simulateur ouvert depuis la fiche d'un
+  // programme neuf (`programmeDuTunnel()`) n'a pas a se demander son propre
+  // type, il le sait deja — et jamais une revente, qui ouvre son propre
+  // simulateur integre plutot que ce tunnel generique.
+  const jauge = (!programmeDuTunnel() ? typeDeBienHTML() : '')
+    + '<div class="tunnel-jauge">' + etapesDuTunnel().map(i =>
     '<i class="seg' + (i <= n ? ' fait' : '') + (i < n ? ' cliquable' : '')
     + '" data-etape="' + i + '"></i>').join('') + '</div>';
   // Parcours « apport » : la somme et sa monnaie, rappelees a chaque etape,
@@ -6130,6 +6163,11 @@ async function etapeFrais(zone) {
   if (!TUNNEL.avocatLibreType) TUNNEL.avocatLibreType = 'pct';
   if (TUNNEL.avocatLibre == null) TUNNEL.avocatLibre = defaut.avocat || 0.5;
   if (!TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'oui';
+  // Simulation « a main levee » basculee sur seconde main : memes regles
+  // que le simulateur d'une vraie fiche de revente — 2 % de frais d'agence
+  // obligatoires, jamais retirables (Hillel, 07/10/2026).
+  const accompagnementImpose = !!TUNNEL.revente;
+  if (accompagnementImpose) TUNNEL.accompagnementMode = 'oui';
   if (!TUNNEL.courtierMode) TUNNEL.courtierMode = 'notre';
   if (!TUNNEL.courtierLibreType) TUNNEL.courtierLibreType = 'montant';
   if (TUNNEL.courtierLibre == null) TUNNEL.courtierLibre = COURTIER_RECOMMANDE;
@@ -6165,13 +6203,15 @@ async function etapeFrais(zone) {
     </div>
 
     <div class="f-choix" style="margin-top:18px">
-      <b>${T('Accompagnement après la signature')}</b>${aide('Accompagnement', notes.agence || '')}
+      <b>${accompagnementImpose ? T("Frais d'agence") : T('Accompagnement après la signature')}</b>${aide('Accompagnement', accompagnementImpose ? '' : (notes.agence || ''))}
       <div class="seg">
-        <button data-accompagnement="oui" class="${TUNNEL.accompagnementMode === 'oui' ? 'on' : ''}">${T('Oui, 1 % du prix')}</button>
-        <button data-accompagnement="non" class="${TUNNEL.accompagnementMode === 'non' ? 'on' : ''}">${T('Sans accompagnement')}</button>
+        <button data-accompagnement="oui" class="${accompagnementImpose || TUNNEL.accompagnementMode === 'oui' ? 'on' : ''}">${accompagnementImpose ? T('Oui, 2 % du prix') : T('Oui, 1 % du prix')}</button>
+        ${accompagnementImpose ? '' : `<button data-accompagnement="non" class="${TUNNEL.accompagnementMode === 'non' ? 'on' : ''}">${T('Sans accompagnement')}</button>`}
       </div>
-      ${TUNNEL.accompagnementMode === 'non' ? `
-      <p class="dim si-note" style="margin-top:8px">⚠ ${T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')}</p>` : ''}
+      ${accompagnementImpose ? `
+      <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'agence de 2 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>`
+      : (TUNNEL.accompagnementMode === 'non' ? `
+      <p class="dim si-note" style="margin-top:8px">⚠ ${T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')}</p>` : '')}
     </div>
 
     ${TUNNEL.comptant ? `
@@ -6214,7 +6254,8 @@ async function etapeFrais(zone) {
       avocat = (TUNNEL.avocatLibreType === 'montant' && TUNNEL.prix)
         ? (TUNNEL.avocatLibre / TUNNEL.prix * 100) : TUNNEL.avocatLibre;
     }
-    const agence = TUNNEL.accompagnementMode === 'oui' ? (defaut.agence || 1) : 0;
+    const agence = TUNNEL.accompagnementMode === 'oui'
+      ? (accompagnementImpose ? 2 : (defaut.agence || 1)) : 0;
     const courtierLibreChamp = $('#t-courtier-libre', zone);
     if (courtierLibreChamp) TUNNEL.courtierLibre = Math.max(0, +courtierLibreChamp.value || 0);
     // Le choix (% ou montant) ne sort jamais d'ici : on resout tout de
@@ -6331,7 +6372,9 @@ function etapeProfil(zone) {
 function etapeCoordonnees(zone) {
   compterVue('simu-coordonnees');
   // Parcours « apport » : le prix n'est pas encore connu, pas d'avant-gout.
-  const eco = TUNNEL.apport ? 0 : economieAgence(TUNNEL.prix);
+  // Jamais non plus sur une seconde main : il n'y a rien a economiser,
+  // les 2 % de frais d'agence sont dus (Hillel, 07/10/2026).
+  const eco = (TUNNEL.apport || TUNNEL.revente) ? 0 : economieAgence(TUNNEL.prix);
   zone.innerHTML = `
     ${jaugeHTML(5)}
     ${eco > 0 ? `<div class="eco-teaser"><b>${T('Bonne nouvelle : vous économisez')} ${mil(eco)} ₪ · ${eur(eco)}</b>
@@ -6413,6 +6456,11 @@ function etapeCoordonnees(zone) {
         avocat: TUNNEL.frais ? TUNNEL.frais.avocat : undefined,
         agence: TUNNEL.frais ? TUNNEL.frais.agence : undefined,
         courtier: TUNNEL.frais ? TUNNEL.frais.courtier : undefined,
+        // Simulation « a main levee » basculee sur seconde main (Hillel,
+        // 07/10/2026) : le mini-site doit se construire comme pour un vrai
+        // bien de seconde main, meme sans bien du stock derriere — vrai
+        // aussi bien du parcours prix que du parcours apport.
+        revente: TUNNEL.revente ? '1' : '',
       });
       compterVue('simu-envoye');
       etapeConfirmation(zone, canal, TUNNEL.apport ? (reponse || {}).prix_max : null);
@@ -6921,6 +6969,10 @@ async function envoyerLead(champs, p, I, extra) {
       avocat: extra.avocat != null ? extra.avocat : '',
       agence: extra.agence != null ? extra.agence : '',
       courtier: extra.courtier != null ? extra.courtier : '',
+      // Vide partout sauf la simulation « a main levee » basculee sur
+      // seconde main (Hillel, 07/10/2026) — voir `leads/service.py`,
+      // qui force alors les memes regles qu'un vrai bien de seconde main.
+      revente: extra.revente || '',
       // De qui vient ce contact. Vide sur l'annuaire de Hillel, la cle du
       // partenaire sur sa page en marque blanche — c'est elle qui fait que le
       // lead lui revient dans le CRM. Elle est posee a la fabrication, jamais
