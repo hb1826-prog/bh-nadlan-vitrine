@@ -6642,9 +6642,14 @@ function contactHTML(p, intention) {
   const MOTS = {
     fiche: {
       titre: T('Recevez les lots disponibles et les prix réels'),
-      texte: T('La page affiche un prix d’appel. Nous vous envoyons la liste '
-        + 'des appartements encore disponibles') + (p ? ' à <b>' + esc(p.nom)
-        + '</b>' : '') + ' ' + T(': étage, orientation, surface et prix réel.'),
+      // Une phrase entiere par cas, le nom en {nom} : coupee en morceaux
+      // autour d'un « à » francais, elle donnait « ... פנויות à Harmony : »
+      // sur la page hebraique (Hillel, 08/10/2026). Une seule chaine par
+      // T() pour que `auto_traduire.py` la voie.
+      texte: p
+        ? T('La page affiche un prix d’appel. Nous vous envoyons la liste des appartements encore disponibles à {nom} : étage, orientation, surface et prix réel.')
+            .replace('{nom}', '<b>' + esc(p.nom) + '</b>')
+        : T('La page affiche un prix d’appel. Nous vous envoyons la liste des appartements encore disponibles : étage, orientation, surface et prix réel.'),
       bouton: T('Recevoir la liste')},
     simulateur: {
       titre: T('Recevez ce chiffrage complet en PDF'),
@@ -6807,6 +6812,19 @@ function formatDateRappel(iso) {
    TOUS les champs telephone du site, plus une aide a la saisie du mail.
    Autonome (aucun appel reseau) : le pays par defaut vient de la langue du
    navigateur, jamais d'une geolocalisation IP. */
+/* Le nom du pays dans la langue de la page : les noms ci-dessous sont en
+   francais, et s'affichaient tels quels sur les cinq traductions (Hillel,
+   08/10/2026). Le navigateur connait le nom de chaque pays dans chaque
+   langue (Intl.DisplayNames) — pas besoin de 200 entrees au dictionnaire.
+   Repli sur le nom francais si le navigateur est trop ancien. */
+let NOMS_PAYS = null;
+try {
+  if ((DONNEES.langue || 'fr') !== 'fr' && typeof Intl.DisplayNames === 'function')
+    NOMS_PAYS = new Intl.DisplayNames([DONNEES.langue], {type: 'region'});
+} catch (e) { NOMS_PAYS = null; }
+const nomPays = p => {
+  try { return (NOMS_PAYS && NOMS_PAYS.of(p[0])) || p[1]; } catch (e) { return p[1]; }
+};
 const PAYS_TEL = [
   ["FR","France","33"],["IL","Israël","972"],["US","États-Unis","1"],
   ["GB","Royaume-Uni","44"],["ES","Espagne","34"],["BR","Brésil","55"],
@@ -6934,7 +6952,8 @@ function initTel(id, zone, isoDepart) {
   }
   const rendreOptions = (filtre) => {
     const f = (filtre || '').trim().toLowerCase();
-    const passe = (p) => !f || p[1].toLowerCase().includes(f) || p[2].includes(f);
+    const passe = (p) => !f || nomPays(p).toLowerCase().includes(f)
+      || p[1].toLowerCase().includes(f) || p[2].includes(f);
     const tries = f
       ? PAYS_TEL.filter(passe)
       : [...PAYS_PRIORITE.map(c => PAYS_TEL.find(p => p[0] === c)),
@@ -6942,7 +6961,7 @@ function initTel(id, zone, isoDepart) {
     opts.innerHTML = tries.map(p => p === null
       ? '<div class="tel-sep"></div>'
       : `<button type="button" class="tel-opt" data-iso="${p[0]}">${drapeauPays(p[0])} `
-        + `${esc(p[1])} <span>+${p[2]}</span></button>`).join('');
+        + `${esc(nomPays(p))} <span>+${p[2]}</span></button>`).join('');
     opts.querySelectorAll('.tel-opt').forEach(b => {
       b.onclick = () => { iso = b.dataset.iso; choisiParVisiteur = true; peindre(); fermer(); };
     });
