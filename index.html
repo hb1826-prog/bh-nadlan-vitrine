@@ -5578,8 +5578,8 @@ function formulaireSimulationFiche(zone, cible, p) {
         <div class="f"><label for="fs-mail">${T('E-mail')}</label>
           <input id="fs-mail" type="email" autocomplete="email" placeholder="vous@exemple.com"></div>
       </div>
-      <div class="pot"><label>${T('Société')}</label>
-        <input id="fs-societe" tabindex="-1" autocomplete="off"></div>
+      <div class="pot" aria-hidden="true">
+        <input id="fs-pot" tabindex="-1" autocomplete="off"></div>
       <p class="si-note" id="fs-note">${T('Nom, téléphone et e-mail sont nécessaires : '
         + 'votre simulation part sur le canal choisi, l’autre nous sert à vous '
         + 'rappeler.')}</p>
@@ -5626,7 +5626,7 @@ function formulaireSimulationFiche(zone, cible, p) {
     try {
       await envoyerLead({
         prenom: prenom, nom: nom, tel: tel, mail: mail, mot: mot,
-        societe: val('fs-societe'),
+        societe: val('fs-pot'),
       }, p, 'fiche-simu', {
         budget: E.prix, canal: canal, profil: E.profil, cadre: E.cadre,
         emprunt_pct: E.comptant ? 0 : E.ltv,
@@ -6504,8 +6504,8 @@ function etapeCoordonnees(zone) {
         <input id="t-mail" type="email" autocomplete="email"
                placeholder="vous@exemple.com"></div>
     </div>
-    <div class="pot"><label>${T('Société')}</label>
-      <input id="t-societe" tabindex="-1" autocomplete="off"></div>
+    <div class="pot" aria-hidden="true">
+      <input id="t-pot" tabindex="-1" autocomplete="off"></div>
     <p class="si-note" id="t-note">${T('Téléphone et e-mail sont nécessaires tous '
       + 'les deux : votre simulation part sur le canal choisi, l’autre nous sert '
       + 'à vous rappeler.')}</p>
@@ -6549,7 +6549,7 @@ function etapeCoordonnees(zone) {
     try {
       const reponse = await envoyerLead({
         prenom: val('t-prenom'), nom: val('t-nom'), tel: tel, mail: mail,
-        mot: mot, societe: val('t-societe'),
+        mot: mot, societe: val('t-pot'),
       }, TUNNEL.apport ? null : programmeDuTunnel(), 'simulateur', {
         budget: TUNNEL.apport ? '' : TUNNEL.prix,
         apport: TUNNEL.apport ? apportIls() : '', canal: canal,
@@ -6717,8 +6717,8 @@ function contactHTML(p, intention) {
               ? T('Une question sur ce programme…')
               : T('Ville, nombre de pièces, budget, échéance…')}"></textarea></div>
         </div>
-        <div class="pot"><label>${T('Société')}</label>
-          <input id="c-societe" tabindex="-1" autocomplete="off"></div>
+        <div class="pot" aria-hidden="true">
+          <input id="c-pot" tabindex="-1" autocomplete="off"></div>
         <div class="actions">
           <button id="c-envoi" type="button">${MOTS.bouton}</button>
           <button class="wa" id="c-wa" type="button">WhatsApp</button>
@@ -7167,7 +7167,7 @@ function wireContact(p, intention) {
     try {
       await envoyerLead({
         prenom: val('c-prenom'), nom: val('c-nom'), tel: telC.valeur(),
-        mail: val('c-mail'), mot: val('c-mot'), societe: val('c-societe'),
+        mail: val('c-mail'), mot: val('c-mot'), societe: val('c-pot'),
       }, p, I, { rappel_date: quandC.date(), rappel_heure: quandC.heure() });
       merci(p, I, { date: quandC.date(), heure: quandC.heure() });
     } catch (e) {
@@ -7288,8 +7288,8 @@ function ouvrirRappel(ancre) {
       </div>
     </div>
     ${champQuandHTML('r')}
-    <div class="pot"><label>${T('Société')}</label>
-      <input id="r-societe" tabindex="-1" autocomplete="off"></div>
+    <div class="pot" aria-hidden="true">
+      <input id="r-pot" tabindex="-1" autocomplete="off"></div>
     <button class="rappel-ok" type="button">${T("Être rappelé aujourd'hui")}</button>
     <p class="rappel-note" id="r-note">${T('Vos coordonnées ne sont ni revendues, ni transmises à un promoteur.')}</p>`;
   document.body.appendChild(POP);
@@ -7317,7 +7317,7 @@ function ouvrirRappel(ancre) {
         prenom: POP.querySelector('#r-prenom').value.trim(),
         nom: POP.querySelector('#r-nom').value.trim(),
         tel: tel,
-        societe: POP.querySelector('#r-societe').value.trim(),
+        societe: POP.querySelector('#r-pot').value.trim(),
       }, p, I, { rappel_date: quandR.date(), rappel_heure: quandR.heure() });
       const quandTxt = quandR.date()
         ? T('le') + ' ' + formatDateRappel(quandR.date()) + (quandR.heure() ? ' ' + T('à') + ' ' + quandR.heure() : '')
