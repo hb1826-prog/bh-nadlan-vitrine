@@ -2398,29 +2398,29 @@ table.ag th{width:64%}
    --action et --or apres cette feuille) le suivent sans une ligne de plus.
    Prefixe `eli-` partout : `.bulle` est deja prise par la carte. */
 
-/* La pastille. Sur ordinateur, une pilule a gauche de « Haut de page » ;
-   sur telephone, un rond au-dessus de la fleche et de la barre du bas. */
-.eli-pastille{position:fixed;right:84px;bottom:22px;z-index:26;
- display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;
- padding:8px 18px 8px 8px;border-radius:999px;
- background:var(--action,#0B6BD6);color:var(--fond,#fff);font:inherit;font-size:14.5px;
- font-weight:700;box-shadow:var(--ombre-3,0 10px 30px rgba(15,23,42,.25));
+/* La pastille : une invitation a ecrire, pas un rond anonyme (Hillel,
+   11/10/2026 : « il faut vraiment mettre ca en avant »). Sur ordinateur,
+   centree en bas de l'ecran, loin de la colonne mail / WhatsApp / « Haut
+   de page » qu'elle recouvrait ; sur telephone, une barre au-dessus de la
+   barre d'action, a cote de la fleche. */
+.eli-pastille{position:fixed;left:50%;bottom:22px;z-index:26;
+ transform:translateX(-50%);width:min(460px,calc(100vw - 420px));
+ display:flex;align-items:center;gap:11px;border:0;cursor:text;
+ padding:7px 20px 7px 7px;border-radius:999px;text-align:start;
+ background:var(--action,#0B6BD6);color:var(--fond,#fff);font:inherit;font-size:15px;
+ font-weight:650;box-shadow:var(--ombre-3,0 10px 30px rgba(15,23,42,.25));
  transition:transform .16s var(--ease,ease)}
-.eli-pastille:hover{transform:translateY(-2px)}
-.eli-pastille-nom{display:none}
-@media(max-width:900px){.eli-pastille-nom{display:inline}}
-.eli-avatar{flex:none;width:34px;height:34px;border-radius:50%;
+.eli-pastille:hover{transform:translate(-50%,-2px)}
+.eli-pastille-txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis}
+.eli-avatar{flex:none;width:36px;height:36px;border-radius:50%;
  display:grid;place-items:center;background:var(--fond,#fff);color:var(--action,#0B6BD6);
  font-weight:800;font-size:16px}
-body.eli-ouvert .eli-pastille{display:none}
+body.eli-ouvert .eli-pastille,body.eli-une-visible .eli-pastille{display:none}
 @media(max-width:900px){
- /* Sur telephone : une pilule « bulle + Eli », au-dessus de la fleche
-    « Haut de page » et de la barre du bas — un rond portant une seule
-    lettre ne disait pas qu'on pouvait discuter. */
- .eli-pastille{right:14px;bottom:calc(156px + env(safe-area-inset-bottom));
-  padding:6px 16px 6px 6px;gap:8px;font-size:15px}
- .eli-pastille .eli-pastille-txt{display:none}
- .eli-pastille .eli-avatar{width:36px;height:36px}
+ .eli-pastille{left:14px;right:72px;width:auto;transform:none;
+  bottom:calc(98px + env(safe-area-inset-bottom));padding:6px 16px 6px 6px}
+ .eli-pastille:hover{transform:none}
  body.tunnel-plein .eli-pastille,body.sim-actif .eli-pastille,
  body.simu-en-vue .eli-pastille,
  body:has(input:focus,select:focus,textarea:focus):not(.eli-ouvert) .eli-pastille{display:none}
@@ -2518,10 +2518,66 @@ body.eli-ouvert .eli-pastille{display:none}
 .eli-note.manque{color:var(--alerte,#B4321F);font-weight:650}
 
 /* Le bandeau de consentement (mesure_pub.py) reste pose en bas de l'ecran
-   tant que le visiteur n'a pas repondu, au-dessus de tout. Le fil d'Eli se
-   reserve alors la place en dessous : ses derniers boutons remontent au-
-   dessus du bandeau au lieu de passer dessous. */
-body:has(#bh-cookies:not([hidden])) .eli-fil{padding-bottom:190px}
+   tant que le visiteur n'a pas repondu, au-dessus de tout. Le panneau
+   d'Eli remonte alors au-dessus de lui : ses derniers boutons et sa saisie
+   ne passent jamais dessous. */
+body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
+ max-height:calc(100vh - 170px)}
+
+/* La saisie libre, au bas du panneau. */
+.eli-saisie{flex:none;display:flex;gap:8px;align-items:center;
+ padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+ background:var(--carte,#fff);border-top:1px solid var(--trait,#E7E2D8)}
+.eli-saisie input{flex:1;min-width:0;padding:12px 15px;border-radius:999px;
+ border:1.5px solid var(--trait,#E7E2D8);background:var(--fond,#FAF7F1);
+ color:var(--encre,#0F172A);font:inherit;font-size:16px}
+.eli-saisie input:focus{outline:none;border-color:var(--action,#0B6BD6)}
+.eli-saisie button{flex:none;width:44px;height:44px;border-radius:50%;border:0;
+ display:grid;place-items:center;cursor:pointer;
+ background:var(--action,#0B6BD6);color:var(--fond,#fff)}
+[dir=rtl] .eli-saisie button svg{transform:scaleX(-1)}
+.eli-fil{padding-bottom:18px}
+
+/* L'invitation d'Eli dans la grande entree, sous le titre : sur la
+   photo, en verre sombre, comme le reste de l'entree. */
+.eli-une{margin:22px 0 4px;max-width:620px;position:relative;z-index:2}
+.eli-une-dedans{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;
+ align-items:center;padding:16px 18px;border-radius:var(--r-xl,20px);
+ background:rgba(11,15,24,.55);border:1px solid rgba(255,255,255,.22);
+ -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-align:start}
+.eli-une-badge{align-self:start;background:var(--or,#C9A227);color:#0B0F18;
+ font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+ padding:5px 10px;border-radius:999px}
+.eli-une-texte b{display:block;font-size:18px;color:#fff}
+.eli-une-texte span{display:block;font-size:14px;color:rgba(255,255,255,.86);line-height:1.45}
+.eli-une-form{grid-column:1/-1;display:flex;gap:8px;background:#fff;
+ border-radius:999px;padding:5px}
+.eli-une-form input{flex:1;min-width:0;padding:11px 16px;border:0;border-radius:999px;
+ background:transparent;color:#0F172A;font:inherit;font-size:16px}
+.eli-une-form input::placeholder{color:#6A7284}
+.eli-une-form input:focus{outline:none}
+.eli-une-form button{flex:none;border:0;border-radius:999px;padding:0 20px;
+ background:var(--action,#0B6BD6);color:#fff;font:inherit;
+ font-weight:750;font-size:15px;cursor:pointer;white-space:nowrap}
+/* Sur ordinateur, la grande entree est une grille (« sp / zf / h1 / pr »,
+   portail.css) : sans case a lui, le bandeau prenait la premiere libre,
+   tout en haut. Il prend celle des chiffres, sous le titre. */
+@media(min-width:901px){
+ .hero .eli-une{grid-area:pr;align-self:start;margin-top:28px}
+}
+@media(max-width:900px){
+ .eli-une{margin:16px auto 6px;padding:0}
+ .eli-une-dedans{grid-template-columns:1fr;padding:14px}
+ .eli-une-badge{justify-self:start}
+ .eli-une-form{flex-direction:column;border-radius:16px}
+ .eli-une-form button{padding:12px;border-radius:12px}
+}
+
+
+/* Meme chose pour la barre « Ecrivez ici » : au premier passage, le bandeau
+   de consentement occupe le bas de l'ecran ; la barre monte au-dessus de
+   lui au lieu d'etre cachee dessous, et redescend des qu'il a repondu. */
+body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-area-inset-bottom))}
 </style>
 <script>/* La banniere de nuit, de 22 h 30 a 6 h a l'heure du visiteur ; claire le
 reste du temps (Hillel, 24/09/2026). ?nuit=1 / ?jour=1 pour la voir a toute heure. */
@@ -2634,6 +2690,21 @@ ecrireCookie(c,'fr');
    <div class=hero-texte>
     <p class=zf-bandeau>Frais d’agence&nbsp;: <span class=zf-pct>0 %</span></p>
     <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
+    <div class=eli-une id=eli-une>
+  <div class=eli-une-dedans>
+    <span class=eli-une-badge>Nouveau</span>
+    <div class=eli-une-texte>
+      <b>Eli, votre conseiller IA</b>
+      <span>Décrivez votre projet avec vos mots : Eli vous montre aussitôt les programmes qui vous correspondent.</span>
+    </div>
+    <form class=eli-une-form id=eli-une-form autocomplete=off>
+      <input type=text enterkeyhint=send maxlength=300
+             placeholder="Ex. : un 4 pièces à Netanya, autour de 3 millions de shekels"
+             aria-label="Écrivez librement ce que vous cherchez…">
+      <button type=submit>Demander à Eli</button>
+    </form>
+  </div>
+</div>
     <ul class=hero-preuves><li><b>50</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li class=pr-ligne><b>15</b><span>ans d’expérience dans la promotion immobilière en Israël</span></li></ul>
     <a class=hero-decouvrir href="#vue">Découvrir nos biens →</a>
    </div>
@@ -2781,17 +2852,22 @@ ecrireCookie(c,'fr');
 <button class=eli-pastille id=eli-pastille type=button
         aria-controls=eli aria-expanded=false>
   <span class=eli-avatar aria-hidden=true><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12Z"/></svg></span>
-  <span class=eli-pastille-txt>Dites-moi ce que vous cherchez</span>
-  <span class=eli-pastille-nom>Eli</span>
+  <span class=eli-pastille-txt>Écrivez ici ce que vous cherchez…</span>
 </button>
-<section class=eli-panneau id=eli hidden aria-label="Eli, l’assistant de BH Nadlan">
+<section class=eli-panneau id=eli hidden aria-label="Eli, votre conseiller IA">
   <div class=eli-tete>
     <span class=eli-avatar aria-hidden=true>E</span>
-    <div class=eli-qui><b>Eli</b><small>Assistant BH Nadlan</small></div>
+    <div class=eli-qui><b>Eli</b><small>Votre conseiller IA</small></div>
     <button class=eli-conseiller type=button>Parler à un conseiller</button>
     <button class=eli-x type=button aria-label="Fermer">×</button>
   </div>
   <div class=eli-fil aria-live=polite></div>
+  <form class=eli-saisie autocomplete=off>
+    <input type=text enterkeyhint=send maxlength=300
+           placeholder="Écrivez librement ce que vous cherchez…"
+           aria-label="Écrivez librement ce que vous cherchez…">
+    <button type=submit aria-label="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </form>
 </section>
 <div class=barre-mobile>
   <button type=button onclick="versContact(this)">Un conseiller vous rappelle aujourd’hui
@@ -8319,6 +8395,7 @@ b.hidden=true;});})();</script>
   if (!PANNEAU || !PASTILLE || DONNEES.seul) return;
 
   const MAX_MONTRES = 3, MAX_DEMANDES = 3;
+  let SAISIE = null;
   // Sur la page d'un partenaire, son visiteur lit une page a son nom : Eli
   // y parle pour lui (« un conseiller BLG… »), comme le reste de la page.
   // Les traductions gardent « BH Nadlan » tel quel, d'ou ce remplacement
@@ -8371,6 +8448,180 @@ b.hidden=true;});})();</script>
   }
   const libellePieces = n => !n ? T('Peu importe')
     : (n >= 5 ? T('5 pièces et plus') : n + ' ' + T('pièces'));
+
+  /* ------------------------------------------------ le texte libre
+
+     « Ecrivez librement ce que vous cherchez » (Hillel, 11/10/2026). Sans
+     IA (tranche 1), Eli lit dans la phrase ce qui sert a chercher — la
+     ville, le budget, le nombre de pieces, un numero de telephone — dans
+     les six langues, dit ce qu'il a compris, et ne demande que ce qui
+     manque. Le reste de la phrase n'est pas perdu : elle part telle quelle
+     dans le CRM avec le lead. La conversation libre complete viendra avec
+     l'IA (tranche 2). */
+
+  const plat = t => String(t || '').toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '').replace(/[’'`´]/g, ' ')
+    .replace(/[-_/]/g, ' ').replace(/\s+/g, ' ').trim();
+  const ALIAS = {
+    'tel aviv': ['tlv', 'tel aviv yafo', 'jaffa', 'yafo'],
+    'jerusalem': ['yerushalayim', 'jerusalen', 'jeru'],
+    'netanya': ['natanya', 'netania', 'netanyah'],
+    'ashkelon': ['ashqelon', 'askelon', 'ascalon'],
+    'haifa': ['hayfa', 'haifah'],
+    'herzliya': ['herzlia', 'herzelia', 'hertzliya'],
+    'raanana': ['ra anana'],
+    'rishon lezion': ['rishon', 'rishon le zion', 'rishon letzion'],
+    'petah tikva': ['petah tikvah', 'petach tikva', 'petach tikvah'],
+    'beer sheva': ['beersheba', 'beer sheba', 'beersheva', 'be er sheva'],
+    'modiin': ['modi in'],
+    'beit shemesh': ['bet shemesh'],
+  };
+  function trouverVille(t) {
+    // La ponctuation colle aux mots (« Jerusalem, budget… ») : on l'ote ici
+    // seulement — le budget, lui, a besoin des points et des virgules.
+    const brut = ' ' + plat(t).replace(/[,.;:!?()"«»\[\]]/g, ' ').replace(/\s+/g, ' ') + ' ';
+    let trouve = null, longueur = 0;
+    TABLE.villes.forEach(v => {
+      const noms = [v.n, T(v.n), v.k].concat(ALIAS[v.k] || []);
+      noms.forEach(n => {
+        const c = plat(n);
+        if (!c) return;
+        // Latin : mot entier. Hebreu et russe se declinent ou prennent une
+        // preposition collee (« בנתניה », « в Нетании ») : on cherche la
+        // racine, sans la derniere lettre.
+        const latin = /^[a-z0-9 ]+$/.test(c);
+        const ok = latin ? brut.indexOf(' ' + c + ' ') >= 0
+          : brut.indexOf(c.length > 4 ? c.slice(0, -1) : c) >= 0;
+        if (ok && c.length > longueur) { trouve = v.k; longueur = c.length; }
+      });
+    });
+    return trouve;
+  }
+  const NOMBRES = {un: 1, une: 1, deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6,
+    one: 1, two: 2, three: 3, four: 4, five: 5, dos: 2, tres: 3, cuatro: 4,
+    cinco: 5, dois: 2, duas: 2, quatro: 4, 'два': 2, 'двух': 2, 'три': 3,
+    'трех': 3, 'четыре': 4, 'четырех': 4, 'пять': 5};
+  const MOTS_PIECES = 'pieces?|pcs?|p|rooms?|habitaciones|ambientes|assoalhadas|divisoes|комнат\\S*|комн|חדרים|חד';
+  const MOTS_CHAMBRES = 'chambres?|bedrooms?|beds?|br|dormitorios|quartos|спальн\\S*';
+  function trouverPieces(t) {
+    const p = plat(t);
+    // « 4 pieces », « 3p », « 2,5 pieces », « 4 rooms », « 3 комнаты »,
+    // « 4 חדרים » ; « T4 » ou « F4 » a la francaise. Une chambre de plus
+    // compte le salon : 3 chambres = 4 pieces a l'israelienne.
+    const n = '(\\d+(?:[.,]5)?|' + Object.keys(NOMBRES).join('|') + ')';
+    let m = p.match(new RegExp(n + '\\s*(' + MOTS_PIECES + ')(?![a-z])'));
+    let extra = 0;
+    if (!m) {
+      m = p.match(new RegExp(n + '\\s*(' + MOTS_CHAMBRES + ')(?![a-z])'));
+      extra = 1;
+    }
+    // « T3 » : 3 pieces en France, mais 3 chambres au Portugal (+1).
+    if (!m) {
+      const f = p.match(/\b[tf]([1-6])\b/);
+      if (f) { m = [f[0], f[1]]; extra = DONNEES.langue === 'pt' ? 1 : 0; }
+    }
+    if (!m) return null;
+    const v = (NOMBRES[m[1]] || parseFloat(String(m[1]).replace(',', '.'))) + extra;
+    return Math.max(2, Math.min(5, Math.round(v)));
+  }
+  function trouverBudget(t) {
+    let p = plat(t);
+    // « T3 », « m2 », « 4p » : un chiffre colle a des lettres n'est pas un
+    // prix. Puis le nombre de pieces, qui n'en est pas un non plus.
+    p = p.replace(/[a-z\u0400-\u04ff\u0590-\u05ff]+\d+[a-z²]*/g, ' ').replace(/\d+\s*(m2|m²)(?![a-z0-9])/g, ' ');
+    // Le nombre de pieces n'est pas un budget : on le retire d'abord.
+    p = p.replace(new RegExp('\\d+(?:[.,]5)?\\s*(' + MOTS_PIECES + '|' + MOTS_CHAMBRES + ')(?![a-z])', 'g'), ' ');
+    const re = /(\d+(?:[ .,]\d{3})*(?:[.,]\d+)?)\s*(millions?|millones|milhoes|milhao|mln|млн|миллион\S*|מיליון|m(?![2²a-z])|k(?![a-z])|mille|mil|тыс\S*)?\s*(€|eur|euros?|\$|usd|dollars?|₪|shekels?|sheqels?|nis|ils|шекел\S*|שח|ש"ח|שקל\S*)?/g;
+    const vus = [];
+    let m, unite = '', devise = '';
+    while ((m = re.exec(p))) {
+      if (!m[1]) { re.lastIndex++; continue; }
+      const brut = m[1];
+      // 2.500.000 / 2 500 000 = des milliers ; 2,5 / 2.5 = une decimale.
+      const milliers = /^\d{1,3}([ .,]\d{3})+$/.test(brut);
+      const v = milliers ? +brut.replace(/[ .,]/g, '') : parseFloat(brut.replace(',', '.'));
+      if (isNaN(v)) continue;
+      if (m[2]) unite = m[2];
+      if (m[3]) devise = m[3];
+      vus.push({v: v, u: m[2] || ''});
+    }
+    if (!vus.length) return null;
+    const mult = u => /^(k|mille|тыс)/.test(u) ? 1e3 : (u ? 1e6 : 1);
+    let max = 0;
+    // « entre 2 et 3 millions » : l'unite dite a la fin vaut pour les deux.
+    vus.forEach(x => {
+      const v = x.v * mult(x.u || (x.v < 100 ? unite : ''));
+      if (v > max) max = v;
+    });
+    if (max < 100000) return null;          // trop petit pour etre un prix
+    if (/€|eur/.test(devise)) max = max * (tauxEuro() || 1);
+    else if (/\$|usd|dollar/.test(devise)) {
+      const tx = ((DONNEES.change || {}).taux || {}).USD;
+      if (tx) max = max * tx;
+    }
+    return Math.round(max);
+  }
+  function trancheBudget(v) {
+    for (let b = 0; b < TABLE.budgets.length - 1; b++) {
+      const [mi, ma] = TABLE.budgets[b];
+      if ((mi == null || v > mi) && (ma == null || v <= ma)) return b;
+    }
+    return TABLE.budgets.length - 1;
+  }
+  function trouverTel(t) {
+    const m = String(t).match(/(\+?\d[\d\s.()-]{7,}\d)/);
+    if (!m) return null;
+    const chiffres = m[1].replace(/\D/g, '');
+    // Un prix tape en chiffres (2500000) n'est pas un telephone : un
+    // numero commence par + ou par 0.
+    if (!/^\s*(\+|0)/.test(m[1])) return null;
+    return chiffres.length >= 9 && chiffres.length <= 15 ? m[1].trim() : null;
+  }
+
+  /* Ce que le visiteur ecrit, a n'importe quel moment de la conversation. */
+  function ecrire(texte) {
+    texte = String(texte || '').trim().slice(0, 300);
+    if (!texte) return;
+    S.etapes.push({t: 'texte', v: texte});
+    S.ecrits = (S.ecrits || []).concat([texte]).slice(-5);
+    compterVue('eli-texte');
+    const tel = trouverTel(texte);
+    if (tel && !S.lead) {
+      // Un numero tape dans la conversation : on le prend, sans faire
+      // remplir de formulaire — il suffit de confirmer.
+      S.telSaisi = tel;
+      S.etapes.push({t: 'demande', m: 0, tel: true});
+      garder(); peindre(); return;
+    }
+    const compris = {};
+    const v = trouverVille(texte), pc = trouverPieces(texte), bu = trouverBudget(texte);
+    if (v) compris.ville = v;
+    if (pc) compris.pieces = pc;
+    if (bu) { compris.budget = trancheBudget(bu); compris.montant = bu; }
+
+    if (!v && !pc && !bu) {
+      const question = /\?/.test(texte);
+      if (question && S.etapes.some(e => e.t === 'res') && peutDemander()) {
+        demander(2);                         // la question personnelle
+      } else {
+        S.etapes.push({t: 'incompris', question: question});
+        S.etapes.push({t: 'q', k: S.crit.ville == null ? 'ville'
+          : (S.crit.budget == null ? 'budget' : 'pieces')});
+      }
+      garder(); peindre(); return;
+    }
+    // Ce qui est compris complete ou remplace ce qu'on savait : apres des
+    // resultats, « et a Tel Aviv ? » garde le budget et les pieces.
+    const c = Object.assign({}, S.crit, compris);
+    delete c.montant;
+    S.crit = c;
+    S.etapes.push({t: 'compris', c: compris});
+    const manque = c.ville == null ? 'ville'
+      : (c.budget == null ? 'budget' : (c.pieces == null ? 'pieces' : null));
+    if (manque) S.etapes.push({t: 'q', k: manque});
+    else resultat();
+    garder(); peindre();
+  }
 
   /* ------------------------------------------------ le deroule */
 
@@ -8503,9 +8754,13 @@ b.hidden=true;});})();</script>
         + (d.budget ? ' ' + T('dans votre budget') : '') + '.';
       return trouve + ' ' + T('Je vous les montre avec plaisir — pourriez-vous me laisser votre prénom et votre numéro, pour qu’un conseiller puisse aussi vous envoyer les prix réels ?');
     }
+    if (d.m === 2) {
+      return T('La réponse exacte dépend de votre situation. Un conseiller peut vous préparer le chiffrage pour votre cas — voulez-vous me laisser votre prénom et votre numéro ?');
+    }
     if (d.m === 4) {
       return T('Avec plaisir ! Si vous voulez, je vous mets cette sélection de côté : un conseiller vous l’enverra sur WhatsApp, avec les prix à jour. Il suffit de me laisser votre prénom et votre numéro.');
     }
+    if (d.tel) return TM('Merci ! Je transmets votre numéro à un conseiller BH Nadlan. Ajoutez simplement votre prénom et confirmez :');
     return TM('Avec plaisir. Laissez-moi simplement votre prénom et votre numéro : un conseiller BH Nadlan vous écrit sur WhatsApp.');
   }
 
@@ -8517,7 +8772,7 @@ b.hidden=true;});})();</script>
       <div class="tel-champ">
         <div class="tel-boite">
           <button type="button" class="tel-drap" id="eli-tel-ind" aria-haspopup="listbox"></button>
-          <input id="eli-tel-num" type="tel" autocomplete="tel-national" placeholder="6 12 34 56 78">
+          <input id="eli-tel-num" type="tel" autocomplete="tel-national" placeholder="6 12 34 56 78" value="${esc(S.lead ? '' : (S.telSaisi || ''))}">
         </div>
         <div class="tel-liste" id="eli-tel-liste" hidden>
           <input class="tel-recherche" id="eli-tel-rech" placeholder="${T('Rechercher un pays…')}">
@@ -8570,7 +8825,21 @@ b.hidden=true;});})();</script>
     const dernier = i === S.etapes.length - 1;
     switch (e.t) {
       case 'accueil':
-        return bulle(TM('Bonjour, je suis Eli, l’assistant de BH Nadlan. Dites-moi quel bien vous cherchez : je vous montre les programmes qui vous correspondent.'));
+        return bulle(esc(T('Bonjour, je suis Eli, votre conseiller IA. Écrivez-moi librement ce que vous cherchez — une ville, un budget, un nombre de pièces — ou choisissez ci-dessous : je vous montre les programmes qui vous correspondent.')));
+      case 'texte':
+        return bulle(esc(e.v), 'moi');
+      case 'compris': {
+        const l = [];
+        if (e.c.ville) l.push(nomVille(e.c.ville));
+        if (e.c.pieces) l.push(libellePieces(e.c.pieces));
+        if (e.c.montant) l.push(T('budget') + ' ' + shek(e.c.montant)
+          + (eur(e.c.montant) ? ' (' + eur(e.c.montant) + ')' : ''));
+        return bulle(esc(T('J’ai compris :') + ' ' + l.join(' · ')));
+      }
+      case 'incompris':
+        return bulle(esc(e.question
+          ? T('Bonne question : un conseiller y répondra précisément. Pour commencer, dites-moi où vous cherchez :')
+          : T('Je n’ai pas tout compris, pardon. Commençons par la ville :')));
       case 'q': {
         const q = {ville: e.encore ? T('Dans quelle ville, cette fois ?') : T('Dans quelle ville ?'),
                    budget: T('Quel est votre budget ?'),
@@ -8679,8 +8948,12 @@ b.hidden=true;});})();</script>
     if (c.pieces != null && c.ville) l.push(libellePieces(c.pieces));
     if (c.budget != null && c.ville) l.push(libelleBudget(c.budget));
     const vus = S.montres.map(projet).filter(Boolean).map(p => p.nom);
-    return (l.length ? T('Cherche') + ' : ' + l.join(', ') : '')
-      + (vus.length ? (l.length ? ' · ' : '') + T('Programmes vus') + ' : ' + vus.join(', ') : '');
+    // Ce que le visiteur a ecrit de sa main part tel quel : c'est souvent
+    // ce qui en dit le plus (« pour ma retraite, pres de la mer »).
+    const ecrits = (S.ecrits || []).join(' / ');
+    return ((l.length ? T('Cherche') + ' : ' + l.join(', ') : '')
+      + (vus.length ? (l.length ? ' · ' : '') + T('Programmes vus') + ' : ' + vus.join(', ') : '')
+      + (ecrits ? ' · A écrit : « ' + ecrits + ' »' : '')).slice(0, 520);
   }
 
   function brancherFormulaire(form) {
@@ -8701,7 +8974,9 @@ b.hidden=true;});})();</script>
     };
     form.querySelector('.eli-ok').onclick = async (ev) => {
       const bouton = ev.currentTarget;
-      const numero = tel ? tel.valeur() : '';
+      // Un numero tape en entier (« +33 6 12 ... ») garde son indicatif.
+      const champ = form.querySelector('#eli-tel-num').value.trim();
+      const numero = /^\+/.test(champ) ? champ : (tel ? tel.valeur() : '');
       if (!numero) {
         note.textContent = T('Il me faut votre numéro pour que le conseiller puisse vous écrire.');
         note.classList.add('manque');
@@ -8756,6 +9031,10 @@ b.hidden=true;});})();</script>
     document.body.classList.add('eli-ouvert');
     PASTILLE.setAttribute('aria-expanded', 'true');
     compterVue('eli-ouvert');
+    // Sur ordinateur, le curseur attend deja dans la saisie. Pas sur
+    // telephone : le clavier mangerait la moitie de l'ecran d'emblee.
+    if (SAISIE && !window.matchMedia('(max-width:900px)').matches)
+      setTimeout(() => { try { SAISIE.querySelector('input').focus({preventScroll: true}); } catch (e) {} }, 60);
     charger().then(demarrer).catch(() => {
       PANNEAU.querySelector('.eli-fil').innerHTML = bulle(esc(T('Je n’arrive pas à charger les programmes. Écrivez-nous sur WhatsApp, un conseiller vous répond.')));
     });
@@ -8776,6 +9055,33 @@ b.hidden=true;});})();</script>
     PANNEAU.hidden = true;
     document.body.classList.remove('eli-ouvert');
     PASTILLE.setAttribute('aria-expanded', 'false');
+  }
+
+  SAISIE = PANNEAU.querySelector('.eli-saisie');
+  if (SAISIE) SAISIE.onsubmit = (ev) => {
+    ev.preventDefault();
+    const champ = SAISIE.querySelector('input');
+    const texte = champ.value;
+    champ.value = '';
+    charger().then(() => { if (!S.etapes.length) demarrer(); ecrire(texte); });
+  };
+  // Le bandeau de l'accueil : on ecrit, Eli s'ouvre et repond.
+  const UNE = document.getElementById('eli-une-form');
+  if (UNE) UNE.onsubmit = (ev) => {
+    ev.preventDefault();
+    const champ = UNE.querySelector('input');
+    const texte = champ.value.trim();
+    champ.value = '';
+    ouvrir();
+    if (texte) charger().then(() => { if (!S.etapes.length) demarrer(); ecrire(texte); });
+  };
+
+  // Tant que l'invitation de la grande entree est a l'ecran, la barre
+  // flottante ferait doublon (et cacherait son bouton) : elle s'efface.
+  if (UNE && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => document.body.classList.toggle(
+      'eli-une-visible', es[0].isIntersecting && es[0].target.offsetParent !== null),
+      {threshold: 0.15}).observe(document.getElementById('eli-une'));
   }
 
   PASTILLE.onclick = () => (PANNEAU.hidden ? ouvrir() : fermer());

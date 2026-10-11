@@ -2398,29 +2398,29 @@ table.ag th{width:64%}
    --action et --or apres cette feuille) le suivent sans une ligne de plus.
    Prefixe `eli-` partout : `.bulle` est deja prise par la carte. */
 
-/* La pastille. Sur ordinateur, une pilule a gauche de « Haut de page » ;
-   sur telephone, un rond au-dessus de la fleche et de la barre du bas. */
-.eli-pastille{position:fixed;right:84px;bottom:22px;z-index:26;
- display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;
- padding:8px 18px 8px 8px;border-radius:999px;
- background:var(--action,#0B6BD6);color:var(--fond,#fff);font:inherit;font-size:14.5px;
- font-weight:700;box-shadow:var(--ombre-3,0 10px 30px rgba(15,23,42,.25));
+/* La pastille : une invitation a ecrire, pas un rond anonyme (Hillel,
+   11/10/2026 : « il faut vraiment mettre ca en avant »). Sur ordinateur,
+   centree en bas de l'ecran, loin de la colonne mail / WhatsApp / « Haut
+   de page » qu'elle recouvrait ; sur telephone, une barre au-dessus de la
+   barre d'action, a cote de la fleche. */
+.eli-pastille{position:fixed;left:50%;bottom:22px;z-index:26;
+ transform:translateX(-50%);width:min(460px,calc(100vw - 420px));
+ display:flex;align-items:center;gap:11px;border:0;cursor:text;
+ padding:7px 20px 7px 7px;border-radius:999px;text-align:start;
+ background:var(--action,#0B6BD6);color:var(--fond,#fff);font:inherit;font-size:15px;
+ font-weight:650;box-shadow:var(--ombre-3,0 10px 30px rgba(15,23,42,.25));
  transition:transform .16s var(--ease,ease)}
-.eli-pastille:hover{transform:translateY(-2px)}
-.eli-pastille-nom{display:none}
-@media(max-width:900px){.eli-pastille-nom{display:inline}}
-.eli-avatar{flex:none;width:34px;height:34px;border-radius:50%;
+.eli-pastille:hover{transform:translate(-50%,-2px)}
+.eli-pastille-txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis}
+.eli-avatar{flex:none;width:36px;height:36px;border-radius:50%;
  display:grid;place-items:center;background:var(--fond,#fff);color:var(--action,#0B6BD6);
  font-weight:800;font-size:16px}
-body.eli-ouvert .eli-pastille{display:none}
+body.eli-ouvert .eli-pastille,body.eli-une-visible .eli-pastille{display:none}
 @media(max-width:900px){
- /* Sur telephone : une pilule « bulle + Eli », au-dessus de la fleche
-    « Haut de page » et de la barre du bas — un rond portant une seule
-    lettre ne disait pas qu'on pouvait discuter. */
- .eli-pastille{right:14px;bottom:calc(156px + env(safe-area-inset-bottom));
-  padding:6px 16px 6px 6px;gap:8px;font-size:15px}
- .eli-pastille .eli-pastille-txt{display:none}
- .eli-pastille .eli-avatar{width:36px;height:36px}
+ .eli-pastille{left:14px;right:72px;width:auto;transform:none;
+  bottom:calc(98px + env(safe-area-inset-bottom));padding:6px 16px 6px 6px}
+ .eli-pastille:hover{transform:none}
  body.tunnel-plein .eli-pastille,body.sim-actif .eli-pastille,
  body.simu-en-vue .eli-pastille,
  body:has(input:focus,select:focus,textarea:focus):not(.eli-ouvert) .eli-pastille{display:none}
@@ -2518,10 +2518,66 @@ body.eli-ouvert .eli-pastille{display:none}
 .eli-note.manque{color:var(--alerte,#B4321F);font-weight:650}
 
 /* Le bandeau de consentement (mesure_pub.py) reste pose en bas de l'ecran
-   tant que le visiteur n'a pas repondu, au-dessus de tout. Le fil d'Eli se
-   reserve alors la place en dessous : ses derniers boutons remontent au-
-   dessus du bandeau au lieu de passer dessous. */
-body:has(#bh-cookies:not([hidden])) .eli-fil{padding-bottom:190px}
+   tant que le visiteur n'a pas repondu, au-dessus de tout. Le panneau
+   d'Eli remonte alors au-dessus de lui : ses derniers boutons et sa saisie
+   ne passent jamais dessous. */
+body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
+ max-height:calc(100vh - 170px)}
+
+/* La saisie libre, au bas du panneau. */
+.eli-saisie{flex:none;display:flex;gap:8px;align-items:center;
+ padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+ background:var(--carte,#fff);border-top:1px solid var(--trait,#E7E2D8)}
+.eli-saisie input{flex:1;min-width:0;padding:12px 15px;border-radius:999px;
+ border:1.5px solid var(--trait,#E7E2D8);background:var(--fond,#FAF7F1);
+ color:var(--encre,#0F172A);font:inherit;font-size:16px}
+.eli-saisie input:focus{outline:none;border-color:var(--action,#0B6BD6)}
+.eli-saisie button{flex:none;width:44px;height:44px;border-radius:50%;border:0;
+ display:grid;place-items:center;cursor:pointer;
+ background:var(--action,#0B6BD6);color:var(--fond,#fff)}
+[dir=rtl] .eli-saisie button svg{transform:scaleX(-1)}
+.eli-fil{padding-bottom:18px}
+
+/* L'invitation d'Eli dans la grande entree, sous le titre : sur la
+   photo, en verre sombre, comme le reste de l'entree. */
+.eli-une{margin:22px 0 4px;max-width:620px;position:relative;z-index:2}
+.eli-une-dedans{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;
+ align-items:center;padding:16px 18px;border-radius:var(--r-xl,20px);
+ background:rgba(11,15,24,.55);border:1px solid rgba(255,255,255,.22);
+ -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-align:start}
+.eli-une-badge{align-self:start;background:var(--or,#C9A227);color:#0B0F18;
+ font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+ padding:5px 10px;border-radius:999px}
+.eli-une-texte b{display:block;font-size:18px;color:#fff}
+.eli-une-texte span{display:block;font-size:14px;color:rgba(255,255,255,.86);line-height:1.45}
+.eli-une-form{grid-column:1/-1;display:flex;gap:8px;background:#fff;
+ border-radius:999px;padding:5px}
+.eli-une-form input{flex:1;min-width:0;padding:11px 16px;border:0;border-radius:999px;
+ background:transparent;color:#0F172A;font:inherit;font-size:16px}
+.eli-une-form input::placeholder{color:#6A7284}
+.eli-une-form input:focus{outline:none}
+.eli-une-form button{flex:none;border:0;border-radius:999px;padding:0 20px;
+ background:var(--action,#0B6BD6);color:#fff;font:inherit;
+ font-weight:750;font-size:15px;cursor:pointer;white-space:nowrap}
+/* Sur ordinateur, la grande entree est une grille (« sp / zf / h1 / pr »,
+   portail.css) : sans case a lui, le bandeau prenait la premiere libre,
+   tout en haut. Il prend celle des chiffres, sous le titre. */
+@media(min-width:901px){
+ .hero .eli-une{grid-area:pr;align-self:start;margin-top:28px}
+}
+@media(max-width:900px){
+ .eli-une{margin:16px auto 6px;padding:0}
+ .eli-une-dedans{grid-template-columns:1fr;padding:14px}
+ .eli-une-badge{justify-self:start}
+ .eli-une-form{flex-direction:column;border-radius:16px}
+ .eli-une-form button{padding:12px;border-radius:12px}
+}
+
+
+/* Meme chose pour la barre « Ecrivez ici » : au premier passage, le bandeau
+   de consentement occupe le bas de l'ecran ; la barre monte au-dessus de
+   lui au lieu d'etre cachee dessous, et redescend des qu'il a repondu. */
+body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-area-inset-bottom))}
 </style>
 <script>/* La banniere de nuit, de 22 h 30 a 6 h a l'heure du visiteur ; claire le
 reste du temps (Hillel, 24/09/2026). ?nuit=1 / ?jour=1 pour la voir a toute heure. */
@@ -2619,6 +2675,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
    <div class=hero-texte>
     <p class=zf-bandeau>Frais d’agence&nbsp;: <span class=zf-pct>0 %</span></p>
     <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
+    
     <ul class=hero-preuves><li><b>50</b><span>programmes suivis</span></li><li><b>17</b><span>villes</span></li><li class=pr-ligne><b>15</b><span>ans d’expérience dans la promotion immobilière en Israël</span></li></ul>
     <a class=hero-decouvrir href="#vue">Découvrir nos biens →</a>
    </div>
