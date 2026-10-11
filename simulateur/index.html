@@ -2402,6 +2402,10 @@ table.ag th{width:64%}
  .hero .zf-bandeau + h1{text-shadow:0 2px 14px rgba(0,0,0,.45)}
 }
 
+/* Prix indicatif de la ville sous une carte « prix sur demande » (agregateur). */
+.tile.sur-demande .indicatif{font-size:12.5px;line-height:1.45;margin:6px 0 2px;color:var(--encre)}
+.tile.sur-demande .indicatif small{display:block;opacity:.72;font-size:11px;margin-top:2px}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -3856,9 +3860,28 @@ function carteSurDemande(p) {
         <div class="titre">${esc(p.nom)}</div>
         <div class="carac">${t ? T('À partir de') + ' ' + t.libelle + ' ' + T('pièces') : ''}</div>
         <div class="lieu">◎ ${esc(p.quartier ? p.quartier + ' · ' + T(p.ville) : T(p.ville))}</div>
+        ${prixIndicatif(p)}
         <span class="veux">${T('Recevoir les prix')}</span>
       </div>
     </div>`;
+}
+
+/* Le prix indicatif de la ville, sous une carte « prix sur demande ». Il dit
+   toujours d'ou il vient, et qu'il n'est pas le prix de ce programme : un vrai
+   prix du neuf constate dans la meme ville, ou la moyenne officielle des
+   ventes (neuf et ancien). Calcule a la fabrication (prix_villes.py). */
+function prixIndicatif(p) {
+  const i = p.indicatif;
+  if (!i || !i.prix) return '';
+  const ville = esc(T(p.ville));
+  const quoi = i.type === 'neuf'
+    ? T('Prix constaté sur un programme neuf à') + ' ' + ville + ' (' + i.pieces + ' ' + T('pièces') + ') : ' + T('dès') + ' '
+    : T('Prix moyen des ventes à') + ' ' + ville + ' (' + i.pieces + ' ' + T('pièces') + ', ' + T('neuf et ancien') + ') : ';
+  const source = i.type === 'officiel'
+    ? ' ' + T('Source : nadlan.gov.il') + (i.maj ? ', ' + esc(i.maj.slice(3).replace('-', '/')) : '') + '.'
+    : '';
+  return `<div class="indicatif">${quoi}<b>${shek(i.prix)}</b> · ${eur(i.prix)}
+    <small>${T('Indicatif : ce n’est pas le prix de ce programme.')}${source}</small></div>`;
 }
 
 function sectionSurDemande() {
