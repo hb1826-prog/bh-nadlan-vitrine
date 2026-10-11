@@ -746,6 +746,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 .modele{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
  max-width:1180px;margin:0 auto 26px;padding:26px 20px 30px;
  border-bottom:1px solid var(--trait)}
+/* Trois arguments, trois colonnes sur toute la largeur : en « auto-fit »,
+   un ecran large ouvrait une quatrieme colonne vide a droite (Hillel,
+   11/10/2026 : « pas equilibre »). */
+@media(min-width:901px){.modele{grid-template-columns:repeat(3,minmax(0,1fr));gap:34px}}
 /* La preuve chiffree (programmes, villes, annees d'experience) : toujours
    visible ici, meme sur telephone ou l'equivalent dans la banniere est
    cache pour laisser la place au simulateur (Hillel, 25/09/2026). */

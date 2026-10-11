@@ -760,6 +760,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 .modele{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
  max-width:1180px;margin:0 auto 26px;padding:26px 20px 30px;
  border-bottom:1px solid var(--trait)}
+/* Trois arguments, trois colonnes sur toute la largeur : en « auto-fit »,
+   un ecran large ouvrait une quatrieme colonne vide a droite (Hillel,
+   11/10/2026 : « pas equilibre »). */
+@media(min-width:901px){.modele{grid-template-columns:repeat(3,minmax(0,1fr));gap:34px}}
 /* La preuve chiffree (programmes, villes, annees d'experience) : toujours
    visible ici, meme sur telephone ou l'equivalent dans la banniere est
    cache pour laisser la place au simulateur (Hillel, 25/09/2026). */
@@ -2596,6 +2600,46 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
    de consentement occupe le bas de l'ecran ; la barre monte au-dessus de
    lui au lieu d'etre cachee dessous, et redescend des qu'il a repondu. */
 body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-area-inset-bottom))}
+
+/* ---------------------------------------------------------------- la dictee */
+.eli-micro{flex:none;width:44px;height:44px;border-radius:50%;border:0;
+ display:grid;place-items:center;cursor:pointer;
+ background:var(--fond-2,#F4F0E7);color:var(--encre,#0F172A)}
+.eli-micro[hidden]{display:none}
+.eli-une-form .eli-micro{background:#EEF1F6;color:#0F172A;align-self:center}
+.eli-enreg .eli-micro{background:#E5484D;color:#fff;animation:eli-pouls 1.4s infinite}
+.eli-enreg input::placeholder{color:#E5484D;opacity:1;font-weight:650}
+@keyframes eli-pouls{0%{box-shadow:0 0 0 0 rgba(229,72,77,.45)}
+ 70%{box-shadow:0 0 0 12px rgba(229,72,77,0)}100%{box-shadow:0 0 0 0 rgba(229,72,77,0)}}
+@media (prefers-reduced-motion:reduce){.eli-enreg .eli-micro{animation:none}}
+.eli-dicte i{background:var(--fond,#fff)}
+
+/* Les exemples du bandeau : ce qu'Eli sait faire, en un toucher. */
+.eli-exemples{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:7px}
+.eli-exemples button{font:inherit;font-size:13px;font-weight:600;cursor:pointer;
+ padding:7px 12px;border-radius:999px;color:#fff;
+ background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35)}
+.eli-exemples button:hover{background:rgba(255,255,255,.22)}
+
+/* ------------------------------------------- l'accueil sur telephone
+   « Eli d'abord » (valide par Hillel, 11/10/2026) : le titre, Eli (ecrire,
+   dicter, ou toucher un exemple), puis deux raccourcis sur une ligne — les
+   programmes et le simulateur. Le simulateur complet quitte l'accueil sur
+   telephone : il faisait doublon avec la carte « Simulateur » juste
+   au-dessus ; il reste sur sa page et sur chaque fiche. */
+@media(max-width:900px){
+ .hero #hero-simu{display:none}
+ .hero .h1-b{display:none}
+ .hero-choix{margin-top:12px;gap:10px}
+ .hero-choix .hc-carte{flex-direction:row;justify-content:center;gap:9px;
+  padding:13px 12px;border-radius:16px}
+ .hero-choix .hc-ic svg{width:22px;height:22px}
+ .hero-choix .hc-texte,.hero-choix .hc-chiffres,.hero-choix .hc-btn{display:none}
+ .hero-choix .hc-titre{font-size:14.5px;white-space:nowrap}
+ .hero-choix .hc-carte{gap:7px;padding:13px 8px}
+ .eli-exemples{flex-direction:column;align-items:flex-start}
+ .eli-une-form .eli-micro{width:44px;height:44px}
+}
 
 :root{ --or:#0D9488; --or-fonce:#0a736a; --or-clair:#ecf6f5; --or-trait:#bbe1de; --action:#0F766E; --action-vive:#44948e; --action-lavis:#f1f7f6;}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){ --or:#7ac4be; --or-fonce:#5ab6ae; --or-clair:#021b18; --or-trait:#053834; --action:#93c1be; --action-vive:#b7d6d4; --action-lavis:#031816;}}
@@ -8369,6 +8413,7 @@ window.addEventListener('beforeinstallprompt', e => {
 
   const MAX_MONTRES = 3, MAX_DEMANDES = 3;
   let SAISIE = null;
+  let rec = null, annule = false;      // la dictee en cours (voir plus bas)
   // Sur la page d'un partenaire, son visiteur lit une page a son nom : Eli
   // y parle pour lui (« un conseiller BLG… »), comme le reste de la page.
   // Les traductions gardent « BH Nadlan » tel quel, d'ou ce remplacement
@@ -8878,6 +8923,7 @@ window.addEventListener('beforeinstallprompt', e => {
       case 'texte':
         return bulle(esc(e.v), 'moi');
       case 'ia':
+      case 'info':
         return bulle(esc(e.v));
       case 'compris': {
         const l = [];
@@ -9116,6 +9162,7 @@ window.addEventListener('beforeinstallprompt', e => {
   SAISIE = PANNEAU.querySelector('.eli-saisie');
   if (SAISIE) SAISIE.onsubmit = (ev) => {
     ev.preventDefault();
+    if (rec) { annule = false; rec.stop(); return; }     // la fleche envoie le vocal
     const champ = SAISIE.querySelector('input');
     const texte = champ.value;
     champ.value = '';
@@ -9125,12 +9172,120 @@ window.addEventListener('beforeinstallprompt', e => {
   const UNE = document.getElementById('eli-une-form');
   if (UNE) UNE.onsubmit = (ev) => {
     ev.preventDefault();
+    if (rec) { annule = false; rec.stop(); return; }
     const champ = UNE.querySelector('input');
     const texte = champ.value.trim();
     champ.value = '';
     ouvrir();
     if (texte) charger().then(() => { if (!S.etapes.length) demarrer(); ecrire(texte); });
   };
+
+  // Les exemples du bandeau : un toucher, et Eli repond comme si on
+  // l'avait ecrit.
+  document.querySelectorAll('#eli-une .eli-exemples button').forEach(b => {
+    b.onclick = () => {
+      ouvrir();
+      charger().then(() => { if (!S.etapes.length) demarrer(); ecrire(b.textContent); });
+    };
+  });
+
+  /* ------------------------------------------------ la dictee
+
+     « Qu'on puisse lui faire un message audio, comme sur WhatsApp » (Hillel,
+     11/10/2026). Un toucher sur le micro : on enregistre, un compteur tourne ;
+     un second toucher : l'audio part au serveur (`/dictee`), Whisper le met
+     en texte, et ce texte part a Eli comme s'il avait ete ecrit — affiche
+     d'abord, pour que le visiteur voie ce qui a ete compris. Une minute au
+     plus. Sans micro (navigateur ancien, permission refusee), le bouton
+     n'apparait pas ou Eli invite a ecrire. */
+  const MAX_DICTEE = 60;
+  let minuteur = null, formRec = null;
+  const peutDicter = !!(DONNEES.eli_dictee && navigator.mediaDevices
+    && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+
+  function info(texte) {
+    ouvrir();
+    charger().then(() => {
+      if (!S.etapes.length) demarrer();
+      S.etapes.push({t: 'info', v: texte});
+      garder(); peindre();
+    });
+  }
+
+  function etatMicro(form, actif, secondes) {
+    form.classList.toggle('eli-enreg', actif);
+    const champ = form.querySelector('input');
+    if (actif) {
+      if (!champ.dataset.ph) champ.dataset.ph = champ.placeholder;
+      champ.value = '';
+      champ.placeholder = '● ' + Math.floor(secondes / 60) + ':' + String(secondes % 60).padStart(2, '0')
+        + '  ' + T('Je vous écoute…');
+    } else if (champ.dataset.ph) {
+      champ.placeholder = champ.dataset.ph;
+    }
+  }
+
+  async function micro(form) {
+    if (rec) { annule = false; rec.stop(); return; }
+    let flux;
+    try {
+      flux = await navigator.mediaDevices.getUserMedia({audio: true});
+    } catch (e) {
+      return info(T('Le micro n’est pas autorisé : vous pouvez écrire votre recherche.'));
+    }
+    const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg']
+      .find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+    const morceaux = [];
+    rec = new MediaRecorder(flux, type ? {mimeType: type} : {});
+    formRec = form; annule = false;
+    rec.ondataavailable = e => { if (e.data && e.data.size) morceaux.push(e.data); };
+    rec.onstop = () => {
+      flux.getTracks().forEach(t => t.stop());
+      clearInterval(minuteur);
+      etatMicro(formRec, false);
+      const typeFinal = (rec && rec.mimeType) || type || 'audio/webm';
+      rec = null;
+      if (annule || !morceaux.length) return;
+      envoyerAudio(new Blob(morceaux, {type: typeFinal}));
+    };
+    rec.start();
+    compterVue('eli-dictee');
+    const debut = Date.now();
+    etatMicro(form, true, 0);
+    minuteur = setInterval(() => {
+      const s = Math.round((Date.now() - debut) / 1000);
+      etatMicro(form, true, s);
+      if (s >= MAX_DICTEE && rec) rec.stop();
+    }, 500);
+  }
+
+  function envoyerAudio(blob) {
+    ouvrir();
+    charger().then(() => {
+      if (!S.etapes.length) demarrer();
+      const fil = PANNEAU.querySelector('.eli-fil');
+      fil.insertAdjacentHTML('beforeend',
+        '<div class="eli-msg eli-moi eli-ecrit eli-dicte"><i></i><i></i><i></i></div>');
+      fil.scrollTop = fil.scrollHeight;
+      fetch(DONNEES.eli_dictee, {method: 'POST', body: blob,
+        headers: {'Content-Type': (blob.type || 'audio/webm').split(';')[0]}})
+        .then(r => r.ok ? r.json() : {})
+        .catch(() => ({}))
+        .then(r => {
+          const tmp = fil.querySelector('.eli-dicte');
+          if (tmp) tmp.remove();
+          if (r && r.texte) ecrire(r.texte);
+          else info(T('Je n’ai pas bien entendu. Pouvez-vous réessayer, ou l’écrire ?'));
+        });
+    });
+  }
+
+  if (peutDicter) {
+    document.querySelectorAll('.eli-micro').forEach(b => {
+      b.hidden = false;
+      b.onclick = () => micro(b.closest('form'));
+    });
+  }
 
   // Tant que l'invitation de la grande entree est a l'ecran, la barre
   // flottante ferait doublon (et cacherait son bouton) : elle s'efface.
