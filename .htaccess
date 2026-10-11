@@ -2,7 +2,7 @@
 ErrorDocument 404 /404.html
 
 <IfModule mod_headers.c>
-  <FilesMatch "\.(html|json|csv)$">
+  <FilesMatch "\.(html|json|csv|xml)$">
     Header set Cache-Control "no-cache, must-revalidate, max-age=0"
   </FilesMatch>
   <FilesMatch "\.(jpg|jpeg|png|webp|svg|ico|woff2|css|js)$">
