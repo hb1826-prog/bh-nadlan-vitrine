@@ -2390,6 +2390,11 @@ table.ag th{width:64%}
 /* Prix indicatif de la ville sous une carte « prix sur demande » (agregateur). */
 .tile.sur-demande .indicatif{font-size:12.5px;line-height:1.45;margin:6px 0 2px;color:var(--encre)}
 .tile.sur-demande .indicatif small{display:block;opacity:.72;font-size:11px;margin-top:2px}
+/* Les boutons « Recevoir les prix » d'une meme rangee sur une meme ligne,
+   qu'une carte ait un prix indicatif ou non. */
+.tile.sur-demande .corps{flex:1}
+.tile.sur-demande .veux{margin-top:auto}
+.tile.sur-demande .indicatif{margin-bottom:12px}
 
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
@@ -3781,8 +3786,8 @@ function carte(p) {
     : '';
   const badges = [p.revente
     ? '<span class="badge">' + T('Revente') + '</span>'
-    : '<span class="badge or">' + T('Neuf') + '</span>'];
-  if (p.nouveau) badges.unshift('<span class="badge nouveau">' + T('Nouveauté') + '</span>');
+    : (p.nouveau ? '<span class="badge nouveau">' + T('Nouveau programme') + '</span>'
+                 : '<span class="badge or">' + T('Neuf') + '</span>')];
   if (p.livraison && !p.revente) {
     badges.push('<span class="badge">' + T('Livraison') + ' '
       + esc(livraisonEnClair(p.livraison)) + '</span>');
@@ -3835,8 +3840,10 @@ function carte(p) {
    C'est la que se prend le contact — le prix, on l'obtient pour lui. */
 function carteSurDemande(p) {
   const t = p.typologies[0];
-  const badges = ['<span class="badge or">' + T('Neuf') + '</span>'];
-  if (p.nouveau) badges.unshift('<span class="badge nouveau">' + T('Nouveauté') + '</span>');
+  // Une seule pastille : « Nouveau programme » remplace « Neuf » (tout est du
+  // neuf ; les deux cote a cote faisaient doublon — Hillel, 11/10/2026).
+  const badges = [p.nouveau ? '<span class="badge nouveau">' + T('Nouveau programme') + '</span>'
+                            : '<span class="badge or">' + T('Neuf') + '</span>'];
   if (p.livraison) {
     badges.push('<span class="badge">' + T('Livraison') + ' '
       + esc(livraisonEnClair(p.livraison)) + '</span>');
