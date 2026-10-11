@@ -12,6 +12,16 @@
 <meta name=theme-color content="#414A5C">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-60HG0FY8NF"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-60HG0FY8NF');</script>
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+(function(){var ok=false;try{ok=localStorage.getItem('bh-consentement')==='oui'}catch(e){}
+if(!ok)fbq('consent','revoke');})();
+fbq('init','3820890624762303');fbq('track','PageView');
+</script>
 <title>Simulateur d'achat — BH · Israël</title>
 <meta name=description content="50 programmes neufs en Israël suivis par
  BH, dans 17 villes : prix, typologies, simulateur d'achat et accompagnement francophone.">
@@ -4484,7 +4494,9 @@ const PAGES = {
       <h3>${T('À quoi cela sert')}</h3>
       <p>${T('À vous rappeler et à vous envoyer les biens qui correspondent à votre recherche. Vos coordonnées sont enregistrées dans notre fichier clients, hébergé sur notre propre serveur.')}</p>
       <h3>${T('Ce que nous n’en faisons pas')}</h3>
-      <p><b>${T('Vos coordonnées ne sont ni vendues, ni louées, ni transmises à un promoteur')}</b> ${T('sans votre accord explicite et pour un programme précis. Il n’y a sur ce site')} <b>${T('aucun traceur publicitaire, aucun cookie de mesure d’audience tiers')}</b>${T(', et aucun bouton de réseau social qui vous suivrait ailleurs.')}</p>
+      <p><b>${T('Vos coordonnées ne sont ni vendues, ni louées, ni transmises à un promoteur')}</b> ${T('sans votre accord explicite et pour un programme précis.')}</p>
+      <h3>${T('Mesure d’audience et publicités')}</h3>
+      <p>${T('Ce site compte ses visites avec Google Analytics. Si vous l’acceptez dans le bandeau en bas de page, il utilise aussi le pixel Meta pour mesurer l’efficacité de ses publicités ; dans ce cas, quand vous laissez vos coordonnées, une version chiffrée et illisible de votre numéro et de votre e-mail est transmise à Meta pour cette seule mesure. Sans votre accord, rien n’est transmis à Meta.')}</p>
       <h3>${T('Ce que votre navigateur garde')}</h3>
       <p>${T("Votre choix d’apparence (clair ou sombre) et le fait que vous avez déjà ouvert une fiche pendant cette visite : pour ne pas compter deux fois la même consultation. Ces informations restent sur votre appareil et ne nous parviennent jamais.")}</p>
       <h3>${T('Vos droits')}</h3>
@@ -7004,7 +7016,11 @@ const provenanceVisite = (() => {
       neuve = {
         source: u('source') || (q.get('gclid') ? 'google' : 'facebook'),
         support: u('medium') || (q.get('gclid') ? 'cpc' : 'lien'),
-        campagne: u('campaign'), contenu: u('content')};
+        campagne: u('campaign'), contenu: u('content'),
+        // Les identifiants de clic eux-memes (11/10/2026) : le guichet en
+        // tire l'evenement Lead envoye a Meta (et plus tard a Google Ads).
+        fbclid: (q.get('fbclid') || '').slice(0, 255),
+        gclid: (q.get('gclid') || '').slice(0, 255)};
     } else if (document.referrer) {
       const hote = new URL(document.referrer).hostname.replace(/^www\./, '');
       if (hote && !/(^|\.)bh-nadlan\.com$|github\.io$|sslip\.io$/.test(hote))
@@ -7021,8 +7037,54 @@ const provenanceVisite = (() => {
   return gardee;
 })();
 
+/* La mesure des publicites (machine a contacts, 11/10/2026).
+   - `?test=1` dans l'adresse marque ce navigateur comme celui d'un essai
+     (`?test=0` l'efface) : un essai n'est ni compte, ni accueilli, ni appris
+     par Meta. Hillel fait ses essais avec son propre numero, deja exclu ;
+     ceci sert aux autres essais.
+   - L'evenement « Lead » du pixel ne part que si le guichet repond qu'un
+     VRAI nouveau contact vient d'arriver (`compte`), avec le meme
+     identifiant (`eid`) que l'envoi du serveur : Meta dedoublonne.
+   - Rien ne part vers Meta sans l'accord du visiteur (bandeau). */
+const essaiNavigateur = (() => {
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get('test') === '1') localStorage.setItem('bh-test', '1');
+    if (q.get('test') === '0') localStorage.removeItem('bh-test');
+    return localStorage.getItem('bh-test') === '1';
+  } catch (e) { return false; }
+})();
+function lireCookieMeta(nom) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + nom + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : '';
+}
+function consentementPub() {
+  try { return localStorage.getItem('bh-consentement') === 'oui'; } catch (e) { return false; }
+}
+function nouvelEid() {
+  try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+  return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+}
+/* Pendant Shabbat ou une fete, le guichet enregistre la demande mais n'envoie
+   rien avant la sortie (regle d'Hillel) : on le dit au visiteur, pour qu'il
+   n'attende pas un message qui ne vient pas tout de suite. */
+function prevenirRetenu(raison) {
+  const b = document.createElement('div');
+  b.setAttribute('role', 'status');
+  b.style.cssText = 'position:fixed;left:12px;right:12px;top:12px;z-index:9999;max-width:560px;' +
+    'margin:0 auto;background:#fff;color:#1a1a1a;border:1px solid #ddd;border-radius:10px;' +
+    'box-shadow:0 4px 18px rgba(0,0,0,.15);padding:12px 14px;font:15px/1.45 Rubik,Arial,sans-serif';
+  b.textContent = raison === 'shabbat'
+    ? T('C’est Shabbat en Israël : votre demande est bien enregistrée, notre message (et votre simulation) vous parviendront à la fin de Shabbat.')
+    : T('C’est jour de fête en Israël : votre demande est bien enregistrée, notre message (et votre simulation) vous parviendront à la fin de la fête.');
+  b.addEventListener('click', () => b.remove());
+  document.body.appendChild(b);
+  setTimeout(() => b.remove(), 15000);
+}
+
 async function envoyerLead(champs, p, I, extra) {
   extra = extra || {};
+  const eid = nouvelEid();
   const r = await fetch(DONNEES.guichet + '/lead', {
     method: 'POST', headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
@@ -7077,11 +7139,23 @@ async function envoyerLead(champs, p, I, extra) {
       langue: DONNEES.langue || 'fr',
       // D'ou vient ce visiteur (pub, Google, lien) — voir `provenanceVisite`.
       provenance: provenanceVisite || {},
+      // La mesure Meta : identifiant de l'evenement, cookies du pixel,
+      // adresse de la page, accord du visiteur, essai. Voir plus haut.
+      meta: {eid: eid, fbp: lireCookieMeta('_fbp'), fbc: lireCookieMeta('_fbc')},
+      url: location.href.slice(0, 500),
+      consentement: consentementPub() ? 'oui' : '',
+      test: essaiNavigateur ? 1 : 0,
       t: Date.now() - DEPART
     })
   });
   if (!r.ok) throw new Error('refus ' + r.status);
-  return r.json().catch(() => ({ok: true}));
+  const reponse = await r.json().catch(() => ({ok: true}));
+  try {
+    if (reponse.compte && reponse.eid && window.fbq && consentementPub())
+      fbq('track', 'Lead', {content_name: I}, {eventID: reponse.eid});
+    if (reponse.retenu) prevenirRetenu(reponse.raison);
+  } catch (e) {}
+  return reponse;
 }
 
 function wireContact(p, intention) {
@@ -7995,4 +8069,13 @@ window.addEventListener('beforeinstallprompt', e => {
   addEventListener('hashchange', () => { forcerSimuEnVue = false; setTimeout(maj, 400); });
 })();
 </script>
+<div id="bh-cookies" hidden style="position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:560px;margin:0 auto;background:#fff;color:#1a1a1a;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.15);padding:12px 14px;font:14px/1.4 Rubik,Arial,sans-serif">
+<span>Ce site mesure l&#x27;efficacité de ses publicités (Meta). Vous acceptez ? <a href="https://bh-nadlan.com/confidentialite.html" style="color:#1a1a1a">En savoir plus</a></span>
+<span style="display:flex;gap:8px;margin-top:8px"><button type="button" data-c="oui" style="flex:1;padding:8px;border-radius:8px;border:1px solid #1a1a1a;background:#1a1a1a;color:#fff;font:inherit">Accepter</button>
+<button type="button" data-c="non" style="flex:1;padding:8px;border-radius:8px;border:1px solid #1a1a1a;background:#fff;color:#1a1a1a;font:inherit">Refuser</button></span></div>
+<script>(function(){var b=document.getElementById('bh-cookies');if(!b)return;var v=null;
+try{v=localStorage.getItem('bh-consentement')}catch(e){}if(v)return;b.hidden=false;
+b.addEventListener('click',function(e){var c=e.target.getAttribute('data-c');if(!c)return;
+try{localStorage.setItem('bh-consentement',c)}catch(e){}if(c==='oui'&&window.fbq)fbq('consent','grant');
+b.hidden=true;});})();</script>
 </body></html>
