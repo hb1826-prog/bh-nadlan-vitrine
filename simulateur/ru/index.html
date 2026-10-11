@@ -4484,7 +4484,9 @@ const PAGES = {
       <h3>${T('À quoi cela sert')}</h3>
       <p>${T('À vous rappeler et à vous envoyer les biens qui correspondent à votre recherche. Vos coordonnées sont enregistrées dans notre fichier clients, hébergé sur notre propre serveur.')}</p>
       <h3>${T('Ce que nous n’en faisons pas')}</h3>
-      <p><b>${T('Vos coordonnées ne sont ni vendues, ni louées, ni transmises à un promoteur')}</b> ${T('sans votre accord explicite et pour un programme précis. Il n’y a sur ce site')} <b>${T('aucun traceur publicitaire, aucun cookie de mesure d’audience tiers')}</b>${T(', et aucun bouton de réseau social qui vous suivrait ailleurs.')}</p>
+      <p><b>${T('Vos coordonnées ne sont ni vendues, ni louées, ni transmises à un promoteur')}</b> ${T('sans votre accord explicite et pour un programme précis.')}</p>
+      <h3>${T('Mesure d’audience et publicités')}</h3>
+      <p>${T('Ce site compte ses visites avec Google Analytics. Si vous l’acceptez dans le bandeau en bas de page, il utilise aussi le pixel Meta pour mesurer l’efficacité de ses publicités ; dans ce cas, quand vous laissez vos coordonnées, une version chiffrée et illisible de votre numéro et de votre e-mail est transmise à Meta pour cette seule mesure. Sans votre accord, rien n’est transmis à Meta.')}</p>
       <h3>${T('Ce que votre navigateur garde')}</h3>
       <p>${T("Votre choix d’apparence (clair ou sombre) et le fait que vous avez déjà ouvert une fiche pendant cette visite : pour ne pas compter deux fois la même consultation. Ces informations restent sur votre appareil et ne nous parviennent jamais.")}</p>
       <h3>${T('Vos droits')}</h3>
@@ -7004,7 +7006,11 @@ const provenanceVisite = (() => {
       neuve = {
         source: u('source') || (q.get('gclid') ? 'google' : 'facebook'),
         support: u('medium') || (q.get('gclid') ? 'cpc' : 'lien'),
-        campagne: u('campaign'), contenu: u('content')};
+        campagne: u('campaign'), contenu: u('content'),
+        // Les identifiants de clic eux-memes (11/10/2026) : le guichet en
+        // tire l'evenement Lead envoye a Meta (et plus tard a Google Ads).
+        fbclid: (q.get('fbclid') || '').slice(0, 255),
+        gclid: (q.get('gclid') || '').slice(0, 255)};
     } else if (document.referrer) {
       const hote = new URL(document.referrer).hostname.replace(/^www\./, '');
       if (hote && !/(^|\.)bh-nadlan\.com$|github\.io$|sslip\.io$/.test(hote))
@@ -7021,8 +7027,54 @@ const provenanceVisite = (() => {
   return gardee;
 })();
 
+/* La mesure des publicites (machine a contacts, 11/10/2026).
+   - `?test=1` dans l'adresse marque ce navigateur comme celui d'un essai
+     (`?test=0` l'efface) : un essai n'est ni compte, ni accueilli, ni appris
+     par Meta. Hillel fait ses essais avec son propre numero, deja exclu ;
+     ceci sert aux autres essais.
+   - L'evenement « Lead » du pixel ne part que si le guichet repond qu'un
+     VRAI nouveau contact vient d'arriver (`compte`), avec le meme
+     identifiant (`eid`) que l'envoi du serveur : Meta dedoublonne.
+   - Rien ne part vers Meta sans l'accord du visiteur (bandeau). */
+const essaiNavigateur = (() => {
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get('test') === '1') localStorage.setItem('bh-test', '1');
+    if (q.get('test') === '0') localStorage.removeItem('bh-test');
+    return localStorage.getItem('bh-test') === '1';
+  } catch (e) { return false; }
+})();
+function lireCookieMeta(nom) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + nom + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : '';
+}
+function consentementPub() {
+  try { return localStorage.getItem('bh-consentement') === 'oui'; } catch (e) { return false; }
+}
+function nouvelEid() {
+  try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+  return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+}
+/* Pendant Shabbat ou une fete, le guichet enregistre la demande mais n'envoie
+   rien avant la sortie (regle d'Hillel) : on le dit au visiteur, pour qu'il
+   n'attende pas un message qui ne vient pas tout de suite. */
+function prevenirRetenu(raison) {
+  const b = document.createElement('div');
+  b.setAttribute('role', 'status');
+  b.style.cssText = 'position:fixed;left:12px;right:12px;top:12px;z-index:9999;max-width:560px;' +
+    'margin:0 auto;background:#fff;color:#1a1a1a;border:1px solid #ddd;border-radius:10px;' +
+    'box-shadow:0 4px 18px rgba(0,0,0,.15);padding:12px 14px;font:15px/1.45 Rubik,Arial,sans-serif';
+  b.textContent = raison === 'shabbat'
+    ? T('C’est Shabbat en Israël : votre demande est bien enregistrée, notre message (et votre simulation) vous parviendront à la fin de Shabbat.')
+    : T('C’est jour de fête en Israël : votre demande est bien enregistrée, notre message (et votre simulation) vous parviendront à la fin de la fête.');
+  b.addEventListener('click', () => b.remove());
+  document.body.appendChild(b);
+  setTimeout(() => b.remove(), 15000);
+}
+
 async function envoyerLead(champs, p, I, extra) {
   extra = extra || {};
+  const eid = nouvelEid();
   const r = await fetch(DONNEES.guichet + '/lead', {
     method: 'POST', headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
@@ -7077,11 +7129,23 @@ async function envoyerLead(champs, p, I, extra) {
       langue: DONNEES.langue || 'fr',
       // D'ou vient ce visiteur (pub, Google, lien) — voir `provenanceVisite`.
       provenance: provenanceVisite || {},
+      // La mesure Meta : identifiant de l'evenement, cookies du pixel,
+      // adresse de la page, accord du visiteur, essai. Voir plus haut.
+      meta: {eid: eid, fbp: lireCookieMeta('_fbp'), fbc: lireCookieMeta('_fbc')},
+      url: location.href.slice(0, 500),
+      consentement: consentementPub() ? 'oui' : '',
+      test: essaiNavigateur ? 1 : 0,
       t: Date.now() - DEPART
     })
   });
   if (!r.ok) throw new Error('refus ' + r.status);
-  return r.json().catch(() => ({ok: true}));
+  const reponse = await r.json().catch(() => ({ok: true}));
+  try {
+    if (reponse.compte && reponse.eid && window.fbq && consentementPub())
+      fbq('track', 'Lead', {content_name: I}, {eventID: reponse.eid});
+    if (reponse.retenu) prevenirRetenu(reponse.raison);
+  } catch (e) {}
+  return reponse;
 }
 
 function wireContact(p, intention) {
