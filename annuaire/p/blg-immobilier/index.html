@@ -7476,6 +7476,11 @@ async function envoyerLead(champs, p, I, extra) {
   try {
     if (reponse.compte && reponse.eid && window.fbq)
       fbq('track', 'Lead', {content_name: I}, {eventID: reponse.eid});
+    // La conversion Google Ads « Contact BH Nadlan » : meme regle, un vrai
+    // nouveau contact seulement (voir `mesure_pub.py`).
+    if (reponse.compte && window.gtag && window.BH_ADS_CONVERSION)
+      gtag('event', 'conversion', {send_to: window.BH_ADS_CONVERSION,
+                                   transaction_id: reponse.eid || ''});
     if (reponse.retenu) prevenirRetenu(reponse.raison);
   } catch (e) {}
   return reponse;

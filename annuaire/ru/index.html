@@ -20,6 +20,13 @@ t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init','3820890624762303');fbq('track','PageView');
 </script>
+<script>
+window.BH_ADS_CONVERSION='AW-1027926958/4Rc4CMyWqJkdEK7Xk-oD';
+(function(){if(!window.gtag){var s=document.createElement('script');s.async=true;
+s.src='https://www.googletagmanager.com/gtag/js?id=AW-1027926958';document.head.appendChild(s);
+window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};
+gtag('js',new Date());}gtag('config','AW-1027926958');})();
+</script>
 <title>BH — Новостройки · Израиль</title>
 <meta name=description content="50 новых жилых проектов в Израиле, сопровождаемых
  BH, в 17 городов: цены, типологии, симулятор покупки и франкоязычное сопровождение.">
@@ -7548,6 +7555,11 @@ async function envoyerLead(champs, p, I, extra) {
   try {
     if (reponse.compte && reponse.eid && window.fbq)
       fbq('track', 'Lead', {content_name: I}, {eventID: reponse.eid});
+    // La conversion Google Ads « Contact BH Nadlan » : meme regle, un vrai
+    // nouveau contact seulement (voir `mesure_pub.py`).
+    if (reponse.compte && window.gtag && window.BH_ADS_CONVERSION)
+      gtag('event', 'conversion', {send_to: window.BH_ADS_CONVERSION,
+                                   transaction_id: reponse.eid || ''});
     if (reponse.retenu) prevenirRetenu(reponse.raison);
   } catch (e) {}
   return reponse;
