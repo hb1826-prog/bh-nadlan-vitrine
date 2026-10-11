@@ -2419,6 +2419,8 @@ body.eli-ouvert .eli-pastille,body.eli-une-visible .eli-pastille{display:none}
  .eli-pastille{left:14px;right:72px;width:auto;transform:none;
   bottom:calc(98px + env(safe-area-inset-bottom));padding:6px 16px 6px 6px}
  .eli-pastille:hover{transform:none}
+ /* De droite a gauche, la fleche « Haut de page » passe a gauche. */
+ [dir=rtl] .eli-pastille{left:72px;right:14px}
  body.tunnel-plein .eli-pastille,body.sim-actif .eli-pastille,
  body.simu-en-vue .eli-pastille,
  body:has(input:focus,select:focus,textarea:focus):not(.eli-ouvert) .eli-pastille{display:none}
@@ -2555,20 +2557,38 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
 .eli-une-form input::placeholder{color:#6A7284}
 .eli-une-form input:focus{outline:none}
 .eli-une-form button{flex:none;border:0;border-radius:999px;padding:0 20px;
+ display:flex;align-items:center;justify-content:center;gap:6px;
  background:var(--action,#0B6BD6);color:#fff;font:inherit;
  font-weight:750;font-size:15px;cursor:pointer;white-space:nowrap}
-/* Sur ordinateur, la grande entree est une grille (« sp / zf / h1 / pr »,
-   portail.css) : sans case a lui, le bandeau prenait la premiere libre,
-   tout en haut. Il prend celle des chiffres, sous le titre. */
+.eli-une-form button svg{display:none}
+[dir=rtl] .eli-une-form button svg{transform:scaleX(-1)}
+/* Sur ordinateur, la grande entree est une grille (portail.css). Le bandeau
+   y a sa propre ligne, sous le titre, et la colonne de gauche (bandeau
+   « 0 % », titre, Eli) est centree en hauteur face au simulateur — Hillel,
+   11/10/2026 : « sur la partie PC, c'est pas equilibre ». Le bandeau prend
+   la largeur du titre, filet compris, pour que les deux blocs s'alignent. */
 @media(min-width:901px){
- .hero .eli-une{grid-area:pr;align-self:start;margin-top:28px}
+ .hero .dedans{grid-template-areas:"sp simu" "zf simu" "h1 simu" "eli simu" "pr simu";
+  grid-template-rows:1fr auto auto auto 1fr}
+ .hero .eli-une{grid-area:eli;align-self:start;margin:30px 0 0;
+  font-size:clamp(21px,1.7vw,27px);max-width:30em;width:100%}
+ .hero .eli-une-dedans{padding:16px 16px 16px 18px}
 }
+/* Sur telephone, plus compact : le badge a cote du titre, et le champ avec
+   une fleche ronde sur la meme ligne — le gros bouton en dessous doublait
+   la hauteur du bloc et repoussait le simulateur. */
 @media(max-width:900px){
- .eli-une{margin:16px auto 6px;padding:0}
- .eli-une-dedans{grid-template-columns:1fr;padding:14px}
- .eli-une-badge{justify-self:start}
- .eli-une-form{flex-direction:column;border-radius:16px}
- .eli-une-form button{padding:12px;border-radius:12px}
+ .eli-une{margin:16px auto 4px;padding:0}
+ .eli-une-dedans{grid-template-columns:auto 1fr;gap:8px 10px;padding:14px}
+ .eli-une-badge{align-self:center;font-size:10.5px;padding:4px 8px}
+ .eli-une-texte{display:contents}
+ .eli-une-texte b{align-self:center;font-size:17px}
+ .eli-une-texte span{grid-column:1/-1;font-size:13.5px}
+ .eli-une-form{padding:4px}
+ .eli-une-form input{padding:10px 12px}
+ .eli-une-form button{width:44px;height:44px;padding:0}
+ .eli-une-form button span{display:none}
+ .eli-une-form button svg{display:block}
 }
 
 
@@ -2699,7 +2719,7 @@ ecrireCookie(c,'fr');
       <input type=text enterkeyhint=send maxlength=300
              placeholder="Ex. : un 4 pièces à Netanya, autour de 3 millions de shekels"
              aria-label="Écrivez librement ce que vous cherchez…">
-      <button type=submit>Demander à Eli</button>
+      <button type=submit aria-label="Demander à Eli"><span>Demander à Eli</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     </form>
   </div>
 </div>
