@@ -4677,7 +4677,7 @@ const PAGES = {
       <h3>${T('Ce que nous n’en faisons pas')}</h3>
       <p><b>${T('Vos coordonnées ne sont ni vendues, ni louées, ni transmises à un promoteur')}</b> ${T('sans votre accord explicite et pour un programme précis.')}</p>
       <h3>${T('Mesure d’audience et publicités')}</h3>
-      <p>${T('Ce site compte ses visites avec Google Analytics. Si vous l’acceptez dans le bandeau en bas de page, il utilise aussi le pixel Meta pour mesurer l’efficacité de ses publicités ; dans ce cas, quand vous laissez vos coordonnées, une version chiffrée et illisible de votre numéro et de votre e-mail est transmise à Meta pour cette seule mesure. Sans votre accord, rien n’est transmis à Meta.')}</p>
+      <p>${T('Ce site compte ses visites avec Google Analytics et utilise le pixel Meta pour mesurer l’efficacité de ses publicités. Quand vous laissez vos coordonnées, une version chiffrée et illisible de votre numéro et de votre e-mail est transmise à Meta pour cette seule mesure. Pour vous y opposer, écrivez-nous : nous retirons vos données.')}</p>
       <h3>${T('Ce que votre navigateur garde')}</h3>
       <p>${T("Votre choix d’apparence (clair ou sombre) et le fait que vous avez déjà ouvert une fiche pendant cette visite : pour ne pas compter deux fois la même consultation. Ces informations restent sur votre appareil et ne nous parviennent jamais.")}</p>
       <h3>${T('Vos droits')}</h3>
@@ -7229,7 +7229,8 @@ const provenanceVisite = (() => {
    - L'evenement « Lead » du pixel ne part que si le guichet repond qu'un
      VRAI nouveau contact vient d'arriver (`compte`), avec le meme
      identifiant (`eid`) que l'envoi du serveur : Meta dedoublonne.
-   - Rien ne part vers Meta sans l'accord du visiteur (bandeau). */
+   - Pas de bandeau de consentement : retire a la demande d'Hillel le
+     11/10/2026 (voir `mesure_pub.py`). */
 const essaiNavigateur = (() => {
   try {
     const q = new URLSearchParams(location.search);
@@ -7241,9 +7242,6 @@ const essaiNavigateur = (() => {
 function lireCookieMeta(nom) {
   const m = document.cookie.match(new RegExp('(?:^|; )' + nom + '=([^;]*)'));
   return m ? decodeURIComponent(m[1]) : '';
-}
-function consentementPub() {
-  try { return localStorage.getItem('bh-consentement') === 'oui'; } catch (e) { return false; }
 }
 function nouvelEid() {
   try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
@@ -7328,7 +7326,6 @@ async function envoyerLead(champs, p, I, extra) {
       // adresse de la page, accord du visiteur, essai. Voir plus haut.
       meta: {eid: eid, fbp: lireCookieMeta('_fbp'), fbc: lireCookieMeta('_fbc')},
       url: location.href.slice(0, 500),
-      consentement: consentementPub() ? 'oui' : '',
       test: essaiNavigateur ? 1 : 0,
       t: Date.now() - DEPART
     })
@@ -7336,7 +7333,7 @@ async function envoyerLead(champs, p, I, extra) {
   if (!r.ok) throw new Error('refus ' + r.status);
   const reponse = await r.json().catch(() => ({ok: true}));
   try {
-    if (reponse.compte && reponse.eid && window.fbq && consentementPub())
+    if (reponse.compte && reponse.eid && window.fbq)
       fbq('track', 'Lead', {content_name: I}, {eventID: reponse.eid});
     if (reponse.retenu) prevenirRetenu(reponse.raison);
   } catch (e) {}
@@ -8259,7 +8256,6 @@ window.addEventListener('beforeinstallprompt', e => {
   addEventListener('hashchange', () => { forcerSimuEnVue = false; setTimeout(maj, 400); });
 })();
 </script>
-
 <script>/* =====================================================================
    Eli — l'assistant du site (tranche 1 : le mode guide, sans IA)
 
