@@ -6261,7 +6261,7 @@ function etapeChoixMode(zone) {
 function etapeChoixCredit(zone) {
   const prog = programmeDuTunnel();
   zone.innerHTML = `
-    ${prog ? `<p class="si-note" style="margin:0 0 6px"><b>${esc(prog.nom)}</b> · ${esc(T(prog.ville))}</p>` : ''}
+    ${prog ? `<p class="si-note" style="margin:0 0 6px"><b>${esc(prog.nom)}</b> · ${esc(T(prog.ville))}</p>` : typeDeBienHTML()}
     <div class="si-lab">${T('Avec ou sans crédit ?')}</div>
     <button type="button" class="etape-carte" data-choix="comptant">
       <span class="etape-carte-corps"><b>${T('Sans crédit')}</b>
