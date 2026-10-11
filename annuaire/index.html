@@ -2778,6 +2778,7 @@ ecrireCookie(c,'fr');
       <button type=button>Un 4 pièces à Netanya</button>
       <button type=button>Que puis-je acheter avec 300.000 € ?</button>
       <button type=button>Un 3 pièces à Jérusalem, 2 millions</button>
+      <button type=button>Combien coûte vraiment un achat ?</button>
     </div>
   </div>
 </div>
@@ -3174,6 +3175,21 @@ function ouvrirSimulateur(mode, prix, projet, apport, devise) {
     if (prix > 0) p.push('prix=' + prix);
     if (apport > 0) p.push('apport=' + apport + '&devise=' + (devise === 'ILS' ? 'ILS' : 'EUR'));
     if (projet) p.push('projet=' + encodeURIComponent(projet));
+    // La provenance voyage avec : dans le navigateur integre d'Instagram, le
+    // nouvel onglet ne partage pas la memoire de la page d'accueil, et un
+    // contact venu d'une pub arrivait « Visite directe » (essai d'Hillel du
+    // 11/10/2026, depuis son iPhone).
+    try {
+      const pv = provenanceVisite;
+      if (pv && pv.source) {
+        const e = encodeURIComponent;
+        p.push('utm_source=' + e(pv.source) + '&utm_medium=' + e(pv.support || 'lien'));
+        if (pv.campagne) p.push('utm_campaign=' + e(pv.campagne));
+        if (pv.contenu) p.push('utm_content=' + e(pv.contenu));
+        if (pv.fbclid) p.push('fbclid=' + e(pv.fbclid));
+        if (pv.gclid) p.push('gclid=' + e(pv.gclid));
+      }
+    } catch (err) { /* sans provenance, le simulateur s'ouvre quand meme */ }
     const q = p.length ? '?' + p.join('&') : '';
     // Pas de 'noopener' dans window.open : le navigateur renvoie alors null
     // meme quand l'onglet s'est ouvert, et la page d'accueil partait AUSSI
