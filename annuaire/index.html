@@ -3155,10 +3155,25 @@ const TUNNELS = {
    elle passe par le taux de la Banque d'Israel fige a la fabrication ; sans
    taux, on ne convertit rien et l'on demande des shekels. */
 function apportIls() {
-  const t = tauxEuro();
-  if (TUNNEL.devise === 'EUR' && t) return Math.round((TUNNEL.montant || 0) * t);
+  // Generalise a toute devise publiee (EUR, USD...) — Hillel, 13/10/2026.
+  // Le shekel reste le pivot : tout le calcul se fait en ₪, la saisie n'est
+  // qu'un confort. Sans taux pour la devise choisie, on ne convertit pas.
+  const t = tauxDevise(TUNNEL.devise);
+  if (TUNNEL.devise !== 'ILS' && t) return Math.round((TUNNEL.montant || 0) * t);
   return Math.round(TUNNEL.montant || 0);
 }
+/* Le taux d'une devise publiee, ou 0 si on ne l'a pas. */
+function tauxDevise(code) {
+  if (!code || code === 'ILS') return 0;
+  return ((DONNEES.change || {}).taux || {})[code] || 0;
+}
+/* Les devises de saisie proposees : le shekel, plus celles dont on a le
+   taux du jour. L'ordre suit ce que les clients d'Hillel utilisent. */
+const DEVISES_SAISIE = [
+  {code: 'EUR', symbole: '€', libelle: 'En euros (€)', champ: 'Votre apport (€)'},
+  {code: 'USD', symbole: '$', libelle: 'En dollars ($)', champ: 'Votre apport ($)'},
+  {code: 'ILS', symbole: '₪', libelle: 'En shekels (₪)', champ: 'Votre apport (₪)'},
+];
 /* Le prix qui sert seulement a lire le plafond de credit et les honoraires
    proposes dans sim.json, tant que le vrai prix n'est pas calcule. Ces deux
    donnees ne dependent pas (ou presque pas) du prix. */
@@ -3489,9 +3504,13 @@ function eur(n) {
     return [enDevise(n, 'EUR', '€'), enDevise(n, 'USD', '$'),
             enDevise(n, 'GBP', '£')].filter(Boolean).join(' · ');
   }
-  const t = tauxEuro();
-  if (!t) return '';
-  return mil(Number(n || 0) / t) + ' €';
+  // Euro ET dollar dans toutes les autres langues (Hillel, 13/10/2026) :
+  // une partie de ses clients raisonne en dollars, et l'immobilier israelien
+  // se cote souvent dans cette monnaie. Les deux taux viennent de la Banque
+  // d'Israel, rafraichis a chaque fabrication de page — jamais calcules dans
+  // le navigateur. Sans taux, `enDevise` rend '' et le shekel reste seul.
+  return [enDevise(n, 'EUR', '€'), enDevise(n, 'USD', '$')]
+    .filter(Boolean).join(' · ');
 }
 /* Le montant en shekels, avec sa conversion en dessous. */
 function prixDouble(n, classe) {
@@ -3502,10 +3521,15 @@ function prixDouble(n, classe) {
 function dateChange() {
   const c = DONNEES.change || {};
   if (!c.date || !tauxEuro()) return '';
-  return T('Montants en euros convertis au taux officiel de la Banque d’Israël du')
-    + ' ' + jour(c.date) + ' — 1 € = '
-    + String(tauxEuro().toFixed(4)).replace('.', ',')
-    + ' ₪ — ' + T('remis à jour à chaque publication.');
+  // Les deux taux affiches, puisque les montants sortent desormais en euro
+  // ET en dollar (Hillel, 13/10/2026) : annoncer une conversion sans dire a
+  // quel taux elle a ete faite laisse le client la refaire de son cote.
+  const usd = tauxDevise('USD');
+  const taux = '1 € = ' + String(tauxEuro().toFixed(4)).replace('.', ',') + ' ₪'
+    + (usd ? ' · 1 $ = ' + String(usd.toFixed(4)).replace('.', ',') + ' ₪' : '');
+  return T('Montants convertis au taux officiel de la Banque d’Israël du')
+    + ' ' + jour(c.date) + ' — ' + taux
+    + ' — ' + T('remis à jour à chaque publication.');
 }
 
 /* La preuve sociale : le nombre d'acheteurs qui ont demande cette ville a BH
@@ -6514,17 +6538,19 @@ function dessinerEtape(n) {
    shekels. Les clients de Hillel pensent en euros ; la conversion se voit
    tout de suite dessous, au taux de la Banque d'Israel. */
 function etapeApport(zone) {
-  if (!tauxEuro()) TUNNEL.devise = 'ILS';
-  const enEur = TUNNEL.devise === 'EUR';
-  const cote = () => enEur ? mil(apportIls()) + ' ₪' : eur(apportIls());
+  const dispo = DEVISES_SAISIE.filter(d => d.code === 'ILS' || tauxDevise(d.code));
+  if (!tauxDevise(TUNNEL.devise)) TUNNEL.devise = 'ILS';
+  const choisie = dispo.find(d => d.code === TUNNEL.devise) || dispo[dispo.length - 1];
+  const enDevise_ = TUNNEL.devise !== 'ILS';
+  const cote = () => enDevise_ ? mil(apportIls()) + ' ₪' : eur(apportIls());
   zone.innerHTML = `
     ${jaugeHTML(1)}
     <div class="si-lab">${T('La somme dont vous disposez')}</div>
-    ${tauxEuro() ? `<div class="seg" style="margin-bottom:10px">
-      <button type="button" data-devise="EUR" class="${enEur ? 'on' : ''}">${T('En euros (€)')}</button>
-      <button type="button" data-devise="ILS" class="${enEur ? '' : 'on'}">${T('En shekels (₪)')}</button>
+    ${dispo.length > 1 ? `<div class="seg" style="margin-bottom:10px">
+      ${dispo.map(d => `<button type="button" data-devise="${d.code}"
+        class="${TUNNEL.devise === d.code ? 'on' : ''}">${T(d.libelle)}</button>`).join('')}
     </div>` : ''}
-    <div class="f"><label>${enEur ? T('Votre apport (€)') : T('Votre apport (₪)')}</label>
+    <div class="f"><label>${T(choisie.champ)}</label>
       <div class="qwrap has-val">
         <input id="t-apport" type="text" inputmode="numeric"
                autocomplete="off" value="${mil(TUNNEL.montant)}">
@@ -6555,8 +6581,8 @@ function etapeApport(zone) {
       // On garde la meme somme, exprimee dans l'autre monnaie.
       const ils = apportIls();
       TUNNEL.devise = b.dataset.devise;
-      TUNNEL.montant = TUNNEL.devise === 'EUR'
-        ? Math.round(ils / tauxEuro() / 1000) * 1000 : ils;
+      const tx = tauxDevise(TUNNEL.devise);
+      TUNNEL.montant = tx ? Math.round(ils / tx / 1000) * 1000 : ils;
       etapeApport(zone);
     };
   });
