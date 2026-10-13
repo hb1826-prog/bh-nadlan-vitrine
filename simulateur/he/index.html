@@ -2649,12 +2649,67 @@ body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-a
 
 /* ------------------------------------------- l'accueil sur telephone
    « Eli d'abord » (valide par Hillel, 11/10/2026) : le titre, Eli (ecrire,
-   dicter, ou toucher un exemple), puis deux raccourcis sur une ligne – les
-   programmes et le simulateur. Le simulateur complet quitte l'accueil sur
-   telephone : il faisait doublon avec la carte « Simulateur » juste
-   au-dessus ; il reste sur sa page et sur chaque fiche. */
+   dicter, ou toucher un exemple), puis les raccourcis.
+
+   Le simulateur, lui, est REVENU sur l'accueil telephone le 14/10/2026
+   (Hillel : « je veux que le simulateur ait aussi un bloc identique a EliA
+   sur la version mobile », capture a l'appui entourant la petite carte
+   « Simulateur »). Il ne revient pas sous sa forme d'ordinateur – carte
+   blanche posee sur la photo, qui ferait deux cartes de styles differents
+   l'une sous l'autre – mais habille comme le bloc d'EliA : meme verre
+   sombre, meme badge or, meme pilule blanche autour du champ, memes
+   pastilles. C'est le MEME formulaire (`#hero-simu`), pas une copie : son
+   JS, ses deux points de depart et son choix de devise marchent deja, et
+   un second formulaire aurait duplique les identifiants `hs-*`.
+   La petite carte « Simulateur » de la ligne de raccourcis disparait du
+   coup : c'est elle que ce bloc remplace. */
 @media(max-width:900px){
- .hero #hero-simu{display:none}
+ .hero #hero-simu{display:flex;flex-direction:column;gap:9px;width:100%;
+  max-width:none;margin:12px auto 0;padding:14px;
+  border-radius:var(--r-xl,20px);background:rgba(11,15,24,.55);
+  border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:none;color:#fff;text-align:start}
+ /* « Simulateur gratuit » devient le badge or, comme le « Nouveau » d'EliA. */
+ .hero #hero-simu .hs-sur{align-self:start;background:var(--or,#C9A227);
+  color:#0B0F18;font-size:10.5px;font-weight:800;letter-spacing:.06em;
+  padding:4px 8px;border-radius:999px}
+ .hero #hero-simu .hs-titre{margin-top:0;font-size:17px;line-height:1.25;color:#fff}
+ /* Le sous-titre reparait : sans lui, le bloc n'aurait pas la meme forme que
+    celui d'EliA (titre + une ligne d'explication). */
+ .hero #hero-simu .hs-sous{display:block;font-size:13.5px;line-height:1.45;
+  color:rgba(255,255,255,.86)}
+ /* Les deux points de depart deviennent des pastilles, comme les exemples
+    d'EliA juste au-dessus. */
+ .hero #hero-simu .hs-modes{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
+ .hero #hero-simu .hs-modes button{font-size:13px;font-weight:600;padding:7px 12px;
+  color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35)}
+ .hero #hero-simu .hs-modes button.on{background:#fff;border-color:#fff;color:#0B0F18}
+ .hero #hero-simu .hs-devise span{color:rgba(255,255,255,.86)}
+ .hero #hero-simu .hs-devise button{color:#fff;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.35)}
+ .hero #hero-simu .hs-devise button.on{background:var(--action);
+  border-color:var(--action);color:#fff}
+ .hero #hero-simu .hs-lab{margin-top:0;color:rgba(255,255,255,.8)}
+ /* Le champ et son bouton dans une seule pilule blanche : la barre d'EliA. */
+ .hero #hero-simu .hs-ligne{flex-direction:row;align-items:center;gap:0;
+  margin-top:2px;background:#fff;border-radius:999px;padding:4px}
+ .hero #hero-simu .hs-ligne input{flex:1;min-width:0;border:0;background:transparent;
+  border-radius:999px;padding:10px 12px;font-size:16px;font-weight:650;color:#0F172A}
+ .hero #hero-simu .hs-ligne input:focus{outline:none}
+ .hero #hero-simu .hs-go{flex:none;margin-top:0;height:44px;padding:0 18px;
+  border-radius:999px;box-shadow:none;font-size:15px;font-weight:750}
+ .hero #hero-simu .hs-note{margin-top:2px;font-size:11px;
+  color:rgba(255,255,255,.72);opacity:1}
+ /* Ne reste qu'un raccourci, « Nos programmes » : il prend toute la largeur. */
+ .hero-choix .hc-simu{display:none}
+ .hero-choix{grid-template-columns:1fr}
+ /* L'ordre de lecture : EliA (dans `.hero-texte`), le simulateur, puis le
+    raccourci vers les programmes. Dans le HTML le simulateur est ecrit en
+    dernier – il etait a droite sur ordinateur, ou c'est la grille nommee
+    qui place tout et ou `order` ne joue pas. */
+ .hero #hero-simu{order:1}
+ .hero-choix{order:2}
  .hero .h1-b{display:none}
  .hero-choix{margin-top:12px;gap:10px}
  .hero-choix .hc-carte{flex-direction:row;justify-content:center;gap:9px;
