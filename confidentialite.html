@@ -771,6 +771,22 @@ button,input,select,textarea{font:inherit;color:inherit}
 .modele-preuve{grid-column:1/-1;margin:0 0 4px;text-align:center;
  font-size:14px;color:var(--gris);letter-spacing:.01em}
 .modele-preuve b{color:var(--or-fonce);font-weight:800}
+/* Deux lignes franches, pas un repli au hasard de la largeur (Hillel,
+   14/10/2026) : les programmes et les villes ensemble, l'experience en
+   dessous. `text-wrap:balance` evite qu'une ligne trop longue ne laisse un
+   mot seul en dessous sur un ecran etroit. */
+.modele-preuve span{display:block;text-wrap:balance}
+/* Sur telephone, la premiere ligne disparait : le bouton « Nos programmes »
+   juste au-dessus affiche deja « 46 villes · 100 programmes », et Hillel l'a
+   vu repete deux fois a l'ecran (14/10/2026). Elle reste sur ordinateur, ou
+   ce bouton est recouvert par la carte du simulateur : sans elle, le volume
+   du portefeuille n'y serait annonce nulle part. Ce qui reste peut alors
+   respirer — un cran plus gros, sur deux lignes si besoin. */
+@media(max-width:900px){
+ .modele-preuve .mp-compte{display:none}
+ .modele-preuve{font-size:16px;line-height:1.45;max-width:22em;
+  margin-left:auto;margin-right:auto}
+}
 /* Fils direct seulement : sans cela, un gras a l'interieur d'une phrase
    (« 0 frais d'agence ») passait a la ligne avec sa propre coche. */
 .modele > div > b{display:block;font-size:16.5px;font-weight:700;
