@@ -2764,6 +2764,21 @@ body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-a
  .hero-choix .hc-texte,.hero-choix .hc-chiffres,.hero-choix .hc-btn{display:none}
  .hero-choix .hc-titre{font-size:14.5px;white-space:nowrap}
  .hero-choix .hc-carte{gap:7px;padding:13px 8px}
+ /* « Nos programmes » reprend l'habillage des deux blocs du dessus (Hillel,
+    14/10/2026 : « le meme lisere que tu as mis EliA et le simulateur, un peu
+    plus gros, un peu plus haut, un peu en relief »). Depuis que la petite
+    carte « Simulateur » a disparu, il est seul sur sa ligne : un bandeau
+    ecrase entre deux vraies cartes faisait raccourci de second rang.
+    Les chiffres du portefeuille reviennent avec lui — ils donnent la hauteur
+    ET disent ce qu'il y a derriere le bouton. */
+ .hero-choix .hc-progs{flex-wrap:wrap;gap:4px 9px;
+  padding:18px 14px 16px;border-radius:var(--r-xl,20px);
+  border-top:4px solid var(--or,#C9A227);
+  box-shadow:0 18px 40px -12px rgba(0,0,0,.55)}
+ .hero-choix .hc-progs .hc-ic svg{width:26px;height:26px}
+ .hero-choix .hc-progs .hc-titre{font-size:17px}
+ .hero-choix .hc-progs .hc-chiffres{display:block;width:100%;
+  font-size:12.5px;text-align:center}
  .eli-exemples{flex-direction:column;align-items:flex-start}
  .eli-une-form .eli-micro{width:44px;height:44px}
 }
