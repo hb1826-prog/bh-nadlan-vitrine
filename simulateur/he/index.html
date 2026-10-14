@@ -691,6 +691,14 @@ button,input,select,textarea{font:inherit;color:inherit}
    est la couleur de la marque. */
 .nav a.nav-eli{color:var(--or-fonce);background:rgba(201,162,39,.14);
  font-weight:700;border-radius:999px;white-space:nowrap}
+/* Le service nomme tant qu'il y a la place, le nom seul des que la barre se
+   resserre – sans ce repli, « EliA, conseiller IA » sur une seule ligne
+   poussait les onglets voisins hors de l'ecran sur un portable. */
+.nav-eli-court{display:none}
+@media(max-width:1340px){
+ .nav .nav-eli-long{display:none}
+ .nav .nav-eli-court{display:inline}
+}
 .nav a.nav-eli:hover{background:var(--or);color:#0B0F18}
 .nav-mobile a.nav-eli{color:var(--or-fonce);font-weight:750}
 
