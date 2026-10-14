@@ -2648,6 +2648,14 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
  .hero .eli-une{grid-area:eli;align-self:stretch;margin:22px 0 0;
   font-size:clamp(21px,1.7vw,27px);max-width:30em;width:100%}
  .hero .eli-une-dedans{height:100%;box-sizing:border-box;align-content:center}
+ /* Le raccourci « Nos programmes » quitte l'ordinateur (Hillel, 14/10/2026).
+    Il etait pose dans la MEME case de grille que le simulateur (`grid-area:
+    simu`, portail.css) : entierement recouvert par la carte blanche, donc
+    invisible — mais toujours present, cliquable au bord et lu par les
+    lecteurs d'ecran. Ce qu'il annonce (« 46 villes · 100 programmes ») reste
+    dit ici par la ligne de preuves sous la banniere, qui, elle, ne se replie
+    que sur telephone. Sur telephone il ne bouge pas : c'est la qu'il sert. */
+ .hero-choix{display:none}
  /* Et le simulateur s'etire AUSSI. Sans cette ligne il gardait sa hauteur
     naturelle, cale en haut par le `align-items:start` de la grille
     « Home ordinateur » de portail.css : EliA descendait jusqu'en bas, lui
