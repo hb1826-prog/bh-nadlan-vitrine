@@ -4152,37 +4152,46 @@ async function ficheSurDemande(p) {
   majFlottantWa(p);
   compterVue(p.cle);
   const t = p.typologies && p.typologies[0];
+  // Exactement la meme charpente qu'une fiche normale (`offre()`) : memes
+  // classes, donc meme habillage, sans une ligne de style en plus. Seul le
+  // bloc du prix change – il n'y en a pas a annoncer.
   const faits = [
-    [T('Ville'), esc(T(p.ville))],
-    p.quartier ? [T('Quartier'), esc(p.quartier)] : null,
-    t ? [T('Typologies'), T('À partir de') + ' ' + t.libelle + ' ' + T('pièces')] : null,
-    p.livraison ? [T('Livraison'), esc(livraisonEnClair(p.livraison))] : null,
+    t ? [T('Typologies'), T('à partir de') + ' ' + t.libelle + ' ' + T('pièces')] : null,
+    p.livraison ? [T('Livraison'), livraisonEnClair(p.livraison)] : null,
   ].filter(Boolean);
+  const messageVisiteur = T("Bonjour, je suis intéressé par "
+    + "{nom} ({ville}). Pouvez-vous m'envoyer les disponibilités et les "
+    + "prix réels ?").replace('{nom}', p.nom).replace('{ville}', T(p.ville));
+  const bonjour = encodeURIComponent(messageVisiteur);
+  const sujetMail = encodeURIComponent(p.nom + ' – ' + T(p.ville));
   vue.innerHTML = `
     <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP}
       <a href="#/ville/${esc(cleVille(p.ville))}">${esc(T(p.ville))}</a> ${SEP}
       ${esc(p.nom)}</p>
     <div class="fiche-tete">
       ${galerie(p)}
-      <div class="offre">
-        <span class="badge nouveau">${T('Nouveau programme')}</span>
-        <h1>${esc(p.nom)}</h1>
-        <p class="lieu">◎ ${esc(p.quartier ? p.quartier + ' · ' + T(p.ville) : T(p.ville))}</p>
-        <div class="prix"><small>${T('Prix')}</small>${T('sur demande')}</div>
+      <aside class="offre"><div class="offre-in">
+        <h1>${esc(p.nom)}${boutonPartage(messagePartageBien(p.nom), '#/' + p.cle, false)}</h1>
+        <p class="offre-lieu">◎ ${esc(p.quartier ? p.quartier + ' · ' + T(p.ville)
+                                                 : T(p.ville))}</p>
+        <div class="offre-prix"><span>${T('Prix')}</span>
+          <b>${T('sur demande')}</b>
+          <em>${T('prix promoteur · 0 frais d’agence')}</em></div>
         ${prixIndicatif(p)}
-        <p class="dim">${T('Ces programmes viennent d’être lancés et leur promoteur ne publie pas encore ses prix. Laissez vos coordonnées : nous les obtenons pour vous.')}</p>
-        <button class="veux" type="button" onclick="versContactBas()">${T('Recevoir les prix')}</button>
-      </div>
+        <dl class="offre-faits">${faits.map(l =>
+          '<div><dt>' + l[0] + '</dt><dd>' + esc(l[1]) + '</dd></div>').join('')}</dl>
+        ${vues(p.cle)}${demande(p.ville)}
+        <div class="offre-actions">
+          <button class="b-or" type="button" onclick="versContact(this)">${T('Recevoir les prix')}</button>
+          <div class="offre-duo">
+            <a class="b-wa" href="https://wa.me/${DONNEES.wa}?text=${bonjour}">WhatsApp</a>
+            <a class="b-ghost" href="mailto:${DONNEES.mail}?subject=${sujetMail}&body=${bonjour}">${T('Par mail')}</a>
+          </div>
+        </div>
+        <p class="offre-note">${T('Ces programmes viennent d’être lancés et leur promoteur ne publie pas encore ses prix. Laissez vos coordonnées : nous les obtenons pour vous.')}</p>
+      </div></aside>
     </div>
-    <div class="card">
-      <div class="block">
-        <div class="block-head" style="display:flex;align-items:center;gap:8px">${picto('immeuble')}<span>${T('Le programme')}</span></div>
-        <div class="scroll" style="max-height:none"><table><tbody>${faits.map(([quoi, valeur]) =>
-          `<tr><td class="mtitle">${quoi}</td><td class="num strong">${valeur}</td></tr>`).join('')}
-        </tbody></table></div>
-      </div>
-      <div class="pad dim" style="font-size:12px">${T('Prix indicatifs, susceptibles d’évolution ; disponibilités sous réserve. Les visuels sont des vues d’artiste fournies par les promoteurs. Document non contractuel.')}</div>
-    </div>
+    ${rassureMini(false)}
     ${quartierHTML(p.ville)}
     ${contactHTML(p, 'fiche')}`;
   wireGalerie(p);
