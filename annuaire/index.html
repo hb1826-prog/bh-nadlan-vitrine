@@ -2662,7 +2662,15 @@ body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-a
  display:grid;place-items:center;cursor:pointer;
  background:var(--fond-2,#F4F0E7);color:var(--encre,#0F172A)}
 .eli-micro[hidden]{display:none}
-.eli-une-form .eli-micro{background:#EEF1F6;color:#0F172A;align-self:center}
+/* `padding:0` n'est pas un detail : le bouton herite du `padding:0 20px` de
+   `.eli-une-form button` (dessine pour « Demander a EliA », qui est du
+   texte). Avec 44 px de large et 20 px de marge de chaque cote, il ne restait
+   que 4 px pour l'icone — un point gris au milieu d'une pastille, personne
+   ne pouvait y lire un micro (Hillel, 14/10/2026). Sur telephone la regle
+   existait deja ; sur ordinateur, non. */
+.eli-une-form .eli-micro{background:#EEF1F6;color:#0F172A;align-self:center;
+ padding:0;flex:none}
+.eli-une-form .eli-micro svg{flex:none}
 .eli-enreg .eli-micro{background:#E5484D;color:#fff;animation:eli-pouls 1.4s infinite}
 .eli-enreg input::placeholder{color:#E5484D;opacity:1;font-weight:650}
 @keyframes eli-pouls{0%{box-shadow:0 0 0 0 rgba(229,72,77,.45)}
