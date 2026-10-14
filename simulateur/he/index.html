@@ -2632,6 +2632,12 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
  .hero .eli-une{grid-area:eli;align-self:stretch;margin:22px 0 0;
   font-size:clamp(21px,1.7vw,27px);max-width:30em;width:100%}
  .hero .eli-une-dedans{height:100%;box-sizing:border-box;align-content:center}
+ /* Et le simulateur s'etire AUSSI. Sans cette ligne il gardait sa hauteur
+    naturelle, cale en haut par le `align-items:start` de la grille
+    « Home ordinateur » de portail.css : EliA descendait jusqu'en bas, lui
+    s'arretait avant, et les deux cartes ne finissaient pas sur la meme
+    ligne. Son contenu reste centre (`justify-content:center`, deja pose). */
+ .hero #hero-simu{align-self:stretch}
  /* Le MEME traitement de carte que le simulateur d'en face (Hillel,
     14/10/2026 : « donne-lui le meme traitement de carte ») – meme liseré or
     en tete, meme rayon, meme ombre portee, meme generosite de marges. Il
