@@ -671,6 +671,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .nav a.nav-simu{color:var(--action);background:var(--action-lavis);font-weight:700}
 .nav a.nav-simu:hover{background:var(--action);color:#fff}
 .nav-mobile a.nav-simu{color:var(--action);font-weight:750}
+/* EliA a le meme poids que le simulateur dans le menu, mais en or plutot
+   qu'en bleu : deux onglets bleus cote a cote se seraient annules, et l'or
+   est la couleur de la marque. */
+.nav a.nav-eli{color:var(--or-fonce);background:rgba(201,162,39,.14);
+ font-weight:700;border-radius:999px}
+.nav a.nav-eli:hover{background:var(--or);color:#0B0F18}
+.nav-mobile a.nav-eli{color:var(--or-fonce);font-weight:750}
 
 /* Le bandeau, sous la liste des programmes. */
 .simu-bande{margin:34px 0 10px;display:grid;grid-template-columns:minmax(0,1fr) auto;
@@ -2575,7 +2582,13 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
  display:flex;align-items:center;justify-content:center;gap:6px;
  background:var(--action,#0B6BD6);color:#fff;font:inherit;
  font-weight:750;font-size:15px;cursor:pointer;white-space:nowrap}
-.eli-une-form button svg{display:none}
+/* Sur ordinateur, le bouton d'envoi dit « Demander a EliA » en toutes
+   lettres : sa fleche ferait doublon. Mais la regle visait AUTREMENT trop
+   large — elle masquait aussi l'icone du micro, qui n'a pas de texte pour la
+   remplacer : il ne restait qu'une pastille grise vide, et personne ne
+   pouvait deviner qu'on peut dicter sa recherche (Hillel, 14/10/2026, sur
+   capture du premier ecran PC). Elle ne vise plus que le bouton d'envoi. */
+.eli-une-form button[type=submit] svg{display:none}
 [dir=rtl] .eli-une-form button svg{transform:scaleX(-1)}
 /* Sur ordinateur, la grande entree est une grille (portail.css). Le bandeau
    y a sa propre ligne, sous le titre, et la colonne de gauche (bandeau
@@ -2587,7 +2600,24 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
   grid-template-rows:1fr auto auto auto 1fr}
  .hero .eli-une{grid-area:eli;align-self:start;margin:30px 0 0;
   font-size:clamp(21px,1.7vw,27px);max-width:30em;width:100%}
- .hero .eli-une-dedans{padding:16px 16px 16px 18px}
+ /* Le MEME traitement de carte que le simulateur d'en face (Hillel,
+    14/10/2026 : « donne-lui le meme traitement de carte ») — meme liseré or
+    en tete, meme rayon, meme ombre portee, meme generosite de marges. Il
+    reste sombre : deux cartes blanches identiques se seraient annulees, et
+    le contraste est ce qui fait lire EliA comme la nouveaute. Avant, un
+    simple voile pose sur la photo face a une vraie carte : l'oeil allait
+    au simulateur, sans hesiter. */
+ .hero .eli-une-dedans{padding:22px 24px 20px;
+  background:rgba(11,15,24,.72);
+  border:1px solid rgba(255,255,255,.22);
+  border-top:4px solid var(--or,#C9A227);
+  border-radius:var(--r-xl,20px);
+  box-shadow:0 18px 50px rgba(0,0,0,.35)}
+ .hero .eli-une-badge{font-size:12.5px;padding:6px 12px}
+ .hero .eli-une-texte b{font-size:24px;line-height:1.2;margin-bottom:2px}
+ .hero .eli-une-texte span{font-size:15px}
+ .hero .eli-une-form{margin-top:4px;padding:6px}
+ .hero .eli-exemples{margin-top:2px}
 }
 /* Sur telephone, plus compact : le badge a cote du titre, et le champ avec
    une fleche ronde sur la meme ligne — le gros bouton en dessous doublait

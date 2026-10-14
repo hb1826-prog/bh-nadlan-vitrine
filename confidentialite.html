@@ -657,6 +657,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .nav a.nav-simu{color:var(--action);background:var(--action-lavis);font-weight:700}
 .nav a.nav-simu:hover{background:var(--action);color:#fff}
 .nav-mobile a.nav-simu{color:var(--action);font-weight:750}
+/* EliA a le meme poids que le simulateur dans le menu, mais en or plutot
+   qu'en bleu : deux onglets bleus cote a cote se seraient annules, et l'or
+   est la couleur de la marque. */
+.nav a.nav-eli{color:var(--or-fonce);background:rgba(201,162,39,.14);
+ font-weight:700;border-radius:999px}
+.nav a.nav-eli:hover{background:var(--or);color:#0B0F18}
+.nav-mobile a.nav-eli{color:var(--or-fonce);font-weight:750}
 
 /* Le bandeau, sous la liste des programmes. */
 .simu-bande{margin:34px 0 10px;display:grid;grid-template-columns:minmax(0,1fr) auto;
