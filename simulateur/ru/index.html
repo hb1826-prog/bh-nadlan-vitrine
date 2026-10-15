@@ -10,15 +10,42 @@
 <meta name=apple-mobile-web-app-title content="BH Home">
 <link rel=alternate hreflang='fr' href='https://bh-nadlan.com/simulateur/'><link rel=alternate hreflang='en' href='https://bh-nadlan.com/simulateur/en/'><link rel=alternate hreflang='he' href='https://bh-nadlan.com/simulateur/he/'><link rel=alternate hreflang='es' href='https://bh-nadlan.com/simulateur/es/'><link rel=alternate hreflang='pt' href='https://bh-nadlan.com/simulateur/pt/'><link rel=alternate hreflang='ru' href='https://bh-nadlan.com/simulateur/ru/'>
 <meta name=theme-color content="#414A5C">
+<script>
+/* Avant tout chargement de mesure : Google en mode « denied » par defaut,
+   et on decide si ce visiteur doit voir la barre. */
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{
+  'analytics_storage':'denied','ad_storage':'denied',
+  'ad_user_data':'denied','ad_personalization':'denied'
+});
+(function(){
+try{
+  var fuseau=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+  window.BH_RGPD_CONCERNE=/^Europe\//.test(fuseau);
+  var m=document.cookie.match(/(?:^|; )bh_rgpd=([^;]*)/);
+  window.BH_RGPD_CHOIX=m?decodeURIComponent(m[1]):'';
+  if(window.BH_RGPD_CHOIX==='oui'){
+    gtag('consent','update',{
+      'analytics_storage':'granted','ad_storage':'granted',
+      'ad_user_data':'granted','ad_personalization':'granted'
+    });
+  }
+}catch(e){window.BH_RGPD_CONCERNE=false;}
+})();
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-60HG0FY8NF"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-60HG0FY8NF');</script>
 <script>
+window.bhPixelInit=function(){
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init','3820890624762303');fbq('track','PageView');
+};
+if((!window.BH_RGPD_CONCERNE || window.BH_RGPD_CHOIX === 'oui')) window.bhPixelInit();
 </script>
 <script>
 window.BH_ADS_CONVERSION='AW-18507495474/7gu2CMfgv5kdELLwh_lE';
@@ -1920,6 +1947,16 @@ small.eu.big{font-size:13.5px}
 .offre-eur{display:block;font-style:normal;font-size:15px;font-weight:650;
  color:var(--gris);margin-top:2px}
 td.num small.eu{text-align:right}
+/* La conversion repliee des cartes de la grille (`prixDoubleToggle`,
+   Hillel, 15/10/2026) : une puce discrete dit que la conversion existe,
+   le detail n'apparait qu'au survol ou au toucher — pour ne pas repeter
+   trois montants sur chaque carte en permanence. */
+.eu-bascule{display:block;margin-top:2px;cursor:pointer}
+.eu-bascule .eu-puce{display:inline-block;font-size:12px;font-weight:600;
+ color:var(--gris-clair,var(--gris))}
+.eu-bascule small.eu{display:none;margin-top:0}
+.eu-bascule:hover .eu-puce,.eu-bascule.ouvert .eu-puce{display:none}
+.eu-bascule:hover small.eu,.eu-bascule.ouvert small.eu{display:block}
 
 
 /* ==================== l'equilibre des lignes de la banniere ==============
@@ -2440,6 +2477,21 @@ table.ag th{width:64%}
 .tile.sur-demande .veux{margin-top:auto}
 .tile.sur-demande .indicatif{margin-bottom:12px}
 
+/* ===================== la barre de consentement (RGPD) ====================
+   Fine, en bas, seulement pour les visiteurs europeens (`consentement.py`,
+   Hillel, 15/10/2026) — jamais un bandeau qui bloque l'ecran. */
+.bh-rgpd{position:fixed;left:0;right:0;bottom:0;z-index:70;
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ gap:10px 18px;padding:12px 18px;background:var(--carte,#fff);
+ border-top:1px solid var(--trait,#E7E2D8);box-shadow:0 -6px 24px rgba(15,23,42,.12)}
+.bh-rgpd[hidden]{display:none}
+.bh-rgpd p{margin:0;font-size:13px;color:var(--gris);flex:1 1 260px;line-height:1.45}
+.bh-rgpd-boutons{display:flex;gap:8px;flex:none}
+.bh-rgpd button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+ padding:9px 16px;border-radius:999px;border:1px solid var(--trait,#E7E2D8)}
+.bh-rgpd button:first-child{background:var(--encre,#0F172A);color:#fff;border-color:var(--encre,#0F172A)}
+.bh-rgpd-refus{background:none;color:var(--gris)}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -2597,18 +2649,22 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
 @keyframes eli-point{0%,80%,100%{opacity:.25;transform:none}40%{opacity:.9;transform:translateY(-3px)}}
 @media (prefers-reduced-motion:reduce){.eli-ecrit i{animation:none;opacity:.6}}
 
-/* L'invitation d'Eli dans la grande entree, sous le titre : sur la
-   photo, en verre sombre, comme le reste de l'entree. */
+/* L'invitation d'Eli dans la grande entree, sous le titre : carte claire,
+   posee sur la photo (Hillel, 15/10/2026 — allege le premier ecran, qui
+   empilait trois blocs sombres d'affilee sur telephone). Avant, verre
+   sombre : le contraste faisait lire EliA comme la nouveaute face au
+   simulateur blanc d'en face, mais au prix d'un premier ecran charge. */
 .eli-une{margin:22px 0 4px;max-width:620px;position:relative;z-index:2}
 .eli-une-dedans{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;
  align-items:center;padding:16px 18px;border-radius:var(--r-xl,20px);
- background:rgba(11,15,24,.55);border:1px solid rgba(255,255,255,.22);
- -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-align:start}
+ background:rgba(255,255,255,.96);border:1px solid rgba(15,23,42,.08);
+ -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-align:start;
+ box-shadow:0 10px 30px rgba(15,23,42,.14)}
 .eli-une-badge{align-self:start;background:var(--or,#C9A227);color:#0B0F18;
  font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
  padding:5px 10px;border-radius:999px}
-.eli-une-texte b{display:block;font-size:18px;color:#fff}
-.eli-une-texte span{display:block;font-size:14px;color:rgba(255,255,255,.86);line-height:1.45}
+.eli-une-texte b{display:block;font-size:18px;color:var(--encre,#0F172A)}
+.eli-une-texte span{display:block;font-size:14px;color:var(--gris,#5A6172);line-height:1.45}
 .eli-une-form{grid-column:1/-1;display:flex;gap:8px;background:#fff;
  border-radius:999px;padding:5px}
 .eli-une-form input{flex:1;min-width:0;padding:11px 16px;border:0;border-radius:999px;
@@ -2662,17 +2718,16 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
  .hero #hero-simu{align-self:stretch}
  /* Le MEME traitement de carte que le simulateur d'en face (Hillel,
     14/10/2026 : « donne-lui le meme traitement de carte ») — meme liseré or
-    en tete, meme rayon, meme ombre portee, meme generosite de marges. Il
-    reste sombre : deux cartes blanches identiques se seraient annulees, et
-    le contraste est ce qui fait lire EliA comme la nouveaute. Avant, un
-    simple voile pose sur la photo face a une vraie carte : l'oeil allait
-    au simulateur, sans hesiter. */
+    en tete, meme rayon, meme ombre portee, meme generosite de marges.
+    Passee claire le 15/10/2026 (meme raison que ci-dessus) : les deux
+    cartes blanches ne s'annulent pas, le liseré or + le badge suffisent a
+    dire que c'est EliA et pas le simulateur. */
  .hero .eli-une-dedans{padding:22px 24px 20px;
-  background:rgba(11,15,24,.72);
-  border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(15,23,42,.08);
   border-top:4px solid var(--or,#C9A227);
   border-radius:var(--r-xl,20px);
-  box-shadow:0 18px 50px rgba(0,0,0,.35)}
+  box-shadow:0 18px 50px rgba(15,23,42,.16)}
  .hero .eli-une-badge{font-size:12.5px;padding:6px 12px}
  .hero .eli-une-texte b{font-size:24px;line-height:1.2;margin-bottom:2px}
  .hero .eli-une-texte span{font-size:15px}
@@ -2723,12 +2778,14 @@ body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-a
 @media (prefers-reduced-motion:reduce){.eli-enreg .eli-micro{animation:none}}
 .eli-dicte i{background:var(--fond,#fff)}
 
-/* Les exemples du bandeau : ce qu'Eli sait faire, en un toucher. */
+/* Les exemples du bandeau : ce qu'Eli sait faire, en un toucher. Couleurs
+   claires depuis le 15/10/2026 (carte blanche, voir plus haut) : du blanc
+   sur blanc etait devenu illisible. */
 .eli-exemples{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:7px}
 .eli-exemples button{font:inherit;font-size:13px;font-weight:600;cursor:pointer;
- padding:7px 12px;border-radius:999px;color:#fff;
- background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35)}
-.eli-exemples button:hover{background:rgba(255,255,255,.22)}
+ padding:7px 12px;border-radius:999px;color:var(--encre,#0F172A);
+ background:var(--fond,#FAF7F1);border:1px solid var(--trait,#E7E2D8)}
+.eli-exemples button:hover{background:var(--fond-2,#F4F0E7)}
 
 /* ------------------------------------------- l'accueil sur telephone
    « Eli d'abord » (valide par Hillel, 11/10/2026) : le titre, Eli (ecrire,
@@ -3594,6 +3651,22 @@ function prixDouble(n, classe) {
   return shek(n) + (e ? '<small class="' + (classe || 'eu') + '">' + e
     + '</small>' : '');
 }
+/* Meme chose, mais repliee : pour la grille de cartes, ou la conversion
+   repetee sur chaque prix alourdissait la page (Hillel, 15/10/2026). Une
+   petite puce dit qu'elle existe ($ €) ; le detail ($757,724 · €676,991)
+   ne s'affiche qu'au survol (ordinateur) ou au toucher (telephone),
+   `toggleEu()` plus bas gere le toucher. Les tableaux de calcul du
+   simulateur gardent `prixDouble()` tel quel : la, le lire d'un coup
+   compte plus que l'alleger. */
+function prixDoubleToggle(n) {
+  const e = eur(n);
+  if (!e) return shek(n);
+  const symboles = (DONNEES.langue === 'en' ? '$ £' : '$');
+  return shek(n) + '<span class="eu-bascule" onclick="toggleEu(this)">'
+    + '<span class="eu-puce" aria-hidden="true">≈ €' + (symboles ? ' ' + symboles : '') + '</span>'
+    + '<small class="eu">' + e + '</small></span>';
+}
+function toggleEu(span) { span.classList.toggle('ouvert'); }
 function dateChange() {
   const c = DONNEES.change || {};
   if (!c.date || !tauxEuro()) return '';
@@ -4060,7 +4133,7 @@ function carte(p) {
         <img src="${esc(imgSrc)}" alt="" loading="lazy" onerror="this.remove()">
       </div>
       <div class="corps">
-        <div class="prix"><small>${T('à partir de')}</small>${prixDouble(p.prix_min)}</div>
+        <div class="prix"><small>${T('à partir de')}</small>${prixDoubleToggle(p.prix_min)}</div>
         <div class="titre">${esc(p.nom)}</div>
         ${marquePromoteur}
         <div class="carac">${typo}${surf}</div>

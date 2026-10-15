@@ -1891,6 +1891,16 @@ small.eu.big{font-size:13.5px}
 .offre-eur{display:block;font-style:normal;font-size:15px;font-weight:650;
  color:var(--gris);margin-top:2px}
 td.num small.eu{text-align:right}
+/* La conversion repliee des cartes de la grille (`prixDoubleToggle`,
+   Hillel, 15/10/2026) : une puce discrete dit que la conversion existe,
+   le detail n'apparait qu'au survol ou au toucher — pour ne pas repeter
+   trois montants sur chaque carte en permanence. */
+.eu-bascule{display:block;margin-top:2px;cursor:pointer}
+.eu-bascule .eu-puce{display:inline-block;font-size:12px;font-weight:600;
+ color:var(--gris-clair,var(--gris))}
+.eu-bascule small.eu{display:none;margin-top:0}
+.eu-bascule:hover .eu-puce,.eu-bascule.ouvert .eu-puce{display:none}
+.eu-bascule:hover small.eu,.eu-bascule.ouvert small.eu{display:block}
 
 
 /* ==================== l'equilibre des lignes de la banniere ==============
@@ -2411,6 +2421,21 @@ table.ag th{width:64%}
 .tile.sur-demande .veux{margin-top:auto}
 .tile.sur-demande .indicatif{margin-bottom:12px}
 
+/* ===================== la barre de consentement (RGPD) ====================
+   Fine, en bas, seulement pour les visiteurs europeens (`consentement.py`,
+   Hillel, 15/10/2026) — jamais un bandeau qui bloque l'ecran. */
+.bh-rgpd{position:fixed;left:0;right:0;bottom:0;z-index:70;
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ gap:10px 18px;padding:12px 18px;background:var(--carte,#fff);
+ border-top:1px solid var(--trait,#E7E2D8);box-shadow:0 -6px 24px rgba(15,23,42,.12)}
+.bh-rgpd[hidden]{display:none}
+.bh-rgpd p{margin:0;font-size:13px;color:var(--gris);flex:1 1 260px;line-height:1.45}
+.bh-rgpd-boutons{display:flex;gap:8px;flex:none}
+.bh-rgpd button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+ padding:9px 16px;border-radius:999px;border:1px solid var(--trait,#E7E2D8)}
+.bh-rgpd button:first-child{background:var(--encre,#0F172A);color:#fff;border-color:var(--encre,#0F172A)}
+.bh-rgpd-refus{background:none;color:var(--gris)}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
@@ -2420,12 +2445,15 @@ table.ag th{width:64%}
 .legal a.retour{display:inline-block;margin-top:40px;font-weight:600}
 .legal .marque{display:block;width:132px;margin:0 auto 8px}
 </style><script>
+window.bhPixelInit=function(){
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init','3820890624762303');fbq('track','PageView');
+};
+if((!window.BH_RGPD_CONCERNE || window.BH_RGPD_CHOIX === 'oui')) window.bhPixelInit();
 </script>
 <script>
 window.BH_ADS_CONVERSION='AW-18507495474/7gu2CMfgv5kdELLwh_lE';
