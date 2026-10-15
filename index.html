@@ -5550,11 +5550,13 @@ function brancherApporteur(slug, info) {
         const typeFinal = (rec && rec.mimeType) || type || 'audio/webm';
         rec = null;
         if (!morceaux.length) return;
-        note.textContent = T('Transcription…');
+        note.classList.add('eli-transcrit');
+        note.innerHTML = '<span class="eli-rond"></span>' + esc(T('Transcription en cours…'));
         fetch(DONNEES.eli_dictee, {method: 'POST', body: new Blob(morceaux, {type: typeFinal}),
           headers: {'Content-Type': typeFinal.split(';')[0]}})
           .then(r => r.ok ? r.json() : {}).catch(() => ({}))
           .then(r => {
+            note.classList.remove('eli-transcrit');
             note.textContent = '';
             if (r && r.texte) motChamp.value = (motChamp.value ? motChamp.value + ' ' : '') + r.texte;
             else note.textContent = T('Je n’ai pas bien entendu. Réessayez, ou écrivez.');
