@@ -7980,7 +7980,11 @@ function initTel(id, zone, isoDepart) {
     if (!liste.hidden && !liste.contains(e.target) && e.target !== bouton) fermer();
   });
   return { valeur: () => {
-    const num = (($('#' + id + '-num', zone) || {}).value || '').trim();
+    // Un zero initial tape par reflexe (« 0767284710 ») rend le numero
+    // injoignable une fois colle a l'indicatif pays — le format
+    // international ne le garde jamais (Hillel, 15/10/2026, apres un test
+    // avec son numero francais jamais arrive en WhatsApp).
+    const num = (($('#' + id + '-num', zone) || {}).value || '').trim().replace(/^0+/, '');
     return num ? '+' + dial(iso) + ' ' + num : '';
   } };
 }
