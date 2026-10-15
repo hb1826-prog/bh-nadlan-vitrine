@@ -5465,11 +5465,13 @@ function brancherApporteur(slug, info) {
     // meme variable globale, juste écrite au bon moment.
     DONNEES.partenaire = info.cle;
     try {
-      await envoyerLead({nom, prenom, tel: numero, mail, mot,
+      const reponse = await envoyerLead({nom, prenom, tel: numero, mail, mot,
         societe: $('#ap-pot', form).value.trim()},
         null, 'apporteur', {page: 'apporteur · ' + slug});
-      vue.querySelector('.ap-form').outerHTML =
-        `<p class="ap-merci">${T('Envoyé : la fiche est dans le CRM, et {nom} reçoit son message.').replace('{nom}', esc(prenom || nom))}</p>`;
+      const texteMerci = reponse && reponse.deja_connu
+        ? T('Ce client est déjà un client d’Hillel — c’est noté, il est prévenu.')
+        : T('Envoyé : la fiche est dans le CRM, et {nom} reçoit son message.').replace('{nom}', esc(prenom || nom));
+      vue.querySelector('.ap-form').outerHTML = `<p class="ap-merci">${texteMerci}</p>`;
     } catch (err) {
       bouton.disabled = false;
       bouton.textContent = etiquette;
