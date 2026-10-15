@@ -2893,13 +2893,11 @@ body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-a
 .ap-micro.ap-enreg{background:#E5484D;color:#fff;animation:eli-pouls 1.4s infinite}
 @media (prefers-reduced-motion:reduce){.ap-micro.ap-enreg{animation:none}}
 .ap-mot-boite:has(.ap-enreg) textarea::placeholder{color:#E5484D;opacity:1;font-weight:650}
-/* Le rond qui tourne d'EliA, repris ici en petite pastille (pas une bulle de
-   chat pleine largeur – le fond de la page reste clair) pendant que Whisper
-   ecrit le texte dicte : sans lui, « Transcription… » en texte fixe donne
-   l'impression que rien ne se passe (Hillel, 15/10/2026). */
-.ap-form .eli-transcrit{display:inline-flex;align-items:center;gap:8px;margin-top:9px;
- padding:7px 12px;border-radius:999px;background:var(--action,#0B6BD6);color:#fff;
- font-weight:650;font-size:12.5px}
+/* Les trois points qui respirent (`.eli-ecrit`, deja utilises par Eli)
+   pendant que Whisper ecrit le texte dicte : sans feedback vivant,
+   « Transcription… » en texte fixe donne l'impression que rien ne se passe
+   (Hillel, 15/10/2026). */
+.ap-form .eli-note.eli-ecrit{margin-top:9px}
 .ap-merci{margin-top:18px;padding:18px;border-radius:var(--r-xl,16px);
  background:var(--vert-fond,#E9F7F0);color:var(--vert,#0B6E4F);font-weight:650}
 
@@ -5535,13 +5533,13 @@ function brancherApporteur(slug, info) {
         const typeFinal = (rec && rec.mimeType) || type || 'audio/webm';
         rec = null;
         if (!morceaux.length) return;
-        note.classList.add('eli-transcrit');
-        note.innerHTML = '<span class="eli-rond"></span>' + esc(T('Transcription en cours…'));
+        note.classList.add('eli-ecrit');
+        note.innerHTML = '<i></i><i></i><i></i>';
         fetch(DONNEES.eli_dictee, {method: 'POST', body: new Blob(morceaux, {type: typeFinal}),
           headers: {'Content-Type': typeFinal.split(';')[0]}})
           .then(r => r.ok ? r.json() : {}).catch(() => ({}))
           .then(r => {
-            note.classList.remove('eli-transcrit');
+            note.classList.remove('eli-ecrit');
             note.textContent = '';
             if (r && r.texte) motChamp.value = (motChamp.value ? motChamp.value + ' ' : '') + r.texte;
             else note.textContent = T('Je n’ai pas bien entendu. Réessayez, ou écrivez.');
@@ -7959,7 +7957,11 @@ function initTel(id, zone, isoDepart) {
     if (!liste.hidden && !liste.contains(e.target) && e.target !== bouton) fermer();
   });
   return { valeur: () => {
-    const num = (($('#' + id + '-num', zone) || {}).value || '').trim();
+    // Un zero initial tape par reflexe (« 0767284710 ») rend le numero
+    // injoignable une fois colle a l'indicatif pays – le format
+    // international ne le garde jamais (Hillel, 15/10/2026, apres un test
+    // avec son numero francais jamais arrive en WhatsApp).
+    const num = (($('#' + id + '-num', zone) || {}).value || '').trim().replace(/^0+/, '');
     return num ? '+' + dial(iso) + ' ' + num : '';
   } };
 }
