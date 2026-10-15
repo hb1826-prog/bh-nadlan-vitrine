@@ -9390,15 +9390,53 @@ window.addEventListener('beforeinstallprompt', e => {
     compterVue('eli-ia');
     const fin = new AbortController();
     const delai = setTimeout(() => fin.abort(), 30000);
+    // Le texte arrive au fil de l'ecriture (SSE), pas en un seul bloc a la
+    // fin : jusqu'a trois allers-retours IA enchaines, le visiteur ne voyait
+    // rien bouger avant la toute fin (Hillel, 15/10/2026). Une bulle a part,
+    // grandie a la main, le temps du flux – la bulle definitive (cartes,
+    // formulaire…) reste posee par `peindre()` comme avant, une fois le
+    // flux termine.
+    let bulleFlux = null, texteFlux = '';
     fetch(DONNEES.eli_url, {method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({cid: S.cid, langue: DONNEES.langue || 'fr', texte: texte, etat: etat}),
       signal: fin.signal})
-      .then(r => r.ok ? r.json() : {mode: 'guide'})
+      .then(r => {
+        if (!r.ok || !r.body) return {mode: 'guide'};
+        const lecteur = r.body.getReader(), decodeur = new TextDecoder();
+        let tampon = '';
+        const lire = () => lecteur.read().then(({done, value}) => {
+          if (done) return {mode: 'guide'};
+          tampon += decodeur.decode(value, {stream: true});
+          const blocs = tampon.split('\n\n');
+          tampon = blocs.pop();
+          for (const bloc of blocs) {
+            const l = bloc.split('\n').find(x => x.startsWith('data: '));
+            if (!l) continue;
+            let evt; try { evt = JSON.parse(l.slice(6)); } catch (e) { continue; }
+            if (evt.delta != null) {
+              texteFlux += evt.delta;
+              if (!bulleFlux) {
+                ecritEli(false);
+                const fil = PANNEAU.querySelector('.eli-fil');
+                fil.insertAdjacentHTML('beforeend', '<div class="eli-msg eli-lui"></div>');
+                bulleFlux = fil.querySelector('.eli-msg.eli-lui:last-child');
+              }
+              bulleFlux.textContent = texteFlux;
+              bulleFlux.closest('.eli-fil').scrollTop = 1e9;
+            } else if (evt.final) {
+              return evt.final;
+            }
+          }
+          return lire();
+        });
+        return lire();
+      })
       .catch(() => ({mode: 'guide'}))
       .then(r => {
         clearTimeout(delai);
         attente = false;
         ecritEli(false);
+        if (bulleFlux) bulleFlux.remove();
         if (!r || r.mode !== 'ia') {
           // Pas d'IA pour cette visite : on retire la phrase posee pour elle
           // et on la relit sans IA, comme avant.
