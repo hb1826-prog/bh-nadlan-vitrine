@@ -1307,6 +1307,10 @@ body.sim-actif .onglets{padding-bottom:0}
  .duo.duo-nom{grid-template-columns:1fr 1fr;gap:8px}}
 @media(max-width:360px){.duo.duo-nom label{font-size:10.5px}
  .duo.duo-nom input{padding-left:9px;padding-right:9px;font-size:14px}}
+/* Trois champs cote a cote (ville, pieces, budget) — meme logique que
+   `.duo`, un champ par ligne en dessous de 560px (Hillel, 15/10/2026). */
+.trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:560px){.trio{grid-template-columns:1fr}}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .actions button{border:0;border-radius:999px;padding:14px 26px;font-size:15px;
  font-weight:700;cursor:pointer;min-height:50px;background:var(--encre);

@@ -1340,6 +1340,10 @@ body.sim-actif .onglets{padding-bottom:0}
  .duo.duo-nom{grid-template-columns:1fr 1fr;gap:8px}}
 @media(max-width:360px){.duo.duo-nom label{font-size:10.5px}
  .duo.duo-nom input{padding-left:9px;padding-right:9px;font-size:14px}}
+/* Trois champs cote a cote (ville, pieces, budget) — meme logique que
+   `.duo`, un champ par ligne en dessous de 560px (Hillel, 15/10/2026). */
+.trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:560px){.trio{grid-template-columns:1fr}}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .actions button{border:0;border-radius:999px;padding:14px 26px;font-size:15px;
  font-weight:700;cursor:pointer;min-height:50px;background:var(--encre);
@@ -2884,20 +2888,13 @@ body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-a
 @media (prefers-reduced-motion:reduce){.eli-rond{animation-duration:2.4s}}
 
 /* ===================== la page d'apport simple (#/pour/<slug>) ===========
-   Reutilise `.eli-form`/`.eli-micro` (Hillel, 15/10/2026) — meme look,
-   formulaire independant. */
+   Reutilise `.eli-form` (Hillel, 15/10/2026) — meme look, formulaire
+   independant. Le micro dicte a ete retire le meme jour : injoignable
+   depuis le navigateur integre de WhatsApp, source de confusion. */
 .ap-page{max-width:560px}
 .ap-form{margin-top:18px}
 .ap-mot-boite{display:flex;gap:8px;align-items:flex-start}
 .ap-mot-boite textarea{flex:1;min-width:0}
-.ap-micro.ap-enreg{background:#E5484D;color:#fff;animation:eli-pouls 1.4s infinite}
-@media (prefers-reduced-motion:reduce){.ap-micro.ap-enreg{animation:none}}
-.ap-mot-boite:has(.ap-enreg) textarea::placeholder{color:#E5484D;opacity:1;font-weight:650}
-/* Les trois points qui respirent (`.eli-ecrit`, deja utilises par Eli)
-   pendant que Whisper ecrit le texte dicte : sans feedback vivant,
-   « Transcription… » en texte fixe donne l'impression que rien ne se passe
-   (Hillel, 15/10/2026). */
-.ap-form .eli-note.eli-ecrit{margin-top:9px}
 .ap-merci{margin-top:18px;padding:18px;border-radius:var(--r-xl,16px);
  background:var(--vert-fond,#E9F7F0);color:var(--vert,#0B6E4F);font-weight:650}
 </style>
@@ -5497,12 +5494,18 @@ function pageApporteur(slug) {
         </div>
         <label for="ap-mail">${T('E-mail')}</label>
         <input id="ap-mail" type="email" autocomplete="email" placeholder="${T('E-mail du client')}">
-        <label for="ap-criteres">${T('Critères')}</label>
-        <input id="ap-criteres" placeholder="${T('Ville, budget, nombre de pièces')}">
+        <label>${T('Critères')}</label>
+        <div class="trio">
+          <div class="f"><label for="ap-ville">${T('Ville')}</label>
+            <input id="ap-ville" placeholder="${T('Jérusalem…')}"></div>
+          <div class="f"><label for="ap-pieces">${T('Nombre de pièces')}</label>
+            <input id="ap-pieces" placeholder="${T('3…')}"></div>
+          <div class="f"><label for="ap-budget">${T('Budget')}</label>
+            <input id="ap-budget" placeholder="${T('2.500.000 ₪…')}"></div>
+        </div>
         <label for="ap-mot">${T('Sa demande')}</label>
         <div class="ap-mot-boite">
-          <textarea id="ap-mot" rows="3" placeholder="${T('Ce que le client cherche — dicté ou écrit')}"></textarea>
-          <button type="button" class="eli-micro ap-micro" aria-label="${T('Dicter')}" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+          <textarea id="ap-mot" rows="3" placeholder="${T('Ce que le client cherche')}"></textarea>
         </div>
         <div class="pot" aria-hidden="true"><input id="ap-pot" tabindex="-1" autocomplete="off"></div>
         <button class="eli-ok" type="button" id="ap-envoi">${T('Envoyer au CRM')}</button>
@@ -5517,69 +5520,6 @@ function brancherApporteur(slug, info) {
   const form = $('.ap-form');
   const tel = initTel('ap-tel', form);
   const note = $('#ap-note', form);
-  const micBtn = $('.ap-micro', form);
-  const motChamp = $('#ap-mot', form);
-
-  // La dictee : un enregistreur minimal, independant de celui d'Eli (prive a
-  // sa propre fermeture de fonctions) — mais le MEME serveur de transcription
-  // (`DONNEES.eli_dictee`, Whisper), deja construit et deja paye.
-  const peutDicter = !!(DONNEES.eli_dictee && navigator.mediaDevices
-    && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
-  if (peutDicter) {
-    micBtn.hidden = false;
-    let rec = null, minuteur = null;
-    const etat = (actif, secondes) => {
-      micBtn.classList.toggle('ap-enreg', !!actif);
-      if (actif) {
-        if (!motChamp.dataset.ph) motChamp.dataset.ph = motChamp.placeholder;
-        motChamp.placeholder = '● ' + Math.floor(secondes / 60) + ':'
-          + String(secondes % 60).padStart(2, '0') + '  ' + T('Je vous écoute…');
-      } else if (motChamp.dataset.ph) {
-        motChamp.placeholder = motChamp.dataset.ph;
-      }
-    };
-    micBtn.onclick = async () => {
-      if (rec) { rec.stop(); return; }
-      let flux;
-      try { flux = await navigator.mediaDevices.getUserMedia({audio: true}); }
-      catch (e) {
-        note.textContent = T('Le micro n’est pas autorisé : vous pouvez écrire.');
-        return;
-      }
-      const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg']
-        .find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
-      const morceaux = [];
-      rec = new MediaRecorder(flux, type ? {mimeType: type} : {});
-      rec.ondataavailable = e => { if (e.data && e.data.size) morceaux.push(e.data); };
-      rec.onstop = () => {
-        flux.getTracks().forEach(t => t.stop());
-        clearInterval(minuteur);
-        etat(false);
-        const typeFinal = (rec && rec.mimeType) || type || 'audio/webm';
-        rec = null;
-        if (!morceaux.length) return;
-        note.classList.add('eli-ecrit');
-        note.innerHTML = '<i></i><i></i><i></i>';
-        fetch(DONNEES.eli_dictee, {method: 'POST', body: new Blob(morceaux, {type: typeFinal}),
-          headers: {'Content-Type': typeFinal.split(';')[0]}})
-          .then(r => r.ok ? r.json() : {}).catch(() => ({}))
-          .then(r => {
-            note.classList.remove('eli-ecrit');
-            note.textContent = '';
-            if (r && r.texte) motChamp.value = (motChamp.value ? motChamp.value + ' ' : '') + r.texte;
-            else note.textContent = T('Je n’ai pas bien entendu. Réessayez, ou écrivez.');
-          });
-      };
-      rec.start();
-      const debut = Date.now();
-      etat(true, 0);
-      minuteur = setInterval(() => {
-        const s = Math.round((Date.now() - debut) / 1000);
-        etat(true, s);
-        if (s >= 60 && rec) rec.stop();
-      }, 500);
-    };
-  }
 
   $('#ap-envoi', form).onclick = async (ev) => {
     const bouton = ev.currentTarget;
@@ -5596,9 +5536,14 @@ function brancherApporteur(slug, info) {
     }
     const adresse = $('#ap-adresse', form).value.trim();
     const mail = $('#ap-mail', form).value.trim();
-    const criteres = $('#ap-criteres', form).value.trim();
-    const mot = [adresse ? T('Adresse') + ' : ' + adresse : '', criteres, motChamp.value.trim()]
-      .filter(Boolean).join(' — ');
+    const ville = $('#ap-ville', form).value.trim();
+    const pieces = $('#ap-pieces', form).value.trim();
+    const budget = $('#ap-budget', form).value.trim();
+    const criteres = [ville ? T('Ville') + ' : ' + ville : '',
+      pieces ? T('Pièces') + ' : ' + pieces : '',
+      budget ? T('Budget') + ' : ' + budget : ''].filter(Boolean).join(', ');
+    const mot = [adresse ? T('Adresse') + ' : ' + adresse : '', criteres,
+      $('#ap-mot', form).value.trim()].filter(Boolean).join(' — ');
     const etiquette = bouton.textContent;
     bouton.disabled = true;
     bouton.textContent = T('Envoi…');
