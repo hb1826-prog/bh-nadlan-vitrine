@@ -5527,23 +5527,34 @@ function brancherApporteur(slug, info) {
     const prenom = $('#ap-prenom', form).value.trim();
     const champ = $('#ap-tel-num', form).value.trim();
     const numero = /^\+/.test(champ) ? champ : (tel ? tel.valeur() : '');
-    if (!nom || !numero) {
-      note.textContent = !nom ? T('Il faut au moins le nom du client.')
-        : T('Il faut au moins le téléphone du client.');
-      note.classList.add('manque');
-      (!nom ? $('#ap-nom', form) : $('#ap-tel-num', form)).focus();
-      return;
-    }
     const adresse = $('#ap-adresse', form).value.trim();
     const mail = $('#ap-mail', form).value.trim();
     const ville = $('#ap-ville', form).value.trim();
     const pieces = $('#ap-pieces', form).value.trim();
     const budget = $('#ap-budget', form).value.trim();
-    const criteres = [ville ? T('Ville') + ' : ' + ville : '',
-      pieces ? T('Pièces') + ' : ' + pieces : '',
-      budget ? T('Budget') + ' : ' + budget : ''].filter(Boolean).join(', ');
-    const mot = [adresse ? T('Adresse') + ' : ' + adresse : '', criteres,
-      $('#ap-mot', form).value.trim()].filter(Boolean).join(' — ');
+    const demande = $('#ap-mot', form).value.trim();
+    // Seuls l'adresse et l'e-mail restent facultatifs (Hillel, 15/10/2026) :
+    // un lead sans le reste ne vaut rien a exploiter.
+    const obligatoires = [
+      [nom, '#ap-nom', T('Il faut le nom du client.')],
+      [prenom, '#ap-prenom', T('Il faut le prénom du client.')],
+      [numero, '#ap-tel-num', T('Il faut le téléphone du client.')],
+      [ville, '#ap-ville', T('Il faut la ville recherchée.')],
+      [pieces, '#ap-pieces', T('Il faut le nombre de pièces recherché.')],
+      [budget, '#ap-budget', T('Il faut le budget du client.')],
+      [demande, '#ap-mot', T('Il faut dire ce que le client cherche.')],
+    ];
+    const manquant = obligatoires.find(([valeur]) => !valeur);
+    if (manquant) {
+      note.textContent = manquant[2];
+      note.classList.add('manque');
+      $(manquant[1], form).focus();
+      return;
+    }
+    const criteres = [T('Ville') + ' : ' + ville, T('Pièces') + ' : ' + pieces,
+      T('Budget') + ' : ' + budget].join(', ');
+    const mot = [adresse ? T('Adresse') + ' : ' + adresse : '', criteres, demande]
+      .filter(Boolean).join(' — ');
     const etiquette = bouton.textContent;
     bouton.disabled = true;
     bouton.textContent = T('Envoi…');
