@@ -5400,6 +5400,8 @@ function pageApporteur(slug) {
         </div>
         <label for="ap-mail">${T('E-mail')}</label>
         <input id="ap-mail" type="email" autocomplete="email" placeholder="${T('E-mail du client')}">
+        <label for="ap-criteres">${T('Critères')}</label>
+        <input id="ap-criteres" placeholder="${T('Ville, budget, nombre de pièces')}">
         <label for="ap-mot">${T('Sa demande')}</label>
         <div class="ap-mot-boite">
           <textarea id="ap-mot" rows="3" placeholder="${T('Ce que le client cherche — dicté ou écrit')}"></textarea>
@@ -5497,7 +5499,8 @@ function brancherApporteur(slug, info) {
     }
     const adresse = $('#ap-adresse', form).value.trim();
     const mail = $('#ap-mail', form).value.trim();
-    const mot = [adresse ? T('Adresse') + ' : ' + adresse : '', motChamp.value.trim()]
+    const criteres = $('#ap-criteres', form).value.trim();
+    const mot = [adresse ? T('Adresse') + ' : ' + adresse : '', criteres, motChamp.value.trim()]
       .filter(Boolean).join(' — ');
     const etiquette = bouton.textContent;
     bouton.disabled = true;
