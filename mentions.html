@@ -1,14 +1,2499 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Informations légales — BH Nadlan</title>
-<link rel="canonical" href="https://bh-nadlan.com/#/informations-legales">
-<meta http-equiv="refresh" content="0; url=/#/informations-legales">
-<script>location.replace('/#/informations-legales');</script>
-</head>
-<body>
-<p>Cette page a changé d'adresse. <a href="/#/informations-legales">Voir les informations légales</a>.</p>
-</body>
-</html>
+<!doctype html><html lang=fr><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Conditions d'utilisation — BH Nadlan</title>
+<style>/* L'annuaire BH — la peau « portail immobilier ».
+   ============================================================
+   Hillel a demande le graphisme des grands portails francais (SeLoger et ses
+   pareils) : une banniere de recherche qui occupe le premier ecran, des
+   cartes ou la PHOTO commande et ou le prix se lit de loin, des pastilles sur
+   les visuels, beaucoup de blanc. Rien n'est repris de leur marque — ni leur
+   nom, ni leur rouge, ni leur logo : la couleur reste l'or de la maison, et
+   le logo est le sien. En public, l'annuaire ne porte que les initiales de
+   Hillel — « BH », sans « Nadlan », qui reste le nom de l'activite qui traite
+   avec les promoteurs et suit les clients.
+
+   Ce fichier remplace, pour cette page seulement, la feuille de style du CRM.
+   Le CRM garde la sienne : un outil de travail dense ne se dessine pas comme
+   une vitrine.
+   ============================================================ */
+
+/* La police de la marque. Servie en woff2 (110 Ko au lieu de 351) parce que
+   cette page s'ouvre depuis un lien WhatsApp, souvent en 4G : le poids se paie
+   en secondes d'attente avant le premier ecran.
+
+   Rubik est VARIABLE — un seul fichier porte les graisses de 300 a 900, d'ou
+   la plage dans `font-weight`. Sans elle le navigateur figerait une graisse
+   unique et tous les titres sortiraient maigres.
+
+   Avant, aucune police n'etait declaree : chaque telephone affichait la sienne,
+   et le site n'avait pas deux fois le meme visage. */
+@font-face{
+ font-family:'Rubik';
+ src:url('rubik.woff2') format('woff2');
+ font-weight:300 900;
+ font-style:normal;
+ font-display:swap;
+}
+
+/* Une seconde police, reservee au SEUL titre de la banniere d'accueil — un
+   serif elegant pour la phrase d'accroche, la ou Rubik (fonctionnelle,
+   partout ailleurs) faisait « trop cheap » pour une promesse marketing
+   (Hillel, 24/09/2026). Meme logique d'hebergement que Rubik : un fichier
+   local, jamais une requete vers Google Fonts. Ne couvre pas l'hebreu —
+   sans consequence ici, la chaine de secours (Georgia/serif) prend le
+   relais uniquement caractere par caractere si besoin.
+   Graisse 600 (semi-gras), pas 800 (extra-gras) : le noir epais faisait
+   encore « trop cheap » (Hillel, 24/09/2026, deuxieme retour) — un trait
+   plus fin est ce qui lit « classieux » a cette taille, pas plus de gras. */
+@font-face{
+ font-family:'Titre Accroche';
+ src:url('playfair.woff2') format('woff2');
+ font-weight:600;
+ font-style:normal;
+ font-display:swap;
+}
+
+/* IDENTITE:debut — ecrit par `python data/sources/identite.py --portail --ecrire`.
+   Ne pas retoucher a la main : la source est `identite.py`, et une
+   valeur corrigee ici serait effacee au prochain passage. */
+:root{
+ --or:#C9A227;
+ --or-fonce:#7A6013;
+ --or-clair:#FBF5E4;
+ --or-trait:#E6D9B0;
+ --encre:#0F172A;
+ --encre-2:#333B4D;
+ --gris:#5A6172;
+ --gris-clair:#6A7284;
+ --fond:#FAF7F1;
+ --fond-2:#F4F0E7;
+ --carte:#FFFFFF;
+ --trait:#E7E2D8;
+ --trait-fin:#F1EDE4;
+ --vert:#0B6E4F;
+ --vert-fond:#E9F7F0;
+ --alerte:#B4321F;
+ --alerte-fond:#FDF0ED;
+ --action:#0B6BD6;
+ --action-vive:#0A57AE;
+ --action-lavis:#EAF3FE;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+ --or:#DFBF52;
+ --or-fonce:#DFBF52;
+ --or-clair:#1E1B10;
+ --or-trait:#453B1E;
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+ --gris:#8C95A8;
+ --gris-clair:#79839A;
+ --fond:#0B0F18;
+ --fond-2:#101623;
+ --carte:#131926;
+ --trait:#242C3B;
+ --trait-fin:#1A2130;
+ --vert:#47CD89;
+ --vert-fond:#0C1F16;
+ --alerte:#F97066;
+ --alerte-fond:#22110F;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
+}}
+:root[data-theme=dark]{
+ --or:#DFBF52;
+ --or-fonce:#DFBF52;
+ --or-clair:#1E1B10;
+ --or-trait:#453B1E;
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+ --gris:#8C95A8;
+ --gris-clair:#79839A;
+ --fond:#0B0F18;
+ --fond-2:#101623;
+ --carte:#131926;
+ --trait:#242C3B;
+ --trait-fin:#1A2130;
+ --vert:#47CD89;
+ --vert-fond:#0C1F16;
+ --alerte:#F97066;
+ --alerte-fond:#22110F;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
+}
+/* IDENTITE:fin */
+
+/* ====================== l'ardoise s'eclaircit, ici seulement ==============
+   La soeur de Hillel, qui lit l'hebreu, a regarde l'annuaire et a dit la
+   meme chose deux fois : « le noir, en gris ». Elle a raison — l'ardoise de
+   marque (#0F172A) est la couleur d'un outil de travail : sur les grandes
+   pastilles pleines de la vitrine, et sur de l'hebreu qui porte plus de
+   matiere a l'oeil que du latin, elle se lit comme du noir d'imprimerie.
+
+   On ne touche PAS a `identite.py` : le CRM, les fiches A4 et les dossiers
+   PDF gardent l'ardoise. Ce qui s'eclaircit est la peau publique, et elle
+   seule — c'est ce que Hillel a tranche. Le gris reste de la meme famille
+   (meme teinte bleutee, juste plus clair), donc la page reste de la marque.
+
+   Ce qui est mesure : #414A5C donne 8,3:1 sur le fond creme et 8,9:1 pour du
+   blanc pose dessus. Tres au-dessus des 4,5:1 exiges — la lisibilite ne paie
+   rien a cet adoucissement. */
+:root:not([data-theme=dark]){
+ --encre:#414A5C;
+ --encre-2:#525B6E;
+}
+/* Et on rend l'encre claire au theme sombre, qu'on vient de recouvrir : les
+   deux regles ont le meme poids, donc c'est la derniere ecrite qui gagne, et
+   sans cette reprise un telephone regle en sombre afficherait du gris sur du
+   gris. */
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+}}
+:root[data-theme=dark]{
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+}
+
+/* Ce qui n'est pas de la couleur reste ecrit ici : les rayons, les ombres et
+   la courbe d'animation appartiennent a cette page-la. Une vitrine arrondit
+   plus large qu'un outil de travail — c'est voulu, et ca ne regarde pas la
+   marque.
+
+   Rayons resserres le 24/09/2026 (Hillel : « un peu plus carre », dans
+   l'esprit des agences immobilieres haut de gamme plutot que d'un site
+   SaaS) — SEULEMENT les grandes surfaces (cartes, gros blocs, photo
+   d'accueil), qui passent tous par ces trois variables. Les boutons ronds
+   n'y touchent pas : ils ecrivent `border-radius:999px` en dur, exactement
+   pour rester intacts a ce changement — un bouton carre donne moins envie
+   de cliquer, l'objectif inverse d'un site qui vit des demandes de rappel. */
+:root{
+ --r:6px; --r-lg:8px; --r-xl:10px;
+ --ombre:0 1px 2px rgba(15,23,42,.05);
+ --ombre-2:0 4px 14px -4px rgba(15,23,42,.12),0 2px 5px -2px rgba(15,23,42,.06);
+ --ombre-3:0 18px 44px -12px rgba(15,23,42,.28);
+ --ease:cubic-bezier(.4,0,.2,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+ --ombre:0 1px 2px rgba(0,0,0,.5);
+ --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
+ --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
+}}
+:root[data-theme=dark]{
+ --ombre:0 1px 2px rgba(0,0,0,.5);
+ --ombre-2:0 4px 14px -4px rgba(0,0,0,.6);
+ --ombre-3:0 18px 44px -12px rgba(0,0,0,.75);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+/* Une seule declaration de police, et c'est celle de la marque. Il y en
+   avait deux : `font-family:'Rubik'` puis, juste dessous, la forme courte
+   `font:16px/1.5 Inter,...` — qui reecrit la premiere. La page portait donc
+   la police du CRM d'avant, en silence, alors que le woff2 etait bien livre
+   a cote d'elle. */
+body{margin:0;background:var(--fond);color:var(--encre);
+ font:16px/1.5 'Rubik',system-ui,-apple-system,'Segoe UI',sans-serif;
+ -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+h1,h2,h3{margin:0;letter-spacing:-.02em}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--or);outline-offset:2px;border-radius:6px}
+.dim{color:var(--gris)}
+.strong{font-weight:650}
+.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ============================ la barre du haut ============================ */
+.pub-top{position:sticky;top:0;z-index:20;background:var(--fond);
+ border-bottom:1px solid var(--trait)}
+.pub-in{max-width:1240px;margin:0 auto;padding:0 22px}
+.pub-bar{display:flex;align-items:center;gap:20px;height:70px}
+.langues-bande{display:none}
+.pub-logo{display:block;flex:none;line-height:0;border-radius:10px;
+ transition:transform .18s var(--ease)}
+.pub-logo:hover{transform:translateY(-1px)}
+.pub-logo svg{display:block}
+/* Sur ordinateur, le logo passe tout a gauche (avant le menu) — demande le
+   22/09/2026. Sur telephone il reste au milieu (voir le commentaire du
+   media 900px plus bas : deplace deux fois pour Safari, ne pas y toucher).
+   `order` seul suffit : aucun HTML a changer, aucun risque pour le mobile. */
+@media(min-width:901px){.pub-logo{order:-1;margin-right:8px}}
+/* Le logo garde la taille exacte de son propre attribut `height` (fixee
+   cote Python), jamais recalculee ici : un `height` CSS qui lui laisse
+   deviner sa largeur declenche, sur la page hebreu (dir=rtl), un bug de
+   Safari qui tasse le logo en carre et ecrase le nom sur le dessin. Le
+   format telephone applique un zoom (transform:scale) au lieu de
+   redemander ce calcul. */
+.nav{display:flex;align-items:center;gap:4px;margin-left:8px}
+.nav a{padding:9px 14px;border-radius:999px;font-size:14.5px;font-weight:550;
+ color:var(--encre-2);transition:background .16s var(--ease)}
+.nav a:hover{background:var(--fond-2);color:var(--encre)}
+.grow{flex:1;min-width:0}
+/* `.pub-flanc-g`/`.pub-flanc-d` n'avaient de regle QUE dans le media du
+   telephone (plus bas) — jamais de mise en ligne sur ordinateur, ou leurs
+   enfants (bouton theme, langues, « Un conseiller vous rappelle ») tombaient
+   donc les uns sous les autres au lieu de tenir sur la meme ligne que le
+   logo. Trouve le 22/09/2026 (photo de Hillel, grand ecran). */
+.pub-flanc{display:flex;align-items:center}
+.pub-flanc-d{justify-content:flex-end;gap:14px}
+.cta{background:var(--encre);color:var(--fond);border:0;border-radius:999px;
+ padding:11px 20px;font-size:14.5px;font-weight:650;cursor:pointer;
+ white-space:nowrap;transition:transform .16s var(--ease),opacity .16s}
+.cta:hover{transform:translateY(-1px);opacity:.92}
+.cta.or{background:var(--action);color:#fff}
+
+/* Le bouton qui ouvre le formulaire de coordonnees sur la fiche d'un bien :
+   demande par Hillel le 20/09/2026 pour qu'il se voie vraiment, au lieu de
+   se fondre parmi les boutons de reglage juste au-dessus. */
+.porte-simu-cta{text-align:center;margin-top:6px}
+/* Repasse beaucoup plus gros (Hillel, 07/10/2026) : c'est le bouton qui
+   decide si la demande part vraiment, il ne doit plus pouvoir se confondre
+   avec un reglage secondaire du simulateur au-dessus — quitte a passer sur
+   deux lignes. `.cta.cta-grand` (et pas juste `.cta-grand`) pour peser plus
+   lourd que la regle mobile `.cta{font-size:12.5px}` plus bas dans ce
+   fichier : a specificite egale, c'est elle qui gagnait sur telephone et
+   annulait purement et simplement l'agrandissement (bug trouve le
+   07/10/2026, le bouton ne bougeait pas du tout sur l'ecran de Hillel). */
+.cta.cta-grand{display:block;width:100%;box-sizing:border-box;padding:26px 20px;
+ font-size:23px;line-height:1.25;font-weight:800;white-space:normal;
+ text-wrap:balance;border-radius:28px}
+@media(max-width:900px){
+ .cta.cta-grand{padding:24px 18px;font-size:21px}
+}
+
+/* Le rond vert de l'entete : demande par Hillel le 19/09/2026 pour etre
+   joignable sur WhatsApp depuis n'importe quelle page, sans passer par le
+   formulaire « Nous contacter ». Pose HORS de `.nav` (comme `.cta`) pour
+   rester visible meme sous 900px, la ou `.nav` s'efface derriere le
+   hamburger. */
+.wa-nav{display:inline-flex;align-items:center;justify-content:center;
+ flex:none;width:38px;height:38px;border-radius:999px;background:#25d366;
+ color:#fff;transition:transform .16s var(--ease),background .16s var(--ease)}
+.wa-nav:hover{background:#1eb85a;transform:translateY(-1px)}
+.wa-nav svg{display:block}
+
+/* Le bouton hamburger : cache par defaut (le menu du haut suffit sur grand
+   ecran), il n'apparait qu'en dessous de 900px — la ou `.nav` disparaissait
+   jusqu'ici sans aucun repli, et ou « Blog » devait pourtant rester
+   accessible depuis l'entete. */
+/* Le bouton Retour global : present sur CHAQUE page (sauf l'accueil), pose
+   une fois dans l'entete plutot que recopie page par page. Il rejoue
+   l'historique du navigateur : contrairement a un lien fixe, il retombe
+   exactement sur la page quittee, filtres et defilement compris.
+
+   Pose dans la bande des reseaux sociaux, PAS a cote du logo/burger — un
+   premier essai la-bas decalait tout le haut de page a chaque navigation, ce
+   qui « ne faisait pas beau » (Hillel, 24/09/2026). Ici, un leger decalage
+   des icones reseaux quand le bouton apparait est accepte : `router()`
+   bascule simplement `[hidden]`. Fond teinte + bordure pleine plutot qu'un
+   filet gris, pour bien se voir. */
+.global-retour{display:inline-flex;align-items:center;gap:4px;flex:none;
+ font-weight:700;font-size:13.5px;color:var(--action);
+ background:var(--action-lavis);padding:8px 10px;border:1.5px solid var(--action);
+ border-radius:999px;white-space:nowrap;cursor:pointer}
+.global-retour[hidden]{display:none}
+.global-retour:hover{background:var(--action);color:#fff}
+@media(max-width:560px){.global-retour{padding:7px 9px;font-size:13px}}
+
+.burger{display:none;flex:none;width:40px;height:40px;border:0;background:none;
+ cursor:pointer;flex-direction:column;align-items:center;justify-content:center;
+ gap:5px;
+ /* Colle au bord vrai de l'ecran plutot qu'a celui du conteneur (padding de
+    `.pub-in`) : Hillel, 24/09/2026, « remets-les a gauche completement ». */
+ margin-inline-start:-22px}
+.burger span{display:block;width:22px;height:2px;background:var(--encre);
+ border-radius:2px}
+.nav-mobile{display:none}
+.nav-mobile.ouvert{display:flex;flex-direction:column;
+ border-top:1px solid var(--trait);background:var(--fond)}
+.nav-mobile a{padding:14px 22px;font-size:15.5px;font-weight:600;
+ color:var(--encre);border-bottom:1px solid var(--trait-fin);
+ display:flex;align-items:center;gap:10px}
+.nav-mobile a.wa{color:#128c3e}
+/* L'installation de l'application, proposee ici plutot qu'en bandeau qui
+   surgit (Hillel, 24/09/2026). Meme allure qu'une ligne du menu. */
+.nav-mobile .nav-installer{padding:14px 22px;font:inherit;font-size:15.5px;
+ font-weight:600;color:var(--action);background:none;border:0;
+ border-bottom:1px solid var(--trait-fin);text-align:start;cursor:pointer}
+.nav-mobile .nav-installer[hidden]{display:none}
+
+/* le selecteur de theme, discret, a droite */
+.theme{display:inline-flex;gap:2px;flex:none;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:999px;padding:3px}
+.theme button{border:0;background:none;color:var(--gris-clair);cursor:pointer;
+ border-radius:999px;padding:5px 8px;display:grid;place-items:center}
+.theme button.on{background:var(--carte);color:var(--action);box-shadow:var(--ombre)}
+.theme svg{width:15px;height:15px;display:block}
+
+/* ============================== la banniere ============================== */
+.hero{position:relative;background:var(--fond-2);overflow:hidden;
+ border-bottom:1px solid var(--trait)}
+.hero .photo{position:absolute;inset:0}
+.hero .photo img{width:100%;height:100%;object-fit:cover;display:block}
+/* Jour / nuit (Hillel, 24/09/2026). De jour : l'image la plus claire, et un
+   voile qui n'assombrit que la colonne du texte — le texte blanc et le zero
+   dore restent lisibles, le reste de la photo respire. De nuit (22 h 30 -
+   6 h, classe `nuit` posee dans le <head>) : l'image et le voile d'avant. */
+.hero .ph-nuit{display:none}
+.nuit .hero .ph-nuit{display:block}
+.nuit .hero .ph-jour{display:none}
+.hero .voile{position:absolute;inset:0;
+ background:linear-gradient(90deg,rgba(6,12,24,.66) 0%,rgba(6,12,24,.46) 38%,
+                            rgba(6,12,24,.10) 68%,rgba(6,12,24,0) 100%),
+            linear-gradient(0deg,rgba(6,12,24,.35),rgba(6,12,24,0) 30%)}
+.nuit .hero .voile{
+ background:linear-gradient(180deg,rgba(6,12,24,.72),rgba(6,12,24,.52) 45%,
+                            rgba(6,12,24,.78))}
+@media(max-width:900px){
+ .hero .voile{background:linear-gradient(180deg,rgba(6,12,24,.58),
+   rgba(6,12,24,.30) 38%,rgba(6,12,24,.12) 60%,rgba(6,12,24,.30))}
+}
+.hero .dedans{position:relative;max-width:1240px;margin:0 auto;
+ padding:64px 22px 78px;color:#fff}
+.hero h1{font-size:40px;line-height:1.12;font-weight:750;max-width:16em;
+ text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
+ color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
+
+/* La ligne de preuve, sous la promesse.
+
+   Hillel, le 16/09/2026 : « fais une tres grande entree ». Quatre chiffres
+   rendent la promesse credible, et aucun n'est ecrit a la main : ils
+   viennent du stock et de la marque.
+
+   La banniere a porte deux boutons pendant quelques heures — « Etre rappele
+   aujourd'hui » et « Voir les programmes ». Hillel les a fait retirer le
+   jour meme : ils repoussaient la boite de recherche sous la ligne de
+   flottaison. « Je prefere qu'ils defilent, parce que ca m'interesse qu'ils
+   voient le bloc de recherche. » Sur ce site, le premier ecran doit montrer
+   la marchandise — l'appel a l'action vit dans la barre du haut, dans la
+   barre du bas sur telephone, et au pied de chaque section. Ne pas les
+   remettre. */
+/* Etalee sur toute la largeur de la colonne de texte, pas juste collee a
+   gauche (Hillel, 24/09/2026, capture d'ecran a l'appui). `space-between`
+   marche naturellement a trois chiffres : le premier au bord gauche, le
+   dernier au bord droit, celui du milieu egalise l'espace des deux cotes. */
+.hero-preuves{display:flex;justify-content:space-between;width:100%;
+ gap:30px;flex-wrap:wrap;margin:30px 0 0;padding:0;
+ list-style:none}
+.hero-preuves li{display:flex;flex-direction:column;gap:2px}
+/* Le chiffre « 15 ans d'experience », seul sur sa ligne, sous les deux
+   autres (Hillel, 26/09/2026). `flex-basis:100%` force le retour a la ligne
+   dans un conteneur en `flex-wrap:wrap`, meme quand les deux precedents
+   tiendraient encore cote a cote. */
+.hero-preuves .pr-ligne{flex-basis:100%}
+.hero-preuves b{font-size:26px;font-weight:750;line-height:1.1;color:var(--or);
+ text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.hero-preuves span{font-size:12.5px;letter-spacing:.05em;
+ text-transform:uppercase;color:rgba(255,255,255,.82)}
+@media(max-width:640px){
+ .hero-preuves{gap:18px 26px;margin-top:22px}
+ .hero-preuves b{font-size:21px}
+ .hero-preuves span{font-size:11px}
+}
+
+/* « 0 frais d'agence », le titre visuel de la banniere (Hillel, 24/09/2026 :
+   « le plus evident possible »). Un zero geant, dore — l'or porte du texte
+   ici parce que le fond est sombre (voile de la photo), jamais sur fond
+   clair. Le h1 passe en second : il dit ce que le zero veut dire. */
+/* Un bandeau fixe, plus un bouton a deplier — demande le 24/09/2026,
+   Hillel : direct, sans clic, le « comment c'est possible » (0 % + achat
+   direct promoteur + simulation des frais annexes) se lit d'un coup. */
+/* Le bouton d'appel du hero, en gros — demande le 24/09/2026, Hillel : « ça,
+   c'est mon gros truc d'appel ». Aussi grand que l'ancien zero geant qu'il
+   remplace, meme logique de couleurs (or sur fond sombre = seul cas ou l'or
+   porte du texte, voir identite.py). */
+/* Agrandi et mis en capitales le 24/09/2026 (Hillel : « il est un peu
+   ecrase par la longue phrase du dessous ») — la phrase d'accroche a
+   grossi le meme jour, ce bandeau doit rester le premier repere de l'oeil. */
+.zf-bandeau{margin:0 0 14px;font-size:48px;font-weight:800;line-height:1.05;
+ color:#fff;text-transform:uppercase}
+/* `white-space:nowrap` (Hillel, 24/09/2026, capture d'ecran a l'appui) :
+   sans lui, l'espace entre le chiffre et le signe pouvait tomber en fin de
+   ligne et le "%" repartait seul dessous — "0" et "%" doivent rester
+   colles ensemble. */
+.zf-pct{color:var(--or);font-weight:900;font-size:92px;
+ line-height:1;white-space:nowrap}
+/* Le h1 reprend la couleur or du zero au-dessus (plutot que le blanc uni
+   d'avant, peu lisible sur la photo) et une largeur bornee — sans elle la
+   phrase s'etirait sur toute la largeur en une seule ligne desequilibree
+   plutot que de se plier proprement (Hillel, 24/09/2026). Le premier essai
+   restait illisible a l'endroit precis ou la photo est claire (capture a
+   l'appui, meme jour) : plus grand, plus gras, et une ombre portee FONCEE
+   et marquee — elle cree un halo sombre qui garde le texte lisible quel
+   que soit ce qu'il y a derriere sur la photo, pas juste a cet endroit-la. */
+/* Le dore etait deja pris par le zero au-dessus : le reprendre ici faisait
+   « dore, dore, dore » (Hillel, 24/09/2026). Le blanc pur revenait ensuite
+   « blanc sur blanc » a l'endroit precis ou la photo est claire — un
+   troisieme essai de couleur pleine aurait le meme risque a un autre
+   endroit de la photo. Solution robuste plutot qu'une nouvelle couleur a
+   deviner : un panneau vitre sombre (fond fonce translucide + flou) derriere
+   le texte, qui garantit le contraste quelle que soit la photo en dessous —
+   le meme procede qu'utilisent Stripe/Notion sur leurs pages d'accueil.
+   `text-align:justify` aligne le texte des deux cotes (gauche ET droit). */
+/* Deuxieme retour de Hillel le meme jour : le titre restait « trop cheap »
+   malgre le fond vitre. Trois changements, pas un seul — le poids (800,
+   noir et epais, plus 600, semi-gras), la justification (`justify` sur un
+   serif etroit ouvrait des blancs irreguliers entre les mots, l'effet
+   « prospectus » precisement vise), et le blanc pur (trop dur, trop
+   « ecran » pour un serif elegant — remplace par le blanc casse chaud de
+   la marque, --or-clair, qui reste largement assez lisible sur le fond
+   vitre sombre). */
+.hero .zf-bandeau + h1{font-family:'Titre Accroche',Georgia,'Times New Roman',serif;
+ font-size:42px;font-weight:600;line-height:1.32;letter-spacing:.002em;
+ max-width:16em;text-align:center;color:var(--or-clair);
+ background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
+ backdrop-filter:blur(6px);border-radius:var(--r-lg);padding:14px 18px;
+ box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
+ color:var(--action);border:1.5px solid var(--action);border-radius:999px;
+ padding:11px 14px;font-size:15px;cursor:pointer}
+.simu-carte:hover{background:var(--action);color:#fff}
+.eco-teaser{background:color-mix(in srgb,var(--ok, #1f8a4c) 10%,transparent);
+ border-left:4px solid var(--ok, #1f8a4c);border-radius:10px;padding:12px 14px;margin:0 0 16px}
+.eco-teaser b{display:block;font-size:17px;margin-bottom:2px}
+.eco-teaser span{font-size:13.5px;opacity:.85}
+@media(max-width:640px){
+ /* Sur telephone, le "0 %" tenait sa propre ligne, deux fois plus gros que
+    le reste — Hillel, 24/09/2026, capture d'ecran a l'appui : "ca donnerait
+    mieux sur une seule ligne". Rapproche de la taille du label plutot que
+    de rester enorme, pour tenir a cote sur la meme ligne. */
+ .zf-bandeau{margin:0 0 10px;font-size:26px}
+ .zf-pct{font-size:30px}
+ .hero .zf-bandeau + h1{font-size:25px;line-height:1.38;padding:10px 14px}
+}
+.zero-frais{display:flex;align-items:center;gap:16px;margin:0 0 18px}
+.zf-zero{font-size:132px;line-height:.78;font-weight:800;color:var(--or);
+ letter-spacing:-.04em;text-shadow:0 4px 24px rgba(0,0,0,.45)}
+.zf-mots{display:flex;flex-direction:column;gap:6px}
+.zf-mots b{font-size:40px;line-height:1;font-weight:800;text-transform:uppercase;
+ letter-spacing:.01em;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.zf-mots small{font-size:17px;font-weight:650;color:var(--or);
+ text-shadow:0 1px 8px rgba(0,0,0,.45)}
+.hero .zero-frais + h1{font-size:36px;font-weight:750;line-height:1.16;max-width:none}
+@media(max-width:640px){
+ .zero-frais{gap:12px;margin-bottom:12px}
+ .zf-zero{font-size:92px}
+ .zf-mots b{font-size:27px}
+ .zf-mots small{font-size:14px}
+ .hero .zero-frais + h1{font-size:21.5px;line-height:1.22}
+}
+
+/* Le simulateur dans la banniere — le premier argument du site (Hillel,
+   23/09/2026). Sur ordinateur, il prend la moitie droite, ou la photo seule
+   occupait la place ; sur telephone, il remplace le long chapeau. Dans les
+   deux cas la banniere ne grandit pas : la recherche reste au premier ecran. */
+.hero .dedans{display:grid;grid-template-columns:minmax(0,1fr) 380px;
+ gap:48px;align-items:start}
+.hero-texte{min-width:0}
+/* Deux volets "Simulateur" / "Nos programmes" — telephone ET ordinateur
+   (etendu le 04/10/2026, Hillel : "il faut la meme chose sur... la version
+   PC"). Remplace le formulaire integre et la liste de preuves partout,
+   pas seulement sur mobile. */
+.hero-choix{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.hero-simu,.hero-preuves,.hero-decouvrir{display:none}
+.hc-carte{background:var(--carte);border-radius:var(--r-xl);padding:20px 14px;
+ text-align:center;text-decoration:none;color:var(--encre);
+ display:flex;flex-direction:column;align-items:center;gap:8px;
+ box-shadow:0 14px 30px -16px rgba(0,0,0,.35)}
+.hc-ic{font-size:26px}
+.hc-ic svg{width:28px;height:28px;display:block}
+.hc-titre{font-size:15.5px;font-weight:800}
+.hc-texte,.hc-chiffres{font-size:12px;color:var(--gris);line-height:1.35}
+.hc-chiffres b{color:var(--or-fonce);font-weight:800}
+/* min-height, pas juste du padding : "Découvrir nos programmes" passe sur
+   deux lignes, "Simuler mon achat" sur une seule — sans hauteur minimale
+   commune, les deux boutons n'avaient pas le meme format (Hillel,
+   03/10/2026). display:flex centre le texte quel que soit le nombre de
+   lignes. */
+.hc-btn{margin-top:auto;font-size:13px;font-weight:700;padding:11px 10px;
+ border-radius:999px;width:100%;min-height:46px;
+ display:flex;align-items:center;justify-content:center;text-align:center}
+.hc-simu .hc-btn,.hc-progs .hc-btn{background:var(--action);color:#fff}
+.hero-simu{background:var(--carte);color:var(--encre);border-radius:var(--r-xl);
+ box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 22px 20px;
+ display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--or)}
+/* Carte et panneau de la grande phrase au cordeau : meme haut, meme bas
+   (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
+   Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
+   ici c'est la grille qui aligne. `.hero-texte` s'efface (display:contents)
+   pour que le bandeau « Frais d'agence », le panneau et les chiffres
+   deviennent trois lignes de la meme grille que la carte : le bandeau seul
+   en haut a gauche, panneau et carte cote a cote et etires a la meme
+   hauteur, les chiffres sur toute la largeur et centres dessous. */
+@media(min-width:901px){
+ .hero .dedans{grid-template-areas:"zf zf" "h1 simu" "pr pr";
+  column-gap:40px;row-gap:0;align-items:stretch}
+ .hero-texte{display:contents}
+ /* « Frais d'agence : 0 % » centre au-dessus des DEUX blocs, en echo a la
+    ligne des chiffres centree dessous (Hillel, 24/09/2026). Au centre, il
+    passe sur une partie plus claire de la photo : l'ombre le garde lisible. */
+ .hero .zf-bandeau{grid-area:zf;text-align:center;
+  text-shadow:0 2px 16px rgba(0,0,0,.45)}
+ .hero .zf-bandeau + h1{grid-area:h1;max-width:none;margin:0;display:flex;
+  align-items:center;justify-content:center;padding:22px 28px}
+ .hero-simu{grid-area:simu;justify-content:center}
+ .hero-choix{grid-area:simu;align-self:center}
+ .hero-preuves{grid-area:pr;justify-content:center;gap:0 72px;margin-top:34px}
+ .hero-preuves li{align-items:center;text-align:center}
+ .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
+}
+/* Tablette et telephone : tout centre aussi (Hillel, 24/09/2026) — le
+   bandeau au-dessus du panneau, les chiffres, la carte. Sur telephone, le
+   « 0 % » passe seul sur sa ligne, en tres gros : c'est le premier
+   argument, il doit se voir avant la phrase. */
+@media(max-width:900px){
+ .hero .zf-bandeau{text-align:center;text-shadow:0 2px 16px rgba(0,0,0,.45)}
+ .hero-preuves{justify-content:center;gap:16px 44px}
+ .hero-preuves li{align-items:center;text-align:center}
+ .hero-preuves span{text-shadow:0 1px 8px rgba(0,0,0,.55)}
+ .hero-simu{margin-left:auto;margin-right:auto;width:100%}
+ /* Compresse le "0 %" et la phrase pour que les deux cartes tiennent sans
+    defiler sur la premiere vue (Hillel, 03/10/2026, capture a l'appui) —
+    seulement ici, ou les deux volets prennent deja la place du formulaire. */
+ .hero .zf-bandeau{margin:0 0 6px;line-height:1}
+ .hero .zf-pct{font-size:40px!important;line-height:1!important;margin-top:0!important}
+ .hero .dedans{padding-top:22px;padding-bottom:22px}
+ /* Meme selecteur que la regle d'origine (".hero .zf-bandeau + h1"), pas
+    juste ".hero h1" — sinon le "max-width:16em" de cette regle-la calcule
+    sa largeur sur SON PROPRE font-size (42px), pas le mien, et la carte
+    restait presque pleine largeur au lieu de se resserrer et se centrer
+    (Hillel, 03/10/2026 : "le bloc texte plus centre"). */
+ .hero .zf-bandeau + h1{font-size:19px!important;line-height:1.3!important;
+  margin:0 auto 4px!important;max-width:15em!important;padding:12px 16px!important}
+}
+@media(max-width:640px){
+ .hero .zf-bandeau{margin:0 0 12px;line-height:1}
+ .hero .zf-pct{display:block!important;font-size:104px!important;line-height:.9!important;margin-top:4px!important}
+}
+@media(min-width:901px) and (max-width:1180px){
+ .hero .zf-bandeau + h1{font-size:34px}
+ .hero-preuves{gap:0 44px}
+}
+.hs-sur{display:inline-block;align-self:flex-start;font-size:11.5px;font-weight:750;
+ letter-spacing:.08em;text-transform:uppercase;color:var(--action);
+ background:var(--action-lavis);padding:4px 10px;border-radius:999px}
+/* Dans la carte de la banniere, l'etiquette « Simulateur gratuit » plus
+   grosse et centree (Hillel, 24/09/2026). */
+.hero-simu .hs-sur{align-self:center;font-size:16px;letter-spacing:.1em;
+ padding:7px 18px}
+.hs-titre{font-size:26px;line-height:1.15;font-weight:800;margin-top:4px}
+.hs-sous{margin:0;font-size:13.5px;line-height:1.45;color:var(--gris)}
+/* Annonce le geste "coordonnees -> resultat" avant que le visiteur clique,
+   pour qu'il ne soit jamais surpris qu'on lui demande ses coordonnees
+   (Hillel, 25/09/2026). */
+.hs-note{margin:6px 0 0;font-size:11.5px;line-height:1.4;color:var(--gris);
+ opacity:.85}
+.hs-lab{margin-top:6px;font-size:12px;font-weight:700;letter-spacing:.04em;
+ text-transform:uppercase;color:var(--gris)}
+.hero-simu input{width:100%;box-sizing:border-box;font:inherit;font-size:18px;
+ font-weight:650;padding:12px 14px;border:1px solid var(--trait);
+ border-radius:var(--r);background:var(--fond);color:var(--encre)}
+.hero-simu input:focus{outline:2px solid var(--action);outline-offset:1px}
+.hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+.hs-modes button{font:inherit;font-size:14px;font-weight:650;cursor:pointer;
+ padding:10px 8px;border-radius:999px;border:1px solid var(--trait);
+ background:var(--fond);color:var(--encre-2)}
+.hs-modes button.on{background:var(--action-lavis);border-color:var(--action);
+ color:var(--action)}
+/* La monnaie de l'apport, toujours visible et au choix (Hillel,
+   24/09/2026 : il avait tape 500.000 sans savoir si c'etait des euros). */
+.hs-devise{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+.hs-devise[hidden]{display:none}
+.hs-devise span{font-size:12.5px;font-weight:700;color:var(--gris)}
+.hs-devise button{font:inherit;font-size:14px;font-weight:700;cursor:pointer;
+ padding:6px 14px;border-radius:999px;border:1px solid var(--trait);
+ background:var(--fond);color:var(--encre-2)}
+.hs-devise button.on{background:var(--action);border-color:var(--action);color:#fff}
+.hs-go{font:inherit;font-size:16px;font-weight:750;cursor:pointer;border:0;
+ background:var(--action);color:#fff;border-radius:999px;padding:14px 18px;
+ margin-top:6px;box-shadow:0 6px 18px color-mix(in srgb,var(--action) 35%,transparent)}
+.hs-go:hover{background:var(--action-vive)}
+@media(max-width:900px){
+ .hero .dedans{grid-template-columns:1fr;gap:22px}
+ .hero-simu{max-width:460px;margin-top:0}
+}
+/* Le champ et le bouton : l'un sous l'autre sur ordinateur, cote a cote sur
+   telephone — la carte y devient un bandeau large et bas plutot qu'un
+   carre (Hillel, 24/09/2026), pour laisser voir les biens dessous. */
+.hs-ligne{display:flex;flex-direction:column;gap:6px}
+.hs-court{display:none}
+@media(max-width:640px){
+ .hs-ligne{flex-direction:row;align-items:stretch;gap:8px;margin-top:4px}
+ .hs-ligne input{flex:1;min-width:0}
+ .hs-ligne .hs-go{margin-top:0;flex:none;padding:10px 16px;white-space:nowrap}
+ .hs-long{display:none}
+ .hs-court{display:inline}
+ .hero-simu .hs-sous{display:none}
+ /* Le libelle du champ reste : « prix » ou « apport en euros », il faut
+    savoir ce qu on tape (24/09/2026). */
+ .hero-simu .hs-lab{margin-top:2px}
+ .hero-simu .hs-sur{font-size:14px;padding:5px 14px}
+ /* Memes bords que la boite de recherche juste dessous (14 px). */
+ .hero .dedans{padding-left:14px;padding-right:14px}
+ .hero-texte{padding:0 6px}
+ .hero-simu{max-width:none}
+}
+@media(max-width:640px){
+ .hero p.chapeau{display:none}
+ /* Les quatre chiffres cedent aussi leur place sur telephone : la carte du
+    simulateur doit tenir au premier ecran SANS pousser la recherche dessous
+    (le « 0 frais d'agence » reste dit par la pastille du haut). */
+ .hero .hero-preuves{display:none}
+ .hero .dedans{padding:26px 20px 58px}
+ .hero-simu{padding:16px 16px 14px;gap:6px}
+ .hs-titre{font-size:21px}
+ .hs-sous{font-size:12.5px}
+ .hero-simu input{font-size:17px;padding:10px 12px}
+ .hs-go{padding:12px 16px}
+}
+
+/* L'onglet « Simuler mon achat » de la boite de recherche, et le lien du
+   menu : visibles au premier coup d'oeil, pas un mot gris parmi d'autres. */
+#onglet-simuler{color:var(--action);border:1px solid var(--action)}
+#onglet-simuler.on{border-color:transparent}
+.nav a.nav-simu{color:var(--action);background:var(--action-lavis);font-weight:700}
+.nav a.nav-simu:hover{background:var(--action);color:#fff}
+.nav-mobile a.nav-simu{color:var(--action);font-weight:750}
+/* EliA a le meme poids que le simulateur dans le menu, mais en or plutot
+   qu'en bleu : deux onglets bleus cote a cote se seraient annules, et l'or
+   est la couleur de la marque. */
+.nav a.nav-eli{color:var(--or-fonce);background:rgba(201,162,39,.14);
+ font-weight:700;border-radius:999px;white-space:nowrap}
+/* Le service nomme tant qu'il y a la place, le nom seul des que la barre se
+   resserre — sans ce repli, « EliA, conseiller IA » sur une seule ligne
+   poussait les onglets voisins hors de l'ecran sur un portable. */
+.nav-eli-court{display:none}
+@media(max-width:1340px){
+ .nav .nav-eli-long{display:none}
+ .nav .nav-eli-court{display:inline}
+}
+.nav a.nav-eli:hover{background:var(--or);color:#0B0F18}
+.nav-mobile a.nav-eli{color:var(--or-fonce);font-weight:750}
+
+/* Le bandeau, sous la liste des programmes. */
+.simu-bande{margin:34px 0 10px;display:grid;grid-template-columns:minmax(0,1fr) auto;
+ gap:28px;align-items:center;background:var(--carte);border:1px solid var(--trait);
+ border-left:5px solid var(--or);border-radius:var(--r-xl);padding:26px 28px;
+ box-shadow:var(--ombre-3)}
+.simu-bande h3{margin:10px 0 14px;font-size:24px;line-height:1.2}
+.simu-bande ul{list-style:none;margin:0;padding:0;display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.simu-bande li{display:flex;flex-direction:column;gap:3px}
+.simu-bande li b{font-size:15px}
+.simu-bande li span{font-size:13.5px;line-height:1.45;color:var(--gris)}
+.sb-actions{display:flex;flex-direction:column;gap:10px;min-width:250px}
+@media(max-width:900px){
+ .simu-bande{grid-template-columns:1fr;padding:20px 18px}
+ .simu-bande ul{grid-template-columns:1fr;gap:10px}
+ .sb-actions{min-width:0}
+}
+
+/* la carte de recherche, posee sur la banniere */
+.cherche{position:relative;max-width:1240px;margin:-46px auto 0;
+ padding:0 22px;z-index:5}
+.cherche .boite{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-xl);box-shadow:var(--ombre-3);padding:16px}
+.onglets{display:flex;gap:6px;padding:0 4px 12px}
+.onglets button{background:none;border:0;padding:8px 14px;border-radius:999px;
+ font-size:14.5px;font-weight:650;color:var(--gris);cursor:pointer}
+.onglets button.on{background:var(--action-lavis);color:var(--action)}
+/* Le panneau de recherche/filtres se replie : ferme au premier chargement,
+   un clic sur ce bouton l'ouvre ou le referme. */
+.filtres-toggle{display:flex;align-items:center;gap:7px;background:none;
+ border:1px solid var(--trait);border-radius:999px;padding:9px 16px;
+ margin:0 4px 12px;font-size:14px;font-weight:650;color:var(--gris);
+ cursor:pointer;transition:.14s var(--ease)}
+.filtres-toggle:hover{border-color:var(--action)}
+.filtres-toggle .chev{transition:transform .15s var(--ease)}
+/* Le bouton qui emmene aux resultats, a cote de « Affiner ma recherche ».
+   Une puce de ville ne fait plus descendre la page toute seule — on compose
+   d'abord sa recherche, pieces et budget compris — donc il faut un endroit
+   evident ou appuyer quand on a fini. */
+.voir-res{margin:0 4px 12px;height:auto;padding:9px 18px;font-size:14px}
+@media(max-width:640px){
+ .voir-res{width:calc(100% - 8px);justify-content:center}
+}
+.filtres-toggle.open .chev{transform:rotate(180deg)}
+.champs[hidden]{display:none}
+.champs{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:10px;
+ align-items:end}
+.qwrap{position:relative;display:flex;align-items:center}
+.qwrap input{width:100%;padding-right:30px}
+.q-clear{position:absolute;right:4px;border:0;background:none;color:var(--gris);
+ font-size:18px;line-height:1;cursor:pointer;padding:4px 7px;border-radius:6px;
+ display:none}
+.qwrap.has-val .q-clear{display:block}
+.q-clear:hover{color:var(--action);background:var(--action-lavis)}
+.champ{display:flex;flex-direction:column;gap:5px;min-width:0}
+.champ label{font-size:11.5px;font-weight:700;letter-spacing:.06em;
+ text-transform:uppercase;color:var(--gris);padding-left:2px}
+.champ input,.champ select{background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r);padding:12px 13px;font-size:15px;min-height:48px;
+ width:100%;transition:border-color .16s var(--ease)}
+.champ input:focus,.champ select:focus{border-color:var(--action)}
+/* La fleche native d'un <select> est a peine visible sur iOS — Hillel, le
+   19/09/2026 : « quand il y a un choix dans un champ je dois le savoir, je
+   ne peux pas le deviner ». Une fleche dessinee, nette, dans la couleur du
+   texte (`currentColor`, donc juste en clair comme en sombre) plutot que le
+   controle du systeme. */
+.champ select{appearance:none;-webkit-appearance:none;-moz-appearance:none;
+ padding-right:38px;background-repeat:no-repeat;background-position:right 12px center;
+ background-size:18px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")}
+.chercher{background:var(--action);color:#fff;border:0;border-radius:var(--r);
+ padding:0 26px;height:48px;font-size:15.5px;font-weight:700;cursor:pointer;
+ display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.chercher:hover{background:var(--action-vive);color:#fff}
+
+/* la promesse, en tete de banniere */
+.promesse{display:inline-block;background:var(--or);color:#1a1405;
+ font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+ padding:7px 14px;border-radius:999px;margin-bottom:16px;
+ box-shadow:0 6px 18px -6px rgba(0,0,0,.5)}
+
+/* ===================== le modele economique, sous la recherche =========== */
+/* Deplace juste sous le hero le 25/09/2026 (avant : dans .wrap, apres la
+   boite de recherche) : ce bloc de confiance n'est plus imbrique dans
+   .wrap et doit donc porter lui-meme la largeur et les marges laterales
+   que .wrap donnait avant. */
+.modele{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+ max-width:1180px;margin:0 auto 26px;padding:26px 20px 30px;
+ border-bottom:1px solid var(--trait)}
+/* Trois arguments, trois colonnes sur toute la largeur : en « auto-fit »,
+   un ecran large ouvrait une quatrieme colonne vide a droite (Hillel,
+   11/10/2026 : « pas equilibre »). */
+@media(min-width:901px){.modele{grid-template-columns:repeat(3,minmax(0,1fr));gap:34px}}
+/* La preuve chiffree (programmes, villes, annees d'experience) : toujours
+   visible ici, meme sur telephone ou l'equivalent dans la banniere est
+   cache pour laisser la place au simulateur (Hillel, 25/09/2026). */
+.modele-preuve{grid-column:1/-1;margin:0 0 4px;text-align:center;
+ font-size:14px;color:var(--gris);letter-spacing:.01em}
+.modele-preuve b{color:var(--or-fonce);font-weight:800}
+/* Deux lignes franches, pas un repli au hasard de la largeur (Hillel,
+   14/10/2026) : les programmes et les villes ensemble, l'experience en
+   dessous. `text-wrap:balance` evite qu'une ligne trop longue ne laisse un
+   mot seul en dessous sur un ecran etroit. */
+.modele-preuve span{display:block;text-wrap:balance}
+/* Sur telephone, la premiere ligne disparait : le bouton « Nos programmes »
+   juste au-dessus affiche deja « 46 villes · 100 programmes », et Hillel l'a
+   vu repete deux fois a l'ecran (14/10/2026). Elle reste sur ordinateur, ou
+   ce bouton est recouvert par la carte du simulateur : sans elle, le volume
+   du portefeuille n'y serait annonce nulle part. Ce qui reste peut alors
+   respirer — un cran plus gros, sur deux lignes si besoin. */
+@media(max-width:900px){
+ .modele-preuve .mp-compte{display:none}
+ .modele-preuve{font-size:16px;line-height:1.45;max-width:22em;
+  margin-left:auto;margin-right:auto}
+}
+/* Fils direct seulement : sans cela, un gras a l'interieur d'une phrase
+   (« 0 frais d'agence ») passait a la ligne avec sa propre coche. */
+.modele > div > b{display:block;font-size:16.5px;font-weight:700;
+ margin-bottom:6px;line-height:1.3}
+.modele > div > b::before{content:"✓";display:inline-block;color:var(--or-fonce);
+ font-weight:900;margin-right:8px}
+.modele span b{font-weight:750;color:var(--encre)}
+.modele span{font-size:14.5px;color:var(--gris);line-height:1.6}
+
+/* ========================== qui vous accompagne ========================== */
+.qui{display:flex;gap:24px;align-items:flex-start;margin-top:34px;
+ padding:28px 26px;background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre)}
+/* La photo n'est plus une pastille ronde de 132 px mais un vrai portrait :
+   Hillel sur un chantier, casque sur la tete. Une vignette ronde se lit comme
+   un avatar, c'est-a-dire comme un element d'interface ; un portrait se lit
+   comme une personne, et c'est tout l'objet de cette page. */
+.qui img{width:176px;height:220px;border-radius:var(--r-lg);object-fit:cover;
+ object-position:center 28%;flex:none;border:3px solid var(--or)}
+/* Seul le NOM est un titre. Sans ce fils-direct, le gras d'une phrase
+   (« chez les promoteurs ») passait a la ligne en corps 19. */
+.qui > div > b{display:block;font-size:19px;font-weight:750;margin-bottom:8px}
+.qui p b{font-weight:750;color:var(--encre)}
+.qui p{margin:0 0 9px;font-size:15px;line-height:1.65;color:var(--encre-2)}
+.qui .liens{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+.qui .liens a{color:var(--action);font-weight:700;font-size:15px;
+ display:inline-flex;align-items:center;gap:7px}
+.qui .liens svg{flex:none;border-radius:2px;
+ box-shadow:0 0 0 1px rgba(15,23,42,.12)}
+/* Qui decroche, a cote du formulaire. */
+.qui-rappelle{display:flex;align-items:center;gap:11px;margin:0 0 16px;
+ padding:10px 12px;background:var(--fond-2,rgba(15,23,42,.04));
+ border-radius:var(--r-lg)}
+.qui-rappelle img{width:46px;height:46px;border-radius:50%;object-fit:cover;
+ flex:none;border:2px solid var(--or)}
+.qui-rappelle span{font-size:14px;line-height:1.5;color:var(--encre-2)}
+
+/* La bande de preuve : trois photos prises par Hillel, sous le paragraphe qui
+   parle de lui. Elle ne raconte rien qu'un texte ne dise deja ; elle prouve
+   que quelqu'un y etait. Sur un telephone tenu en portrait, les trois defilent
+   horizontalement plutot que de s'empiler sur trois ecrans de haut. */
+.preuve-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+ margin-top:14px}
+.preuve-photos figure{margin:0}
+.preuve-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;
+ border-radius:var(--r-lg);border:1px solid var(--trait);display:block;
+ box-shadow:var(--ombre)}
+@media(max-width:900px){
+ .qui{flex-direction:column;align-items:center;text-align:center;gap:16px;
+  padding:24px 18px}
+ .qui .liens{justify-content:center}
+ .modele{gap:16px;padding:20px 18px 22px}
+ .preuve-photos{grid-template-columns:none;grid-auto-flow:column;
+  grid-auto-columns:76%;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-padding:0 22px;padding-bottom:6px;
+  scrollbar-width:none}
+ .preuve-photos::-webkit-scrollbar{display:none}
+ .preuve-photos figure{scroll-snap-align:center}
+}
+
+/* =============================== la liste =============================== */
+.wrap{max-width:1240px;margin:0 auto;padding:30px 22px 80px}
+.entete{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+ margin-bottom:18px}
+.entete h2{font-size:23px;font-weight:700}
+.pub-count{color:var(--gris);font-size:14.5px}
+.elargi{background:var(--or-clair);border:1px solid var(--or-trait);
+ border-radius:var(--r);padding:14px 16px;margin-bottom:20px;font-size:14.5px;
+ line-height:1.55;color:var(--encre-2)}
+.elargi b{color:var(--encre)}
+
+.progs{display:grid;gap:22px;
+ grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.tile{display:flex;flex-direction:column;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);overflow:hidden;
+ height:100%;transition:transform .2s var(--ease),box-shadow .2s var(--ease),
+ border-color .2s var(--ease)}
+.tile:hover{transform:translateY(-3px);box-shadow:var(--ombre-2);
+ border-color:var(--or-trait)}
+.tile .shot{position:relative;aspect-ratio:4/3;background:var(--fond-2);
+ overflow:hidden}
+/* La photo se pose PAR-DESSUS le monogramme de repli : un element positionne
+   passe devant un element qui ne l'est pas, quel que soit l'ordre du HTML —
+   sans cela le repli masque la photo qui a bien ete chargee. */
+.tile .shot img{position:absolute;inset:0;z-index:1;width:100%;height:100%;
+ object-fit:cover;display:block;object-position:50% 30%;
+ transition:transform .45s var(--ease)}
+.tile:hover .shot img{transform:scale(1.04)}
+.tile .fallback{position:absolute;inset:0;z-index:0;display:grid;
+ place-items:center;
+ background:linear-gradient(140deg,var(--fond-2),var(--or-clair));
+ color:var(--or-fonce);font-size:30px;font-weight:800;letter-spacing:.1em}
+.badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;
+ flex-wrap:wrap;max-width:calc(100% - 68px);z-index:2}
+.badge{background:rgba(9,14,26,.82);color:#fff;font-size:11.5px;font-weight:650;
+ padding:5px 10px;border-radius:999px;backdrop-filter:blur(6px)}
+.badge.or{background:var(--or);color:#1a1405}
+/* Programme ajoute par l'agregateur depuis moins de 7 jours. */
+.badge.nouveau{background:var(--action);color:#fff}
+.badge.blanc{background:rgba(255,255,255,.94);color:var(--encre)}
+/* Le bouton de partage : discret sur la tuile (un rond, coin oppose aux
+   badges), plus visible sur la fiche (une pilule avec son mot). Demande le
+   24/09/2026. */
+.partager{display:inline-flex;align-items:center;gap:6px;border:none;
+ cursor:pointer;font:inherit;font-weight:650}
+.partager svg{width:16px;height:16px;flex:0 0 auto}
+.partager-discret{position:absolute;top:12px;right:12px;z-index:2;
+ width:32px;height:32px;border-radius:999px;justify-content:center;
+ background:rgba(9,14,26,.72);color:#fff;backdrop-filter:blur(6px);
+ transition:background .15s}
+.partager-discret:hover{background:rgba(9,14,26,.92)}
+.offre-in h1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* Le partage du simulateur, au bout de son titre : un petit rond discret. */
+h1.h1-partage{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.partager-titre{width:34px;height:34px;border-radius:999px;justify-content:center;
+ background:var(--fond);color:var(--action);border:1px solid var(--trait);
+ flex:none;padding:0}
+.partager-titre:hover{border-color:var(--action);background:var(--action-lavis)}
+.offre-in h1 .partager{background:var(--fond);color:var(--encre);
+ border:1px solid var(--trait);border-radius:999px;padding:6px 12px;
+ font-size:13px}
+.offre-in h1 .partager:hover{border-color:var(--action);color:var(--action)}
+.tile .corps{padding:15px 16px 17px;display:flex;flex-direction:column;
+ gap:6px;flex:1}
+.tile .prix{font-size:24px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.1}
+.tile .prix small{display:block;font-size:11.5px;font-weight:600;
+ color:var(--gris);letter-spacing:.03em;text-transform:uppercase;
+ margin-bottom:2px}
+.tile .titre{font-size:16.5px;font-weight:650;line-height:1.3}
+.tile .carac{color:var(--encre-2);font-size:14px}
+/* Le promoteur sous contrat, sur la tuile. Discret par construction : c'est
+   une signature, pas une publicite — la tuile vend le programme, et un bloc
+   de marque trop present prendrait la place du prix. */
+.promo-chip{display:flex;align-items:center;gap:6px;margin:-2px 0 2px;
+  font-size:12.5px;color:var(--gris);font-weight:550}
+.promo-chip img{height:16px;width:auto;max-width:74px;object-fit:contain;
+  border-radius:3px}
+.promo-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile .lieu{color:var(--gris);font-size:13.5px;display:flex;align-items:center;
+ gap:5px}
+.tile .bas{margin-top:auto;padding-top:11px;border-top:1px solid var(--trait-fin);
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+ font-size:12px;color:var(--gris-clair)}
+.preuve{color:var(--or-fonce);font-weight:650;font-size:12px}
+
+/* ============================== la fiche ============================== */
+.fil{font-size:13.5px;color:var(--gris);padding:22px 0 0}
+.fil a:hover{color:var(--action)}
+/* La photo est posee EN ABSOLU dans son cadre : en flux, sa hauteur propre
+   commande, le rapport de forme du cadre ne s'applique plus, et un rendu de
+   1200x900 occupe tout l'ecran. */
+.grande{position:relative;border-radius:var(--r-lg);overflow:hidden;
+ border:1px solid var(--trait);aspect-ratio:16/7;background:var(--fond-2);
+ margin-top:12px}
+.grande img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+ display:block}
+.pub-head{padding:22px 0 18px;display:flex;align-items:flex-start;gap:20px;
+ flex-wrap:wrap}
+.pub-head h1{font-size:30px;font-weight:750}
+.pub-head .sub{margin:7px 0 0;color:var(--gris);font-size:15px}
+.pub-head .apd{margin-left:auto;text-align:right}
+.pub-head .apd b{display:block;font-size:28px;font-weight:750;
+ letter-spacing:-.03em}
+.pub-head .apd span{font-size:12px;color:var(--gris);text-transform:uppercase;
+ letter-spacing:.06em;font-weight:650}
+.pub-head .apd em{display:block;font-style:normal;font-size:12.5px;
+ font-weight:700;color:var(--or-fonce);margin-top:4px}
+
+.card{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre);margin-bottom:22px}
+.block{border-top:1px solid var(--trait-fin)}
+.block:first-child{border-top:0}
+.block-head{padding:18px 22px 0;font-size:12px;font-weight:750;
+ letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.pad{padding:14px 22px 22px}
+/* Le prix au m² de la fiche, juste au-dessus du tableau des typologies
+   (Hillel, 24/09/2026). */
+.m2-projet{margin:8px 22px 0;font-size:14px;color:var(--gris)}
+@media(max-width:640px){.m2-projet{margin-left:16px;margin-right:16px}}
+
+/* Le petit « ? » cliquable a cote d'un titre (identite.aide(), cote Python,
+   pose par generer.py dans window.AIDES puis lu par aide() dans
+   annuaire.js) — demande par Hillel le 22/09/2026 : « le ? est tres
+   important partout sur le site BH aussi ». Deuxieme dessin, recopie a
+   l'identique depuis le mini-site client (espace_page.py) : un premier
+   passage en position:absolute (coin du bloc) a coute plusieurs
+   allers-retours sans jamais retomber au meme endroit qu'un bouton voisin
+   sur un telephone reel. Le bouton vit maintenant DANS le flux normal,
+   colle juste apres le texte du titre — plus rien a positionner en CSS. Sa
+   bulle est fabriquee et placee par le script (cherche `.aide-btn` dans
+   annuaire.js), avec la position REELLE du bouton — jamais devinee.
+   Fond de la bulle en couleur fixe (pas `var(--encre)`, qui devient presque
+   blanc en theme sombre sur ce site — cf `.theme`) : elle doit rester lisible
+   quel que soit le theme choisi, comme une infobulle. */
+.aide-btn{display:inline-flex;align-items:center;justify-content:center;
+ width:22px;height:22px;border-radius:50%;border:1.5px solid var(--trait);
+ color:var(--gris);font-size:12px;font-weight:800;background:var(--carte);
+ cursor:pointer;flex:none;margin-left:6px;padding:0;vertical-align:middle}
+.aide-btn.ouvert{border-color:var(--or);color:var(--or-fonce)}
+.aide-bulle{position:absolute;z-index:50;width:260px;max-width:78vw;
+ background:#0F172A;color:#fff;font-size:14.5px;line-height:1.55;font-weight:400;
+ text-align:left;padding:12px 14px;border-radius:10px;
+ box-shadow:0 10px 24px rgba(15,23,42,.32)}
+/* Le simulateur sur la fiche d'un bien, replie par defaut : Hillel, le
+   19/09/2026, apres avoir vu la fiche d'un telephone — « ca charge
+   beaucoup trop la fiche ». On comprend deja la typologie et le prix dans
+   le tableau juste au-dessus ; le detail du chiffrage (profil, credit,
+   frais, echeancier) n'a plus besoin d'etre deroule avant meme qu'on l'ait
+   demande. Regle valable pour TOUTE fiche, dans toutes les langues — pas
+   seulement celle qu'il regardait. La page dediee au simulateur seul
+   (`#/simulateur`) n'est pas concernee : y arriver EST deja la demande. */
+/* Redevenu un vrai bouton, gros et plein, le 21/09/2026 : replie en simple
+   lien texte, Hillel le manquait meme en le regardant (« on le loupe quand
+   on le voit »). Meme traitement visuel que `.b-or`, le bouton d'appel en
+   haut de la fiche — la meme couleur d'action dit la meme chose : « appuie
+   ici ». Reste un `<summary>` de `<details>` : replie par defaut (la fiche
+   ne doit pas peser plus lourd sur telephone, raison du repli d'origine),
+   mais impossible a manquer une fois qu'on scrolle jusque-la. */
+.simu-resume{display:flex;align-items:center;justify-content:center;
+ gap:10px;margin:18px 22px;padding:16px 20px;cursor:pointer;font-size:16px;
+ font-weight:750;color:#fff;background:var(--action);border-radius:999px;
+ list-style:none;text-align:center;transition:.16s var(--ease)}
+/* Sur deux lignes, un texte qui remplit la premiere au maximum laisse un
+   mot seul et perdu sur la seconde (vu sur "Simulation gratuite pour ce
+   bien", Hillel, 07/10/2026) : `text-wrap:balance` repartit les mots entre
+   les deux lignes au lieu de les tasser au plus large d'abord. */
+.simu-resume span{text-wrap:balance}
+.simu-resume:hover{background:var(--action-vive)}
+.simu-resume::-webkit-details-marker{display:none}
+.simu-resume .chev{color:#fff;flex:none;display:block;
+ transition:transform .15s var(--ease)}
+.simu-plier[open] .simu-resume .chev{transform:rotate(180deg)}
+/* Second bouton "Simuler l'achat", sous le formulaire de coordonnees du bas
+   de la fiche (demande le 22/09/2026) — un vrai <button>, pas un <summary>,
+   donc sans largeur pleine ni police par defaut sans ce reset. */
+.simu-resume-bas{width:calc(100% - 44px);border:0;font-family:inherit;
+ appearance:none}
+/* Le tableau des typologies n'est pas dans un `.pad` : il porte sa propre
+   marge, sinon il se colle a l'intitule du bloc. */
+.block .scroll{padding:14px 22px 20px}
+
+table{width:100%;border-collapse:collapse;font-size:15px}
+thead th{text-align:left;font-size:11.5px;text-transform:uppercase;
+ letter-spacing:.06em;color:var(--gris);font-weight:700;padding:0 12px 9px}
+tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
+.kv{width:100%}
+.kv th{text-align:left;font-weight:500;color:var(--gris);padding:11px 12px;
+ vertical-align:top;font-size:14.5px;width:46%}
+.kv td{padding:11px 12px;vertical-align:top}
+.kv tr+tr th,.kv tr+tr td{border-top:1px solid var(--trait-fin)}
+
+/* ============================ le simulateur ============================ */
+.si-lab{font-size:12px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris);margin:20px 0 8px}
+.si-note{font-size:13px;color:var(--gris);margin:9px 0 0;line-height:1.55}
+.si-note.manque{color:var(--alerte)}
+.si-pied{font-size:12px;color:var(--gris-clair);margin-top:22px;line-height:1.6}
+.si-titre{font-size:12px;font-weight:750;letter-spacing:.08em;
+ text-transform:uppercase;color:var(--gris);margin:26px 0 10px}
+.si-tr{font-size:12.5px;color:var(--gris);line-height:1.6;margin-top:4px;
+ font-weight:400}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+ gap:14px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font-size:11.5px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris)}
+.f input,.f select,.f textarea{background:var(--fond);
+ border:1px solid var(--trait);border-radius:var(--r);padding:11px 12px;
+ font-size:15px;min-height:46px;width:100%}
+.f textarea{min-height:70px;resize:vertical}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--action)}
+/* Meme fleche nette que `.champ select` — un champ avec un choix doit se
+   voir comme tel, jamais comme du texte fixe (19/09/2026). */
+.f select{appearance:none;-webkit-appearance:none;-moz-appearance:none;
+ padding-right:36px;background-repeat:no-repeat;background-position:right 11px center;
+ background-size:17px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{background:var(--fond);border:1px solid var(--trait);
+ border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;
+ color:var(--encre-2);cursor:pointer;min-height:42px}
+.seg button:hover{border-color:var(--gris-clair)}
+.seg button.on{background:var(--action);border-color:var(--action);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:14px;margin-top:22px}
+.stat{background:var(--fond-2);border:1px solid var(--trait);
+ border-radius:var(--r);padding:16px 18px}
+.stat b{display:block;font-size:26px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.1}
+.stat span{display:block;font-size:11.5px;font-weight:700;color:var(--gris);
+ text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+.jauge{height:12px;border-radius:999px;background:var(--fond-2);overflow:hidden;
+ display:flex;border:1px solid var(--trait);margin-top:16px}
+.jauge i{display:block;height:100%}
+.jauge .cap{background:var(--or)}
+.jauge .int{background:var(--gris-clair);opacity:.5}
+
+/* ==================== le tunnel du simulateur autonome ==================== */
+/* La jauge de progression du formulaire par etapes (prix -> profil ->
+   financement -> frais annexes -> coordonnees). Pas de pourcentage ecrit :
+   cinq segments du meme bleu tekhelet de la marque (`--action`), du plus
+   clair au plus fonce a mesure qu'on avance — jamais une nouvelle couleur,
+   jamais un chiffre. */
+.tunnel-type-bien{margin:0 0 16px}
+.tunnel-jauge{display:flex;gap:6px;margin:0 0 22px}
+.tunnel-jauge .seg{flex:1;height:7px;border-radius:999px;
+ background:var(--fond-2);border:1px solid var(--trait)}
+.tunnel-jauge .seg.fait{border-color:transparent;background:var(--action)}
+.tunnel-jauge .seg.fait:nth-child(1){opacity:.3}
+.tunnel-jauge .seg.fait:nth-child(2){opacity:.48}
+.tunnel-jauge .seg.fait:nth-child(3){opacity:.66}
+.tunnel-jauge .seg.fait:nth-child(4){opacity:.84}
+.tunnel-jauge .seg.fait:nth-child(5){opacity:1}
+.tunnel-jauge .seg.cliquable{cursor:pointer}
+.tunnel-jauge .seg.cliquable:hover{height:10px}
+
+/* Les deux simulations, tenues a part (Hillel, 23/09/2026) : deux grands
+   onglets au-dessus du parcours, jamais un bouton de plus perdu dans la
+   rangee des pourcentages. */
+.simu-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
+.simu-modes button{display:flex;flex-direction:column;gap:4px;text-align:left;
+ cursor:pointer;padding:14px 16px;border-radius:var(--r);
+ background:var(--fond);border:1px solid var(--trait);color:inherit;font:inherit}
+.simu-modes button b{font-size:15px}
+.simu-modes button span{font-size:12.5px;opacity:.72;line-height:1.4}
+.simu-modes button:hover{border-color:var(--gris-clair)}
+.simu-modes button.on{border:2px solid var(--action);padding:13px 15px;
+ box-shadow:0 0 0 3px color-mix(in srgb,var(--action) 12%,transparent)}
+.simu-modes button.on b{color:var(--action)}
+@media (max-width:560px){.simu-modes button span{display:none}}
+
+/* La page a part du simulateur : ni banniere, ni recherche, ni liste. Il
+   reste le logo et un lien bien visible vers les programmes, pour qu'on ne
+   se sente jamais sorti du site. */
+body.simulateur-seul #hero,body.simulateur-seul #cherche,
+body.simulateur-seul #entete,body.simulateur-seul #modele{display:none!important}
+.retour-site{display:none}
+body.simulateur-seul .retour-site{display:inline-flex;align-items:center;gap:6px;
+ font-weight:600;font-size:14px;color:var(--action);text-decoration:none;
+ padding:8px 12px;border:1px solid var(--trait);border-radius:999px;white-space:nowrap;
+ margin-inline-end:8px}
+body.simulateur-seul .retour-site:hover{border-color:var(--action)}
+.retour-site .court{display:none}
+@media (max-width:560px){
+ .retour-site .long{display:none}
+ .retour-site .court{display:inline}
+ body.simulateur-seul .retour-site{padding:7px 10px;font-size:13px}
+}
+
+/* Les cartes de profil fiscal, cliquables. L'explication de chacune reste
+   repliee derriere un petit « + » (demande par Hillel le 10/09/2026) : la
+   liste tient sur moins de hauteur et le bouton Suivant reste visible sans
+   avoir a faire defiler. Texte un peu plus grand, padding un peu resserre
+   pour compenser (Hillel, 24/09/2026) : les quatre cartes ET le bouton
+   Suivant doivent rester visibles sur un ecran d'iPhone sans defiler. */
+/* Les 4 statuts fiscaux cote a cote plutot qu'empiles (Hillel, 24/09/2026,
+   deuxieme retour) : c'est ce qui liberait assez de hauteur pour que le
+   bouton Suivant reste visible sans defiler, sur telephone. Uniquement pour
+   cet ecran — le choix comptant/credit (2 cartes avec une phrase sous le
+   titre) reste empile, une grille a 2 colonnes l'aurait rendu illisible. */
+.etape-cartes-grille{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+ margin-bottom:8px}
+.etape-cartes-grille .etape-carte{margin-bottom:0}
+/* La carte dont l'explication est ouverte reprend toute la largeur : une
+   phrase d'explication dans une colonne de 150px serait illisible. */
+.etape-cartes-grille .etape-carte.aide-ouverte{grid-column:1 / -1}
+.etape-cartes-grille .etape-carte b{font-size:14.5px;line-height:1.25}
+.etape-cartes-grille .etape-carte .radio{width:18px;height:18px}
+@media(max-width:420px){
+ .etape-cartes-grille{gap:6px}
+ .etape-cartes-grille .etape-carte{padding:10px 12px}
+ .etape-cartes-grille .etape-carte b{font-size:13.5px}
+}
+.etape-carte{display:flex;align-items:flex-start;justify-content:space-between;
+ gap:14px;width:100%;text-align:left;cursor:pointer;
+ background:var(--fond);border:1px solid var(--trait);border-radius:var(--r);
+ padding:14px 18px;margin-bottom:8px}
+.etape-carte:hover{border-color:var(--gris-clair)}
+/* Hillel, le 19/09/2026 : « c'est pas clair qu'on a selectionne le bon
+   statut ». Le seul signal etait une bordure a peine plus foncee — un vrai
+   bouton radio, qui se remplit, est le geste qu'on reconnait sans avoir a
+   le lire. */
+.etape-carte.on{border-color:var(--action);background:var(--fond-2);
+ box-shadow:0 0 0 1px var(--action)}
+.etape-carte-corps{flex:1;min-width:0}
+.etape-carte .radio{flex:none;width:22px;height:22px;margin-top:2px;
+ border-radius:50%;border:2px solid var(--trait);position:relative;
+ transition:border-color .15s var(--ease)}
+.etape-carte:hover .radio{border-color:var(--gris-clair)}
+.etape-carte.on .radio{border-color:var(--action)}
+.etape-carte.on .radio::after{content:"";position:absolute;inset:4px;
+ border-radius:50%;background:var(--action)}
+.etape-carte b{display:block;font-size:17px;font-weight:750}
+.etape-carte span{display:block;font-size:13.5px;color:var(--gris);
+ line-height:1.5;margin-top:4px}
+.etape-carte .plus{color:var(--action);font-weight:700}
+.etape-carte .note{margin-top:8px}
+
+/* Avocat / accompagnement / courtier, sur l'etape « Frais annexes » : un
+   choix explicite (`.seg`), jamais un champ deja rempli qu'on pourrait ne
+   pas remarquer. */
+.f-choix{display:block}
+.f-choix > b{display:block;font-size:14.5px;font-weight:700;margin-bottom:8px}
+.f-choix .plus{color:var(--action);font-weight:700;font-size:13px;
+ cursor:pointer;margin-left:8px}
+.f-choix .note{display:block;margin-top:8px;font-size:13px}
+.f-choix .seg button{font-size:13.5px;padding:8px 14px}
+
+.etape-nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.etape-nav button{border:0;border-radius:999px;padding:14px 26px;
+ font-size:15px;font-weight:700;cursor:pointer;min-height:50px}
+.etape-nav .suivant{background:var(--encre);color:var(--fond)}
+.etape-nav .suivant:hover{opacity:.92}
+.etape-nav .suivant:disabled{opacity:.4;cursor:not-allowed}
+.etape-nav .precedent{background:none;color:var(--gris);
+ border:1px solid var(--trait)}
+
+/* ===================== la carte d'appel dans la grille ==================== */
+.tile.appel{display:flex;flex-direction:column;gap:9px;justify-content:center;
+ text-align:left;padding:26px 24px;cursor:pointer;
+ background:linear-gradient(160deg,var(--encre),#535D73);color:#fff;
+ border-color:var(--encre);font:inherit}
+.tile.appel .pastille{align-self:flex-start;background:var(--or);color:#1a1405;
+ font-size:11.5px;font-weight:750;padding:5px 11px;border-radius:999px}
+.tile.appel b{font-size:21px;font-weight:750;line-height:1.25;letter-spacing:-.02em}
+.tile.appel span{font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.82)}
+.tile.appel .lien{color:var(--action);font-weight:700;margin-top:4px}
+.tile.appel:hover{transform:translateY(-3px);box-shadow:var(--ombre-2)}
+.tile.appel.blog{background:linear-gradient(160deg,var(--action),#1a3f8f)}
+.tile.appel.blog .pastille{background:#fff;color:var(--action)}
+
+/* ========================= la reassurance, sous la liste ================== */
+.rassure{margin-top:34px;padding:30px 26px;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:var(--r-lg)}
+.rassure h3{font-size:21px;font-weight:750;margin-bottom:18px}
+.rassure .points{display:grid;gap:20px;
+ grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.rassure .points b{display:block;font-size:15.5px;margin-bottom:5px}
+.rassure .points span{font-size:14.5px;color:var(--gris);line-height:1.6}
+.rassure .appelez{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+/* `gap` plutot qu'une espace dans le texte : le bouton est une boite flexible,
+   et une boite flexible jette les espaces entre ses elements. Depuis que le
+   numero est enveloppe dans son `<bdi>`, il forme un element a part — sans
+   cette ligne, le bouton affiche « להתקשר+972… » colle. */
+.rassure .appelez .cta{display:inline-flex;align-items:center;gap:8px}
+
+/* ====================== la barre d'action du telephone =================== */
+.barre-mobile{display:none}
+@media(max-width:900px){
+ .barre-mobile{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
+  gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:var(--fond);border-top:1px solid var(--trait);
+  box-shadow:0 -6px 20px -8px rgba(15,23,42,.22)}
+ .barre-mobile button,.barre-mobile a{flex:1;border:0;border-radius:20px;
+  padding:10px 10px;font-size:14px;font-weight:700;text-align:center;
+  line-height:1.25;background:var(--encre);color:var(--fond);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1px}
+ .barre-mobile a{flex-direction:row;gap:8px}
+ /* Le rappel gratuit se dit en deux lignes : le titre, puis la reassurance
+    en petit — sans elle, l'engagement est ce qui retient le plus un
+    visiteur d'entrer son numero. */
+ .barre-mobile button small{font-size:10.5px;font-weight:600;opacity:.72}
+ .barre-mobile .wa{background:#25d366;color:#052e16}
+ body{padding-bottom:86px}
+ body.tunnel-plein{padding-bottom:0}
+}
+
+/* Le tunnel du simulateur, seul a l'ecran : plus rien qui puisse detourner
+   un tap pendant qu'on remplit les etapes — ni la barre fixe du bas (son
+   WhatsApp a ete appuye par erreur a la place de « Suivant », signale par
+   Hillel le 10/09/2026), ni le bouton « Etre rappele » ni les liens du
+   haut, ni le pied de page. Le logo reste : il ne gene jamais un tap et
+   c'est la seule sortie du tunnel. */
+body.tunnel-plein .barre-mobile{display:none}
+body.tunnel-plein .pub-top .nav{display:none}
+body.tunnel-plein .pub-top .cta{display:none}
+body.tunnel-plein .pub-top .wa-nav{display:none}
+body.tunnel-plein .pub-foot{display:none}
+
+/* Le simulateur s'ouvre SOUS ses onglets, pas a la place de la page.
+
+   Hillel, le 16/09/2026 : « j'ai l'impression qu'on est sorti complètement de
+   l'application ». Le tunnel ci-dessus efface la navigation pour qu'aucun tap
+   ne se perde pendant les etapes — c'etait juste, mais il ne restait alors
+   aucune sortie visible, sinon le logo.
+
+   « Acheter » et « Simuler mon achat » sont des ONGLETS : la rangee reste
+   donc a l'ecran, l'onglet allume dit ou l'on est, et appuyer sur « Acheter »
+   ramene a la liste. Ce qui disparait, c'est le reste de la boite — villes,
+   pieces, budget — qui ne sert qu'a acheter et n'aurait aucun sens au-dessus
+   d'un simulateur. La rangee d'onglets est une cible large et deliberee : elle
+   ne cree pas le risque de tap accidentel que le tunnel cherche a eviter. */
+body.sim-actif #raccourcis,
+body.sim-actif .cherche .ligne-pieces,
+body.sim-actif .cherche .filtres-toggle,
+body.sim-actif .cherche .champs,
+body.sim-actif #voir-res{display:none}
+/* La boite chevauche la banniere de 46 px sur la liste. La banniere n'est
+   plus la : sans cette ligne, les onglets passent sous la barre du haut. */
+body.sim-actif .cherche{margin-top:18px}
+body.sim-actif .cherche .boite{padding:8px 10px}
+body.sim-actif .onglets{padding-bottom:0}
+
+/* ============================== le contact ============================== */
+.contact{border:1px solid var(--or-trait);background:linear-gradient(
+ 180deg,var(--or-clair),var(--carte) 62%)}
+.contact .block-head{color:var(--or-fonce)}
+.contact .intro{margin:0 0 18px;font-size:15px;line-height:1.6;
+ color:var(--encre-2)}
+/* Deux champs, pas cinq : chaque champ de plus coute des remplissages. Le
+   reste s'obtient dans la conversation, ou derriere « ajouter un e-mail ». */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.plus{background:none;border:0;color:var(--or-fonce);font-size:13.5px;
+ font-weight:650;cursor:pointer;padding:12px 0 0;text-decoration:underline}
+@media(max-width:560px){.duo{grid-template-columns:1fr}
+ /* Nom et prenom restent sur la meme ligne meme sur un petit telephone —
+    demande le 19/09/2026 : les deux se lisent d'un coup d'oeil, jamais
+    l'un sous l'autre. */
+ .duo.duo-nom{grid-template-columns:1fr 1fr;gap:8px}}
+@media(max-width:360px){.duo.duo-nom label{font-size:10.5px}
+ .duo.duo-nom input{padding-left:9px;padding-right:9px;font-size:14px}}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.actions button{border:0;border-radius:999px;padding:14px 26px;font-size:15px;
+ font-weight:700;cursor:pointer;min-height:50px;background:var(--encre);
+ color:var(--fond)}
+.actions button:hover{opacity:.92}
+.actions .wa{background:#25d366;color:#052e16}
+.actions .ghost{background:var(--fond);color:var(--encre);
+ border:1px solid var(--trait)}
+/* Le piege a robots. Il etait pousse a gauche de l'ecran (left:-9999px) —
+   inoffensif en francais, catastrophique en hebreu : en lecture de droite a
+   gauche, ce debordement devient le sens NORMAL du document, la page s'ouvre
+   sur le vide et parait entierement blanche. On le cache donc sans le
+   deplacer, par la technique qui ne depend d'aucun sens de lecture. */
+.pot{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+ overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.merci{text-align:center;padding:30px 20px}
+.merci .coche{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;
+ display:grid;place-items:center;background:var(--vert-fond);color:var(--vert);
+ font-size:25px;font-weight:800}
+.merci h3{font-size:21px;margin-bottom:8px}
+.merci p{margin:0 0 9px}
+.merci a{color:var(--or-fonce);font-weight:650;text-decoration:underline}
+
+/* =============================== le pied =============================== */
+.pub-foot{background:var(--fond-2);border-top:1px solid var(--trait);
+ padding:38px 22px 46px;text-align:center;color:var(--gris);font-size:13.5px;
+ line-height:1.75}
+.pub-foot .marque{margin-bottom:12px}
+.pub-foot .marque svg{display:block}
+.pub-foot a{color:var(--encre-2);font-weight:600}
+
+/* =============================== telephone =============================== */
+@media(max-width:900px){
+ .pub-bar{height:62px;gap:0}
+ .nav{display:none}
+ .burger{display:flex;margin-inline-start:-14px}  /* padding de .pub-in ici : 14px */
+ .cta{padding:9px 12px;font-size:12.5px}
+ .wa-nav{width:34px;height:34px}
+ /* Le logo au milieu, le menu et les langues aux deux bouts : Hillel, le
+    19/09/2026 — « le menu et le logo, il y a quelque chose qui ne va pas
+    [...] peut-etre le logo au milieu ». Corrige une premiere fois avec
+    `position:absolute` + `transform:translate(-50%)`, mais Hillel a repere
+    le 20/09/2026 (video a l'appui) que le logo continuait a sauter d'un
+    cote a l'autre pendant qu'on faisait defiler la page — ce calcul se
+    refait a chaque repaint de la barre collante (`position:sticky`) et
+    Safari ne le rejoue pas toujours a l'identique. Remplace par deux blocs
+    `flex:1` de poids egal, un de chaque cote : le logo tombe pile au milieu
+    par la seule geometrie du flex, sans jamais mesurer sa propre largeur —
+    donc plus rien a recalculer, plus rien qui puisse sauter. */
+ .pub-flanc{flex:1 1 0%;display:flex;align-items:center;min-width:0}
+ .pub-flanc-d{justify-content:flex-end;gap:12px}
+ .pub-bar > .grow{display:none}
+ .pub-logo{flex:none;margin-left:0;padding:0}
+ .pub-logo svg{transform:scale(.8)}
+ .hero .dedans{padding:38px 20px 62px}
+ .hero h1{font-size:28px}
+ .hero p.chapeau{font-size:15.5px}
+ .champs{grid-template-columns:1fr 1fr;gap:9px}
+ .champs .champ:first-child{grid-column:1 / -1}
+ .chercher{grid-column:1 / -1;width:100%;justify-content:center}
+ .cherche{margin-top:-38px;padding:0 14px}
+ .cherche .boite{padding:13px;border-radius:20px}
+ .wrap{padding:24px 14px 70px}
+ .progs{grid-template-columns:1fr;gap:16px}
+ .pub-in{padding:0 14px}
+ .pub-head{padding:18px 0 14px}
+ .pub-head h1{font-size:23px}
+ .pub-head .apd{margin-left:0;text-align:left}
+ .pub-head .apd b{font-size:23px}
+ .grande{aspect-ratio:16/10}
+ .block-head,.pad{padding-left:16px;padding-right:16px}
+ .block .scroll{padding:12px 16px 16px}
+ /* Les tableaux deviennent des fiches empilees : quatorze colonnes ne se
+    lisent pas sur 390 pixels, et un tableau qu'on balaie cache toujours la
+    colonne qu'on cherchait. */
+ .scroll table,.scroll thead,.scroll tbody,.scroll tr,.scroll td{display:block;
+  width:auto}
+ .scroll thead{display:none}
+ .scroll tr{background:var(--fond-2);border:1px solid var(--trait);
+  border-radius:var(--r);padding:13px 15px;margin-bottom:10px}
+ .scroll td{border:0;padding:4px 0;display:flex;gap:10px;align-items:baseline}
+ .scroll td::before{content:attr(data-label);flex:none;width:96px;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--gris-clair);font-weight:700;line-height:1.7}
+ .scroll td.mtitle{font-size:17px;font-weight:700;padding:0 0 9px;
+  margin-bottom:7px;border-bottom:1px solid var(--trait)}
+ .scroll td.mtitle::before{display:none}
+ .kv th,.kv td{display:block;width:auto}
+ .kv th{padding:11px 12px 0}
+ .kv td{padding:2px 12px 11px}
+ .kv tr+tr td{border-top:0}
+}
+
+
+/* ======================= les raccourcis de recherche =====================
+   Le premier ecran ne doit jamais se terminer sur une carte blanche. Ces
+   puces sont la premiere chose cliquable de la page. */
+.raccourcis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+ padding:0 4px 12px}
+.rac-lab{font-size:11.5px;font-weight:700;letter-spacing:.06em;
+ text-transform:uppercase;color:var(--gris);margin-right:2px}
+.raccourcis button{background:var(--fond);border:1px solid var(--trait);
+ border-radius:999px;padding:9px 15px;font-size:14px;font-weight:600;
+ color:var(--encre-2);cursor:pointer;transition:.14s var(--ease)}
+.raccourcis button:hover{border-color:var(--action);color:var(--encre)}
+.raccourcis button.on{background:var(--action);border-color:var(--action);
+ color:#fff}
+.raccourcis .rac-tout{color:var(--gris);border-style:dashed}
+
+/* ========================= la fiche : tete de page =======================
+   Une fiche commence par le bien : le visuel a gauche, le prix et le bouton a
+   droite, tous deux dans le premier ecran. C'est la seule disposition qui
+   evite qu'un visiteur venu d'un lien WhatsApp doive faire defiler mille
+   pixels d'argumentaire avant de voir ce qu'il est venu voir. */
+.fiche-tete{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
+ gap:26px;align-items:start;padding-top:14px}
+
+.galerie{min-width:0}
+.galerie .grand{position:relative;border-radius:var(--r-lg);overflow:hidden;
+ border:1px solid var(--trait);aspect-ratio:4/3;background:var(--fond-2)}
+.galerie .grand img{position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;display:block;cursor:zoom-in}
+.galerie .grand.vide{display:grid;place-items:center;font-size:44px;
+ font-weight:800;letter-spacing:.1em;color:var(--or-fonce);
+ background:linear-gradient(140deg,var(--fond-2),var(--or-clair))}
+.g-compte{position:absolute;right:12px;bottom:12px;background:rgba(9,14,26,.78);
+ color:#fff;font-size:12px;font-weight:650;padding:5px 11px;border-radius:999px;
+ backdrop-filter:blur(6px)}
+.g-fleche{position:absolute;top:50%;transform:translateY(-50%);width:42px;
+ height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.9);
+ color:var(--encre);font-size:26px;line-height:1;cursor:pointer;
+ display:grid;place-items:center;box-shadow:var(--ombre-2);
+ transition:.14s var(--ease)}
+.g-fleche:hover{background:#fff;transform:translateY(-50%) scale(1.06)}
+.g-prec{left:12px} .g-suiv{right:12px}
+.vignettes{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));
+ gap:8px;margin-top:10px}
+.vignettes .vg{padding:0;border:2px solid transparent;border-radius:10px;
+ overflow:hidden;background:var(--fond-2);cursor:pointer;aspect-ratio:4/3;
+ transition:border-color .14s var(--ease)}
+.vignettes .vg img{width:100%;height:100%;object-fit:cover;display:block}
+.vignettes .vg.on{border-color:var(--action)}
+.vignettes .vg:hover{border-color:var(--or-trait)}
+.g-note{margin:10px 2px 0;font-size:11.5px;color:var(--gris-clair)}
+
+/* le plein ecran */
+.plein{position:fixed;inset:0;z-index:60;background:rgba(6,10,18,.94);
+ display:grid;place-items:center;padding:32px}
+.plein img{max-width:100%;max-height:100%;object-fit:contain;
+ border-radius:10px}
+.p-fermer{position:absolute;top:18px;right:20px;width:44px;height:44px;
+ border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;
+ font-size:26px;line-height:1;cursor:pointer}
+.p-fleche{position:absolute;top:50%;transform:translateY(-50%);width:48px;
+ height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.14);
+ color:#fff;font-size:30px;line-height:1;cursor:pointer}
+.p-prec{left:20px} .p-suiv{right:20px}
+.p-fermer:hover,.p-fleche:hover{background:rgba(255,255,255,.26)}
+
+/* le bloc d'offre */
+.offre{min-width:0}
+.offre-in{position:sticky;top:88px;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);padding:22px 22px 20px;
+ box-shadow:var(--ombre-2)}
+.offre-in h1{font-size:27px;font-weight:750;line-height:1.2}
+.offre-lieu{margin:7px 0 0;color:var(--gris);font-size:14.5px}
+/* Sur la fiche, le promoteur a sa ligne. Le client veut savoir chez qui il
+   achete ; le promoteur paie pour etre vu la. Le filet d'or tient lieu de
+   cadre — l'or ne porte jamais de texte sur fond clair. */
+.offre-promo{display:flex;align-items:center;gap:11px;margin:11px 0 0;
+  padding:9px 12px;background:var(--creux);border:1px solid var(--trait);
+  border-left:3px solid var(--or);border-radius:0 9px 9px 0}
+.offre-promo img{height:30px;width:auto;max-width:104px;object-fit:contain;
+  border-radius:4px;flex:none}
+.offre-promo small{display:block;font-size:11.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--gris)}
+.offre-promo b{font-size:15.5px;font-weight:650;color:var(--encre)}
+.offre-prix{margin-top:16px;padding-top:16px;border-top:1px solid var(--trait-fin)}
+.offre-prix span{display:block;font-size:11.5px;font-weight:700;
+ letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+.offre-prix b{display:block;font-size:32px;font-weight:750;letter-spacing:-.03em;
+ line-height:1.15;margin-top:3px}
+.offre-prix em{display:block;font-style:normal;font-size:12.5px;font-weight:700;
+ color:var(--or-fonce);margin-top:5px}
+.offre-faits{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--trait-fin);
+ display:grid;gap:9px}
+.offre-faits div{display:flex;gap:12px;justify-content:space-between;
+ align-items:baseline;font-size:14px}
+.offre-faits dt{color:var(--gris);flex:none}
+.offre-faits dd{margin:0;text-align:right;font-weight:600;color:var(--encre)}
+.offre-actions{margin-top:18px;display:grid;gap:9px}
+.offre-actions .b-or{background:var(--action);color:#fff;border:0;
+ border-radius:999px;padding:15px 18px;font-size:15px;font-weight:750;
+ cursor:pointer;line-height:1.3;transition:.16s var(--ease)}
+.offre-actions .b-or:hover{background:var(--action-vive);color:#fff}
+.offre-duo{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.offre-duo a{text-align:center;border-radius:999px;padding:13px 12px;
+ font-size:14.5px;font-weight:700}
+.offre-duo .b-wa{background:#25d366;color:#052e16}
+.offre-duo .b-ghost{background:var(--fond);color:var(--encre);
+ border:1px solid var(--trait)}
+.offre-note{margin:14px 0 0;font-size:12.5px;line-height:1.55;color:var(--gris)}
+.offre-in .preuve{margin-top:12px !important}
+
+/* la bande de reassurance des fiches : trois lignes, pas l'accueil entier */
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+ gap:18px;margin:26px 0 24px;padding:20px 22px;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:var(--r-lg)}
+.mini b{display:block;font-size:15px;margin-bottom:3px}
+.mini b::before{content:"✓";color:var(--or-fonce);font-weight:900;margin-right:7px}
+.mini span{font-size:13.5px;color:var(--gris);line-height:1.55}
+
+/* Le repli generique des blocs secondaires d'une fiche — le quartier, ce
+   qu'il y a autour — demande par Hillel le 22/09/2026, meme principe que
+   `.simu-plier` : seuls le prix et les typologies restent ouverts d'emblee,
+   le reste se deroule sur demande. `.ville-bloc` et `.autour-bloc` gardent
+   leur grille interne telle quelle ; c'est seulement leur propre carte
+   (fond, bordure, ombre) qui est retiree pour ne pas en doubler une autour. */
+details.repli-carte{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre);margin:26px 0;overflow:hidden}
+details.repli-carte summary{cursor:pointer;list-style:none;padding:20px 26px;
+ display:flex;align-items:center;gap:10px;font-size:16px;font-weight:750;
+ color:var(--encre)}
+details.repli-carte summary::-webkit-details-marker{display:none}
+details.repli-carte summary .chev{margin-left:auto;color:var(--gris);
+ flex:none;display:block;transition:transform .15s var(--ease)}
+details.repli-carte[open] summary .chev{transform:rotate(180deg)}
+details.repli-carte summary:hover{background:var(--fond-2)}
+details.repli-carte .ville-bloc,details.repli-carte .autour-bloc{margin:0;
+ border:0;box-shadow:none;border-radius:0;border-top:1px solid var(--trait-fin)}
+@media(max-width:900px){details.repli-carte summary{padding:16px 16px}}
+
+/* ============================= les villes ==============================
+   Ce que Hillel sait et que la page taisait : ou l'on est, qui y vit, a
+   quelle distance du reste du pays. */
+.ville-bloc{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);
+ gap:28px;margin:26px 0;padding:26px;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);box-shadow:var(--ombre)}
+.ville-bloc.large{margin-top:18px}
+.ville-texte h2{font-size:20px;font-weight:750;margin-bottom:10px;
+ line-height:1.3}
+.ville-texte p{margin:0;font-size:15px;line-height:1.7;color:var(--encre-2)}
+.ville-lien{display:inline-block;margin-top:14px;color:var(--or-fonce);
+ font-weight:700;font-size:14.5px}
+.ville-lien:hover{text-decoration:underline}
+.ville-reperes{margin:0;display:grid;gap:0;align-content:start;
+ background:var(--fond-2);border:1px solid var(--trait-fin);
+ border-radius:var(--r);padding:4px 16px}
+.ville-reperes div{padding:12px 0;border-top:1px solid var(--trait-fin)}
+.ville-reperes div:first-child{border-top:0}
+.ville-reperes dt{font-size:11.5px;font-weight:700;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--gris)}
+.ville-reperes dd{margin:4px 0 0;font-size:14.5px;color:var(--encre);
+ font-weight:600;line-height:1.45}
+/* La photo de la ville. Partout ailleurs sur le site une tuile porte une
+   image ; les pages de ville n'avaient que du texte, alors que ce sont elles
+   qui recoivent les visiteurs venus de Google. La photo situe le lieu — elle
+   ne remplace jamais le rendu d'un programme. Pas de photo -> la grille
+   revient a deux colonnes et rien ne bouge. */
+.ville-bloc.avec-photo{grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr)
+ minmax(220px,.9fr)}
+.ville-photo{margin:0;position:relative;border-radius:var(--r);overflow:hidden;
+ background:var(--fond-2);aspect-ratio:4/3}
+.ville-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.ville-banniere{margin:14px 0 0;position:relative;border-radius:var(--r-lg);
+ overflow:hidden;aspect-ratio:21/9;background:var(--fond-2);
+ border:1px solid var(--trait)}
+.ville-banniere img{width:100%;height:100%;object-fit:cover;display:block}
+/* Certains auteurs Wikimedia signent en hebreu : le credit est isole,
+   sinon un nom en hebreu retournerait la ligne autour de lui. */
+.ville-credit{unicode-bidi:isolate;position:absolute;right:0;bottom:0;padding:3px 8px;
+ font-size:10.5px;line-height:1.4;color:#fff;background:rgba(0,0,0,.42);
+ border-top-left-radius:6px;max-width:100%;overflow:hidden;
+ text-overflow:ellipsis;white-space:nowrap}
+.ville-credit a{color:#fff;text-decoration:underline}
+.ville-tete{padding:22px 0 6px}
+.ville-tete h1{font-size:30px;font-weight:750;line-height:1.2}
+.ville-tete .sub{margin:8px 0 0;color:var(--gris);font-size:15.5px}
+.ville-h2{font-size:21px;font-weight:750;margin:30px 0 16px}
+
+/* ce qu'il y a d'autre, en bas d'une fiche : jamais un cul-de-sac */
+.ailleurs{margin-top:34px}
+.ailleurs h2{font-size:21px;font-weight:750;margin-bottom:16px}
+
+/* ===================== les pages ecrites (qui, legal) ==================== */
+.texte{max-width:44em;padding:22px 0 10px}
+.texte h1{font-size:31px;font-weight:750;margin-bottom:18px;line-height:1.2}
+.texte h3{font-size:17px;font-weight:750;margin:26px 0 8px}
+.texte p{margin:0 0 13px;font-size:15.5px;line-height:1.75;color:var(--encre-2)}
+.texte b{color:var(--encre);font-weight:700}
+.texte a{color:var(--or-fonce);font-weight:650;text-decoration:underline}
+
+/* ==================== la reponse du simulateur, d'abord ==================
+   Quinze lignes de tableau avant de dire ce qu'on venait chercher : c'etait
+   une feuille de comptable. On repond par une phrase, le detail se deplie. */
+.reponse{margin-top:22px;padding:22px 24px;border-radius:var(--r-lg);
+ background:linear-gradient(160deg,var(--or-clair),var(--carte) 78%);
+ border:1px solid var(--or-trait)}
+.rep-phrase{margin:0;font-size:21px;line-height:1.5;font-weight:500;
+ color:var(--encre);letter-spacing:-.01em}
+.rep-phrase b{font-weight:800;letter-spacing:-.02em}
+.rep-sous{margin:12px 0 0;font-size:14.5px;line-height:1.65;color:var(--encre-2)}
+.rep-sous b{font-weight:750;color:var(--encre)}
+.detail{margin-top:18px}
+.detail summary{cursor:pointer;font-size:14.5px;font-weight:700;
+ color:var(--or-fonce);padding:11px 0;list-style:none;
+ display:flex;align-items:center;gap:8px}
+.detail summary::-webkit-details-marker{display:none}
+.detail summary::before{content:"›";display:inline-block;font-size:19px;
+ transition:transform .16s var(--ease)}
+.detail[open] summary::before{transform:rotate(90deg)}
+.detail summary:hover{text-decoration:underline}
+
+/* ============================== le pied ================================
+   Un acheteur qui va virer deux millions de shekels a l'etranger cherche des
+   signaux : un nom, une adresse, ce qu'on fait de ses coordonnees. */
+.pub-foot{background:var(--fond-2);border-top:1px solid var(--trait);
+ padding:44px 22px 30px;text-align:left;color:var(--gris);font-size:13.5px;
+ line-height:1.7}
+.pied-haut{max-width:1240px;margin:0 auto;display:grid;
+ grid-template-columns:minmax(0,2fr) repeat(3,minmax(140px,1fr));gap:32px}
+.pied-marque svg{display:block;margin-bottom:14px}
+.pied-marque p{margin:0;max-width:34em;line-height:1.7}
+.pied-tel{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+.pied-tel a{display:inline-flex;align-items:center;gap:8px;
+ color:var(--encre-2);font-weight:700;font-size:14.5px}
+.pied-tel svg{flex:none}
+.pied-tel img{flex:none;border-radius:2px;
+ box-shadow:0 0 0 1px rgba(15,23,42,.12)}
+/* Les vraies icones de marque (couleur propre a chaque reseau) : un fond
+   uni derriere ne fait que les etouffer, elles se suffisent a elles-memes
+   sur la pierre ou sur l'ardoise. Grossies le 24/09/2026 (Hillel : « mets-les
+   en plus gros ») et repetees en haut de page (`.entete-reseaux`) en plus
+   du pied, pour qu'on les voie sans avoir a tout descendre — le blog les
+   porte aussi, puisque l'entete est commune a toutes les pages. */
+/* Les pastilles (`identite.pastille_reseau`) portent deja leur rond de
+   couleur et leur taille en ligne : le lien n'a plus qu'a les aligner et a
+   ajouter le survol. Une seule taille de rond partout dans un meme bloc
+   supprime l'ecart d'un reseau a l'autre (TikTok/Instagram paraissaient
+   plus petits que YouTube a densite d'encre egale, corrige le 24/09/2026). */
+/* Le bandeau d'installation : pose au ras du bas, jamais par-dessus le
+   bouton flottant WhatsApp/mail (voir la marge a droite). Une seule
+   information, un seul geste — rien qui ressemble a une publicite. */
+.install-bandeau{position:fixed;left:12px;right:80px;bottom:-100px;
+ z-index:20;background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);box-shadow:var(--ombre-2);
+ transition:bottom .3s var(--ease);padding-bottom:env(safe-area-inset-bottom)}
+.install-bandeau.on{bottom:12px}
+.install-in{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 16px}
+.install-picto{flex:none;width:38px;height:38px;border-radius:10px;
+ background:var(--or-lavis);color:var(--or-fonce);display:flex;
+ align-items:center;justify-content:center}
+.install-picto svg{width:20px;height:20px}
+.install-texte{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.install-texte b{font-size:14px;line-height:1.3}
+.install-texte span{font-size:12.5px;color:var(--gris);line-height:1.4}
+.install-go{flex:none;background:var(--action);color:#fff;border:none;
+ border-radius:999px;padding:9px 15px;font-size:13px;font-weight:650;
+ cursor:pointer}
+.install-fermer{flex:none;width:26px;height:26px;border:none;background:none;
+ color:var(--gris);font-size:20px;line-height:1;cursor:pointer}
+@media (max-width:640px){
+  .install-in{padding:12px}
+  .install-texte span{display:none}
+}
+
+.pied-reseaux{display:flex;align-items:center;gap:12px;margin-top:18px;
+ flex-wrap:wrap}
+.pied-reseaux a{display:flex;line-height:0;transition:transform .15s}
+.pied-reseaux a:hover{transform:translateY(-2px)}
+.pied-reseaux a span{vertical-align:top}
+.pied-reseaux a svg{display:block}
+.pied-reseaux button{margin-left:6px;background:var(--fond);
+ border:1px solid var(--trait);border-radius:999px;padding:9px 16px;
+ font-size:13.5px;font-weight:650;color:var(--encre);cursor:pointer}
+.pied-reseaux button:hover{border-color:var(--action);color:var(--action)}
+
+/* Sa propre ligne, sous la barre principale — pas dans la barre elle-meme :
+   coincee entre le burger et le logo, elle passait par-dessus (signale par
+   Hillel le 24/09/2026, capture a l'appui). Toujours en haut de page (donc
+   visible sur le blog aussi), jamais en concurrence avec le logo. */
+.entete-reseaux{display:flex;align-items:center;justify-content:center;
+ gap:14px;padding:8px 22px;border-top:1px solid var(--trait)}
+.entete-reseaux a{display:flex;line-height:0;transition:transform .15s}
+.entete-reseaux a:hover{transform:translateY(-1px)}
+.entete-reseaux a svg{display:block}
+.pied-col{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+.pied-col b{font-size:12px;font-weight:750;letter-spacing:.07em;
+ text-transform:uppercase;color:var(--encre);margin-bottom:2px}
+.pied-col a{color:var(--gris);font-size:14px}
+.pied-col a:hover{color:var(--or-fonce)}
+.pied-bas{max-width:1240px;margin:34px auto 0;padding-top:20px;
+ border-top:1px solid var(--trait);display:flex;gap:24px;flex-wrap:wrap;
+ justify-content:space-between;font-size:12px;color:var(--gris-clair)}
+.pied-bas span:last-child{max-width:56em}
+
+/* ============================== telephone =============================== */
+@media(max-width:980px){
+ .fiche-tete{grid-template-columns:1fr;gap:18px}
+ .offre-in{position:static;box-shadow:var(--ombre)}
+ .ville-bloc,.ville-bloc.avec-photo{grid-template-columns:1fr;gap:20px;
+  padding:22px 18px}
+ .ville-photo{aspect-ratio:16/9}
+ .ville-banniere{aspect-ratio:16/9;border-radius:var(--r)}
+}
+@media(max-width:900px){
+ .galerie .grand{aspect-ratio:4/3;border-radius:var(--r)}
+ .g-fleche{width:36px;height:36px;font-size:22px}
+ .vignettes{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+ .offre-in{padding:18px 16px 16px}
+ .offre-in h1{font-size:23px}
+ .offre-prix b{font-size:28px}
+ .raccourcis{gap:6px;padding-bottom:10px}
+ .raccourcis button{padding:8px 13px;font-size:13.5px}
+ .rac-lab{width:100%;margin-bottom:2px}
+ .mini{grid-template-columns:1fr;gap:14px;padding:18px}
+ .ville-tete h1{font-size:24px}
+ .texte h1{font-size:25px}
+ .rep-phrase{font-size:18px}
+ .reponse{padding:18px 16px}
+ .pied-haut{grid-template-columns:1fr 1fr;gap:24px}
+ .pied-marque{grid-column:1 / -1}
+ .plein{padding:14px}
+ .p-fleche{width:40px;height:40px}
+}
+@media(max-width:520px){
+ .pied-haut{grid-template-columns:1fr}
+}
+
+
+/* ==================== l'espace perdu en haut des sous-pages ===============
+   Sur une fiche, la banniere et la recherche sont masquees : il ne restait
+   que la somme des marges hautes du `.wrap` et du fil d'Ariane, soit une
+   bande blanche de soixante-dix pixels avant la premiere ligne. Sur un
+   telephone, c'est un dixieme du premier ecran donne a rien. */
+.fil{padding-top:6px}
+.wrap:has(.fil){padding-top:14px}
+.texte,.ville-tete{padding-top:12px}
+
+/* Sur un telephone, le prix doit arriver le plus haut possible : l'image
+   passe en 3/2 plutot qu'en 4/3, ce qui remonte le bloc d'offre d'une
+   centaine de pixels sans rien lui enlever. */
+@media(max-width:900px){
+ .galerie .grand{aspect-ratio:3/2}
+ .vignettes{grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}
+ .g-note{font-size:11px;margin-top:8px}
+ .wrap{padding-top:14px}
+}
+
+
+/* ========================= ce qu'en disent les acheteurs ==================
+   Le seul endroit du site ou quelqu'un d'autre que Hillel parle. Sobre : des
+   guillemets et un trait d'or, pas d'etoiles ni de notes sur cinq — on n'est
+   pas une place de marche, et cinq etoiles dessinees inspirent moins
+   confiance que trois phrases qui sonnent vrai. */
+.avis{margin-top:34px}
+.avis h3{font-size:21px;font-weight:750;margin-bottom:18px}
+.avis-grille{display:grid;gap:18px;
+ grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.avis figure{margin:0;background:var(--carte);border:1px solid var(--trait);
+ border-left:3px solid var(--or);border-radius:var(--r-lg);padding:22px 24px;
+ box-shadow:var(--ombre)}
+.avis blockquote{margin:0;font-size:15px;line-height:1.7;color:var(--encre-2)}
+.avis blockquote::before{content:"“";display:block;font-size:38px;
+ line-height:.6;color:var(--or);margin-bottom:8px;font-family:Georgia,serif}
+.avis figcaption{margin-top:14px;padding-top:12px;
+ border-top:1px solid var(--trait-fin);font-size:13.5px;font-weight:700;
+ color:var(--encre)}
+.avis figcaption span{font-weight:500;color:var(--gris)}
+@media(max-width:900px){
+ .avis figure{padding:18px 18px}
+ .avis h3{font-size:19px}
+}
+
+/* ========================= la page « Nos vidéos » =========================
+   Une carte par video, triee de la plus recente a la plus ancienne. Chaque
+   carte ouvre le reseau ou la video est vraiment hebergee (YouTube, Instagram
+   ou Facebook selon ce qui est disponible) : la page ne joue aucune video
+   elle-meme, elle n'est que l'index. */
+/* Une seule colonne, les pastilles les unes SOUS les autres — demande de
+   Hillel le 22/09/2026, sur grand ecran : « il faut vraiment faire des
+   pastilles, une en dessous l'autre, pas cote a cote ».
+   Ce n'est pas qu'une question de gout, la grille creait un vrai defaut :
+   les articles sont des <details>, et deplier l'un etirait toute sa rangee,
+   donnant l'impression que les cartes voisines s'ouvraient toutes seules.
+   Une colonne unique supprime la rangee, donc le defaut avec elle. */
+.video-grille{display:grid;gap:14px;margin-top:20px;
+ grid-template-columns:1fr;max-width:760px}
+/* La vraie image de la video (visage de Hillel), pas le rond generique —
+   demande le 19/09/2026. Le rond redevient le repli si l'image casse. */
+.video-vignette{position:relative;flex:0 0 auto;width:88px;height:88px;
+ border-radius:16px;overflow:hidden}
+.video-vignette img{width:100%;height:100%;object-fit:cover;display:block}
+.video-play.sur-vignette{position:absolute;inset:0;margin:auto;width:34px;
+ height:34px;background:rgba(9,14,26,.72);color:#fff;font-size:15px}
+/* Un leger mouvement sur chaque pastille de theme : Hillel, le 19/09/2026,
+   « ce n'est pas beau [...] trouve-moi des animations ». Discret et en CSS
+   pur (pas de fichier a charger) : la fleche de « marche » tique comme un
+   cours de bourse, les autres respirent doucement. */
+@keyframes tique-bourse{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes respire{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.article-carte.theme-marche .video-play svg{animation:tique-bourse 1.6s ease-in-out infinite}
+.article-carte:not(.theme-marche) .video-play{animation:respire 2.4s ease-in-out infinite}
+.video-carte{display:flex;align-items:center;gap:16px;
+ background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--ombre);
+ text-decoration:none;color:inherit;transition:border-color .15s}
+.video-carte:hover{border-color:var(--or)}
+.video-play{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+ width:88px;height:88px;border-radius:20px;background:var(--or);color:#1a1305;
+ font-size:22px}
+.video-corps{display:flex;flex-direction:column;gap:4px;min-width:0}
+.video-corps b{font-size:15px;line-height:1.4;color:var(--encre)}
+.video-date{font-size:13px;color:var(--gris)}
+.article-carte{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:2px;box-shadow:var(--ombre)}
+.article-carte summary{display:flex;align-items:center;gap:16px;
+ padding:14px 16px;cursor:pointer;list-style:none}
+.article-carte summary::-webkit-details-marker{display:none}
+/* La carte d'un article qui a sa vraie page (francais, 08/10/2026) : un lien,
+   dessine exactement comme la carte qui se deplie. */
+a.article-lien{display:flex;align-items:center;gap:16px;padding:16px 18px;
+ text-decoration:none;color:inherit}
+.article-carte .video-play{background:var(--action);color:#fff;font-size:15px}
+.article-carte .video-play svg{width:36px;height:36px;display:block}
+/* La vraie photo de Hillel remplace le dessin des qu'elle existe — demande
+   du 19/09/2026, le dessin seul jugé « très vilain ». Le dessin reste posé
+   dans le HTML et redevient visible si l'image casse (onerror retire
+   `avec-photo` en JS). */
+.article-carte .video-vignette{display:none}
+.article-carte.avec-photo .video-vignette{display:block}
+.article-carte.avec-photo .video-play{display:none}
+/* Plus de couleur par theme : cinq couleurs prises au hasard (bleu, brun,
+   vert, or, violet) faisaient une page « pas pro », hors charte — l'icone
+   seule distingue les themes, sur la couleur d'action de la marque deja
+   posee juste au-dessus. Corrige le 24/09/2026, Hillel : « fais-moi de
+   l'ordre [...] que ca fasse pas nul ». */
+.article-corps{padding:0 20px 20px 78px;color:var(--encre-2);font-size:14.5px;
+ line-height:1.7}
+.article-corps p{margin:0 0 12px}
+.article-corps p:last-child{margin-bottom:0}
+@media(max-width:600px){.article-corps{padding-left:20px}}
+
+/* ===================== les pastilles de typologie ========================
+   « À partir de 2 pièces » etait un filtre ecrit pour une base de donnees :
+   personne ne cherche un minimum, on cherche un trois-pieces. On coche donc
+   les typologies reellement en stock, plusieurs a la fois, au pouce. */
+.pastilles{display:flex;gap:8px;flex-wrap:wrap}
+.pastilles button{background:var(--fond);border:1px solid var(--trait);
+ border-radius:999px;min-width:52px;height:48px;padding:0 16px;font-size:15px;
+ font-weight:650;color:var(--encre-2);cursor:pointer;
+ transition:.14s var(--ease)}
+.pastilles button:hover{border-color:var(--action)}
+.pastilles button.on{background:var(--action);border-color:var(--action);color:#fff}
+/* L'abreviation « pieces » vivait ICI, en `content:" p."`. Une feuille de
+   style ne passe pas par le dictionnaire : les six langues affichaient donc
+   « 3 p. », y compris l'hebreu. Elle est desormais ecrite dans la page, par
+   `generer.py`, et traduite comme le reste. */
+.pastilles button small{font-weight:500;opacity:.65;font-size:13px;
+ margin-inline-start:3px}
+
+/* ======================== « Je veux ce bien » ============================
+   Hillel voulait l'energie du commerce en ligne sur les tuiles. Le mot ne
+   peut pas etre « Acheter » ni « Reserver » : il ne peut pas bloquer un lot,
+   et la page dit elle-meme qu'aucune information n'y est une offre de vente.
+   « Je veux ce bien » dit l'intention de l'acheteur et n'engage personne. */
+.tile .veux{display:block;margin-top:10px;text-align:center;
+ background:var(--action-lavis);color:var(--action);border:1px solid var(--action);
+ border-radius:999px;padding:11px 14px;font-size:14.5px;font-weight:750;
+ cursor:pointer;transition:.16s var(--ease)}
+.tile .veux:hover,.tile:hover .veux{background:var(--action);border-color:var(--action);
+ color:#fff}
+
+/* ===================== la conversion en euros ============================
+   Les clients gagnent en euros et achetent en shekels ; dans le neuf, une
+   grosse part du prix se paie trois ans plus tard, donc reste exposee au
+   change. L'euro se lit sous le shekel, jamais a sa place. */
+small.eu{display:block;font-size:12.5px;font-weight:600;color:var(--gris);
+ letter-spacing:0;margin-top:2px;text-transform:none}
+small.eu.big{font-size:13.5px}
+.tile .prix small.eu{margin-bottom:0}
+.offre-eur{display:block;font-style:normal;font-size:15px;font-weight:650;
+ color:var(--gris);margin-top:2px}
+td.num small.eu{text-align:right}
+
+
+/* ==================== l'equilibre des lignes de la banniere ==============
+   « 0 frais d'agence » se coupait entre le zero et le mot : la ligne se
+   terminait sur un « 0 » solitaire, et la promesse se lisait en deux temps.
+   La rendre insecable suffit — mais tant qu'a faire, on laisse aussi le
+   navigateur equilibrer les lignes plutot que de les remplir une a une, ce
+   qui evite les dernieres lignes de trois mots. */
+.insec{white-space:nowrap}
+.hero h1{text-wrap:balance}
+.hero p.chapeau{text-wrap:pretty;max-width:32em}
+
+/* Le champ de prix du simulateur, avec sa conversion a cote. */
+.f-eur{display:block;margin-top:5px;font-size:13px;font-weight:650;
+ color:var(--or-fonce)}
+
+/* ==================== l'agenda des paiements =============================
+   Ce que le client veut vraiment savoir : combien maintenant, combien
+   ensuite. Les deux chiffres qui commandent sont sortis du tableau. */
+.ag-clefs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+ gap:14px;margin:14px 0 18px}
+.ag-clefs > div{background:var(--fond-2);border:1px solid var(--trait);
+ border-left:3px solid var(--or);border-radius:var(--r);padding:16px 18px}
+.ag-clefs span{display:block;font-size:11.5px;font-weight:700;
+ letter-spacing:.05em;text-transform:uppercase;color:var(--gris)}
+.ag-clefs b{display:block;font-size:24px;font-weight:750;letter-spacing:-.03em;
+ margin-top:6px;line-height:1.15}
+.ag-clefs em{display:block;font-style:normal;font-size:12.5px;
+ color:var(--gris);margin-top:6px}
+table.ag th{width:64%}
+.ag-note{display:block;font-weight:400;color:var(--gris);font-size:12.5px;
+ line-height:1.55;margin-top:3px}
+.si-note.avert{background:var(--or-clair);border:1px solid var(--or-trait);
+ border-radius:var(--r);padding:13px 15px;color:var(--encre-2);
+ margin-top:16px}
+.si-note.indexation{background:var(--fond-2);border:1px solid var(--trait);
+ border-radius:var(--r);padding:13px 15px;color:var(--encre-2);margin-top:14px}
+.coche{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14.5px;
+ color:var(--encre-2);cursor:pointer}
+.coche input{width:20px;height:20px;accent-color:var(--action);cursor:pointer}
+
+
+/* ================== ce qu'on propose en plus de ce qu'on trouve ==========
+   Sous les resultats, jamais melange avec eux : c'est une proposition, pas
+   une reponse, et le visiteur doit le voir avant de cliquer. */
+.autour{margin-top:38px;padding-top:30px;border-top:1px solid var(--trait)}
+.autour h2{font-size:21px;font-weight:750;margin-bottom:6px}
+.autour-note{margin:0 0 18px;font-size:14.5px;line-height:1.6;
+ color:var(--gris);max-width:56em}
+.autour-note b{color:var(--encre);font-weight:750}
+
+
+/* ========================== remonter en haut =============================
+   Sur un telephone, la barre du bas porte deja « Être rappelé ». Sur un
+   ordinateur, arrive en bas d'une fiche, il fallait remonter tout l'ecran
+   pour retrouver le bouton de l'en-tete — et personne ne devine que le logo
+   ramene en haut. */
+.remonter{position:fixed;right:22px;bottom:40px;z-index:25;
+ display:inline-flex;align-items:center;gap:8px;
+ background:var(--encre);color:var(--fond);border:0;border-radius:999px;
+ padding:13px 20px;font-size:14px;font-weight:700;cursor:pointer;
+ opacity:.75;box-shadow:var(--ombre-3);
+ transition:transform .16s var(--ease),opacity .16s}
+.remonter:hover{transform:translateY(-2px);opacity:1}
+.remonter span{font-size:16px;line-height:1}
+@media(max-width:900px){
+ /* Au-dessus de la barre d'action, jamais dessous, et sans son libelle :
+    la place manque. Relevé et rendu un peu transparent — demande le
+    19/09/2026, pour que le trio flotte sans peser sur le contenu. */
+ .remonter{right:14px;bottom:calc(100px + env(safe-area-inset-bottom));
+  padding:12px;font-size:0;gap:0;width:46px;height:46px;
+  justify-content:center}
+ .remonter span{font-size:19px}
+}
+
+/* WhatsApp et mail, empiles juste au-dessus de la fleche « remonter » —
+   demande le 19/09/2026 : un contact toujours a portee de pouce, sur
+   n'importe quelle page, jamais seulement en bas de l'ecran. Relevés un peu
+   plus haut et rendus legerement transparents le meme jour, pour que le
+   trio se voie sans ecraser ce qu'il y a derriere. */
+.flottant{position:fixed;right:22px;z-index:25;width:46px;height:46px;
+ border-radius:999px;display:flex;align-items:center;justify-content:center;
+ opacity:.75;box-shadow:var(--ombre-3);transition:transform .16s var(--ease),opacity .16s;
+ text-decoration:none}
+.flottant:hover{transform:translateY(-2px);opacity:1}
+.flottant svg{width:22px;height:22px;display:block}
+.flottant.wa{bottom:98px;background:#25d366;color:#052e16}
+.flottant.mail{bottom:156px;background:var(--encre);color:var(--fond)}
+/* Sur telephone et tablette, plus de bulles WhatsApp et mail (Hillel,
+   24/09/2026 : « ca derange plus qu'autre chose »). Le contact y reste a
+   portee par la barre fixe du bas et par le menu ; seule la fleche
+   « remonter » flotte encore. Sur ordinateur, rien ne change. */
+@media(max-width:900px){
+ .flottant{display:none!important}
+}
+/* Pendant une simulation, sur telephone et tablette, le trio flottant se
+   retire (Hillel, 24/09/2026 : « sur des petits mobiles, le bouton flottant
+   est derangeant »). Il cachait les champs et les boutons « Suivant » :
+   - dans le tunnel du simulateur (page seule ou #/simulateur) ;
+   - quand le simulateur d'une fiche occupe l'ecran (`simu-en-vue`, pose par
+     annuaire.js) ;
+   - partout, des qu'on tape dans un champ : le clavier mange deja la moitie
+     de l'ecran. Le contact reste a portee : il revient des qu'on en sort. */
+@media(max-width:900px){
+ body.tunnel-plein .flottant,body.tunnel-plein .remonter,
+ body.sim-actif .flottant,body.sim-actif .remonter,
+ body.simu-en-vue .flottant,body.simu-en-vue .remonter,
+ body:has(input:focus,select:focus,textarea:focus) .flottant,
+ body:has(input:focus,select:focus,textarea:focus) .remonter{display:none}
+ /* La VRAIE barre du bas sur telephone est `.barre-mobile` (large, « Un
+    conseiller vous rappelle aujourd'hui » + WhatsApp) — pas `.flottant`
+    (les deux ronds mail/WhatsApp, discrets). La regle ci-dessus ne cachait
+    jamais que les ronds : la grande barre restait collee sous le bouton
+    « Envoyer » de la simulation, au point de faire appuyer sur WhatsApp par
+    erreur — vrai bug trouve le 07/10/2026, signale par Hillel apres que le
+    correctif precedent n'avait change que les ronds, jamais remarque. */
+ body.sim-actif .barre-mobile,
+ body.simu-en-vue .barre-mobile{display:none}
+}
+
+/* ===================== l'echeancier sur mesure ===========================
+   Hillel negocie l'echelonnement autant que le prix : il doit pouvoir poser
+   ses propres echeances, avec leur pourcentage et leur date. */
+.ech-liste{display:grid;gap:9px;margin-top:14px}
+.ech-ligne{display:grid;grid-template-columns:1fr 84px auto 84px auto auto;
+ gap:8px;align-items:center}
+.ech-ligne input{background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r);padding:10px 11px;font-size:14.5px;min-height:44px;
+ width:100%}
+.ech-ligne input:focus{border-color:var(--action)}
+.ech-u{font-size:13px;color:var(--gris);white-space:nowrap}
+.ech-moins{border:1px solid var(--trait);background:var(--fond);
+ color:var(--gris);border-radius:50%;width:34px;height:34px;font-size:17px;
+ line-height:1;cursor:pointer}
+.ech-moins:hover{border-color:#b42318;color:#b42318}
+.ech-plus{background:none;border:0;color:var(--or-fonce);font-size:14px;
+ font-weight:700;cursor:pointer;padding:12px 0 0;text-decoration:underline}
+@media(max-width:700px){
+ .ech-ligne{grid-template-columns:1fr auto;gap:7px}
+ .ech-ligne .ech-lib{grid-column:1 / -1}
+ .ech-ligne .ech-pct,.ech-ligne .ech-mois{width:80px}
+}
+
+/* ========================== le commutateur de langue =====================
+   Un menu qui deroule, pas six pastilles affichees d'un coup — modele
+   donne par Hillel le 19/09/2026 (drapeau + nom complet + fleche, comme
+   sur le site d'un hotel qu'il a montre en photo). Le bouton affiche la
+   langue COURANTE ; le clic ouvre la liste des cinq autres. */
+.langues-dd{position:relative;flex:none}
+.langues-actuel{display:flex;align-items:center;gap:7px;background:var(--fond-2);
+ border:1px solid var(--trait);border-radius:999px;padding:6px 12px 6px 8px;
+ font-size:13px;font-weight:650;color:var(--encre-2);cursor:pointer;
+ transition:.14s var(--ease)}
+.langues-actuel:hover{border-color:var(--gris-clair)}
+.langues-actuel .chev{color:var(--gris);transition:transform .15s var(--ease)}
+.langues-dd.ouvert .langues-actuel .chev{transform:rotate(180deg)}
+/* `:not([hidden])` porte le display — jamais la classe seule. Un
+   `display:flex` pose directement sur `.langues-menu` bat l'attribut
+   `hidden` (une regle de classe l'emporte sur la feuille de style interne
+   du navigateur) : le menu restait ouvert en permanence, sur chaque page,
+   pour chaque visiteur, jusqu'a ce qu'Hillel le signale le 19/09/2026
+   (« ca ne va pas du tout »). */
+.langues-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:20;
+ display:none;flex-direction:column;min-width:170px;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r);box-shadow:var(--ombre-2);
+ padding:6px;gap:1px}
+.langues-menu:not([hidden]){display:flex}
+.langues-menu a{display:flex;align-items:center;gap:9px;padding:9px 10px;
+ border-radius:8px;font-size:14px;font-weight:600;color:var(--encre-2)}
+.langues-menu a:hover{background:var(--fond-2);color:var(--encre)}
+@media(max-width:900px){
+ .theme{display:none}
+ .langues-menu{right:auto;left:50%;transform:translateX(-50%)}
+}
+
+/* ============================== la carte =================================
+   Dessinee a la fabrication : aucune tuile a telecharger, aucun traceur
+   tiers sur une page qui promet de n'en poser aucun, et un dessin aux
+   couleurs de la maison plutot qu'une carte qui ressemble aux autres. */
+.carte{margin-top:38px;padding-top:30px;border-top:1px solid var(--trait)}
+.carte-tete h2{font-size:21px;font-weight:750;margin-bottom:6px}
+.carte-tete p{margin:0 0 18px;font-size:14.5px;color:var(--gris);
+ line-height:1.6}
+.carte-cadre{background:var(--fond-2);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:18px;display:grid;place-items:center;
+ overflow:hidden}
+.carte-fond{width:100%;max-width:420px;height:auto;display:block}
+.carte-fond .terre{fill:var(--carte);stroke:var(--trait);stroke-width:1.5}
+.carte-fond .eau{fill:#bcd7ea;stroke:#9dc2dc;stroke-width:1}
+.carte-fond .repere circle{fill:var(--gris-clair)}
+.carte-fond .repere text{font-size:11px;fill:var(--gris);font-weight:600}
+.carte-fond .pin{cursor:pointer}
+.carte-fond .pin .halo{fill:var(--or);opacity:.16;transition:opacity .16s}
+.carte-fond .pin .rond{fill:var(--or);stroke:#fff;stroke-width:2.5}
+.carte-fond .pin .nb{fill:#1a1405;font-size:12px;font-weight:800;
+ text-anchor:middle}
+.carte-fond .pin:hover .halo{opacity:.34}
+/* La bulle ne s'affiche qu'au survol : cinq bulles ouvertes en meme temps
+   cachent la carte qu'elles decrivent. */
+.carte-fond .bulle{opacity:0;pointer-events:none;transition:opacity .14s}
+.carte-fond .pin:hover .bulle,.carte-fond .pin:focus .bulle{opacity:1}
+.carte-fond .bulle rect{fill:var(--encre);opacity:.95}
+.carte-fond .bulle text{text-anchor:middle;fill:#fff}
+.carte-fond .bulle .v{font-size:12.5px;font-weight:700}
+.carte-fond .bulle .p{font-size:11.5px;fill:#e0c163}
+.carte-note{margin:12px 2px 0;font-size:11.5px;color:var(--gris-clair)}
+
+/* ==================== ce qu'il y a autour d'un programme ================= */
+.autour-bloc{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,1fr);
+ gap:26px;margin:26px 0;padding:26px;background:var(--carte);
+ border:1px solid var(--trait);border-radius:var(--r-lg);box-shadow:var(--ombre)}
+.autour-texte h2{font-size:20px;font-weight:750;margin-bottom:8px}
+.autour-texte .dim{font-size:13px;line-height:1.6;margin:0 0 16px}
+.cm-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+ gap:12px}
+.cm{background:var(--fond-2);border:1px solid var(--trait-fin);
+ border-radius:var(--r);padding:12px 14px}
+.cm b{display:block;font-size:22px;font-weight:750;line-height:1;
+ color:var(--or-fonce)}
+.cm span{display:block;font-size:13.5px;font-weight:600;margin-top:4px}
+.cm em{display:block;font-style:normal;font-size:12px;color:var(--gris);
+ margin-top:3px;line-height:1.45}
+/* La carte du quartier : un vrai fond OpenStreetMap qu'on zoome et deplace,
+   a la place du dessin fixe d'avant le 22/09/2026. Le lien "plein ecran"
+   compense ce qu'un iframe etroit ne peut pas montrer. */
+.autour-carte{display:grid;gap:8px;position:relative}
+.autour-carte .carte-osm{width:100%;height:280px;border:1px solid var(--trait);
+ border-radius:var(--r);background:var(--fond-2)}
+.autour-carte .carte-osm-lien{font-size:12.5px;font-weight:700;
+ color:var(--action);text-align:right}
+@media(max-width:900px){
+ .autour-bloc{grid-template-columns:1fr;padding:20px 16px}
+ .autour-carte{order:-1}
+ .autour-carte .carte-osm{height:220px}
+ .carte-cadre{padding:12px}
+ .carte-fond{max-width:320px}
+}
+
+/* La carte ne doit pas avaler la page : le pays est haut et etroit, on borne
+   donc sa hauteur plutot que sa largeur. */
+.carte-fond{max-height:560px;width:auto;max-width:100%}
+@media(max-width:900px){
+ .carte-fond{max-height:420px}
+}
+
+/* ================== l'en-tete sur un telephone ==========================
+   Hillel, le 19/09/2026, en deux temps. D'abord : « le menu il est a
+   droite, il faut qu'il soit a gauche » et « c'est pas tres marketing tout
+   ca » — le menu est passe a gauche, a cote du logo, et « Etre rappele »
+   (deja fait par la barre fixe du bas) a ete retire pour degager la place.
+   Puis, une fois la place degagee : « on voit plus les langues, il faut
+   qu'on les voit sans rentrer dans le menu » et « mets-moi un logo
+   WhatsApp en haut a droite ». Les deux reviennent donc dans la barre,
+   a droite du logo — la place laissee libre par « Etre rappele » leur sert
+   maintenant. Les drapeaux (`.langues`, voir plus bas) remplacent les
+   lettres FR/EN/... : six drapeaux tiennent la ou six pastilles de texte
+   debordaient, et `overflow-x:auto` les fait defiler si un telephone tres
+   etroit n'a vraiment pas la place. */
+@media(max-width:900px){
+ .pub-bar .cta{display:none}
+ .nav-mobile .langues{display:inline-flex;margin:12px 22px 16px}
+}
+
+
+/* Le type d'appartement, a la suite des nombres de pieces : deux questions
+   differentes, un seul geste pour choisir. Le trait les separe sans les
+   couper. */
+.pastilles-sep{display:inline-block;width:1px;align-self:stretch;
+ background:var(--trait);margin:2px 4px}
+.pastilles button[data-type]{padding:0 18px}
+.pastilles button[data-type]::after{content:""}
+@media(max-width:600px){
+ .pastilles-sep{width:100%;height:1px;margin:4px 0}
+}
+
+
+/* ================= le bloc de recherche, rempli ==========================
+   Les deux questions qu'un acheteur pose en premier — ou, et combien de
+   pieces — sont posees sur le bloc, sans rien deplier. Cachees derriere
+   « Affiner ma recherche », elles laissaient une carte a moitie vide, et
+   demandaient un clic pour exister. */
+.ligne-pieces{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+ padding:0 4px 12px}
+.ligne-pieces .rac-lab{margin-right:2px}
+.ligne-pieces .pastilles{gap:7px}
+.ligne-pieces .pastilles button{height:42px;min-width:46px;padding:0 14px;
+ font-size:14.5px}
+/* Le champ Ville, sorti du sous-menu « Affiner ma recherche » pour rester
+   visible d'entree (Hillel, 24/09/2026 : il fallait pouvoir changer de
+   ville sans ouvrir un sous-menu). Une largeur fixe plutot que le
+   `width:100%` herite de `.champ select` : sinon il s'etire jusqu'a
+   occuper toute la place laissee par les pastilles.
+   Il passait deja seul sur sa propre ligne, faute de place a cote des
+   pastilles — mais `margin-left:auto` (jusqu'au 24/09/2026, deuxieme
+   retour) le poussait ensuite tout seul a droite sur cette ligne, loin
+   des pastilles, plutot que de rester a gauche comme demande. */
+.ligne-pieces .champ-ville{flex:0 0 auto;width:190px;margin-top:2px}
+@media(max-width:900px){
+ .ligne-pieces{gap:7px;padding-bottom:10px}
+ .ligne-pieces .rac-lab{width:100%;margin-bottom:2px}
+ .ligne-pieces .pastilles button{height:40px;min-width:42px;padding:0 12px;
+  font-size:14px}
+ .ligne-pieces .champ-ville{width:100%;margin-left:0}
+}
+
+/* ---------------- « Être rappelé », sur place
+
+   Hillel (09/09/2026) : le bouton ne doit pas emmener au bas de la page, mais
+   ouvrir une petite fenêtre juste au-dessus de lui. Chaque pas entre l'envie
+   et l'envoi coûte des contacts, et faire perdre au visiteur ce qu'il était en
+   train de regarder est le plus cher de tous.
+
+   Deux champs seulement — un prénom, un numéro. Le bloc complet reste en bas
+   de page pour qui veut en dire plus : il n'est pas remplacé, il est doublé
+   par un chemin plus court.
+
+   **Chaque couleur porte sa valeur de repli.** La première version de ce bloc
+   demandait `var(--surface)`, `var(--bg)` et `var(--muted)` — des noms qui
+   n'existent pas dans cette feuille, où la carte s'appelle `--carte` et le
+   fond `--fond`. Une variable inconnue ne vaut pas « blanc » : elle ne vaut
+   RIEN, et la fenêtre s'est ouverte entièrement transparente, illisible sur
+   l'écran comme sur le téléphone. Un panneau qu'on ne voit pas ne se signale
+   pas comme cassé — il se lit comme un bouton qui ne marche pas. */
+.rappel{position:fixed;z-index:60;width:min(320px,calc(100vw - 20px));
+  background:var(--carte,#ffffff);color:var(--encre,#0F172A);
+  border:1px solid var(--trait,#E7E2D8);border-radius:var(--r-lg,8px);
+  padding:16px 16px 12px;
+  box-shadow:var(--ombre-3,0 18px 44px -12px rgba(15,23,42,.28));
+  opacity:1;animation:rappel-entre .16s ease-out}
+/* L'animation ne touche QUE la position. Elle partait aussi de `opacity:0`,
+   et une fenetre dont la visibilite depend d'une animation est une fenetre
+   qu'on retrouve invisible des qu'elle ne joue pas — capture d'ecran, onglet
+   en arriere-plan, « animations reduites » dans les reglages du telephone.
+   On ne fait donc jamais dependre le fait de VOIR quelque chose du bon
+   deroulement d'une animation. */
+@keyframes rappel-entre{from{transform:translateY(6px)}
+  to{transform:none}}
+@media (prefers-reduced-motion:reduce){.rappel{animation:none}}
+.rappel-titre{display:block;font-size:15px;margin-bottom:3px;
+  color:var(--encre,#0F172A);font-weight:800}
+.rappel p b{color:var(--encre,#0F172A)}
+.rappel p{margin:0 0 10px;font-size:12.5px;color:var(--gris,#5A6172);
+  line-height:1.45}
+.rappel label{display:block;font-size:12px;font-weight:600;margin:9px 0 4px;
+  color:var(--encre,#0F172A)}
+.rappel input{width:100%;padding:11px;border:1px solid var(--trait,#E7E2D8);
+  border-radius:9px;font:inherit;font-size:16px;
+  background:var(--fond,#FAF7F1);color:var(--encre,#0F172A)}
+.rappel input:focus{outline:2px solid var(--action,#0038B8);outline-offset:1px;
+  border-color:var(--action,#0038B8)}
+.rappel-ok{width:100%;margin-top:13px;padding:12px;border:0;border-radius:10px;
+  background:var(--action,#0038B8);color:#fff;font:inherit;font-weight:700;
+  font-size:15px;cursor:pointer}
+.rappel-ok:disabled{opacity:.6;cursor:default}
+.rappel-note{margin:9px 0 0;font-size:11.5px;color:var(--gris,#5A6172)}
+.rappel-note.manque{color:var(--alerte,#b91c1c);font-weight:600}
+.rappel-x{position:absolute;top:6px;right:8px;width:30px;height:30px;border:0;
+  background:none;color:var(--gris,#5A6172);font-size:20px;line-height:1;
+  cursor:pointer;border-radius:8px}
+.rappel-x:hover{background:var(--or-clair,#F4F0E7)}
+.rappel-ok-fait{text-align:center;padding:6px 0}
+.rappel-ok-fait b{font-size:15px}
+.rappel-ok-fait span{display:inline-flex;align-items:center;
+  justify-content:center;width:38px;height:38px;border-radius:50%;
+  background:var(--action,#0038B8);color:#fff;font-size:20px;margin-bottom:8px}
+/* Le piege a robots : present dans le DOM, invisible pour un humain. */
+.rappel .pot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* Indicatif telephonique + suggestions de mail — 19/09/2026. Corrige le
+   19/09/2026 (« très grossier, je veux un truc fin classe ») : sobre, une
+   ligne par pays (jamais des pastilles en vrac), et un contour de focus
+   dans le bleu de la marque — jamais l'anneau dore/systeme par defaut. */
+.tel-boite{display:flex;gap:0;border:1px solid var(--trait);
+ border-radius:var(--r);overflow:hidden;background:var(--fond);
+ transition:border-color .16s var(--ease)}
+.tel-boite:focus-within{border-color:var(--action)}
+.tel-drap{flex:none;border:0;border-right:1px solid var(--trait);
+ background:transparent;padding:0 12px;font-size:14.5px;font-weight:600;
+ cursor:pointer;min-height:46px;letter-spacing:.01em}
+.tel-boite input{flex:1;min-width:0;border:0;border-radius:0;background:none}
+.tel-boite input:focus{border-color:transparent}
+.tel-champ{position:relative}
+.tel-liste{position:absolute;z-index:30;top:100%;left:0;margin-top:6px;
+ width:min(300px,100%);background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r-lg,14px);box-shadow:var(--ombre-3);padding:10px;
+ max-height:280px;display:flex;flex-direction:column}
+/* `display:flex` ci-dessus a la meme specificite que la regle systeme
+   `[hidden]{display:none}` et passe apres elle : sans ce correctif, la
+   liste restait affichee en permanence et cachait le champ mail — bug
+   remonte le 19/09/2026. */
+.tel-liste[hidden]{display:none}
+.tel-recherche{width:100%;border:1px solid var(--trait);border-radius:var(--r);
+ padding:9px 11px;font-size:14px;margin-bottom:8px;outline:none;
+ transition:border-color .16s var(--ease)}
+.tel-recherche:focus{border-color:var(--action);box-shadow:0 0 0 1px var(--action)}
+.tel-options{overflow-y:auto}
+.tel-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;
+ width:100%;text-align:left;background:none;border:0;
+ padding:9px 8px;font-size:14.5px;cursor:pointer;border-radius:8px;
+ color:var(--encre-2);line-height:1.3}
+.tel-opt:hover{background:var(--fond-2)}
+.tel-opt span{color:var(--gris);font-size:13.5px;flex:none}
+.tel-sep{border-top:1px solid var(--trait);margin:6px 2px}
+.mail-suggestions{position:absolute;z-index:30;left:0;right:0;margin-top:6px;
+ background:var(--fond);border:1px solid var(--trait);
+ border-radius:var(--r-lg,14px);box-shadow:var(--ombre-3);overflow:hidden;
+ padding:4px}
+.mail-suggestions button{display:block;width:100%;text-align:left;background:none;
+ border:0;padding:9px 10px;font-size:14px;cursor:pointer;border-radius:8px;
+ color:var(--encre-2)}
+.mail-suggestions button:hover{background:var(--fond-2)}
+
+/* ===================== Home ordinateur, 05/10/2026 =====================
+   Maquette validee par Hillel : l'accroche a gauche, le simulateur a
+   droite, la recherche posee juste dessous (donc dans le premier ecran),
+   puis une bande « Ou acheter » dont les villes s'ouvrent au survol.
+   Reserve a l'ordinateur : sur telephone rien ne change. */
+.ou{display:none}
+@media(min-width:901px){
+ .hero .dedans{grid-template-columns:minmax(0,1fr) 400px;
+  grid-template-areas:"sp simu" "zf simu" "h1 simu" "pr simu";
+  grid-template-rows:1fr auto auto 1fr;
+  column-gap:44px;align-items:start;padding:40px 22px 112px}
+ .hero .zf-bandeau{text-align:start;font-size:clamp(44px,4vw,58px);margin:0 0 22px}
+ .hero .zf-bandeau + h1{background:none;-webkit-backdrop-filter:none;
+  backdrop-filter:none;box-shadow:none;border-radius:0;padding:0;
+  display:block;justify-content:flex-start;text-align:start;max-width:30em;
+  font-size:clamp(21px,1.7vw,27px);font-weight:700;line-height:1.38;
+  color:var(--or-clair)}
+ .hero h1 .h1-a{display:block}
+ @media(min-width:1180px){.hero h1 .h1-a{white-space:nowrap}}
+ .hero h1 .h1-b{display:block;font-weight:400;opacity:.95;font-size:.86em;
+  line-height:1.38;margin-top:14px;padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.28)}
+ .hero h1 em{font-style:normal;color:var(--or)}
+ .hero-simu{align-self:center}
+ /* la recherche d'abord, le modele ensuite */
+ .bloc-accueil{display:flex;flex-direction:column}
+ .bloc-accueil .cherche{order:-1;margin-top:-76px;width:100%}
+ .bloc-accueil .modele{order:1;margin-top:8px}
+ .bloc-accueil .ou{order:2;display:block}
+ body.simulateur-seul .ou{display:none}
+ /* le moteur : pieces | ville | budget | bouton, sur une seule ligne */
+ .cherche .boite{display:grid;column-gap:22px;row-gap:6px;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+  padding:10px 28px 26px;align-items:end}
+ .cherche .onglets{grid-column:1/-1;padding:0;margin:0 -8px 12px;
+  border-bottom:1px solid var(--trait)}
+ .cherche .onglets button{border-radius:0;padding:14px 20px;font-size:15px;
+  border-bottom:3px solid transparent;margin-bottom:-1px;background:none}
+ .cherche .onglets button.on{background:none;color:var(--action);
+  border-bottom-color:var(--action)}
+ .cherche #raccourcis{display:none}
+ .cherche .ligne-pieces{display:contents}
+ .cherche .ligne-pieces .rac-lab{grid-column:1/-1;grid-row:2;width:auto;margin-top:6px}
+ .cherche .ligne-pieces .pastilles{grid-column:1/-1;grid-row:3;display:flex;
+  flex-wrap:wrap;gap:10px;margin-bottom:14px}
+ .cherche .ligne-pieces .pastilles button{flex:1 1 auto;padding:0 16px;
+  min-height:46px;text-align:center;white-space:nowrap}
+ .cherche .ligne-pieces .pastilles-sep{flex:none}
+ .cherche .ligne-pieces .champ-ville{grid-column:1;grid-row:4;align-self:end;max-width:none;width:100%}
+ .cherche .filtres-toggle,.cherche .voir-res{display:none}
+ .cherche .champs,.cherche .champs[hidden]{display:contents}
+ .cherche .champs .champ{grid-column:2;grid-row:4;align-self:end}
+ .cherche .champs .chercher{grid-column:3;grid-row:4;height:50px;font-size:16px;border-radius:999px;
+  padding:0 34px;box-shadow:0 6px 18px color-mix(in srgb,var(--action) 35%,transparent)}
+ /* « Ou acheter » : les villes s'ouvrent au survol */
+ .ou{max-width:1240px;margin:8px auto 0;padding:26px 22px 0;width:100%}
+ .ou-tete{margin-bottom:14px}
+ .ou h2{font-size:26px;font-weight:750}
+ .accord{display:flex;gap:12px;height:280px}
+ .pan{position:relative;flex:1 1 0;min-width:0;border-radius:18px;overflow:hidden;
+  cursor:pointer;color:#fff;background:#1b2438 center/cover;border:0;
+  padding:0;text-align:start;font:inherit;box-shadow:var(--ombre-2, 0 10px 28px rgba(15,23,42,.18));
+  transition:flex-grow .55s cubic-bezier(.2,.8,.2,1)}
+ .pan::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(15,23,42,0) 35%,rgba(15,23,42,.88))}
+ .pan.on{flex-grow:4}
+ .pan .v{position:absolute;inset-inline-start:18px;bottom:16px;font-weight:750;
+  font-size:17px;white-space:nowrap;transition:opacity .2s}
+ .pan.on .v{opacity:0}
+ .pan .d{position:absolute;inset-inline:24px;bottom:20px;display:flex;
+  justify-content:space-between;align-items:flex-end;gap:14px;opacity:0;
+  transform:translateY(12px);white-space:nowrap;
+  transition:opacity .35s .15s,transform .4s .15s}
+ .pan.on .d{opacity:1;transform:none}
+ .pan .d b{display:block;font-size:28px;font-weight:800;line-height:1.1}
+ .pan .d span{font-size:14.5px;opacity:.93}
+ .pan .d em{font-style:normal;flex:none;background:#fff;color:#0F172A;
+  font-weight:700;font-size:13.5px;padding:10px 16px;border-radius:999px}
+ .pan .ville-credit{opacity:0;transition:opacity .3s}
+ .pan.on .ville-credit{opacity:1}
+}
+@keyframes zoom-lent{from{transform:scale(1)}to{transform:scale(1.07)}}
+@media(min-width:901px) and (prefers-reduced-motion:no-preference){
+ .hero .photo img{animation:zoom-lent 22s ease-out forwards}
+}
+@media(prefers-reduced-motion:reduce){.pan,.pan .d{transition:none}}
+@media(min-width:901px){
+ .cherche .onglets button,.cherche #onglet-simuler{border:0;border-bottom:3px solid transparent;border-radius:0}
+ .cherche .onglets button.on{border-bottom-color:var(--action)}
+}
+/* Sans panneau derriere l'accroche, le voile porte seul la lisibilite : il
+   est plus dense du cote du texte (a gauche, a droite en hebreu). */
+@media(min-width:901px){
+ .hero .voile{background:linear-gradient(90deg,rgba(6,12,24,.80) 0%,rgba(6,12,24,.62) 55%,rgba(6,12,24,.40) 100%)}
+ [dir=rtl] .hero .voile{background:linear-gradient(270deg,rgba(6,12,24,.80) 0%,rgba(6,12,24,.62) 55%,rgba(6,12,24,.40) 100%)}
+ .nuit .hero .voile{background:linear-gradient(180deg,rgba(6,12,24,.72),rgba(6,12,24,.52) 45%,rgba(6,12,24,.78))}
+ .hero .zf-bandeau + h1{text-shadow:0 2px 14px rgba(0,0,0,.45)}
+}
+
+/* Prix indicatif de la ville sous une carte « prix sur demande » (agregateur). */
+.tile.sur-demande .indicatif{font-size:12.5px;line-height:1.45;margin:6px 0 2px;color:var(--encre)}
+.tile.sur-demande .indicatif small{display:block;opacity:.72;font-size:11px;margin-top:2px}
+/* Les boutons « Recevoir les prix » d'une meme rangee sur une meme ligne,
+   qu'une carte ait un prix indicatif ou non. */
+.tile.sur-demande .corps{flex:1}
+.tile.sur-demande .veux{margin-top:auto}
+.tile.sur-demande .indicatif{margin-bottom:12px}
+
+.legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
+.legal h1{font-size:30px;margin:24px 0 8px}
+.legal h2{font-size:19px;margin:34px 0 10px}
+.legal p,.legal li{font-size:15px}
+.legal ul{padding-left:22px}
+.legal .maj{opacity:.65;font-size:13px}
+.legal a.retour{display:inline-block;margin-top:40px;font-weight:600}
+.legal .marque{display:block;width:132px;margin:0 auto 8px}
+</style><script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','3820890624762303');fbq('track','PageView');
+</script>
+<script>
+window.BH_ADS_CONVERSION='AW-18507495474/7gu2CMfgv5kdELLwh_lE';
+(function(){if(!window.gtag){var s=document.createElement('script');s.async=true;
+s.src='https://www.googletagmanager.com/gtag/js?id=AW-18507495474';document.head.appendChild(s);
+window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};
+gtag('js',new Date());}gtag('config','AW-18507495474');})();
+</script></head><body>
+<main class=legal>
+<a href="index.html" class=marque><svg viewBox="0 0 152 64" width="95.00" height="40"
+ style="aspect-ratio:152/64;direction:ltr" role="img"
+ aria-label="BH" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
+  <g transform="translate(13.25 12) scale(0.5)" fill="#c9a227"><path d="M5 76 V32 L19 22 V76 Z"/><path d="M25 76 V12 L42 0 V76 Z"/><path d="M48 76 V30 L62 40 V76 Z"/><rect x="0" y="75.5" width="67" height="4.5" rx="2.2"/></g>
+  <text x="74" y="47" font-family="Helvetica,Arial,sans-serif" font-size="40"
+        font-weight="800" letter-spacing="-1.5" fill="currentColor">BH</text>
+</svg></a>
+<h1>Conditions d'utilisation</h1>
+<p class=maj>Derniere mise a jour : 06/09/2026</p>
+
+<h2>1. Objet du site</h2>
+<p>Ce site presente des programmes immobiliers situes en Israel et met a
+disposition des outils de simulation (taxe d'acquisition, frais annexes,
+financement). Il s'adresse a des personnes, principalement francophones, qui
+envisagent d'acheter un bien en Israel.</p>
+
+<h2>2. Ce que ce site n'est pas</h2>
+<p>Les informations publiees ici sont donnees a titre indicatif et ne
+constituent ni une offre de vente, ni un conseil juridique, fiscal ou
+financier personnalise. Une acquisition immobiliere en Israel suppose
+l'intervention d'un avocat ; les simulations proposees ne remplacent ni son
+analyse, ni celle d'un etablissement bancaire.</p>
+
+<h2>3. Prix et disponibilites</h2>
+<p>Les prix affiches sont ceux communiques par les promoteurs a la date de
+publication. Ils peuvent varier, notamment du fait de l'indexation legale des
+ventes sur plan, et un lot presente peut avoir ete vendu depuis. Seul un
+document signe avec le vendeur engage les parties.</p>
+
+<h2>4. Simulations</h2>
+<p>Les montants calcules par le simulateur reposent sur les baremes fiscaux et
+les taux de marche en vigueur a la date indiquee sur la page. Ils sont des
+estimations. Le taux reellement accorde par une banque depend du dossier de
+l'emprunteur et n'est connu qu'apres son examen.</p>
+
+<h2>5. Honoraires</h2>
+<p>BH Nadlan ne facture aucun honoraire d'agence a l'acquereur : l'achat se
+fait directement aupres du promoteur, au prix negocie. Un accompagnement
+apres la signature peut faire l'objet d'une remuneration distincte, annoncee
+a l'avance et acceptee par ecrit.</p>
+
+<h2>6. Propriete intellectuelle</h2>
+<p>Les textes et l'habillage de ce site appartiennent a son editeur. Les
+visuels des programmes sont la propriete des promoteurs concernes et sont
+publies dans le cadre de leur commercialisation. Les photographies de villes
+proviennent de Wikimedia Commons et restent soumises a leurs licences
+respectives.</p>
+
+<h2>7. Liens et services tiers</h2>
+<p>Le site propose des liens vers WhatsApp et vers des messageries afin de
+faciliter la prise de contact. L'usage de ces services releve de leurs propres
+conditions.</p>
+
+<h2>8. Droit applicable</h2>
+<p>Les presentes conditions sont soumises au droit israelien. Tout differend
+sera porte devant les juridictions competentes d'Israel.</p>
+<h2>9. Editeur</h2><ul><li><strong>Responsable :</strong> Hillel Bijaoui</li><li><strong>Enseigne :</strong> BH Nadlan</li><li><strong>Activite :</strong> Conseil en acquisition immobiliere en Israel</li><li><strong>Raison sociale :</strong> Bijaoui Hillel — BH Nadlan</li><li><strong>Numero d'entreprise :</strong> Osek mourshe (entrepreneur agree) n° 333788610</li><li><strong>Adresse :</strong> Harav Salman Mutzafi 8, Jerusalem, Israel</li><li><strong>Courriel :</strong> <a href='mailto:hillel@bh-nadlan.com'>hillel@bh-nadlan.com</a></li><li><strong>Telephone :</strong> +972(0)58.567.89.26 (Israel) — +33(0)7.67.28.47.10 (France)</li></ul>
+<a class=retour href="index.html">&larr; Retour a l'accueil</a>
+</main></body></html>
