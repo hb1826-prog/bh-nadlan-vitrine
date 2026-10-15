@@ -1077,6 +1077,14 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
  text-transform:uppercase;color:var(--gris);margin:20px 0 8px}
 .si-note{font-size:13px;color:var(--gris);margin:9px 0 0;line-height:1.55}
 .si-note.manque{color:var(--alerte)}
+/* Le resume d'une etape deja remplie du simulateur, empile au-dessus de la
+   question active (Hillel, 15/10/2026) : discret, mais le lien « modifier »
+   reste bien visible — c'est lui qui permet de remonter corriger une
+   reponse sans perdre les suivantes. */
+.tunnel-resume{margin:0 0 6px;padding:8px 11px;border-radius:10px;
+ background:var(--fond-2);font-size:12.5px}
+.tunnel-resume a{color:inherit;text-decoration:none}
+.tunnel-resume a:hover{text-decoration:underline}
 .si-pied{font-size:12px;color:var(--gris-clair);margin-top:22px;line-height:1.6}
 .si-titre{font-size:12px;font-weight:750;letter-spacing:.08em;
  text-transform:uppercase;color:var(--gris);margin:26px 0 10px}
@@ -6991,6 +6999,47 @@ function typeDeBienHTML() {
   </div>`;
 }
 
+/* Le resume d'une etape DEJA remplie, une ligne, avec un lien pour la
+   rouvrir — demande par Hillel le 15/10/2026 : « a chaque question, le
+   resume des reponses precedentes, et la possibilite de modifier en
+   remontant ». Les points de la jauge existaient deja pour y revenir
+   (19/09/2026) ; ce qui manquait, c'est de VOIR ce qu'on a repondu sans
+   avoir a cliquer pour se souvenir. `null` si cette etape n'a encore rien
+   a montrer (ex: prix pas encore tape) — ne s'affiche alors pas. */
+function resumeEtape(i) {
+  if (i === 1) {
+    if (TUNNEL.apport) {
+      if (!TUNNEL.montant) return null;
+      const somme = TUNNEL.devise === 'EUR'
+        ? mil(TUNNEL.montant) + ' € · ' + mil(apportIls()) + ' ₪'
+        : mil(TUNNEL.montant) + ' ₪' + (eur(TUNNEL.montant) ? ' · ' + eur(TUNNEL.montant) : '');
+      return T('Votre apport') + ' : ' + somme;
+    }
+    if (!TUNNEL.prix) return null;
+    const type = TUNNEL.revente === true ? T('Seconde main')
+      : TUNNEL.revente === false ? T('Projet neuf') : null;
+    return T('Prix du bien') + ' : ' + mil(TUNNEL.prix) + ' ₪'
+      + (type ? ' · ' + type : '');
+  }
+  if (i === 2) {
+    if (!TUNNEL.profil) return null;
+    const libelle = (DONNEES.profils || {})[TUNNEL.profil];
+    return libelle ? T('Votre situation') + ' : ' + esc(libelle) : null;
+  }
+  if (i === 3) {
+    if (TUNNEL.comptant) return T('Financement') + ' : ' + T('sans crédit');
+    if (!TUNNEL.ltv) return null;
+    return T('Financement') + ' : ' + TUNNEL.ltv + ' % · ' + (TUNNEL.duree || '') + ' ' + T('ans');
+  }
+  if (i === 4) {
+    // Trois postes negociables (avocat, accompagnement, courtier) : un
+    // resume d'une ligne listerait trop de details pour peu d'intelligibilite,
+    // on se contente de confirmer que l'etape est passee.
+    return TUNNEL.avocatMode ? T('Frais annexes') + ' : ' + T('définis') : null;
+  }
+  return null;
+}
+
 function jaugeHTML(n) {
   // Seulement a main levee : un simulateur ouvert depuis la fiche d'un
   // programme neuf (`programmeDuTunnel()`) n'a pas a se demander son propre
@@ -7000,15 +7049,13 @@ function jaugeHTML(n) {
     + '<div class="tunnel-jauge">' + etapesDuTunnel().map(i =>
     '<i class="seg' + (i <= n ? ' fait' : '') + (i < n ? ' cliquable' : '')
     + '" data-etape="' + i + '"></i>').join('') + '</div>';
-  // Parcours « apport » : la somme et sa monnaie, rappelees a chaque etape,
-  // pour qu'on ne se demande jamais si l'on a tape des euros ou des shekels.
-  if (!TUNNEL.apport || n < 2 || !TUNNEL.montant) return jauge;
-  const somme = TUNNEL.devise === 'EUR'
-    ? mil(TUNNEL.montant) + ' € · ' + mil(apportIls()) + ' ₪'
-    : mil(TUNNEL.montant) + ' ₪' + (eur(TUNNEL.montant) ? ' · ' + eur(TUNNEL.montant) : '');
-  return jauge + '<p class="si-note" style="margin:0 0 10px">' + T('Votre apport')
-    + ' : <b>' + somme + '</b> · <a href="javascript:void 0" data-etape="1">'
-    + T('modifier') + '</a></p>';
+  const resumes = etapesDuTunnel().filter(i => i < n).map(i => {
+    const texte = resumeEtape(i);
+    return texte ? '<p class="si-note tunnel-resume">'
+      + '<a href="javascript:void 0" data-etape="' + i + '">' + texte
+      + ' · ' + T('modifier') + '</a></p>' : '';
+  }).join('');
+  return jauge + resumes;
 }
 
 function dessinerEtape(n) {
