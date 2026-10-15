@@ -3236,13 +3236,16 @@ let TUNNEL = {
   // Hillel (`f.taux`, voir `etapeFrais`) plutot que d'un chiffre fige ici.
   frais: null,
   canal: 'whatsapp',
-  // Simulation « a main levee » (sans bien reel choisi) : par defaut un
-  // projet neuf, comme avant — Hillel peut la basculer sur « seconde main »
-  // en haut de chaque etape, auquel cas le mini-site se construit comme
-  // pour un vrai bien de seconde main (2 % de frais d'agence non
-  // retirables, paiement integral a la signature, pas d'echeancier de
-  // chantier). Demande le 07/10/2026.
-  revente: false,
+  // Simulation « a main levee » (sans bien reel choisi) : `null` tant que le
+  // visiteur n'a pas repondu, meme logique que `profil` ci-dessus — un
+  // defaut « neuf » deja coche passait inapercu (cas Yoav Abihatsira, qui
+  // achetait de l'ancien mais a recu l'echeancier de chantier d'un neuf).
+  // Hillel peut la basculer sur « seconde main » en haut de chaque etape,
+  // auquel cas le mini-site se construit comme pour un vrai bien de seconde
+  // main (2 % de frais d'agence non retirables, paiement integral a la
+  // signature, pas d'echeancier de chantier). Demande le 07/10/2026, rendue
+  // obligatoire sur le parcours « prix » le 15/10/2026.
+  revente: null,
 };
 
 /* Deux simulations tenues A PART — Hillel, le 23/09/2026 : « une simulation
@@ -6887,11 +6890,15 @@ function economieAgence(prix) {
    sur une fiche) doit pouvoir dire elle aussi qu'elle porte sur une revente,
    pour que le mini-site se construise avec les memes regles qu'un vrai bien
    de seconde main (2 % de frais d'agence non retirables, tout paye a la
-   signature, pas d'echeancier de chantier). */
+   signature, pas d'echeancier de chantier).
+   Ni bouton pre-coche le 15/10/2026 : aucun des deux boutons ne porte « on »
+   tant que `TUNNEL.revente` reste `null` (ni vrai ni faux), pour que ce soit
+   une vraie question posee, pas un filtre par defaut qu'on ne remarque pas. */
 function typeDeBienHTML() {
-  return `<div class="seg tunnel-type-bien">
-    <button type="button" data-tunnel-revente="non" class="${!TUNNEL.revente ? 'on' : ''}">${T('Projet neuf')}</button>
-    <button type="button" data-tunnel-revente="oui" class="${TUNNEL.revente ? 'on' : ''}">${T('Seconde main')}</button>
+  return `<div class="si-lab">${T('Neuf ou seconde main ?')}</div>
+  <div class="seg tunnel-type-bien">
+    <button type="button" data-tunnel-revente="non" class="${TUNNEL.revente === false ? 'on' : ''}">${T('Projet neuf')}</button>
+    <button type="button" data-tunnel-revente="oui" class="${TUNNEL.revente === true ? 'on' : ''}">${T('Seconde main')}</button>
   </div>`;
 }
 
@@ -6990,7 +6997,12 @@ function etapeApport(zone) {
 /* Etape 1 : le prix du bien, seul — rien d'autre. Demande par Hillel le
    09/09/2026 : le prix doit venir avant le profil, et le financement doit
    passer APRES le profil (pour connaitre le vrai plafond de credit avant de
-   le proposer), plutot que les deux ensemble comme au premier jet. */
+   le proposer), plutot que les deux ensemble comme au premier jet.
+   Neuf/seconde main obligatoire ici depuis le 15/10/2026 (cas Yoav
+   Abihatsira) : c'est l'ecran d'entree du parcours « prix », donc le seul
+   endroit ou bloquer tant que `TUNNEL.revente` n'a pas de reponse — le
+   parcours « apport » (`etapeApport`) n'est pas concerne, lui n'a jamais ete
+   en cause. */
 function etapePrix(zone) {
   zone.innerHTML = `
     ${jaugeHTML(1)}
@@ -7005,7 +7017,8 @@ function etapePrix(zone) {
       <span class="f-eur" id="t-prix-eur">${TUNNEL.prix ? eur(TUNNEL.prix) : ''}</span></div>
 
     <div class="etape-nav">
-      <button type="button" class="suivant" id="t-suivant">${T('Suivant')}</button>
+      <button type="button" class="suivant" id="t-suivant"
+              ${TUNNEL.revente === null ? 'disabled' : ''}>${T('Suivant')}</button>
     </div>`;
 
   const prix = poserMilliers($('#t-prix', zone));
@@ -7025,6 +7038,7 @@ function etapePrix(zone) {
   $('#t-suivant', zone).onclick = () => {
     TUNNEL.prix = nombreSaisi(prix);
     if (!TUNNEL.prix) { prix.focus(); return; }
+    if (TUNNEL.revente === null) return;
     dessinerEtape(2);
   };
 }
