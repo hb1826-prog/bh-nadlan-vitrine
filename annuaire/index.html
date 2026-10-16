@@ -7847,6 +7847,12 @@ function v2Cartes() {
   // `undefined`, et le calcul des frais (`v2LireFrais`) manquerait son
   // 0,5 % (Hillel, 16/10/2026).
   if (!TUNNEL.avocatMode) { TUNNEL.avocatMode = 'notre'; TUNNEL.avocatLibre = defaut.avocat || 0.5; }
+  // Meme regle pour l'accompagnement (1 %, neuf uniquement) : deja choisi
+  // d'office, le visiteur reste libre de decocher (Hillel, 16/10/2026).
+  // Imposee (ancien), la valeur est 'oui' quoi qu'il arrive — ecrite ici
+  // pour la meme raison que l'avocat ci-dessus (le bouton Continuer seul,
+  // sans clic sur l'option, ne doit jamais laisser le champ a `undefined`).
+  if (accompagnementImpose || !TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'oui';
 
   const cartes = [
     {
@@ -7929,14 +7935,14 @@ function v2Cartes() {
         ? T("Frais d'agence") + ' · ' + T('2 % du prix, non négociables')
         : (TUNNEL.accompagnementMode === 'non' ? T('Sans accompagnement')
            : T('Accompagnement après la signature') + ' · ' + T('1 % du prix')),
-      get: () => accompagnementImpose ? 'oui' : (TUNNEL.accompagnementMode || null),
+      get: () => TUNNEL.accompagnementMode,
       set: (v) => { TUNNEL.accompagnementMode = v; },
       choix: accompagnementImpose ? [
         {v:'oui', t:T("Frais d'agence"), s:T('2 % du prix, non négociables'),
          aide:T('Comme nous ne sommes pas payés par un promoteur sur ce type de bien, ces frais couvrent la négociation, le dossier et le suivi jusqu’aux clés.')},
       ] : [
         {v:'oui', t:T('Accompagnement après la signature'), s:T('1 % du prix'),
-         aide: notesFrais.agence || ''},
+         aide: notesFrais.agence || '', defaut:true},
         {v:'non', t:T('Sans accompagnement'), s:T('Vous gérez seul après la signature'),
          avertissement:T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')},
       ],
