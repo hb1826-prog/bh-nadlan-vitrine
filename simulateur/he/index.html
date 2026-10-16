@@ -7840,6 +7840,8 @@ function v2Cartes() {
   // pour la meme raison que l'avocat ci-dessus (le bouton Continuer seul,
   // sans clic sur l'option, ne doit jamais laisser le champ a `undefined`).
   if (accompagnementImpose || !TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'oui';
+  // Meme chose pour le courtier recommande (Hillel, 16/10/2026).
+  if (!TUNNEL.courtierMode) TUNNEL.courtierMode = 'notre';
 
   const cartes = [
     {
@@ -7943,11 +7945,11 @@ function v2Cartes() {
         return T('Mon propre courtier') + ' · ' + TUNNEL.courtierLibre
           + (TUNNEL.courtierLibreType === 'pct' ? ' %' : ' ₪');
       },
-      get: () => TUNNEL.courtierMode || null,
+      get: () => TUNNEL.courtierMode,
       set: (v) => { TUNNEL.courtierMode = v; },
       choix: [
         {v:'notre', t:T('Le courtier que nous recommandons'),
-         s: mil(COURTIER_RECOMMANDE) + ' ₪, ' + T('prix constaté'), aide: notesFrais.courtier || ''},
+         s: mil(COURTIER_RECOMMANDE) + ' ₪, ' + T('prix constaté'), aide: notesFrais.courtier || '', defaut:true},
         {v:'libre', t:T('Mon propre courtier'), s:T('Vous avez déjà quelqu’un en tête'),
          libre:{label:T('Ses honoraires'),
            modeGet:()=>TUNNEL.courtierLibreType||'montant', modeSet:(m)=>{TUNNEL.courtierLibreType=m;},
