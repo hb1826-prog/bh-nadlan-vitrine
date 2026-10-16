@@ -7125,6 +7125,7 @@ function etapeApport(zone) {
   $('#t-suivant', zone).onclick = () => {
     TUNNEL.montant = nombreSaisi(champ);
     if (!TUNNEL.montant) { champ.focus(); return; }
+    if (TUNNEL.revente === null) return;
     dessinerEtape(2);
   };
 }
