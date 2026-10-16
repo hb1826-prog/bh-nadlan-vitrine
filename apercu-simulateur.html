@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BH Nadlan — Aperçu nouveau simulateur</title>
+<style>
+:root{
+  --or:#C9A227; --or-fonce:#7A6013; --or-clair:#FBF5E4; --or-trait:#E6D9B0;
+  --encre:#0F172A; --encre-2:#333B4D; --gris:#5A6172; --gris-clair:#6A7284;
+  --fond:#FAF7F1; --fond-2:#F4F0E7; --carte:#FFFFFF; --trait:#E7E2D8;
+  --trait-fin:#F1EDE4; --vert:#0B6E4F; --vert-fond:#E9F7F0;
+  --action:#0B6BD6; --action-vive:#0A57AE; --action-lavis:#EAF3FE;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font:16px/1.5 Rubik,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+/* ---- en-tete de marque ---- */
+.tete{padding:22px 20px 16px;text-align:center}
+.tete .logo{display:inline-flex;align-items:center;gap:9px;margin-bottom:10px}
+.tete .logo .carre{width:38px;height:38px;border-radius:9px;background:var(--encre);
+  display:grid;place-items:center;color:var(--or);font-weight:800;font-size:17px}
+.tete .logo b{font-size:19px;letter-spacing:.06em;font-weight:800}
+.tete h1{margin:4px 0 2px;font-size:21px;font-weight:800;letter-spacing:-.01em}
+.tete p{margin:0;color:var(--gris);font-size:14px}
+
+/* ---- barre de progression ---- */
+.progres{padding:0 20px;margin:14px 0 4px}
+.progres .etiquette{display:flex;justify-content:space-between;font-size:12.5px;
+  color:var(--gris);font-weight:650;margin-bottom:7px}
+.progres .etiquette b{color:var(--encre)}
+.progres .piste{height:6px;border-radius:99px;background:var(--trait);overflow:hidden}
+.progres .fait{height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--or-fonce),var(--or));
+  transition:width .45s cubic-bezier(.65,0,.35,1)}
+
+/* ---- le fil de cartes ---- */
+.fil{flex:1;padding:14px 16px 100px;display:flex;flex-direction:column;gap:10px}
+
+.q{background:var(--carte);border:1px solid var(--trait);border-radius:16px;
+  overflow:hidden;transition:box-shadow .3s}
+.q.active{box-shadow:0 10px 30px -12px rgba(15,23,42,.18);border-color:var(--or-trait)}
+
+/* En-tete de carte : toujours visible, meme repliee */
+.q-tete{padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.q-num{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:12.5px;font-weight:800;background:var(--fond-2);color:var(--gris);
+  transition:background .3s,color .3s}
+.q.fait .q-num{background:var(--vert-fond);color:var(--vert)}
+.q.active .q-num{background:var(--encre);color:var(--or)}
+.q-texte{flex:1;min-width:0}
+.q-label{font-size:12px;font-weight:700;color:var(--gris);text-transform:uppercase;
+  letter-spacing:.04em;margin:0 0 2px}
+.q-reponse{font-size:17px;font-weight:800;margin:0;transition:font-size .3s;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q.vide .q-reponse{color:var(--gris-clair);font-weight:600;font-size:14.5px}
+.q-modif{flex:none;font-size:12.5px;font-weight:700;color:var(--action);
+  display:none}
+.q.fait .q-modif{display:block}
+
+/* Corps : les choix, masque/affiche en accordeon anime */
+.q-corps{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.65,0,.35,1)}
+.q.active .q-corps{max-height:420px}
+.q-choix{padding:4px 16px 16px;display:grid;gap:8px}
+.q-choix.grille2{grid-template-columns:1fr 1fr}
+
+.opt{display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 12px;border-radius:12px;border:1.5px solid var(--trait);
+  background:var(--fond);font:inherit;font-weight:700;font-size:14.5px;
+  color:var(--encre);cursor:pointer;transition:all .15s;text-align:center}
+.opt:active{transform:scale(.97)}
+.opt b{display:block;font-size:14.5px}
+.opt span{display:block;font-size:11.5px;font-weight:500;color:var(--gris);margin-top:2px}
+.opt.large{flex-direction:column;align-items:flex-start;text-align:left}
+
+/* ---- pied : mention de confiance ---- */
+.confiance{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;
+  background:var(--carte);border-top:1px solid var(--trait);
+  padding:12px 20px calc(12px + env(safe-area-inset-bottom));
+  text-align:center;font-size:12.5px;font-weight:650;color:var(--gris);
+  display:flex;justify-content:center;gap:8px;align-items:center}
+.confiance .pt{color:var(--or-fonce)}
+
+/* animation d'entree d'une carte qui vient de s'ouvrir */
+@keyframes ouvre{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.q.active .q-corps{animation:none}
+.q.venir-ouvrir .q-corps > *{animation:ouvre .35s ease both}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="tete">
+    <div class="logo"><span class="carre">BH</span><b>BH NADLAN</b></div>
+    <h1>Votre projet immobilier en Israël</h1>
+    <p>Répondez étape par étape, sans changer de page</p>
+  </div>
+
+  <div class="progres">
+    <div class="etiquette"><span>Étape <b id="etape-n">1</b> sur <b id="etape-total">5</b></span><span id="etape-pct">20%</span></div>
+    <div class="piste"><div class="fait" id="barre" style="width:20%"></div></div>
+  </div>
+
+  <div class="fil" id="fil"></div>
+
+  <div class="confiance"><span class="pt">●</span> Simple <span class="pt">·</span> Confidentiel <span class="pt">·</span> Sans engagement</div>
+</div>
+
+<script>
+const QUESTIONS = [
+  { id:'depart', label:'Point de départ', choix:[
+      {v:'apport', t:'Mon apport', s:'« J’ai 200.000 €, qu’est-ce que je peux acheter ? »'},
+      {v:'prix', t:'Le prix du bien', s:'Vous donnez un prix, on calcule le reste'}
+    ], grille:1 },
+  { id:'type', label:'Type de bien', choix:[
+      {v:'neuf', t:'Projet neuf'}, {v:'ancien', t:'Seconde main'}
+    ], grille:2 },
+  { id:'credit', label:'Financement', choix:[
+      {v:'comptant', t:'Sans crédit', s:'Vous payez tout comptant'},
+      {v:'credit', t:'Avec crédit', s:'Une part financée par la banque'}
+    ], grille:1 },
+  { id:'profil', label:'Votre situation', choix:[
+      {v:'israelien', t:'Israélien'}, {v:'etranger', t:'Résident étranger'},
+      {v:'oleh', t:'Nouvel immigrant'}, {v:'societe', t:'Via une société'}
+    ], grille:2 },
+  { id:'contact', label:'Vos coordonnées', choix:[
+      {v:'whatsapp', t:'Par WhatsApp'}, {v:'mail', t:'Par e-mail'}
+    ], grille:2 },
+];
+
+let actif = 0;
+const reponses = {};
+
+function libelle(q, v){
+  const c = q.choix.find(x => x.v === v);
+  return c ? c.t : '';
+}
+
+function peindre(){
+  const fil = document.getElementById('fil');
+  fil.innerHTML = QUESTIONS.map((q, i) => {
+    const repondu = reponses[q.id] != null;
+    const estActif = i === actif;
+    const classe = ['q'];
+    if (estActif) classe.push('active');
+    else if (repondu) classe.push('fait');
+    else classe.push('vide');
+    const corps = estActif ? `
+      <div class="q-corps"><div class="q-choix ${q.grille === 2 ? 'grille2' : ''}">
+        ${q.choix.map(c => `<button type="button" class="opt ${c.s ? 'large' : ''}" data-id="${q.id}" data-v="${c.v}">
+          <b>${c.t}</b>${c.s ? `<span>${c.s}</span>` : ''}
+        </button>`).join('')}
+      </div></div>` : '<div class="q-corps"></div>';
+    return `<div class="${classe.join(' ')}" data-i="${i}">
+      <div class="q-tete">
+        <div class="q-num">${repondu ? '✓' : (i + 1)}</div>
+        <div class="q-texte">
+          <p class="q-label">${q.label}</p>
+          <p class="q-reponse">${repondu ? libelle(q, reponses[q.id]) : 'À répondre'}</p>
+        </div>
+        <div class="q-modif">modifier</div>
+      </div>
+      ${corps}
+    </div>`;
+  }).join('');
+
+  fil.querySelectorAll('.q-tete').forEach(t => {
+    t.onclick = () => {
+      const i = +t.closest('.q').dataset.i;
+      if (i <= actif) { actif = i; peindre(); }
+    };
+  });
+  fil.querySelectorAll('.opt').forEach(b => {
+    b.onclick = () => {
+      reponses[b.dataset.id] = b.dataset.v;
+      if (actif < QUESTIONS.length - 1) actif++;
+      peindre();
+      setTimeout(() => {
+        const el = document.querySelector('.q.active');
+        if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+      }, 80);
+    };
+  });
+
+  const n = Math.min(actif + 1, QUESTIONS.length);
+  document.getElementById('etape-n').textContent = n;
+  document.getElementById('etape-total').textContent = QUESTIONS.length;
+  const pct = Math.round((n / QUESTIONS.length) * 100);
+  document.getElementById('etape-pct').textContent = pct + '%';
+  document.getElementById('barre').style.width = pct + '%';
+}
+
+peindre();
+</script>
+</body>
+</html>
