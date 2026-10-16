@@ -8084,12 +8084,12 @@ function v2Brancher(zone) {
       const c = v2Carte(id);
       const opt = (c.choix || []).find(x => x.v === v);
       c.set(v);
-      if (opt.montant || opt.libre || opt.avertissement) {
-        peindreV2(zone);
-      } else {
-        V2_REPONDU[id] = true;
-        v2Avancer(zone);
-      }
+      // Jamais d'avance automatique au clic, meme pour un choix simple
+      // (Hillel, 16/10/2026 : « il faut qu'il y ait un bouton suivant a
+      // chaque fois, pour que les gens comprennent qu'il faut passer a
+      // l'etape suivante ») — le choix se peint « coche », avec son propre
+      // bouton Continuer juste en dessous (voir `v2RenduOpt`).
+      peindreV2(zone);
     };
   });
   zone.querySelectorAll('[data-v2-montant]').forEach(inp => {
