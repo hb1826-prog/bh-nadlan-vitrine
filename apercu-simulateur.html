@@ -191,11 +191,16 @@ const QUESTIONS = [
        aide:'Fiscalité différente (impôt sur les sociétés plutôt que barème personnel) — pertinent surtout pour un investissement locatif.'}
     ] },
   { id:'avocat', label:'Accompagnement juridique', choix:[
-      {v:'avec', t:'Avec un avocat',
-       aide:'Il vérifie le contrat, sécurise le paiement et vous représente à la signature.',
-       pct:{label:'Ses honoraires', options:[0.5,0.8,1]}},
-      {v:'sans', t:'Je gère seul'}
+      {v:'notre', t:'Avec notre avocat', s:'Honoraires fixes : 0,5 %',
+       aide:'Il vérifie le contrat, sécurise le paiement et vous représente à la signature. 0,5 %, sans négociation à faire.'},
+      {v:'propre', t:'Mon propre avocat', s:'Vous avez déjà quelqu’un en tête',
+       libre:{label:'Ses honoraires'}}
     ] },
+  // Le 1 % (neuf) ou 2 % non retirable (ancien) de frais d'agence/
+  // accompagnement n'est PAS une question : il decoule directement de la
+  // reponse neuf/ancien deja donnee a l'etape 2, jamais un choix a part
+  // (Hillel, 16/10/2026, apres une premiere maquette qui l'avait, a tort,
+  // transforme en liste de pourcentages a choisir).
 ];
 
 // La devise se choisit a chaque montant, apport comme prix — un client a
@@ -208,6 +213,8 @@ const reponses = {};       // id -> valeur choisie
 const montants = {};       // id -> montant saisi
 const devises = {};        // id -> code devise choisi (ILS par defaut)
 const pourcentages = {};   // id -> % choisi
+const libreMode = {};      // id -> 'pct' ou 'montant' (choix libre du client)
+const libreValeur = {};    // id -> nombre saisi par le client (son %, ou son montant)
 let aideOuverte = null;    // "id:v" de l'aide actuellement deroulee
 let sousOuvert = null;     // "id:v" du sous-champ actuellement ouvert
 
@@ -224,6 +231,9 @@ function libelle(q){
     texte += ' · ' + montants[q.id].toLocaleString('fr-FR') + ' ' + d.s;
   }
   if (c.pct && pourcentages[q.id] != null) texte += ' · ' + pourcentages[q.id] + ' %';
+  if (c.libre && libreValeur[q.id] != null) {
+    texte += ' · ' + libreValeur[q.id] + (libreMode[q.id] === 'montant' ? ' ₪' : ' %');
+  }
   return texte;
 }
 
@@ -251,7 +261,7 @@ function peindre(){
         ${q.choix.map(c => {
           const cle = q.id + ':' + c.v;
           const estChoisi = reponses[q.id] === c.v;
-          const sousActif = sousOuvert === cle || (estChoisi && (c.montant || c.pct));
+          const sousActif = sousOuvert === cle || (estChoisi && (c.montant || c.pct || c.libre));
           let sous = '';
           if (c.montant) {
             const val = montants[q.id];
@@ -274,6 +284,27 @@ function peindre(){
               <p class="sous-label">${c.pct.label}</p>
               <div class="sous-pct">${c.pct.options.map(p => `<button type="button"
                 class="pct-opt ${val === p ? 'choisi' : ''}" data-pct="${q.id}" data-pv="${p}">${p} %</button>`).join('')}</div>
+              <button type="button" class="sous-suite" data-suite="${q.id}" ${val != null ? '' : 'disabled'}>Continuer</button>
+            </div>`;
+          } else if (c.libre) {
+            // Jamais un pourcentage propose d'avance : c'est le client qui
+            // tape ce qu'IL a negocie avec SON avocat/courtier — un
+            // pourcentage ou un montant, a lui de choisir le mode
+            // (Hillel, 16/10/2026).
+            const mode = libreMode[q.id] || 'pct';
+            const val = libreValeur[q.id];
+            sous = `<div class="sous-champ ${sousActif ? 'ouvert' : ''}">
+              <p class="sous-label">${c.libre.label}</p>
+              <div class="sous-devises">
+                <button type="button" class="devise-opt ${mode === 'pct' ? 'choisi' : ''}"
+                  data-libre-mode="${q.id}" data-mode-v="pct">Pourcentage</button>
+                <button type="button" class="devise-opt ${mode === 'montant' ? 'choisi' : ''}"
+                  data-libre-mode="${q.id}" data-mode-v="montant">Montant fixe</button>
+              </div>
+              <div class="sous-montant"><input type="text" inputmode="decimal"
+                data-libre="${q.id}" placeholder="${mode === 'pct' ? '0,5' : '15 000'}"
+                value="${val != null ? val : ''}">
+                <span class="devise">${mode === 'pct' ? '%' : '₪'}</span></div>
               <button type="button" class="sous-suite" data-suite="${q.id}" ${val != null ? '' : 'disabled'}>Continuer</button>
             </div>`;
           }
@@ -325,16 +356,17 @@ function peindre(){
   fil.querySelectorAll('.opt').forEach(o => {
     o.onclick = (e) => {
       if (e.target.closest('[data-aide]') || e.target.closest('[data-montant]')
-          || e.target.closest('[data-pct]') || e.target.closest('[data-suite]')) return;
+          || e.target.closest('[data-pct]') || e.target.closest('[data-suite]')
+          || e.target.closest('[data-libre]') || e.target.closest('[data-libre-mode]')) return;
       const id = o.dataset.id, v = o.dataset.v;
       const q = QUESTIONS.find(x => x.id === id);
       const c = q.choix.find(x => x.v === v);
       reponses[id] = v;
-      if (c.montant || c.pct) {
+      if (c.montant || c.pct || c.libre) {
         sousOuvert = id + ':' + v;
         peindre();
         setTimeout(() => {
-          const champ = fil.querySelector(`[data-montant="${id}"]`);
+          const champ = fil.querySelector(`[data-montant="${id}"], [data-libre="${id}"]`);
           if (champ) champ.focus();
         }, 60);
       } else {
@@ -369,6 +401,26 @@ function peindre(){
       const id = b.dataset.pct;
       pourcentages[id] = parseFloat(b.dataset.pv);
       peindre();
+    };
+  });
+
+  fil.querySelectorAll('[data-libre-mode]').forEach(b => {
+    b.onclick = () => {
+      const id = b.dataset.libreMode;
+      libreMode[id] = b.dataset.modeV;
+      peindre();
+      const champ = fil.querySelector(`[data-libre="${id}"]`);
+      if (champ) champ.focus();
+    };
+  });
+
+  fil.querySelectorAll('[data-libre]').forEach(inp => {
+    inp.oninput = () => {
+      const id = inp.dataset.libre;
+      const nettoye = inp.value.replace(',', '.').replace(/[^\d.]/g, '');
+      libreValeur[id] = nettoye ? parseFloat(nettoye) : null;
+      const bouton = fil.querySelector(`[data-suite="${id}"]`);
+      if (bouton) bouton.disabled = libreValeur[id] == null;
     };
   });
 
