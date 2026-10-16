@@ -1918,7 +1918,12 @@ small.eu.big{font-size:13.5px}
 .tile .prix small.eu{margin-bottom:0}
 .offre-eur{display:block;font-style:normal;font-size:15px;font-weight:650;
  color:var(--gris);margin-top:2px}
-td.num small.eu{text-align:right}
+/* `.num` force `white-space:nowrap` sur toute la cellule (pour le shekel,
+   qui ne doit jamais se couper) — sans ce reset, la conversion euro/dollar
+   l'heritait aussi et poussait la cellule hors de l'ecran au lieu de
+   passer sous le prix, la ou `display:block` ci-dessus l'envoie (vu sur un
+   tableau de typologies, Hillel, 16/10/2026). */
+td.num small.eu{text-align:right;white-space:normal}
 /* La conversion repliee des cartes de la grille (`prixDoubleToggle`,
    Hillel, 15/10/2026) : une puce discrete dit que la conversion existe,
    le detail n'apparait qu'au survol ou au toucher — pour ne pas repeter
