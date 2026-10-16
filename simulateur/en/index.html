@@ -3407,9 +3407,9 @@ function tauxDevise(code) {
 /* Les devises de saisie proposees : le shekel, plus celles dont on a le
    taux du jour. L'ordre suit ce que les clients d'Hillel utilisent. */
 const DEVISES_SAISIE = [
+  {code: 'ILS', symbole: '₪', libelle: 'En shekels (₪)', champ: 'Votre apport (₪)'},
   {code: 'EUR', symbole: '€', libelle: 'En euros (€)', champ: 'Votre apport (€)'},
   {code: 'USD', symbole: '$', libelle: 'En dollars ($)', champ: 'Votre apport ($)'},
-  {code: 'ILS', symbole: '₪', libelle: 'En shekels (₪)', champ: 'Votre apport (₪)'},
 ];
 /* Le prix qui sert seulement a lire le plafond de credit et les honoraires
    proposes dans sim.json, tant que le vrai prix n'est pas calcule. Ces deux
@@ -7777,6 +7777,11 @@ function v2Cartes() {
   if (accompagnementImpose || !TUNNEL.accompagnementMode) TUNNEL.accompagnementMode = 'oui';
   // Meme chose pour le courtier recommande (Hillel, 16/10/2026).
   if (!TUNNEL.courtierMode) TUNNEL.courtierMode = 'notre';
+  // Le prix se tape par defaut en shekels (contrairement a l'apport, qui
+  // part en euros — les clients de Hillel pensent leur epargne en euros,
+  // mais discutent le prix d'un bien en Israel en shekels). Jamais ecrase
+  // si deja pose par ailleurs (`TUNNELS.apport` l'a deja via `deviseParDefaut()`).
+  if (!TUNNEL.apport && !TUNNEL.devise) TUNNEL.devise = 'ILS';
 
   const cartes = [
     {
@@ -7793,17 +7798,37 @@ function v2Cartes() {
     },
     {
       id: 'montant', label: T(TUNNEL.apport ? 'Votre apport' : 'Le prix du bien'),
-      resume: () => TUNNEL.apport
-        ? (TUNNEL.devise === 'EUR' ? mil(TUNNEL.montant) + ' € · ' + mil(apportIls()) + ' ₪'
-                                    : mil(TUNNEL.montant) + ' ₪' + (eur(TUNNEL.montant) ? ' · ' + eur(TUNNEL.montant) : ''))
-        : mil(TUNNEL.prix) + ' ₪' + (eur(TUNNEL.prix) ? ' · ' + eur(TUNNEL.prix) : ''),
+      // Les trois devises partout, meme sur le prix (Hillel, 16/10/2026) :
+      // avant, seul l'apport pouvait se taper en euros/dollars. Le prix tape
+      // reste la valeur brute saisie (`TUNNEL.montant`), convertie tout de
+      // suite en shekels (`TUNNEL.prix`, celui que le reste du calcul lit
+      // partout) — exactement le meme mecanisme que l'apport.
+      resume: () => {
+        const cible = TUNNEL.apport ? apportIls() : TUNNEL.prix;
+        if (TUNNEL.devise && TUNNEL.devise !== 'ILS') {
+          return mil(TUNNEL.montant) + ' ' + (TUNNEL.devise === 'EUR' ? '€' : '$') + ' · ' + mil(cible) + ' ₪';
+        }
+        return mil(cible) + ' ₪' + (eur(cible) ? ' · ' + eur(cible) : '');
+      },
       montantSeul: {
         placeholder: TUNNEL.apport ? '200 000' : '2 500 000',
-        avecDevise: !!TUNNEL.apport,
+        avecDevise: true,
         deviseGet: () => TUNNEL.devise || 'ILS',
-        deviseSet: (d) => { TUNNEL.devise = d; },
-        get: () => TUNNEL.apport ? (TUNNEL.montant || null) : (TUNNEL.prix || null),
-        set: (v) => { if (TUNNEL.apport) TUNNEL.montant = v; else TUNNEL.prix = v; },
+        deviseSet: (d) => {
+          TUNNEL.devise = d;
+          if (!TUNNEL.apport && TUNNEL.montant != null) {
+            const t = tauxDevise(d);
+            TUNNEL.prix = (d !== 'ILS' && t) ? Math.round(TUNNEL.montant * t) : Math.round(TUNNEL.montant);
+          }
+        },
+        get: () => (TUNNEL.montant != null ? TUNNEL.montant : TUNNEL.prix) || null,
+        set: (v) => {
+          TUNNEL.montant = v;
+          if (TUNNEL.apport) return;
+          const t = tauxDevise(TUNNEL.devise);
+          TUNNEL.prix = (TUNNEL.devise && TUNNEL.devise !== 'ILS' && t)
+            ? Math.round(v * t) : Math.round(v);
+        },
       },
     },
     {
@@ -7965,7 +7990,7 @@ function v2CorpsMontantSeul(c) {
   const val = c.montantSeul.get();
   const dCode = c.montantSeul.deviseGet();
   const devises = c.montantSeul.avecDevise
-    ? `<div class="s2-sous-devises">${[{code:'EUR',s:'€'},{code:'USD',s:'$'},{code:'ILS',s:'₪'}].map(x => `<button type="button"
+    ? `<div class="s2-sous-devises">${[{code:'ILS',s:'₪'},{code:'EUR',s:'€'},{code:'USD',s:'$'}].map(x => `<button type="button"
         class="s2-devise-opt ${x.code === dCode ? 'choisi' : ''}" data-v2-montant-devise="${x.code}">${x.s} ${x.code}</button>`).join('')}</div>` : '';
   const symbole = c.montantSeul.avecDevise ? ({EUR:'€', USD:'$', ILS:'₪'}[dCode] || '₪') : '₪';
   return `<div class="s2-q-choix"><div class="s2-sous ouvert" style="margin-top:0;padding-top:0;border-top:0">
