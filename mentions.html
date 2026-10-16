@@ -2454,6 +2454,100 @@ table.ag th{width:64%}
 .bh-rgpd button:first-child{background:var(--encre,#0F172A);color:#fff;border-color:var(--encre,#0F172A)}
 .bh-rgpd-refus{background:none;color:var(--gris)}
 
+/* ============================================================
+   TUNNEL V2 — cartes accordeon, maquette approuvee par Hillel le
+   16/10/2026 (https://biens.bh-nadlan.com/apercu-simulateur.html).
+   Prefixe s2- partout : ne doit jamais toucher une classe du tunnel
+   existant (etape-carte, seg, f-choix...), qui reste actif par
+   defaut pour tous les vrais visiteurs tant que ?v2=1 n'est pas
+   dans l'URL. Repris quasi a l'identique de la maquette validee,
+   seules les couleurs restent les variables du site (compatibles
+   mode sombre, jamais figees ici).
+   ============================================================ */
+.s2-progres{margin:0 0 16px}
+.s2-progres .s2-etiquette{display:flex;justify-content:space-between;font-size:12.5px;
+  color:var(--gris);font-weight:650;margin-bottom:7px}
+.s2-progres .s2-etiquette b{color:var(--encre)}
+.s2-progres .s2-piste{height:6px;border-radius:99px;background:var(--trait);overflow:hidden}
+.s2-progres .s2-fait{height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--or-fonce),var(--or));
+  transition:width .45s cubic-bezier(.65,0,.35,1)}
+
+.s2-fil{display:flex;flex-direction:column;gap:10px}
+
+.s2-q{background:var(--carte);border:1px solid var(--trait);border-radius:16px;
+  overflow:hidden;transition:box-shadow .3s}
+.s2-q.active{box-shadow:0 10px 30px -12px rgba(15,23,42,.18);border-color:var(--or-trait)}
+
+.s2-q-tete{padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.s2-q-num{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:12.5px;font-weight:800;background:var(--fond-2);color:var(--gris);
+  transition:background .3s,color .3s}
+.s2-q.fait .s2-q-num{background:var(--vert-fond);color:var(--vert)}
+.s2-q.active .s2-q-num{background:var(--encre);color:var(--or)}
+.s2-q-texte{flex:1;min-width:0}
+.s2-q-label{font-size:12px;font-weight:700;color:var(--gris);text-transform:uppercase;
+  letter-spacing:.04em;margin:0 0 2px}
+.s2-q-reponse{font-size:17px;font-weight:800;margin:0;transition:font-size .3s;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.s2-q.vide .s2-q-reponse{color:var(--gris-clair);font-weight:600;font-size:14.5px}
+.s2-q-modif{flex:none;font-size:12.5px;font-weight:700;color:var(--action);display:none}
+.s2-q.fait .s2-q-modif{display:block}
+
+.s2-q-corps{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.65,0,.35,1)}
+.s2-q.active .s2-q-corps{max-height:1400px}
+.s2-q-choix{padding:4px 16px 16px;display:grid;gap:9px}
+
+.s2-opt{display:block;width:100%;padding:15px 16px;border-radius:12px;
+  border:1.5px solid var(--trait);background:var(--carte);font:inherit;
+  font-weight:700;font-size:15px;color:var(--encre);cursor:pointer;
+  transition:all .15s;text-align:left}
+.s2-opt:active{transform:scale(.98)}
+.s2-opt-ligne{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.s2-opt-txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.s2-opt-txt span{font-size:12px;font-weight:500;color:var(--gris)}
+.s2-opt-rond{flex:none;width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--trait);display:grid;place-items:center;
+  transition:all .15s;color:transparent;font-size:13px}
+.s2-opt.choisi{background:var(--or-clair);border-color:var(--or)}
+.s2-opt.choisi .s2-opt-rond{background:var(--or);border-color:var(--or);color:#fff}
+
+.s2-aide-bouton{flex:none;width:21px;height:21px;border-radius:50%;
+  border:1.5px solid var(--trait);background:var(--fond-2);color:var(--gris);
+  font-size:12px;font-weight:800;display:grid;place-items:center;cursor:pointer}
+.s2-aide-texte{max-height:0;overflow:hidden;transition:max-height .35s ease;
+  font-size:12.5px;font-weight:500;color:var(--gris);line-height:1.5}
+.s2-aide-texte.ouvert{max-height:220px;margin-top:10px}
+
+.s2-avertissement{margin-top:10px;padding:10px 12px;border-radius:10px;
+  background:#FBF0E4;border:1.5px solid #E8C9A0;color:#8A5A1E;
+  font-size:12.5px;font-weight:600;line-height:1.5}
+
+.s2-sous{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.s2-sous.ouvert{max-height:260px;margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--trait)}
+.s2-sous-label{font-size:12px;font-weight:700;color:var(--gris);
+  text-transform:uppercase;letter-spacing:.03em;margin:0 0 8px}
+.s2-sous-devises{display:flex;gap:6px;margin-bottom:8px}
+.s2-devise-opt{flex:1;padding:8px 6px;border-radius:8px;border:1.5px solid var(--trait);
+  background:var(--fond);font:inherit;font-weight:700;font-size:12.5px;
+  text-align:center;cursor:pointer;color:var(--gris)}
+.s2-devise-opt.choisi{background:var(--or-clair);border-color:var(--or);color:var(--or-fonce)}
+.s2-sous-montant{display:flex;align-items:center;gap:8px;background:var(--fond);
+  border:1.5px solid var(--trait);border-radius:10px;padding:11px 13px}
+.s2-sous-montant input{flex:1;border:0;background:none;font:inherit;font-size:18px;
+  font-weight:800;color:var(--encre);min-width:0}
+.s2-sous-montant input:focus{outline:none}
+.s2-sous-montant .s2-devise{font-size:14px;font-weight:700;color:var(--gris)}
+.s2-sous-suite{width:100%;margin-top:10px;padding:12px;border-radius:10px;border:0;
+  background:var(--encre);color:var(--or);font:inherit;font-weight:800;
+  font-size:14px;cursor:pointer}
+.s2-sous-suite:disabled{opacity:.4}
+
+.s2-confiance{text-align:center;font-size:12.5px;font-weight:650;color:var(--gris);
+  display:flex;justify-content:center;gap:8px;align-items:center;margin-top:18px}
+.s2-confiance .s2-pt{color:var(--or-fonce)}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}

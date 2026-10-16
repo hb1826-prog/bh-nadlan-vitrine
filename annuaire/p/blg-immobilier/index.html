@@ -2469,6 +2469,100 @@ table.ag th{width:64%}
 .bh-rgpd button:first-child{background:var(--encre,#0F172A);color:#fff;border-color:var(--encre,#0F172A)}
 .bh-rgpd-refus{background:none;color:var(--gris)}
 
+/* ============================================================
+   TUNNEL V2 — cartes accordeon, maquette approuvee par Hillel le
+   16/10/2026 (https://biens.bh-nadlan.com/apercu-simulateur.html).
+   Prefixe s2- partout : ne doit jamais toucher une classe du tunnel
+   existant (etape-carte, seg, f-choix...), qui reste actif par
+   defaut pour tous les vrais visiteurs tant que ?v2=1 n'est pas
+   dans l'URL. Repris quasi a l'identique de la maquette validee,
+   seules les couleurs restent les variables du site (compatibles
+   mode sombre, jamais figees ici).
+   ============================================================ */
+.s2-progres{margin:0 0 16px}
+.s2-progres .s2-etiquette{display:flex;justify-content:space-between;font-size:12.5px;
+  color:var(--gris);font-weight:650;margin-bottom:7px}
+.s2-progres .s2-etiquette b{color:var(--encre)}
+.s2-progres .s2-piste{height:6px;border-radius:99px;background:var(--trait);overflow:hidden}
+.s2-progres .s2-fait{height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--or-fonce),var(--or));
+  transition:width .45s cubic-bezier(.65,0,.35,1)}
+
+.s2-fil{display:flex;flex-direction:column;gap:10px}
+
+.s2-q{background:var(--carte);border:1px solid var(--trait);border-radius:16px;
+  overflow:hidden;transition:box-shadow .3s}
+.s2-q.active{box-shadow:0 10px 30px -12px rgba(15,23,42,.18);border-color:var(--or-trait)}
+
+.s2-q-tete{padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.s2-q-num{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:12.5px;font-weight:800;background:var(--fond-2);color:var(--gris);
+  transition:background .3s,color .3s}
+.s2-q.fait .s2-q-num{background:var(--vert-fond);color:var(--vert)}
+.s2-q.active .s2-q-num{background:var(--encre);color:var(--or)}
+.s2-q-texte{flex:1;min-width:0}
+.s2-q-label{font-size:12px;font-weight:700;color:var(--gris);text-transform:uppercase;
+  letter-spacing:.04em;margin:0 0 2px}
+.s2-q-reponse{font-size:17px;font-weight:800;margin:0;transition:font-size .3s;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.s2-q.vide .s2-q-reponse{color:var(--gris-clair);font-weight:600;font-size:14.5px}
+.s2-q-modif{flex:none;font-size:12.5px;font-weight:700;color:var(--action);display:none}
+.s2-q.fait .s2-q-modif{display:block}
+
+.s2-q-corps{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.65,0,.35,1)}
+.s2-q.active .s2-q-corps{max-height:1400px}
+.s2-q-choix{padding:4px 16px 16px;display:grid;gap:9px}
+
+.s2-opt{display:block;width:100%;padding:15px 16px;border-radius:12px;
+  border:1.5px solid var(--trait);background:var(--carte);font:inherit;
+  font-weight:700;font-size:15px;color:var(--encre);cursor:pointer;
+  transition:all .15s;text-align:left}
+.s2-opt:active{transform:scale(.98)}
+.s2-opt-ligne{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.s2-opt-txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.s2-opt-txt span{font-size:12px;font-weight:500;color:var(--gris)}
+.s2-opt-rond{flex:none;width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--trait);display:grid;place-items:center;
+  transition:all .15s;color:transparent;font-size:13px}
+.s2-opt.choisi{background:var(--or-clair);border-color:var(--or)}
+.s2-opt.choisi .s2-opt-rond{background:var(--or);border-color:var(--or);color:#fff}
+
+.s2-aide-bouton{flex:none;width:21px;height:21px;border-radius:50%;
+  border:1.5px solid var(--trait);background:var(--fond-2);color:var(--gris);
+  font-size:12px;font-weight:800;display:grid;place-items:center;cursor:pointer}
+.s2-aide-texte{max-height:0;overflow:hidden;transition:max-height .35s ease;
+  font-size:12.5px;font-weight:500;color:var(--gris);line-height:1.5}
+.s2-aide-texte.ouvert{max-height:220px;margin-top:10px}
+
+.s2-avertissement{margin-top:10px;padding:10px 12px;border-radius:10px;
+  background:#FBF0E4;border:1.5px solid #E8C9A0;color:#8A5A1E;
+  font-size:12.5px;font-weight:600;line-height:1.5}
+
+.s2-sous{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.s2-sous.ouvert{max-height:260px;margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--trait)}
+.s2-sous-label{font-size:12px;font-weight:700;color:var(--gris);
+  text-transform:uppercase;letter-spacing:.03em;margin:0 0 8px}
+.s2-sous-devises{display:flex;gap:6px;margin-bottom:8px}
+.s2-devise-opt{flex:1;padding:8px 6px;border-radius:8px;border:1.5px solid var(--trait);
+  background:var(--fond);font:inherit;font-weight:700;font-size:12.5px;
+  text-align:center;cursor:pointer;color:var(--gris)}
+.s2-devise-opt.choisi{background:var(--or-clair);border-color:var(--or);color:var(--or-fonce)}
+.s2-sous-montant{display:flex;align-items:center;gap:8px;background:var(--fond);
+  border:1.5px solid var(--trait);border-radius:10px;padding:11px 13px}
+.s2-sous-montant input{flex:1;border:0;background:none;font:inherit;font-size:18px;
+  font-weight:800;color:var(--encre);min-width:0}
+.s2-sous-montant input:focus{outline:none}
+.s2-sous-montant .s2-devise{font-size:14px;font-weight:700;color:var(--gris)}
+.s2-sous-suite{width:100%;margin-top:10px;padding:12px;border-radius:10px;border:0;
+  background:var(--encre);color:var(--or);font:inherit;font-weight:800;
+  font-size:14px;cursor:pointer}
+.s2-sous-suite:disabled{opacity:.4}
+
+.s2-confiance{text-align:center;font-size:12.5px;font-weight:650;color:var(--gris);
+  display:flex;justify-content:center;gap:8px;align-items:center;margin-top:18px}
+.s2-confiance .s2-pt{color:var(--or-fonce)}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -6804,7 +6898,7 @@ async function vueSimulateurEtapes() {
   // a ce moment-la ignorerait une reponse deja donnee — il ne reste alors
   // que « comptant ou credit » a demander (Hillel, 15/10/2026).
   const prixDejaDonne = TUNNELS.credit.prix > 0 && TUNNELS.credit.etape >= 2;
-  if (MODE_SIMU) dessinerEtape(TUNNEL.etape || 1);
+  if (MODE_SIMU) { if (SIMU_V2) peindreV2($('#tunnel')); else dessinerEtape(TUNNEL.etape || 1); }
   else if (prixDejaDonne) etapeChoixCredit($('#tunnel'));
   else etapeChoixMode($('#tunnel'));
   // Revenir directement a une etape DEJA remplie, sans repasser par
@@ -7570,6 +7664,511 @@ function etapeConfirmation(zone, canal, prixMax) {
     zone.querySelectorAll('a.tile').forEach(a => {
       a.href = DONNEES.site_url + a.getAttribute('href');
     });
+  }
+}
+
+/* ============================================================
+   TUNNEL V2 — cartes accordeon, maquette approuvee par Hillel le
+   16/10/2026 (https://biens.bh-nadlan.com/apercu-simulateur.html).
+   PHASE 1 du chantier convenu le 16/10/2026 : le parcours generique
+   (prix ou apport), derriere ?v2=1 — ne touche RIEN au tunnel
+   existant ci-dessus (etapeChoixMode...etapeConfirmation), qui reste
+   actif par defaut pour tous les vrais visiteurs. La tuile de la
+   home et le simulateur integre a une fiche suivent en phase 2/3,
+   une fois celui-ci teste et valide par Hillel sur le lien flashe.
+
+   Principe : AUCUN etat separe du vrai TUNNEL. Chaque carte lit et
+   ecrit directement dans les memes champs que l'ancien tunnel
+   (TUNNEL.prix, TUNNEL.profil, TUNNEL.avocatMode...) via des
+   fermetures get()/set() — seul `V2_REPONDU` (carte repondue ou non)
+   est un etat propre a cet affichage. Ainsi le calcul final et
+   l'envoi du lead (`envoyerLead`, plus bas) restent exactement les
+   memes qu'avant : seul l'HABILLAGE change. */
+const SIMU_V2 = (() => {
+  try { return new URLSearchParams(location.search).get('v2') === '1'; }
+  catch (e) { return false; }
+})();
+
+let V2_ACTIF = 0;
+let V2_AIDE = null;
+let V2_SOUS = null;
+let V2_REPONDU = {};
+let V2_TUNNEL_VU = null;
+
+function v2TauxBloc() {
+  const cle = TUNNEL.profil + '|' + TUNNEL.cadre;
+  return blocAuPrix(prixDeReference(), cle) || {};
+}
+
+/* Les frais annexes resolus en shekels/pourcentages, exactement le meme
+   calcul que `lire()` dans l'ancien `etapeFrais` — point unique, appele
+   juste avant l'envoi (voir `v2CorpsCoordonnees`). */
+function v2LireFrais() {
+  const f = v2TauxBloc();
+  const defaut = f.taux || {avocat: 0, agence: 0, courtier: 0};
+  const accompagnementImpose = !!TUNNEL.revente;
+  let avocat = 0;
+  if (TUNNEL.avocatMode === 'notre') avocat = defaut.avocat || 0.5;
+  else if (TUNNEL.avocatMode === 'libre') {
+    avocat = (TUNNEL.avocatLibreType === 'montant' && TUNNEL.prix)
+      ? (TUNNEL.avocatLibre / TUNNEL.prix * 100) : TUNNEL.avocatLibre;
+  }
+  const agence = TUNNEL.accompagnementMode === 'oui'
+    ? (accompagnementImpose ? 2 : (defaut.agence || 1)) : 0;
+  let courtier = 0;
+  if (!TUNNEL.comptant) {
+    if (TUNNEL.courtierMode === 'notre') courtier = COURTIER_RECOMMANDE;
+    else if (TUNNEL.courtierMode === 'libre') {
+      courtier = TUNNEL.courtierLibreType === 'pct'
+        ? Math.round(TUNNEL.prix * TUNNEL.courtierLibre / 100) : TUNNEL.courtierLibre;
+    }
+  }
+  TUNNEL.frais = {avocat, agence, courtier};
+}
+
+/* La liste ordonnee des cartes — recalculee a chaque peinture a partir de
+   TUNNEL directement, jamais d'un double etat qui pourrait se
+   desynchroniser du vrai chiffrage. Ordre demande par Hillel le
+   16/10/2026 : neuf/ancien D'ABORD, puis seulement le montant — jamais
+   l'inverse, pour que le montant tienne toujours compte des frais du bon
+   type de bien. */
+function v2Cartes() {
+  const f = v2TauxBloc();
+  const defaut = f.taux || {avocat: 0, agence: 0, courtier: 0};
+  const notesFrais = DONNEES.frais_notes || {};
+  const notesProfil = DONNEES.profils_note || {};
+  const profils = DONNEES.profils || {};
+  const accompagnementImpose = !!TUNNEL.revente;
+
+  const cartes = [
+    {
+      id: 'type', label: T('Neuf ou seconde main ?'),
+      resume: () => TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf'),
+      get: () => TUNNEL.revente === true ? 'oui' : (TUNNEL.revente === false ? 'non' : null),
+      set: (v) => { TUNNEL.revente = v === 'oui'; },
+      choix: [
+        {v:'non', t:T('Projet neuf'),
+         aide:T('Paiement échelonné selon l’avancement du chantier. Nous sommes rémunérés par le promoteur : aucun frais d’agence.')},
+        {v:'oui', t:T('Seconde main'),
+         aide:T('Pas de calendrier de chantier : le prix se règle en une ou deux fois. Comme nous ne sommes pas payés par un promoteur sur ce type de bien, des frais d’agence de 2 % s’appliquent.')},
+      ],
+    },
+    {
+      id: 'montant', label: T(TUNNEL.apport ? 'Votre apport' : 'Le prix du bien'),
+      resume: () => TUNNEL.apport
+        ? (TUNNEL.devise === 'EUR' ? mil(TUNNEL.montant) + ' € · ' + mil(apportIls()) + ' ₪'
+                                    : mil(TUNNEL.montant) + ' ₪' + (eur(TUNNEL.montant) ? ' · ' + eur(TUNNEL.montant) : ''))
+        : mil(TUNNEL.prix) + ' ₪' + (eur(TUNNEL.prix) ? ' · ' + eur(TUNNEL.prix) : ''),
+      montantSeul: {
+        placeholder: TUNNEL.apport ? '200 000' : '2 500 000',
+        avecDevise: !!TUNNEL.apport,
+        deviseGet: () => TUNNEL.devise || 'ILS',
+        deviseSet: (d) => { TUNNEL.devise = d; },
+        get: () => TUNNEL.apport ? (TUNNEL.montant || null) : (TUNNEL.prix || null),
+        set: (v) => { if (TUNNEL.apport) TUNNEL.montant = v; else TUNNEL.prix = v; },
+      },
+    },
+    {
+      id: 'profil', label: T('Votre situation'),
+      resume: () => esc(profils[TUNNEL.profil] || ''),
+      get: () => TUNNEL.profil,
+      set: (v) => { TUNNEL.profil = v; },
+      choix: Object.entries(profils).map(([cle, libelle]) => ({
+        v: cle, t: libelle, aide: notesProfil[cle] || '',
+      })),
+    },
+    {
+      id: 'financement', label: T('Part financée par le prêt'),
+      visible: () => !TUNNEL.comptant,
+      resume: () => TUNNEL.ltv + ' % · ' + TUNNEL.duree + ' ' + T('ans'),
+    },
+    {
+      id: 'avocat', label: T('Accompagnement juridique'),
+      resume: () => {
+        if (TUNNEL.avocatMode === 'notre') return T('L’avocat que nous recommandons');
+        if (TUNNEL.avocatMode === 'non') return T('Sans avocat');
+        return T('Mon propre avocat') + ' · ' + TUNNEL.avocatLibre
+          + (TUNNEL.avocatLibreType === 'pct' ? ' %' : ' ₪');
+      },
+      get: () => TUNNEL.avocatMode || null,
+      set: (v) => { TUNNEL.avocatMode = v; if (v === 'notre') TUNNEL.avocatLibre = defaut.avocat || 0.5; },
+      choix: [
+        {v:'notre', t:T('L’avocat que nous recommandons'), s:T('Honoraires fixes : 0,5 %'),
+         aide: notesFrais.avocat || ''},
+        {v:'libre', t:T('Mon propre avocat'), s:T('Vous avez déjà quelqu’un en tête'),
+         libre:{label:T('Ses honoraires'),
+           modeGet:()=>TUNNEL.avocatLibreType||'pct', modeSet:(m)=>{TUNNEL.avocatLibreType=m;},
+           valGet:()=>TUNNEL.avocatLibre, valSet:(x)=>{TUNNEL.avocatLibre=x;}}},
+        {v:'non', t:T('Sans avocat'), s:T('Vous gérez seul cette partie'),
+         avertissement:T('Nous recommandons vivement de prendre un avocat, surtout si vous ne parlez pas hébreu : c’est lui qui relit le contrat et vous protège avant la signature.')},
+      ],
+    },
+    {
+      id: 'accompagnement',
+      label: accompagnementImpose ? T("Frais d'agence") : T('Accompagnement après la signature'),
+      impose: accompagnementImpose,
+      resume: () => accompagnementImpose
+        ? T("Frais d'agence") + ' · ' + T('2 % du prix, non négociables')
+        : (TUNNEL.accompagnementMode === 'non' ? T('Sans accompagnement')
+           : T('Accompagnement après la signature') + ' · ' + T('1 % du prix')),
+      get: () => accompagnementImpose ? 'oui' : (TUNNEL.accompagnementMode || null),
+      set: (v) => { TUNNEL.accompagnementMode = v; },
+      choix: accompagnementImpose ? [
+        {v:'oui', t:T("Frais d'agence"), s:T('2 % du prix, non négociables'),
+         aide:T('Comme nous ne sommes pas payés par un promoteur sur ce type de bien, ces frais couvrent la négociation, le dossier et le suivi jusqu’aux clés.')},
+      ] : [
+        {v:'oui', t:T('Accompagnement après la signature'), s:T('1 % du prix'),
+         aide: notesFrais.agence || ''},
+        {v:'non', t:T('Sans accompagnement'), s:T('Vous gérez seul après la signature'),
+         avertissement:T('Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.')},
+      ],
+    },
+    {
+      id: 'courtier', label: T('Courtier en crédit'),
+      visible: () => !TUNNEL.comptant,
+      resume: () => {
+        if (TUNNEL.courtierMode === 'notre') return T('Le courtier que nous recommandons') + ' · ' + mil(COURTIER_RECOMMANDE) + ' ₪';
+        if (TUNNEL.courtierMode === 'non') return T('Sans courtier');
+        return T('Mon propre courtier') + ' · ' + TUNNEL.courtierLibre
+          + (TUNNEL.courtierLibreType === 'pct' ? ' %' : ' ₪');
+      },
+      get: () => TUNNEL.courtierMode || null,
+      set: (v) => { TUNNEL.courtierMode = v; },
+      choix: [
+        {v:'notre', t:T('Le courtier que nous recommandons'),
+         s: mil(COURTIER_RECOMMANDE) + ' ₪, ' + T('prix constaté'), aide: notesFrais.courtier || ''},
+        {v:'libre', t:T('Mon propre courtier'), s:T('Vous avez déjà quelqu’un en tête'),
+         libre:{label:T('Ses honoraires'),
+           modeGet:()=>TUNNEL.courtierLibreType||'montant', modeSet:(m)=>{TUNNEL.courtierLibreType=m;},
+           valGet:()=>TUNNEL.courtierLibre, valSet:(x)=>{TUNNEL.courtierLibre=x;}}},
+        {v:'non', t:T('Sans courtier'), s:T('Vous gérez seul ce volet'),
+         avertissement:T('Le marché du crédit est très concurrentiel : même avec un crédit déjà en tête, un courtier négocie souvent un meilleur taux que ce qu’une seule banque proposera. Nous recommandons d’en garder un.')},
+      ],
+    },
+    {id: 'coordonnees', label: T('Vos coordonnées'), resume: () => T('Simulation envoyée')},
+  ];
+  return cartes;
+}
+
+function v2Carte(id) { return v2Cartes().find(c => c.id === id); }
+function v2CartesVisibles() { return v2Cartes().filter(c => !c.visible || c.visible()); }
+function v2Fait(c) { return c.impose || !!V2_REPONDU[c.id]; }
+
+function v2Avancer(zone) {
+  const visibles = v2CartesVisibles();
+  if (V2_ACTIF < visibles.length - 1) V2_ACTIF++;
+  peindreV2(zone);
+  setTimeout(() => {
+    const el = zone.querySelector('.s2-q.active');
+    if (el) el.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }, 80);
+}
+
+/* Le sous-champ « montant » d'une option de choix (jamais celui de la
+   carte « montant » elle-meme, qui a son propre rendu — voir
+   `v2CorpsMontantSeul`). */
+function v2RenduSousMontant(c, opt) {
+  const val = opt.montant.get();
+  return `<div class="s2-sous ouvert">
+    <p class="s2-sous-label">${opt.montant.label}</p>
+    <div class="s2-sous-montant"><input type="text" inputmode="numeric"
+      data-v2-montant="${c.id}" placeholder="${opt.montant.placeholder}"
+      value="${val != null ? mil(val) : ''}"><span class="s2-devise">₪</span></div>
+    <button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" ${val ? '' : 'disabled'}>${T('Continuer')}</button>
+  </div>`;
+}
+function v2RenduSousLibre(c, opt) {
+  const mode = opt.libre.modeGet() || 'pct';
+  const val = opt.libre.valGet();
+  return `<div class="s2-sous ouvert">
+    <p class="s2-sous-label">${opt.libre.label}</p>
+    <div class="s2-sous-devises">
+      <button type="button" class="s2-devise-opt ${mode === 'pct' ? 'choisi' : ''}" data-v2-libre-mode="${c.id}" data-v2-mv="pct">${T('Pourcentage')}</button>
+      <button type="button" class="s2-devise-opt ${mode === 'montant' ? 'choisi' : ''}" data-v2-libre-mode="${c.id}" data-v2-mv="montant">${T('Montant fixe')}</button>
+    </div>
+    <div class="s2-sous-montant"><input type="text" inputmode="decimal"
+      data-v2-libre="${c.id}" placeholder="${mode === 'pct' ? '0,5' : '15 000'}"
+      value="${val != null ? val : ''}"><span class="s2-devise">${mode === 'pct' ? '%' : '₪'}</span></div>
+    <button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" ${val != null ? '' : 'disabled'}>${T('Continuer')}</button>
+  </div>`;
+}
+function v2RenduOpt(c, opt) {
+  const estChoisi = c.get ? c.get() === opt.v : false;
+  const aideCle = c.id + ':' + opt.v;
+  const aideOuverte = V2_AIDE === aideCle;
+  let sous = '';
+  if (opt.montant) sous = v2RenduSousMontant(c, opt);
+  else if (opt.libre) sous = v2RenduSousLibre(c, opt);
+  return `<div class="s2-opt ${estChoisi ? 'choisi' : ''}" data-v2-id="${c.id}" data-v2-v="${opt.v}">
+    <div class="s2-opt-ligne">
+      <span class="s2-opt-txt">${opt.t}${opt.s ? `<span>${opt.s}</span>` : ''}</span>
+      ${opt.aide ? `<button type="button" class="s2-aide-bouton" data-v2-aide="${aideCle}">?</button>` : ''}
+      <span class="s2-opt-rond" data-v2-choisir="${c.id}:${opt.v}">✓</span>
+    </div>
+    ${opt.aide ? `<div class="s2-aide-texte ${aideOuverte ? 'ouvert' : ''}">${opt.aide}</div>` : ''}
+    ${opt.avertissement && estChoisi ? `<div class="s2-avertissement">⚠ ${opt.avertissement}
+      <button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>
+    </div>` : ''}
+    ${estChoisi ? sous : ''}
+  </div>`;
+}
+function v2CorpsMontantSeul(c) {
+  const val = c.montantSeul.get();
+  const dCode = c.montantSeul.deviseGet();
+  const devises = c.montantSeul.avecDevise
+    ? `<div class="s2-sous-devises">${[{code:'EUR',s:'€'},{code:'USD',s:'$'},{code:'ILS',s:'₪'}].map(x => `<button type="button"
+        class="s2-devise-opt ${x.code === dCode ? 'choisi' : ''}" data-v2-montant-devise="${x.code}">${x.s} ${x.code}</button>`).join('')}</div>` : '';
+  const symbole = c.montantSeul.avecDevise ? ({EUR:'€', USD:'$', ILS:'₪'}[dCode] || '₪') : '₪';
+  return `<div class="s2-q-choix"><div class="s2-sous ouvert" style="margin-top:0;padding-top:0;border-top:0">
+    ${devises}
+    <div class="s2-sous-montant"><input type="text" inputmode="numeric"
+      id="v2-montant-seul" placeholder="${c.montantSeul.placeholder}"
+      value="${val != null ? mil(val) : ''}"><span class="s2-devise">${symbole}</span></div>
+    <button type="button" class="s2-sous-suite" id="v2-montant-seul-suite" ${val ? '' : 'disabled'}>${T('Continuer')}</button>
+  </div></div>`;
+}
+function v2CorpsFinancement() {
+  const f = v2TauxBloc();
+  const plafond = f.plafond || 75;
+  if (TUNNEL.ltv == null) TUNNEL.ltv = plafond;
+  if (!TUNNEL.comptant && TUNNEL.ltv > plafond) TUNNEL.ltv = plafond;
+  const ltvs = (DONNEES.ltv || []).filter(v => v <= plafond);
+  const durees = (DONNEES.durees_par_cadre || {})[TUNNEL.cadre] || DONNEES.durees || [10, 15, 20, 25, 30];
+  if (!TUNNEL.duree || !durees.includes(TUNNEL.duree)) TUNNEL.duree = durees[durees.length - 1];
+  return `<div class="s2-q-choix">
+    <div class="s2-sous-devises">
+      ${TUNNEL.apport ? `<button type="button" class="s2-devise-opt ${TUNNEL.comptant ? 'choisi' : ''}" data-v2-ltv="0">${T('Sans crédit')}</button>` : ''}
+      ${ltvs.map(v => `<button type="button"
+        class="s2-devise-opt ${!TUNNEL.comptant && v === TUNNEL.ltv ? 'choisi' : ''}" data-v2-ltv="${v}">${v} %</button>`).join('')}
+    </div>
+    ${TUNNEL.comptant ? '' : `
+    <p class="s2-sous-label" style="margin-top:14px">${T('Durée du prêt')}</p>
+    <div class="s2-sous-devises">${durees.map(v => `<button type="button"
+      class="s2-devise-opt ${v === TUNNEL.duree ? 'choisi' : ''}" data-v2-duree="${v}">${v} ${T('ans')}</button>`).join('')}</div>`}
+    <button type="button" class="s2-sous-suite" id="v2-financement-suite" style="margin-top:14px">${T('Continuer')}</button>
+  </div>`;
+}
+function v2CorpsCoordonnees() {
+  return `<div class="s2-q-choix">
+    <div class="duo duo-nom"><div class="f"><label for="v2-nom">${T('Nom')}</label>
+      <input id="v2-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
+      <div class="f"><label for="v2-prenom">${T('Prénom')}</label>
+      <input id="v2-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div></div>
+    <div class="duo" style="margin-top:14px">
+      ${champTelHTML('v2-tel', T('Téléphone'))}
+      <div class="f"><label for="v2-mail">${T('E-mail')}</label>
+      <input id="v2-mail" type="email" autocomplete="email" placeholder="vous@exemple.com"></div></div>
+    <div class="seg" id="v2-canal" style="margin-top:14px">
+      <button type="button" data-v2-canal="whatsapp" class="${TUNNEL.canal !== 'mail' ? 'on' : ''}">${T('Par WhatsApp')}</button>
+      <button type="button" data-v2-canal="mail" class="${TUNNEL.canal === 'mail' ? 'on' : ''}">${T('Par mail')}</button>
+    </div>
+    <div class="pot" aria-hidden="true"><input id="v2-pot" tabindex="-1" autocomplete="off"></div>
+    <p class="si-note" id="v2-note">${T('Téléphone et e-mail sont nécessaires tous les deux : votre simulation part sur le canal choisi, l’autre nous sert à vous rappeler.')}</p>
+    <button type="button" class="s2-sous-suite" id="v2-envoi" style="margin-top:14px">${T('Recevoir ma simulation')}</button>
+  </div>`;
+}
+function v2CorpsCarte(c) {
+  if (c.id === 'montant') return v2CorpsMontantSeul(c);
+  if (c.id === 'financement') return v2CorpsFinancement();
+  if (c.id === 'coordonnees') return v2CorpsCoordonnees();
+  return `<div class="s2-q-choix">${(c.choix || []).map(opt => v2RenduOpt(c, opt)).join('')}</div>`;
+}
+function v2RenduCarte(c, i) {
+  const repondu = v2Fait(c);
+  const estActif = i === V2_ACTIF;
+  const classe = ['s2-q'];
+  if (estActif) classe.push('active'); else if (repondu) classe.push('fait'); else classe.push('vide');
+  return `<div class="${classe.join(' ')}" data-i="${i}" data-id="${c.id}">
+    <div class="s2-q-tete">
+      <div class="s2-q-num">${repondu ? '✓' : (i + 1)}</div>
+      <div class="s2-q-texte">
+        <p class="s2-q-label">${c.label}</p>
+        <p class="s2-q-reponse">${repondu ? c.resume() : T('À répondre')}</p>
+      </div>
+      <div class="s2-q-modif">${T('modifier')}</div>
+    </div>
+    <div class="s2-q-corps">${estActif ? v2CorpsCarte(c) : ''}</div>
+  </div>`;
+}
+
+async function peindreV2(zone) {
+  if (V2_TUNNEL_VU !== TUNNEL) { V2_ACTIF = 0; V2_REPONDU = {}; V2_SOUS = null; V2_AIDE = null; V2_TUNNEL_VU = TUNNEL; }
+  zone.innerHTML = '<p class="dim si-note">' + T('Chargement…') + '</p>';
+  await charger();
+  const visibles = v2CartesVisibles();
+  if (V2_ACTIF >= visibles.length) V2_ACTIF = visibles.length - 1;
+  const n = Math.min(V2_ACTIF + 1, visibles.length);
+  const pct = Math.round((n / visibles.length) * 100);
+  zone.innerHTML = `
+    <div class="s2-progres">
+      <div class="s2-etiquette"><span>${T('Étape')} <b>${n}</b> ${T('sur')} <b>${visibles.length}</b></span><span>${pct}%</span></div>
+      <div class="s2-piste"><div class="s2-fait" style="width:${pct}%"></div></div>
+    </div>
+    <div class="s2-fil">${visibles.map((c, i) => v2RenduCarte(c, i)).join('')}</div>
+    <p class="s2-confiance"><span class="s2-pt">●</span> ${T('Simple')} <span class="s2-pt">·</span> ${T('Confidentiel')} <span class="s2-pt">·</span> ${T('Sans engagement')}</p>`;
+  v2Brancher(zone);
+}
+
+function v2Brancher(zone) {
+  zone.querySelectorAll('.s2-q-tete').forEach(t => {
+    t.onclick = () => {
+      const i = +t.closest('.s2-q').dataset.i;
+      if (i <= V2_ACTIF) { V2_ACTIF = i; peindreV2(zone); }
+    };
+  });
+  zone.querySelectorAll('[data-v2-aide]').forEach(b => {
+    b.onclick = (e) => { e.stopPropagation(); V2_AIDE = V2_AIDE === b.dataset.v2Aide ? null : b.dataset.v2Aide; peindreV2(zone); };
+  });
+  zone.querySelectorAll('.s2-opt').forEach(o => {
+    o.onclick = (e) => {
+      if (e.target.closest('[data-v2-aide]') || e.target.closest('[data-v2-montant]')
+          || e.target.closest('[data-v2-suite]') || e.target.closest('[data-v2-libre]')
+          || e.target.closest('[data-v2-libre-mode]')) return;
+      const id = o.dataset.v2Id, v = o.dataset.v2V;
+      const c = v2Carte(id);
+      const opt = (c.choix || []).find(x => x.v === v);
+      c.set(v);
+      if (opt.montant || opt.libre || opt.avertissement) {
+        peindreV2(zone);
+      } else {
+        V2_REPONDU[id] = true;
+        v2Avancer(zone);
+      }
+    };
+  });
+  zone.querySelectorAll('[data-v2-montant]').forEach(inp => {
+    inp.oninput = () => {
+      const id = inp.dataset.v2Montant;
+      const c = v2Carte(id);
+      const v = c.get();
+      const opt = (c.choix || []).find(x => x.v === v);
+      const chiffres = inp.value.replace(/[^\d]/g, '');
+      const val = chiffres ? parseInt(chiffres, 10) : null;
+      opt.montant.set(val);
+      inp.value = val != null ? mil(val) : '';
+      const bouton = zone.querySelector(`[data-v2-suite="${id}:${v}"]`);
+      if (bouton) bouton.disabled = !val;
+    };
+  });
+  zone.querySelectorAll('[data-v2-libre-mode]').forEach(b => {
+    b.onclick = () => {
+      const id = b.dataset.v2LibreMode;
+      const c = v2Carte(id);
+      const v = c.get();
+      const opt = (c.choix || []).find(x => x.v === v);
+      opt.libre.modeSet(b.dataset.v2Mv);
+      peindreV2(zone);
+      const champ = zone.querySelector(`[data-v2-libre="${id}"]`);
+      if (champ) champ.focus();
+    };
+  });
+  zone.querySelectorAll('[data-v2-libre]').forEach(inp => {
+    inp.oninput = () => {
+      const id = inp.dataset.v2Libre;
+      const c = v2Carte(id);
+      const v = c.get();
+      const opt = (c.choix || []).find(x => x.v === v);
+      const nettoye = inp.value.replace(',', '.').replace(/[^\d.]/g, '');
+      const val = nettoye ? parseFloat(nettoye) : null;
+      opt.libre.valSet(val);
+      const bouton = zone.querySelector(`[data-v2-suite="${id}:${v}"]`);
+      if (bouton) bouton.disabled = val == null;
+    };
+  });
+  zone.querySelectorAll('[data-v2-suite]').forEach(b => {
+    b.onclick = () => {
+      const [id] = b.dataset.v2Suite.split(':');
+      V2_REPONDU[id] = true;
+      v2Avancer(zone);
+    };
+  });
+  const montantSeulInp = zone.querySelector('#v2-montant-seul');
+  if (montantSeulInp) {
+    const c = v2Carte('montant');
+    montantSeulInp.oninput = () => {
+      const chiffres = montantSeulInp.value.replace(/[^\d]/g, '');
+      const val = chiffres ? parseInt(chiffres, 10) : null;
+      c.montantSeul.set(val);
+      montantSeulInp.value = val != null ? mil(val) : '';
+      const bouton = zone.querySelector('#v2-montant-seul-suite');
+      if (bouton) bouton.disabled = !val;
+    };
+    zone.querySelectorAll('[data-v2-montant-devise]').forEach(b => {
+      b.onclick = () => { c.montantSeul.deviseSet(b.dataset.v2MontantDevise); peindreV2(zone); };
+    });
+    const bouton = zone.querySelector('#v2-montant-seul-suite');
+    if (bouton) bouton.onclick = () => { V2_REPONDU.montant = true; v2Avancer(zone); };
+  }
+  zone.querySelectorAll('[data-v2-ltv]').forEach(b => {
+    b.onclick = () => {
+      const v = +b.dataset.v2Ltv;
+      TUNNEL.comptant = v === 0;
+      if (v) TUNNEL.ltv = v;
+      peindreV2(zone);
+    };
+  });
+  zone.querySelectorAll('[data-v2-duree]').forEach(b => {
+    b.onclick = () => { TUNNEL.duree = +b.dataset.v2Duree; peindreV2(zone); };
+  });
+  const finSuite = zone.querySelector('#v2-financement-suite');
+  if (finSuite) finSuite.onclick = () => { V2_REPONDU.financement = true; v2Avancer(zone); };
+
+  const envoiBtn = zone.querySelector('#v2-envoi');
+  if (envoiBtn) {
+    zone.querySelectorAll('#v2-canal button').forEach(b => {
+      b.onclick = () => { TUNNEL.canal = b.dataset.v2Canal; peindreV2(zone); };
+    });
+    v2LireFrais();
+    const telT = initTel('v2-tel', zone);
+    initMailSuggestions('v2-mail', zone);
+    const val = id => (($('#' + id, zone) || {}).value || '').trim();
+    envoiBtn.onclick = async () => {
+      const tel = telT.valeur(), mail = val('v2-mail');
+      const note = $('#v2-note', zone);
+      if (!tel || !mail) {
+        note.textContent = T("Il nous faut votre téléphone ET votre e-mail : la simulation part sur l’un, l’autre nous sert à vous rappeler.");
+        note.classList.add('manque');
+        (tel ? $('#v2-mail', zone) : $('#v2-tel-num', zone))?.focus();
+        return;
+      }
+      v2LireFrais();
+      const canal = TUNNEL.canal === 'mail' ? 'mail' : 'whatsapp';
+      const profilLabel = (DONNEES.profils || {})[TUNNEL.profil] || '';
+      const mot = (TUNNEL.apport
+        ? 'Simulation depuis un apport (v2) — Apport : ' + shek(apportIls())
+          + (TUNNEL.devise === 'EUR' ? ' (' + mil(TUNNEL.montant) + ' €)' : '')
+        : 'Simulation par étapes (v2) — Budget : ' + shek(TUNNEL.prix))
+        + (TUNNEL.comptant ? ' (achat comptant)'
+          : ' (crédit jusqu’à ' + TUNNEL.ltv + ' % sur ' + TUNNEL.duree + ' ans)')
+        + ' — Profil : ' + profilLabel
+        + ' — Reçue par : ' + (canal === 'mail' ? 'mail' : 'WhatsApp');
+      const etiquette = envoiBtn.textContent;
+      envoiBtn.disabled = true;
+      envoiBtn.textContent = T('Envoi…');
+      try {
+        const reponse = await envoyerLead({
+          prenom: val('v2-prenom'), nom: val('v2-nom'), tel: tel, mail: mail,
+          mot: mot, societe: val('v2-pot'),
+        }, TUNNEL.apport ? null : programmeDuTunnel(), 'simulateur', {
+          budget: TUNNEL.apport ? '' : TUNNEL.prix,
+          apport: TUNNEL.apport ? apportIls() : '', canal: canal,
+          profil: TUNNEL.profil, cadre: TUNNEL.cadre,
+          emprunt_pct: TUNNEL.comptant ? 0 : TUNNEL.ltv,
+          emprunt_duree: TUNNEL.comptant ? null : TUNNEL.duree,
+          avocat: TUNNEL.frais ? TUNNEL.frais.avocat : undefined,
+          agence: TUNNEL.frais ? TUNNEL.frais.agence : undefined,
+          courtier: TUNNEL.frais ? TUNNEL.frais.courtier : undefined,
+          revente: TUNNEL.revente ? '1' : '',
+        });
+        compterVue('simu-envoye');
+        etapeConfirmation(zone, canal, TUNNEL.apport ? (reponse || {}).prix_max : null);
+      } catch (err) {
+        envoiBtn.disabled = false;
+        envoiBtn.textContent = etiquette;
+        note.textContent = T('L’envoi a échoué. Réessayez, ou écrivez-nous directement sur WhatsApp.');
+        note.classList.add('manque');
+      }
+    };
   }
 }
 
