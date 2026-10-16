@@ -7021,7 +7021,8 @@ function etapeApport(zone) {
     <p class="dim si-note">${T('Tout ce que vous pouvez mettre sur la table le jour de la signature : c’est de là que nous partons pour calculer le prix du bien que vous pouvez viser, taxe et frais compris.')}</p>
 
     <div class="etape-nav">
-      <button type="button" class="suivant" id="t-suivant">${T('Suivant')}</button>
+      <button type="button" class="suivant" id="t-suivant"
+              ${TUNNEL.revente === null ? 'disabled' : ''}>${T('Suivant')}</button>
     </div>`;
 
   const champ = poserMilliers($('#t-apport', zone));
@@ -7050,6 +7051,7 @@ function etapeApport(zone) {
   $('#t-suivant', zone).onclick = () => {
     TUNNEL.montant = nombreSaisi(champ);
     if (!TUNNEL.montant) { champ.focus(); return; }
+    if (TUNNEL.revente === null) return;
     dessinerEtape(2);
   };
 }
@@ -7059,10 +7061,12 @@ function etapeApport(zone) {
    passer APRES le profil (pour connaitre le vrai plafond de credit avant de
    le proposer), plutot que les deux ensemble comme au premier jet.
    Neuf/seconde main obligatoire ici depuis le 15/10/2026 (cas Yoav
-   Abihatsira) : c'est l'ecran d'entree du parcours « prix », donc le seul
-   endroit ou bloquer tant que `TUNNEL.revente` n'a pas de reponse — le
-   parcours « apport » (`etapeApport`) n'est pas concerne, lui n'a jamais ete
-   en cause. */
+   Abihatsira) : c'est l'ecran d'entree du parcours « prix », donc l'un des
+   deux endroits ou bloquer tant que `TUNNEL.revente` n'a pas de reponse —
+   voir le meme blocage dans `etapeApport`, ajoute le 16/10/2026 apres un
+   test en seconde main qui est quand meme ressorti comme un neuf (le
+   parcours « apport » laissait passer « Suivant » sans jamais avoir pose la
+   question). */
 function etapePrix(zone) {
   zone.innerHTML = `
     ${jaugeHTML(1)}
