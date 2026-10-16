@@ -3088,26 +3088,16 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
      <span class=hc-btn>Découvrir nos programmes</span>
     </a>
    </div>
-   <form class=hero-simu id=hero-simu novalidate>
+   <div class=hero-simu id=hero-simu>
     <span class=hs-sur>Simulateur gratuit</span>
-    <b class=hs-titre>Simulez ici le prix réel de votre bien, frais compris</b>
+    <b class=hs-titre>Simulez ici votre achat</b>
     <p class=hs-sous>Gratuit, en deux minutes : taxe d’acquisition, frais, mensualité et coût total.</p>
     <div class=hs-modes role=tablist>
-      <button type=button class=on data-hs-depart=prix aria-selected=true>À partir du prix d’un bien</button>
-      <button type=button data-hs-depart=apport aria-selected=false>À partir de votre apport</button>
-    </div>
-    <div class=hs-devise id=hs-devise hidden>
-      <span>Montant en</span>
-      <button type=button data-hs-devise=EUR>€ euros</button>
-      <button type=button data-hs-devise=ILS>₪ shekels</button>
-    </div>
-    <label class=hs-lab for=hs-prix id=hs-lab data-prix="Prix du bien (₪)" data-eur="Votre apport (€)" data-ils="Votre apport (₪)">Prix du bien (₪)</label>
-    <div class=hs-ligne>
-      <input id=hs-prix type=text inputmode=numeric autocomplete=off placeholder="2.500.000" aria-label="Prix du bien (₪)">
-      <button type=submit class=hs-go><span class=hs-long>Lancer ma simulation</span><span class=hs-court>Simuler</span> <span aria-hidden=true class=fl>→</span></button>
+      <button type=button data-hs-depart=prix>À partir du montant du bien</button>
+      <button type=button data-hs-depart=apport>À partir de votre apport</button>
     </div>
     <p class=hs-note>Votre simulation envoyée gratuitement et sans engagement, directement par WhatsApp ou par mail.</p>
-  </form>
+  </div>
   </div>
 </section>
 
@@ -3449,10 +3439,14 @@ function choisirModeSimu(mode) {
 /* Ouvre le simulateur, depuis n'importe quel bouton du site. Sur le site de
    BH : sa page a part, dans un nouvel onglet. Sur une page partenaire (pas
    de page a part) : la vue du simulateur, dans la page. */
-function ouvrirSimulateur(mode, prix, projet, apport, devise) {
+function ouvrirSimulateur(mode, prix, projet, apport, devise, v2) {
   if (DONNEES.simulateur_url) {
     const p = [];
     if (mode) p.push('mode=' + ((mode === 'comptant' || mode === 'apport') ? mode : 'credit'));
+    // Le nouveau tunnel (cartes accordeon, phase 1-2 du 16/10/2026) : tant
+    // qu'il n'a pas remplace l'ancien pour de bon, seuls les appels qui le
+    // demandent explicitement l'ouvrent — voir `SIMU_V2` plus bas.
+    if (v2) p.push('v2=1');
     if (prix > 0) p.push('prix=' + prix);
     if (apport > 0) p.push('apport=' + apport + '&devise=' + (devise === 'ILS' ? 'ILS' : 'EUR'));
     if (projet) p.push('projet=' + encodeURIComponent(projet));
@@ -3480,6 +3474,7 @@ function ouvrirSimulateur(mode, prix, projet, apport, devise) {
     else location.href = DONNEES.simulateur_url + q;
     return;
   }
+  if (v2) SIMU_V2 = true;
   if (mode) choisirModeSimu(mode); else MODE_SIMU = null;
   TUNNELS.credit.projet = TUNNELS.comptant.projet = projet || null;
   if (apport > 0) {
@@ -7684,7 +7679,7 @@ function etapeConfirmation(zone, canal, prixMax) {
    est un etat propre a cet affichage. Ainsi le calcul final et
    l'envoi du lead (`envoyerLead`, plus bas) restent exactement les
    memes qu'avant : seul l'HABILLAGE change. */
-const SIMU_V2 = (() => {
+let SIMU_V2 = (() => {
   try { return new URLSearchParams(location.search).get('v2') === '1'; }
   catch (e) { return false; }
 })();
@@ -7778,9 +7773,15 @@ function v2Cartes() {
       })),
     },
     {
+      // Avec/sans credit n'est plus une question a part avant le tunnel
+      // (ancienne tuile de la home, phase 2 du 16/10/2026) : cette carte
+      // decide maintenant les deux a la fois, exactement comme le faisait
+      // deja le parcours apport — jamais masquee en cours de route, sinon
+      // la carte disparaitrait sous les pieds du visiteur au moment meme
+      // ou il clique « Sans credit ».
       id: 'financement', label: T('Part financée par le prêt'),
-      visible: () => !TUNNEL.comptant,
-      resume: () => TUNNEL.ltv + ' % · ' + TUNNEL.duree + ' ' + T('ans'),
+      resume: () => TUNNEL.comptant ? T('Sans crédit')
+        : TUNNEL.ltv + ' % · ' + TUNNEL.duree + ' ' + T('ans'),
     },
     {
       id: 'avocat', label: T('Accompagnement juridique'),
@@ -7937,7 +7938,7 @@ function v2CorpsFinancement() {
   if (!TUNNEL.duree || !durees.includes(TUNNEL.duree)) TUNNEL.duree = durees[durees.length - 1];
   return `<div class="s2-q-choix">
     <div class="s2-sous-devises">
-      ${TUNNEL.apport ? `<button type="button" class="s2-devise-opt ${TUNNEL.comptant ? 'choisi' : ''}" data-v2-ltv="0">${T('Sans crédit')}</button>` : ''}
+      <button type="button" class="s2-devise-opt ${TUNNEL.comptant ? 'choisi' : ''}" data-v2-ltv="0">${T('Sans crédit')}</button>
       ${ltvs.map(v => `<button type="button"
         class="s2-devise-opt ${!TUNNEL.comptant && v === TUNNEL.ltv ? 'choisi' : ''}" data-v2-ltv="${v}">${v} %</button>`).join('')}
     </div>
@@ -9187,43 +9188,16 @@ const LOGO = document.querySelector('.pub-logo');
 (function () {
   const carte = document.getElementById('hero-simu');
   if (carte) {
-    const prix = poserMilliers(carte.querySelector('#hs-prix'));
-    // Deux points de depart, visibles des la page d'accueil (Hillel,
-    // 24/09/2026) : le prix d'un bien, ou la somme dont on dispose.
-    let depart = 'prix';
-    let devise = deviseParDefaut();
-    const lab = carte.querySelector('#hs-lab');
-    const choixDevise = carte.querySelector('#hs-devise');
-    const majDevise = () => {
-      if (choixDevise) choixDevise.querySelectorAll('[data-hs-devise]').forEach(x =>
-        x.classList.toggle('on', x.dataset.hsDevise === devise));
-      if (lab && depart === 'apport') lab.textContent = lab.dataset[devise.toLowerCase()];
-      if (depart === 'apport') prix.placeholder = devise === 'EUR' ? '200.000' : '700.000';
-    };
-    if (choixDevise) choixDevise.querySelectorAll('[data-hs-devise]').forEach(b => {
-      b.onclick = () => { devise = b.dataset.hsDevise; majDevise(); prix.focus(); };
-    });
+    // Simplifiee le 16/10/2026 (Hillel, phase 2) : plus de montant tape ici
+    // — la tuile ne choisit que le mode, le tunnel V2 demande neuf/ancien
+    // D'ABORD puis seulement le montant (jamais l'inverse). `true` en
+    // dernier argument : cette tuile ouvre toujours le nouveau tunnel.
     carte.querySelectorAll('[data-hs-depart]').forEach(b => {
       b.onclick = () => {
-        depart = b.dataset.hsDepart;
-        carte.querySelectorAll('[data-hs-depart]').forEach(x => {
-          x.classList.toggle('on', x === b);
-          x.setAttribute('aria-selected', x === b);
-        });
-        if (choixDevise) choixDevise.hidden = depart !== 'apport';
-        if (lab) lab.textContent = lab.dataset[depart === 'apport' ? devise.toLowerCase() : 'prix'];
-        prix.placeholder = depart === 'apport' ? '200.000' : '2.500.000';
-        majDevise();
-        prix.setAttribute('aria-label', lab ? lab.textContent : '');
-        prix.value = '';
-        prix.focus();
+        if (b.dataset.hsDepart === 'apport') ouvrirSimulateur('apport', 0, null, 0, null, true);
+        else ouvrirSimulateur('credit', 0, null, 0, null, true);
       };
     });
-    carte.onsubmit = e => {
-      e.preventDefault();
-      if (depart === 'apport') ouvrirSimulateur('apport', 0, null, nombreSaisi(prix), devise);
-      else ouvrirSimulateur(null, nombreSaisi(prix));
-    };
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-simu-cle]');
