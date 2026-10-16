@@ -69,12 +69,16 @@ body{margin:0;background:var(--fond);color:var(--encre);
 /* Bloc cliquable pleine largeur, texte a gauche, pastille de choix a
    droite — demande par Hillel le 16/10/2026, d'apres une reference qu'il
    a montree : jamais de grille a deux colonnes, toujours une liste. */
-.opt{display:flex;align-items:center;justify-content:space-between;gap:10px;
-  width:100%;padding:15px 16px;border-radius:12px;border:1.5px solid var(--trait);
-  background:var(--carte);font:inherit;font-weight:700;font-size:15px;
-  color:var(--encre);cursor:pointer;transition:all .15s;text-align:left}
+/* `.opt` est le conteneur BLOCK (jamais flex lui-meme : des qu'un sous-champ
+   ou une aide deroulante s'ajoute en dessous, un `.opt` flex-row les aurait
+   pousses a cote au lieu d'en dessous — bug vu a l'ecran, 16/10/2026). Seule
+   `.opt-ligne`, la ligne titre + pastille, est flex. */
+.opt{display:block;width:100%;padding:15px 16px;border-radius:12px;
+  border:1.5px solid var(--trait);background:var(--carte);font:inherit;
+  font-weight:700;font-size:15px;color:var(--encre);cursor:pointer;
+  transition:all .15s;text-align:left}
 .opt:active{transform:scale(.98)}
-.opt-ligne{display:flex;align-items:center;gap:10px}
+.opt-ligne{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .opt-txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 .opt-txt span{font-size:12px;font-weight:500;color:var(--gris)}
 .opt-rond{flex:none;width:22px;height:22px;border-radius:50%;
