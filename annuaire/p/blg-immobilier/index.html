@@ -6854,16 +6854,24 @@ async function vueSimulateur() {
    Aucun chiffre ne s'affiche avant l'envoi reussi des coordonnees : le
    chiffrage complet part dans un mini-site que le guichet fabrique et envoie
    lui-meme, sur le canal choisi — jamais affiche dans cette page. */
+// Le bandeau « Simulation sans credit / avec credit / Je pars de mon
+// apport », juste au-dessus du tunnel, n'a plus lieu d'etre une fois le
+// tunnel V2 actif (Hillel, 16/10/2026) : avec/sans credit est redevenu une
+// vraie question DANS le tunnel (la carte « financement », qui demande
+// aussi le pourcentage finance), pas un choix a faire avant meme d'y
+// entrer. Le mode (prix/apport) est lui deja tranche par la tuile de la
+// home — voir `#hero-simu`. Masque uniquement derriere `SIMU_V2` : le vieux
+// tunnel continue de s'en servir normalement.
 async function vueSimulateurEtapes() {
   basculer('simulateur');
   vue.innerHTML = `
     <div class="pub-head">
       <div>
       <h1 class="h1-partage">${T("Simulateur d'achat")}${boutonPartageSimulateur()}</h1>
-      <p class="sub">${T("Un prix, votre situation, et on vous envoie le chiffrage complet : à la signature, tous les mois, et à la revente.")}</p>
+      ${SIMU_V2 ? '' : `<p class="sub">${T("Un prix, votre situation, et on vous envoie le chiffrage complet : à la signature, tous les mois, et à la revente.")}</p>`}
       </div>
     </div>
-    ${MODE_SIMU ? `<div class="simu-modes" role="tablist">
+    ${MODE_SIMU && !SIMU_V2 ? `<div class="simu-modes" role="tablist">
       <button type="button" role="tab" data-mode="comptant"
               class="${MODE_SIMU === 'comptant' ? 'on' : ''}"
               aria-selected="${MODE_SIMU === 'comptant'}">
