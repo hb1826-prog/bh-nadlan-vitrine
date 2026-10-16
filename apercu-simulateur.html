@@ -64,17 +64,23 @@ body{margin:0;background:var(--fond);color:var(--encre);
 /* Corps : les choix, masque/affiche en accordeon anime */
 .q-corps{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.65,0,.35,1)}
 .q.active .q-corps{max-height:420px}
-.q-choix{padding:4px 16px 16px;display:grid;gap:8px}
-.q-choix.grille2{grid-template-columns:1fr 1fr}
+.q-choix{padding:4px 16px 16px;display:grid;gap:9px}
 
-.opt{display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:14px 12px;border-radius:12px;border:1.5px solid var(--trait);
-  background:var(--fond);font:inherit;font-weight:700;font-size:14.5px;
-  color:var(--encre);cursor:pointer;transition:all .15s;text-align:center}
-.opt:active{transform:scale(.97)}
-.opt b{display:block;font-size:14.5px}
-.opt span{display:block;font-size:11.5px;font-weight:500;color:var(--gris);margin-top:2px}
-.opt.large{flex-direction:column;align-items:flex-start;text-align:left}
+/* Bloc cliquable pleine largeur, texte a gauche, pastille de choix a
+   droite — demande par Hillel le 16/10/2026, d'apres une reference qu'il
+   a montree : jamais de grille a deux colonnes, toujours une liste. */
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;padding:15px 16px;border-radius:12px;border:1.5px solid var(--trait);
+  background:var(--carte);font:inherit;font-weight:700;font-size:15px;
+  color:var(--encre);cursor:pointer;transition:all .15s;text-align:left}
+.opt:active{transform:scale(.98)}
+.opt-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.opt-txt span{font-size:12px;font-weight:500;color:var(--gris)}
+.opt-rond{flex:none;width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--trait);display:grid;place-items:center;
+  transition:all .15s;color:transparent;font-size:13px}
+.opt.choisi{background:var(--or-clair);border-color:var(--or)}
+.opt.choisi .opt-rond{background:var(--or);border-color:var(--or);color:#fff}
 
 /* ---- pied : mention de confiance ---- */
 .confiance{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;
@@ -149,9 +155,10 @@ function peindre(){
     else if (repondu) classe.push('fait');
     else classe.push('vide');
     const corps = estActif ? `
-      <div class="q-corps"><div class="q-choix ${q.grille === 2 ? 'grille2' : ''}">
-        ${q.choix.map(c => `<button type="button" class="opt ${c.s ? 'large' : ''}" data-id="${q.id}" data-v="${c.v}">
-          <b>${c.t}</b>${c.s ? `<span>${c.s}</span>` : ''}
+      <div class="q-corps"><div class="q-choix">
+        ${q.choix.map(c => `<button type="button" class="opt" data-id="${q.id}" data-v="${c.v}">
+          <span class="opt-txt">${c.t}${c.s ? `<span>${c.s}</span>` : ''}</span>
+          <span class="opt-rond">✓</span>
         </button>`).join('')}
       </div></div>` : '<div class="q-corps"></div>';
     return `<div class="${classe.join(' ')}" data-i="${i}">
@@ -175,13 +182,20 @@ function peindre(){
   });
   fil.querySelectorAll('.opt').forEach(b => {
     b.onclick = () => {
+      // Le bloc se colore AVANT de passer a la question suivante — on voit
+      // son propre choix se confirmer, pas juste un changement d'ecran
+      // instantane (Hillel, 16/10/2026).
+      fil.querySelectorAll(`.opt[data-id="${b.dataset.id}"]`).forEach(o => o.classList.remove('choisi'));
+      b.classList.add('choisi');
       reponses[b.dataset.id] = b.dataset.v;
-      if (actif < QUESTIONS.length - 1) actif++;
-      peindre();
       setTimeout(() => {
-        const el = document.querySelector('.q.active');
-        if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
-      }, 80);
+        if (actif < QUESTIONS.length - 1) actif++;
+        peindre();
+        setTimeout(() => {
+          const el = document.querySelector('.q.active');
+          if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+        }, 80);
+      }, 260);
     };
   });
 
