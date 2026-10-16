@@ -545,9 +545,12 @@ button,input,select,textarea{font:inherit;color:inherit}
  border-radius:999px;width:100%;min-height:46px;
  display:flex;align-items:center;justify-content:center;text-align:center}
 .hc-simu .hc-btn,.hc-progs .hc-btn{background:var(--action);color:#fff}
-.hero-simu{background:var(--carte);color:var(--encre);border-radius:var(--r-xl);
- box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 22px 20px;
- display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--or)}
+/* Couleurs FIXES (jamais var(--carte)/var(--fond), qui basculent sombres
+   la nuit) : ce bloc reste lisible quel que soit le theme du telephone
+   (Hillel, 16/10/2026, "on ne le voit pas bien"). */
+.hero-simu{background:#FBF5E4;border-radius:var(--r-xl);
+ box-shadow:0 10px 30px -14px rgba(0,0,0,.25);padding:14px;
+ display:flex;flex-direction:column;border:1.5px solid #E6D9B0}
 /* Carte et panneau de la grande phrase au cordeau : meme haut, meme bas
    (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
    Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
@@ -625,12 +628,14 @@ button,input,select,textarea{font:inherit;color:inherit}
  font-weight:650;padding:12px 14px;border:1px solid var(--trait);
  border-radius:var(--r);background:var(--fond);color:var(--encre)}
 .hero-simu input:focus{outline:2px solid var(--action);outline-offset:1px}
-.hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
-.hs-modes button{font:inherit;font-size:14px;font-weight:650;cursor:pointer;
- padding:10px 8px;border-radius:999px;border:1px solid var(--trait);
- background:var(--fond);color:var(--encre-2)}
-.hs-modes button.on{background:var(--action-lavis);border-color:var(--action);
- color:var(--action)}
+/* Deux petits carres nets (Hillel, 16/10/2026), plus les pilules longues
+   d'avant — couleurs fixes, jamais sombres la nuit. */
+.hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hs-modes button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+ padding:16px 10px;border-radius:12px;border:1.5px solid #E6D9B0;
+ background:#FFFFFF;color:#0F172A;text-align:center;line-height:1.3;
+ aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+.hs-modes button:active{background:#FBF5E4}
 /* La monnaie de l'apport, toujours visible et au choix (Hillel,
    24/09/2026 : il avait tape 500.000 sans savoir si c'etait des euros). */
 .hs-devise{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
@@ -3144,14 +3149,10 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     </a>
    </div>
    <div class=hero-simu id=hero-simu>
-    <span class=hs-sur>Бесплатный симулятор</span>
-    <b class=hs-titre>Смоделируйте здесь вашу покупку</b>
-    <p class=hs-sous>Бесплатно, за две минуты: налог на приобретение, расходы, ежемесячный платёж и общая стоимость.</p>
     <div class=hs-modes role=tablist>
       <button type=button data-hs-depart=prix>Исходя из стоимости объекта недвижимости</button>
       <button type=button data-hs-depart=apport>Исходя из вашего первоначального взноса</button>
     </div>
-    <p class=hs-note>Ваш расчёт отправляется бесплатно и без обязательств, напрямую через WhatsApp или по электронной почте.</p>
   </div>
   </div>
 </section>
@@ -8045,7 +8046,7 @@ function v2RenduOpt(c, opt) {
     ${opt.avertissement && estChoisi ? `<div class="s2-avertissement">⚠ ${opt.avertissement}
       <button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>
     </div>` : ''}
-    ${estChoisi && !opt.montant && !opt.libre && !opt.avertissement ? `<button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>` : ''}
+    ${(c.impose || opt.defaut) && estChoisi ? `<button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>` : ''}
     ${estChoisi ? sous : ''}
   </div>`;
 }
@@ -8117,16 +8118,20 @@ function v2CorpsCarte(c) {
   if (c.id === 'coordonnees') return v2CorpsCoordonnees();
   return `<div class="s2-q-choix">${(c.choix || []).map(opt => v2RenduOpt(c, opt)).join('')}</div>`;
 }
-function v2RenduCarte(c, i) {
+function v2RenduCarte(c, i, total) {
   const repondu = v2Fait(c);
   const estActif = i === V2_ACTIF;
   const classe = ['s2-q'];
   if (estActif) classe.push('active'); else if (repondu) classe.push('fait'); else classe.push('vide');
+  // Le numero de l'etape ecrit sur CHAQUE carte, pas seulement dans la
+  // barre du haut qui peut avoir defile hors de l'ecran (Hillel,
+  // 16/10/2026 : « étape 3 sur 7 » sur chaque bloc, pas qu'une fois).
+  const etiquette = T('Étape') + ' ' + (i + 1) + ' ' + T('sur') + ' ' + total + ' · ' + c.label;
   return `<div class="${classe.join(' ')}" data-i="${i}" data-id="${c.id}">
     <div class="s2-q-tete">
       <div class="s2-q-num">${repondu ? '✓' : (i + 1)}</div>
       <div class="s2-q-texte">
-        <p class="s2-q-label">${c.label}</p>
+        <p class="s2-q-label">${etiquette}</p>
         <p class="s2-q-reponse">${repondu ? c.resume() : T('À répondre')}</p>
       </div>
       <div class="s2-q-modif">${T('modifier')}</div>
@@ -8148,7 +8153,7 @@ async function peindreV2(zone) {
       <div class="s2-etiquette"><span>${T('Étape')} <b>${n}</b> ${T('sur')} <b>${visibles.length}</b></span><span>${pct}%</span></div>
       <div class="s2-piste"><div class="s2-fait" style="width:${pct}%"></div></div>
     </div>
-    <div class="s2-fil">${visibles.map((c, i) => v2RenduCarte(c, i)).join('')}</div>
+    <div class="s2-fil">${visibles.map((c, i) => v2RenduCarte(c, i, visibles.length)).join('')}</div>
     <p class="s2-confiance"><span class="s2-pt">●</span> ${T('Simple')} <span class="s2-pt">·</span> ${T('Confidentiel')} <span class="s2-pt">·</span> ${T('Sans engagement')}</p>`;
   v2Brancher(zone);
 }
@@ -8172,12 +8177,18 @@ function v2Brancher(zone) {
       const c = v2Carte(id);
       const opt = (c.choix || []).find(x => x.v === v);
       c.set(v);
-      // Jamais d'avance automatique au clic, meme pour un choix simple
-      // (Hillel, 16/10/2026 : « il faut qu'il y ait un bouton suivant a
-      // chaque fois, pour que les gens comprennent qu'il faut passer a
-      // l'etape suivante ») — le choix se peint « coche », avec son propre
-      // bouton Continuer juste en dessous (voir `v2RenduOpt`).
-      peindreV2(zone);
+      // Revu le 16/10/2026 (Hillel : « le bouton Continuer me derange ») :
+      // un vrai choix multiple avance tout de suite au clic. Seul un choix
+      // qui a quelque chose de plus a montrer (montant/libre a saisir, un
+      // avertissement a lire) ou qui est impose (une seule option,
+      // automatiquement cochee, rien a « choisir ») attend un clic sur
+      // Continuer — sinon rien ne dirait que l'etape suivante existe.
+      if (opt.montant || opt.libre || opt.avertissement || c.impose) {
+        peindreV2(zone);
+      } else {
+        V2_REPONDU[id] = true;
+        v2Avancer(zone);
+      }
     };
   });
   zone.querySelectorAll('[data-v2-montant]').forEach(inp => {
