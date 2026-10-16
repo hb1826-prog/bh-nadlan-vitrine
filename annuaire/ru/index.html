@@ -8000,6 +8000,7 @@ function v2RenduOpt(c, opt) {
     ${opt.avertissement && estChoisi ? `<div class="s2-avertissement">⚠ ${opt.avertissement}
       <button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>
     </div>` : ''}
+    ${c.impose && estChoisi ? `<button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>` : ''}
     ${estChoisi ? sous : ''}
   </div>`;
 }
