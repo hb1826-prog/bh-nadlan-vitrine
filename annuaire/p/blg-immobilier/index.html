@@ -7958,8 +7958,19 @@ function v2CorpsFinancement() {
   </div>`;
 }
 function v2CorpsCoordonnees() {
+  // Ordre impose par Hillel le 16/10/2026, apres un test ou taper le
+  // formulaire PUIS choisir WhatsApp/mail effacait tout ce qui avait ete
+  // tape : le choix du canal passe maintenant AVANT le formulaire (un
+  // simple reglage, pas une derniere etape), et son clic ne redessine plus
+  // jamais toute la carte (voir le handler plus bas, `v2Brancher`) — c'est
+  // ce redessin complet qui vidait les champs.
   return `<div class="s2-q-choix">
-    <div class="duo duo-nom"><div class="f"><label for="v2-nom">${T('Nom')}</label>
+    <p class="s2-sous-label">${T('Comment souhaitez-vous recevoir votre simulation ?')}</p>
+    <div class="seg" id="v2-canal">
+      <button type="button" data-v2-canal="whatsapp" class="${TUNNEL.canal !== 'mail' ? 'on' : ''}">${T('Par WhatsApp')}</button>
+      <button type="button" data-v2-canal="mail" class="${TUNNEL.canal === 'mail' ? 'on' : ''}">${T('Par mail')}</button>
+    </div>
+    <div class="duo duo-nom" style="margin-top:16px"><div class="f"><label for="v2-nom">${T('Nom')}</label>
       <input id="v2-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
       <div class="f"><label for="v2-prenom">${T('Prénom')}</label>
       <input id="v2-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div></div>
@@ -7967,10 +7978,6 @@ function v2CorpsCoordonnees() {
       ${champTelHTML('v2-tel', T('Téléphone'))}
       <div class="f"><label for="v2-mail">${T('E-mail')}</label>
       <input id="v2-mail" type="email" autocomplete="email" placeholder="vous@exemple.com"></div></div>
-    <div class="seg" id="v2-canal" style="margin-top:14px">
-      <button type="button" data-v2-canal="whatsapp" class="${TUNNEL.canal !== 'mail' ? 'on' : ''}">${T('Par WhatsApp')}</button>
-      <button type="button" data-v2-canal="mail" class="${TUNNEL.canal === 'mail' ? 'on' : ''}">${T('Par mail')}</button>
-    </div>
     <div class="pot" aria-hidden="true"><input id="v2-pot" tabindex="-1" autocomplete="off"></div>
     <p class="si-note" id="v2-note">${T('Téléphone et e-mail sont nécessaires tous les deux : votre simulation part sur le canal choisi, l’autre nous sert à vous rappeler.')}</p>
     <button type="button" class="s2-sous-suite" id="v2-envoi" style="margin-top:14px">${T('Recevoir ma simulation')}</button>
@@ -8124,8 +8131,15 @@ function v2Brancher(zone) {
 
   const envoiBtn = zone.querySelector('#v2-envoi');
   if (envoiBtn) {
+    // Jamais `peindreV2(zone)` ici : redessiner toute la carte videait les
+    // champs deja tapes du formulaire juste en dessous (Hillel, 16/10/2026,
+    // « j'ai rempli le formulaire, j'ai appuye par WhatsApp et ca m'a tout
+    // efface »). Un simple bascule de classe suffit, rien d'autre ne change.
     zone.querySelectorAll('#v2-canal button').forEach(b => {
-      b.onclick = () => { TUNNEL.canal = b.dataset.v2Canal; peindreV2(zone); };
+      b.onclick = () => {
+        TUNNEL.canal = b.dataset.v2Canal;
+        zone.querySelectorAll('#v2-canal button').forEach(x => x.classList.toggle('on', x === b));
+      };
     });
     v2LireFrais();
     const telT = initTel('v2-tel', zone);
