@@ -191,16 +191,46 @@ const QUESTIONS = [
        aide:'Fiscalité différente (impôt sur les sociétés plutôt que barème personnel) — pertinent surtout pour un investissement locatif.'}
     ] },
   { id:'avocat', label:'Accompagnement juridique', choix:[
-      {v:'notre', t:'Avec notre avocat', s:'Honoraires fixes : 0,5 %',
-       aide:'Il vérifie le contrat, sécurise le paiement et vous représente à la signature. 0,5 %, sans négociation à faire.'},
-      {v:'propre', t:'Mon propre avocat', s:'Vous avez déjà quelqu’un en tête',
-       libre:{label:'Ses honoraires'}}
+      {v:'notre', t:'L’avocat que nous recommandons', s:'Honoraires fixes : 0,5 %',
+       aide:'Nous avons des avocats qui peuvent vous accompagner à partir de 0,5 % du prix du bien, sans négociation à faire.'},
+      {v:'libre', t:'Mon propre avocat', s:'Vous avez déjà quelqu’un en tête',
+       libre:{label:'Ses honoraires'}},
+      {v:'non', t:'Sans avocat', s:'Vous gérez seul cette partie'}
     ] },
-  // Le 1 % (neuf) ou 2 % non retirable (ancien) de frais d'agence/
-  // accompagnement n'est PAS une question : il decoule directement de la
-  // reponse neuf/ancien deja donnee a l'etape 2, jamais un choix a part
-  // (Hillel, 16/10/2026, apres une premiere maquette qui l'avait, a tort,
-  // transforme en liste de pourcentages a choisir).
+  // Frais d'agence (ancien) vs accompagnement (neuf) : jamais la meme
+  // question. Dans l'ancien, les 2 % de frais d'agence sont IMPOSES — pas
+  // de bouton « non », rien a choisir, on decoule du type de bien repondu
+  // a l'etape 2. Dans le neuf, l'accompagnement a 1 % reste un vrai choix,
+  // le client peut le refuser (Hillel, 16/10/2026 : « dans le neuf, tu peux
+  // le prendre ou ne pas le prendre, mais dans l'ancien t'as pas le choix »).
+  // Reprend exactement la mecanique du vrai tunnel (`etapeFrais()`,
+  // `accompagnementImpose = !!TUNNEL.revente`).
+  { id:'accompagnement',
+    dynamique(r){
+      const ancien = r.type === 'ancien';
+      return ancien
+        ? { label:'Frais d’agence', choix:[
+            {v:'oui', t:'Frais d’agence', s:'2 % du prix, non négociables',
+             aide:'Comme nous ne sommes pas payés par un promoteur sur ce type de bien, ces frais couvrent la négociation, le dossier et le suivi jusqu’aux clés.'}
+          ] }
+        : { label:'Accompagnement après la signature', choix:[
+            {v:'oui', t:'Accompagnement après la signature', s:'1 % du prix',
+             aide:'De la signature jusqu’à la remise des clés, nous nous occupons de tout : le dossier, l’avocat, la banque, le suivi du chantier et la réception du bien. Cet accompagnement est proposé à 1 % du prix.'},
+            {v:'non', t:'Sans accompagnement', s:'Vous gérez seul après la signature'}
+          ] };
+    } },
+  // Courtier bancaire : seulement si un credit a ete choisi a l'etape
+  // financement — « Aucun credit : pas de courtier a payer » dans le vrai
+  // tunnel. Meme mecanique notre/libre/non que l'avocat.
+  { id:'courtier', label:'Courtier bancaire',
+    visible:(r) => r.credit === 'credit',
+    choix:[
+      {v:'notre', t:'Le courtier que nous recommandons', s:'7 000 ₪, prix constaté',
+       aide:'Nous avons un courtier francophone qui peut vous accompagner, entre 7 000 et 12 000 ₪ selon la complexité du dossier.'},
+      {v:'libre', t:'Mon propre courtier', s:'Vous avez déjà quelqu’un en tête',
+       libre:{label:'Ses honoraires'}},
+      {v:'non', t:'Sans courtier', s:'Vous gérez seul ce volet'}
+    ] },
 ];
 
 // La devise se choisit a chaque montant, apport comme prix — un client a
@@ -218,8 +248,22 @@ const libreValeur = {};    // id -> nombre saisi par le client (son %, ou son mo
 let aideOuverte = null;    // "id:v" de l'aide actuellement deroulee
 let sousOuvert = null;     // "id:v" du sous-champ actuellement ouvert
 
+// `dynamique(reponses)` : certaines questions (accompagnement) changent
+// de libelle et de choix selon une reponse deja donnee plus haut (neuf ou
+// ancien) — jamais une question figee a l'avance.
+function resoudre(q){
+  return q.dynamique ? q.dynamique(reponses) : { label:q.label, choix:q.choix };
+}
+
+// `visible(reponses)` : certaines questions (courtier) ne s'affichent que
+// si une reponse anterieure le justifie (credit choisi) — reprend
+// `etapesDuTunnel()` du vrai simulateur.
+function questionsVisibles(){
+  return QUESTIONS.filter(q => !q.visible || q.visible(reponses));
+}
+
 function choixActuel(q){
-  return q.choix.find(c => c.v === reponses[q.id]);
+  return resoudre(q).choix.find(c => c.v === reponses[q.id]);
 }
 
 function libelle(q){
@@ -238,7 +282,7 @@ function libelle(q){
 }
 
 function confirmer(id){
-  if (actif < QUESTIONS.length - 1) actif++;
+  if (actif < questionsVisibles().length - 1) actif++;
   peindre();
   setTimeout(() => {
     const el = document.querySelector('.q.active');
@@ -248,7 +292,9 @@ function confirmer(id){
 
 function peindre(){
   const fil = document.getElementById('fil');
-  fil.innerHTML = QUESTIONS.map((q, i) => {
+  const visibles = questionsVisibles();
+  fil.innerHTML = visibles.map((q, i) => {
+    const { label, choix } = resoudre(q);
     const repondu = reponses[q.id] != null;
     const estActif = i === actif;
     const classe = ['q'];
@@ -258,7 +304,7 @@ function peindre(){
 
     const corps = estActif ? `
       <div class="q-corps"><div class="q-choix">
-        ${q.choix.map(c => {
+        ${choix.map(c => {
           const cle = q.id + ':' + c.v;
           const estChoisi = reponses[q.id] === c.v;
           const sousActif = sousOuvert === cle || (estChoisi && (c.montant || c.pct || c.libre));
@@ -326,7 +372,7 @@ function peindre(){
       <div class="q-tete">
         <div class="q-num">${repondu ? '✓' : (i + 1)}</div>
         <div class="q-texte">
-          <p class="q-label">${q.label}</p>
+          <p class="q-label">${label}</p>
           <p class="q-reponse">${repondu ? libelle(q) : 'À répondre'}</p>
         </div>
         <div class="q-modif">modifier</div>
@@ -360,7 +406,7 @@ function peindre(){
           || e.target.closest('[data-libre]') || e.target.closest('[data-libre-mode]')) return;
       const id = o.dataset.id, v = o.dataset.v;
       const q = QUESTIONS.find(x => x.id === id);
-      const c = q.choix.find(x => x.v === v);
+      const c = resoudre(q).choix.find(x => x.v === v);
       reponses[id] = v;
       if (c.montant || c.pct || c.libre) {
         sousOuvert = id + ':' + v;
@@ -428,10 +474,10 @@ function peindre(){
     b.onclick = () => { sousOuvert = null; confirmer(b.dataset.suite); };
   });
 
-  const n = Math.min(actif + 1, QUESTIONS.length);
+  const n = Math.min(actif + 1, visibles.length);
   document.getElementById('etape-n').textContent = n;
-  document.getElementById('etape-total').textContent = QUESTIONS.length;
-  const pct = Math.round((n / QUESTIONS.length) * 100);
+  document.getElementById('etape-total').textContent = visibles.length;
+  const pct = Math.round((n / visibles.length) * 100);
   document.getElementById('etape-pct').textContent = pct + '%';
   document.getElementById('barre').style.width = pct + '%';
 }
