@@ -98,6 +98,14 @@ body{margin:0;background:var(--fond);color:var(--encre);
   font-size:12.5px;font-weight:500;color:var(--gris);line-height:1.5}
 .aide-texte.ouvert{max-height:160px;margin-top:10px}
 
+/* L'avertissement (« sans avocat », « sans courtier »...) : jamais derriere
+   un clic, contrairement a l'aide — il s'affiche tout de suite des que ce
+   choix est selectionne, pour qu'on ne le manque pas (Hillel, 16/10/2026,
+   reprend le texte exact du vrai tunnel). */
+.avertissement{margin-top:10px;padding:10px 12px;border-radius:10px;
+  background:#FBF0E4;border:1.5px solid #E8C9A0;color:#8A5A1E;
+  font-size:12.5px;font-weight:600;line-height:1.5}
+
 /* Le sous-champ (montant, pourcentage) qui s'ouvre SOUS le bloc choisi,
    avant de pouvoir continuer — jamais un ecran separe. */
 .sous-champ{max-height:0;overflow:hidden;transition:max-height .4s ease}
@@ -195,7 +203,8 @@ const QUESTIONS = [
        aide:'Nous avons des avocats qui peuvent vous accompagner à partir de 0,5 % du prix du bien, sans négociation à faire.'},
       {v:'libre', t:'Mon propre avocat', s:'Vous avez déjà quelqu’un en tête',
        libre:{label:'Ses honoraires'}},
-      {v:'non', t:'Sans avocat', s:'Vous gérez seul cette partie'}
+      {v:'non', t:'Sans avocat', s:'Vous gérez seul cette partie',
+       avertissement:'Nous recommandons vivement de prendre un avocat, surtout si vous ne parlez pas hébreu : c’est lui qui relit le contrat et vous protège avant la signature.'}
     ] },
   // Frais d'agence (ancien) vs accompagnement (neuf) : jamais la meme
   // question. Dans l'ancien, les 2 % de frais d'agence sont IMPOSES — pas
@@ -216,7 +225,8 @@ const QUESTIONS = [
         : { label:'Accompagnement après la signature', choix:[
             {v:'oui', t:'Accompagnement après la signature', s:'1 % du prix',
              aide:'De la signature jusqu’à la remise des clés, nous nous occupons de tout : le dossier, l’avocat, la banque, le suivi du chantier et la réception du bien. Cet accompagnement est proposé à 1 % du prix.'},
-            {v:'non', t:'Sans accompagnement', s:'Vous gérez seul après la signature'}
+            {v:'non', t:'Sans accompagnement', s:'Vous gérez seul après la signature',
+             avertissement:'Jusqu’à la signature, c’est effectivement gratuit. Mais après, choix des matériaux, conseils d’architecte, suivi des paiements de la garantie bancaire : quelqu’un pour vous accompagner reste utile. Encore une fois, c’est facultatif.'}
           ] };
     } },
   // Courtier bancaire : seulement si un credit a ete choisi a l'etape
@@ -229,7 +239,8 @@ const QUESTIONS = [
        aide:'Nous avons un courtier francophone qui peut vous accompagner, entre 7 000 et 12 000 ₪ selon la complexité du dossier.'},
       {v:'libre', t:'Mon propre courtier', s:'Vous avez déjà quelqu’un en tête',
        libre:{label:'Ses honoraires'}},
-      {v:'non', t:'Sans courtier', s:'Vous gérez seul ce volet'}
+      {v:'non', t:'Sans courtier', s:'Vous gérez seul ce volet',
+       avertissement:'Le marché du crédit est très concurrentiel : même avec un crédit déjà en tête, un courtier négocie souvent un meilleur taux que ce qu’une seule banque proposera. Nous recommandons d’en garder un.'}
     ] },
 ];
 
@@ -363,6 +374,9 @@ function peindre(){
               <span class="opt-rond" data-choisir="${q.id}:${c.v}">✓</span>
             </div>
             ${c.aide ? `<div class="aide-texte ${aideEstOuverte ? 'ouvert' : ''}">${c.aide}</div>` : ''}
+            ${c.avertissement && estChoisi ? `<div class="avertissement">⚠ ${c.avertissement}
+              <button type="button" class="sous-suite" data-suite="${q.id}" style="margin-top:10px">Continuer</button>
+            </div>` : ''}
             ${sous}
           </div>`;
         }).join('')}
@@ -408,7 +422,7 @@ function peindre(){
       const q = QUESTIONS.find(x => x.id === id);
       const c = resoudre(q).choix.find(x => x.v === v);
       reponses[id] = v;
-      if (c.montant || c.pct || c.libre) {
+      if (c.montant || c.pct || c.libre || c.avertissement) {
         sousOuvert = id + ':' + v;
         peindre();
         setTimeout(() => {
