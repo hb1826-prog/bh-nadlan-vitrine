@@ -62,25 +62,60 @@ body{margin:0;background:var(--fond);color:var(--encre);
 .q.fait .q-modif{display:block}
 
 /* Corps : les choix, masque/affiche en accordeon anime */
-.q-corps{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.65,0,.35,1)}
-.q.active .q-corps{max-height:420px}
+.q-corps{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.65,0,.35,1)}
+.q.active .q-corps{max-height:900px}
 .q-choix{padding:4px 16px 16px;display:grid;gap:9px}
 
 /* Bloc cliquable pleine largeur, texte a gauche, pastille de choix a
    droite — demande par Hillel le 16/10/2026, d'apres une reference qu'il
    a montree : jamais de grille a deux colonnes, toujours une liste. */
-.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;
+.opt{display:flex;align-items:center;justify-content:space-between;gap:10px;
   width:100%;padding:15px 16px;border-radius:12px;border:1.5px solid var(--trait);
   background:var(--carte);font:inherit;font-weight:700;font-size:15px;
   color:var(--encre);cursor:pointer;transition:all .15s;text-align:left}
 .opt:active{transform:scale(.98)}
-.opt-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.opt-ligne{display:flex;align-items:center;gap:10px}
+.opt-txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 .opt-txt span{font-size:12px;font-weight:500;color:var(--gris)}
 .opt-rond{flex:none;width:22px;height:22px;border-radius:50%;
   border:2px solid var(--trait);display:grid;place-items:center;
   transition:all .15s;color:transparent;font-size:13px}
 .opt.choisi{background:var(--or-clair);border-color:var(--or)}
 .opt.choisi .opt-rond{background:var(--or);border-color:var(--or);color:#fff}
+
+/* Le petit « ? » d'aide : n'affecte jamais le choix lui-meme (il garde son
+   propre gestionnaire de clic, stoppe la propagation) — demande par
+   Hillel le 16/10/2026 : chaque reponse qui a une vraie incidence doit
+   pouvoir expliquer laquelle, sans obliger a quitter l'ecran. */
+.aide-bouton{flex:none;width:21px;height:21px;border-radius:50%;
+  border:1.5px solid var(--trait);background:var(--fond-2);color:var(--gris);
+  font-size:12px;font-weight:800;display:grid;place-items:center;cursor:pointer}
+.aide-texte{max-height:0;overflow:hidden;transition:max-height .35s ease;
+  font-size:12.5px;font-weight:500;color:var(--gris);line-height:1.5}
+.aide-texte.ouvert{max-height:160px;margin-top:10px}
+
+/* Le sous-champ (montant, pourcentage) qui s'ouvre SOUS le bloc choisi,
+   avant de pouvoir continuer — jamais un ecran separe. */
+.sous-champ{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.sous-champ.ouvert{max-height:220px;margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--trait)}
+.sous-label{font-size:12px;font-weight:700;color:var(--gris);
+  text-transform:uppercase;letter-spacing:.03em;margin:0 0 8px}
+.sous-montant{display:flex;align-items:center;gap:8px;background:var(--fond);
+  border:1.5px solid var(--trait);border-radius:10px;padding:11px 13px}
+.sous-montant input{flex:1;border:0;background:none;font:inherit;font-size:18px;
+  font-weight:800;color:var(--encre);min-width:0}
+.sous-montant input:focus{outline:none}
+.sous-montant .devise{font-size:14px;font-weight:700;color:var(--gris)}
+.sous-pct{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.pct-opt{padding:10px 6px;border-radius:9px;border:1.5px solid var(--trait);
+  background:var(--fond);font:inherit;font-weight:700;font-size:13.5px;
+  text-align:center;cursor:pointer}
+.pct-opt.choisi{background:var(--or-clair);border-color:var(--or);color:var(--or-fonce)}
+.sous-suite{width:100%;margin-top:10px;padding:12px;border-radius:10px;border:0;
+  background:var(--encre);color:var(--or);font:inherit;font-weight:800;
+  font-size:14px;cursor:pointer}
+.sous-suite:disabled{opacity:.4}
 
 /* ---- pied : mention de confiance ---- */
 .confiance{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;
@@ -89,11 +124,6 @@ body{margin:0;background:var(--fond);color:var(--encre);
   text-align:center;font-size:12.5px;font-weight:650;color:var(--gris);
   display:flex;justify-content:center;gap:8px;align-items:center}
 .confiance .pt{color:var(--or-fonce)}
-
-/* animation d'entree d'une carte qui vient de s'ouvrir */
-@keyframes ouvre{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.q.active .q-corps{animation:none}
-.q.venir-ouvrir .q-corps > *{animation:ouvre .35s ease both}
 </style>
 </head>
 <body>
@@ -102,7 +132,7 @@ body{margin:0;background:var(--fond);color:var(--encre);
   <div class="tete">
     <div class="logo"><span class="carre">BH</span><b>BH NADLAN</b></div>
     <h1>Votre projet immobilier en Israël</h1>
-    <p>Répondez étape par étape, sans changer de page</p>
+    <p>Un prix, votre situation, et le chiffrage complet — en une seule page</p>
   </div>
 
   <div class="progres">
@@ -116,33 +146,76 @@ body{margin:0;background:var(--fond);color:var(--encre);
 </div>
 
 <script>
+// `montant` : ce choix ouvre un champ numerique sous lui-meme avant de
+// pouvoir continuer (Hillel, 16/10/2026 : « il faut ecrire le montant
+// quelque part »).
+// `aide` : le texte du petit « ? », qui deroule l'incidence du choix.
+// `pct` : ce choix ouvre un sous-bloc de pourcentages avant de continuer
+// (avocat, courtier...).
 const QUESTIONS = [
   { id:'depart', label:'Point de départ', choix:[
-      {v:'apport', t:'Mon apport', s:'« J’ai 200.000 €, qu’est-ce que je peux acheter ? »'},
-      {v:'prix', t:'Le prix du bien', s:'Vous donnez un prix, on calcule le reste'}
-    ], grille:1 },
+      {v:'apport', t:'Mon apport', s:'« J’ai 200.000 €, qu’est-ce que je peux acheter ? »',
+       montant:{label:'Montant disponible', devise:'€', placeholder:'200 000'}},
+      {v:'prix', t:'Le prix du bien', s:'Vous donnez un prix, on calcule le reste',
+       montant:{label:'Prix du bien', devise:'₪', placeholder:'2 500 000'}}
+    ] },
   { id:'type', label:'Type de bien', choix:[
-      {v:'neuf', t:'Projet neuf'}, {v:'ancien', t:'Seconde main'}
-    ], grille:2 },
+      {v:'neuf', t:'Projet neuf',
+       aide:'Paiement échelonné selon l’avancement du chantier. Nous sommes rémunérés par le promoteur : aucun frais d’agence.'},
+      {v:'ancien', t:'Seconde main',
+       aide:'Pas de calendrier de chantier : le prix se règle en une ou deux fois. Comme nous ne sommes pas payés par un promoteur sur ce type de bien, des frais d’agence de 2 % s’appliquent.'}
+    ] },
   { id:'credit', label:'Financement', choix:[
-      {v:'comptant', t:'Sans crédit', s:'Vous payez tout comptant'},
-      {v:'credit', t:'Avec crédit', s:'Une part financée par la banque'}
-    ], grille:1 },
+      {v:'comptant', t:'Sans crédit', s:'Vous payez tout comptant',
+       aide:'Vous réglez le prix, les frais et la taxe directement, sans mensualité ni intérêts.'},
+      {v:'credit', t:'Avec crédit', s:'Une part financée par la banque',
+       aide:'Une banque finance une partie de l’achat. Vous remboursez chaque mois, avec des intérêts — le montant empruntable dépend de votre situation.'}
+    ] },
   { id:'profil', label:'Votre situation', choix:[
-      {v:'israelien', t:'Israélien'}, {v:'etranger', t:'Résident étranger'},
-      {v:'oleh', t:'Nouvel immigrant'}, {v:'societe', t:'Via une société'}
-    ], grille:2 },
-  { id:'contact', label:'Vos coordonnées', choix:[
-      {v:'whatsapp', t:'Par WhatsApp'}, {v:'mail', t:'Par e-mail'}
-    ], grille:2 },
+      {v:'israelien', t:'Israélien',
+       aide:'Taxe d’acquisition au barème standard, progressif selon le prix du bien.'},
+      {v:'etranger', t:'Résident étranger',
+       aide:'Taxe d’acquisition majorée (8 % dès le premier shekel), et un apport généralement plus élevé exigé par la banque.'},
+      {v:'oleh', t:'Nouvel immigrant',
+       aide:'Exonération ou forte réduction de la taxe d’acquisition, sous conditions de délai (2 ans avant l’alya, jusqu’à 7 ans après).'},
+      {v:'societe', t:'Via une société',
+       aide:'Fiscalité différente (impôt sur les sociétés plutôt que barème personnel) — pertinent surtout pour un investissement locatif.'}
+    ] },
+  { id:'avocat', label:'Accompagnement juridique', choix:[
+      {v:'avec', t:'Avec un avocat',
+       aide:'Il vérifie le contrat, sécurise le paiement et vous représente à la signature.',
+       pct:{label:'Ses honoraires', options:[0.5,0.8,1]}},
+      {v:'sans', t:'Je gère seul'}
+    ] },
 ];
 
 let actif = 0;
-const reponses = {};
+const reponses = {};       // id -> valeur choisie
+const montants = {};       // id -> montant saisi
+const pourcentages = {};   // id -> % choisi
+let aideOuverte = null;    // "id:v" de l'aide actuellement deroulee
+let sousOuvert = null;     // "id:v" du sous-champ actuellement ouvert
 
-function libelle(q, v){
-  const c = q.choix.find(x => x.v === v);
-  return c ? c.t : '';
+function choixActuel(q){
+  return q.choix.find(c => c.v === reponses[q.id]);
+}
+
+function libelle(q){
+  const c = choixActuel(q);
+  if (!c) return '';
+  let texte = c.t;
+  if (c.montant && montants[q.id] != null) texte += ' · ' + montants[q.id].toLocaleString('fr-FR') + ' ' + c.montant.devise;
+  if (c.pct && pourcentages[q.id] != null) texte += ' · ' + pourcentages[q.id] + ' %';
+  return texte;
+}
+
+function confirmer(id){
+  if (actif < QUESTIONS.length - 1) actif++;
+  peindre();
+  setTimeout(() => {
+    const el = document.querySelector('.q.active');
+    if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 80);
 }
 
 function peindre(){
@@ -154,19 +227,53 @@ function peindre(){
     if (estActif) classe.push('active');
     else if (repondu) classe.push('fait');
     else classe.push('vide');
+
     const corps = estActif ? `
       <div class="q-corps"><div class="q-choix">
-        ${q.choix.map(c => `<button type="button" class="opt" data-id="${q.id}" data-v="${c.v}">
-          <span class="opt-txt">${c.t}${c.s ? `<span>${c.s}</span>` : ''}</span>
-          <span class="opt-rond">✓</span>
-        </button>`).join('')}
+        ${q.choix.map(c => {
+          const cle = q.id + ':' + c.v;
+          const estChoisi = reponses[q.id] === c.v;
+          const sousActif = sousOuvert === cle || (estChoisi && (c.montant || c.pct));
+          let sous = '';
+          if (c.montant) {
+            const val = montants[q.id];
+            sous = `<div class="sous-champ ${sousActif ? 'ouvert' : ''}">
+              <p class="sous-label">${c.montant.label}</p>
+              <div class="sous-montant"><input type="text" inputmode="numeric"
+                data-montant="${q.id}" placeholder="${c.montant.placeholder}"
+                value="${val != null ? val.toLocaleString('fr-FR') : ''}">
+                <span class="devise">${c.montant.devise}</span></div>
+              <button type="button" class="sous-suite" data-suite="${q.id}" ${val ? '' : 'disabled'}>Continuer</button>
+            </div>`;
+          } else if (c.pct) {
+            const val = pourcentages[q.id];
+            sous = `<div class="sous-champ ${sousActif ? 'ouvert' : ''}">
+              <p class="sous-label">${c.pct.label}</p>
+              <div class="sous-pct">${c.pct.options.map(p => `<button type="button"
+                class="pct-opt ${val === p ? 'choisi' : ''}" data-pct="${q.id}" data-pv="${p}">${p} %</button>`).join('')}</div>
+              <button type="button" class="sous-suite" data-suite="${q.id}" ${val != null ? '' : 'disabled'}>Continuer</button>
+            </div>`;
+          }
+          const aideCle = cle;
+          const aideEstOuverte = aideOuverte === aideCle;
+          return `<div class="opt ${estChoisi ? 'choisi' : ''}" data-id="${q.id}" data-v="${c.v}">
+            <div class="opt-ligne">
+              <span class="opt-txt">${c.t}${c.s ? `<span>${c.s}</span>` : ''}</span>
+              ${c.aide ? `<button type="button" class="aide-bouton" data-aide="${aideCle}">?</button>` : ''}
+              <span class="opt-rond" data-choisir="${q.id}:${c.v}">✓</span>
+            </div>
+            ${c.aide ? `<div class="aide-texte ${aideEstOuverte ? 'ouvert' : ''}">${c.aide}</div>` : ''}
+            ${sous}
+          </div>`;
+        }).join('')}
       </div></div>` : '<div class="q-corps"></div>';
+
     return `<div class="${classe.join(' ')}" data-i="${i}">
       <div class="q-tete">
         <div class="q-num">${repondu ? '✓' : (i + 1)}</div>
         <div class="q-texte">
           <p class="q-label">${q.label}</p>
-          <p class="q-reponse">${repondu ? libelle(q, reponses[q.id]) : 'À répondre'}</p>
+          <p class="q-reponse">${repondu ? libelle(q) : 'À répondre'}</p>
         </div>
         <div class="q-modif">modifier</div>
       </div>
@@ -180,23 +287,60 @@ function peindre(){
       if (i <= actif) { actif = i; peindre(); }
     };
   });
-  fil.querySelectorAll('.opt').forEach(b => {
-    b.onclick = () => {
-      // Le bloc se colore AVANT de passer a la question suivante — on voit
-      // son propre choix se confirmer, pas juste un changement d'ecran
-      // instantane (Hillel, 16/10/2026).
-      fil.querySelectorAll(`.opt[data-id="${b.dataset.id}"]`).forEach(o => o.classList.remove('choisi'));
-      b.classList.add('choisi');
-      reponses[b.dataset.id] = b.dataset.v;
-      setTimeout(() => {
-        if (actif < QUESTIONS.length - 1) actif++;
+
+  // Le petit « ? » : deroule l'explication, ne choisit rien.
+  fil.querySelectorAll('[data-aide]').forEach(b => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      aideOuverte = aideOuverte === b.dataset.aide ? null : b.dataset.aide;
+      peindre();
+    };
+  });
+
+  // Choisir un bloc : simple -> confirme tout de suite ; avec montant/pct
+  // -> ouvre le sous-champ et attend « Continuer ».
+  fil.querySelectorAll('.opt').forEach(o => {
+    o.onclick = (e) => {
+      if (e.target.closest('[data-aide]') || e.target.closest('[data-montant]')
+          || e.target.closest('[data-pct]') || e.target.closest('[data-suite]')) return;
+      const id = o.dataset.id, v = o.dataset.v;
+      const q = QUESTIONS.find(x => x.id === id);
+      const c = q.choix.find(x => x.v === v);
+      reponses[id] = v;
+      if (c.montant || c.pct) {
+        sousOuvert = id + ':' + v;
         peindre();
         setTimeout(() => {
-          const el = document.querySelector('.q.active');
-          if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
-        }, 80);
-      }, 260);
+          const champ = fil.querySelector(`[data-montant="${id}"]`);
+          if (champ) champ.focus();
+        }, 60);
+      } else {
+        confirmer(id);
+      }
     };
+  });
+
+  fil.querySelectorAll('[data-montant]').forEach(inp => {
+    inp.oninput = () => {
+      const id = inp.dataset.montant;
+      const chiffres = inp.value.replace(/[^\d]/g, '');
+      montants[id] = chiffres ? parseInt(chiffres, 10) : null;
+      inp.value = montants[id] != null ? montants[id].toLocaleString('fr-FR') : '';
+      const bouton = fil.querySelector(`[data-suite="${id}"]`);
+      if (bouton) bouton.disabled = !montants[id];
+    };
+  });
+
+  fil.querySelectorAll('[data-pct]').forEach(b => {
+    b.onclick = () => {
+      const id = b.dataset.pct;
+      pourcentages[id] = parseFloat(b.dataset.pv);
+      peindre();
+    };
+  });
+
+  fil.querySelectorAll('[data-suite]').forEach(b => {
+    b.onclick = () => { sousOuvert = null; confirmer(b.dataset.suite); };
   });
 
   const n = Math.min(actif + 1, QUESTIONS.length);
