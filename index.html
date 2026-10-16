@@ -628,6 +628,11 @@ button,input,select,textarea{font:inherit;color:inherit}
  font-weight:650;padding:12px 14px;border:1px solid var(--trait);
  border-radius:var(--r);background:var(--fond);color:var(--encre)}
 .hero-simu input:focus{outline:2px solid var(--action);outline-offset:1px}
+/* Titre remis le 16/10/2026 au-dessus des deux carres, mais plus petit que
+   le .hs-titre d'origine (26px) qui etait pense pour l'ancienne carte plus
+   large — ici la carte est reduite au strict minimum. */
+.hero-simu .hs-titre{font-size:16px;line-height:1.3;font-weight:750;
+ margin:0 0 12px;color:#0F172A !important}
 /* Deux petits carres nets (Hillel, 16/10/2026), plus les pilules longues
    d'avant — couleurs fixes, jamais sombres la nuit. */
 .hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -2561,6 +2566,9 @@ table.ag th{width:64%}
   background:#FBF0E4;border:1.5px solid #E8C9A0;color:#8A5A1E;
   font-size:12.5px;font-weight:600;line-height:1.5}
 
+.s2-mode-toggle{font:inherit;font-size:12.5px;font-weight:700;color:var(--action);
+  background:none;border:none;padding:0;cursor:pointer;text-decoration:underline}
+
 .s2-sous{max-height:0;overflow:hidden;transition:max-height .4s ease}
 .s2-sous.ouvert{max-height:260px;margin-top:10px;padding-top:10px;
   border-top:1px solid var(--trait)}
@@ -3164,9 +3172,10 @@ ecrireCookie(c,'fr');
     </a>
    </div>
    <div class=hero-simu id=hero-simu>
+    <p class=hs-titre>Simulez ici le montant exact de votre acquisition</p>
     <div class=hs-modes role=tablist>
-      <button type=button data-hs-depart=prix>À partir du montant du bien</button>
-      <button type=button data-hs-depart=apport>À partir de votre apport</button>
+      <button type=button data-hs-depart=prix>Je connais le prix de mon bien</button>
+      <button type=button data-hs-depart=apport>Je pars de mon apport</button>
     </div>
   </div>
   </div>
@@ -7864,19 +7873,13 @@ function v2Cartes() {
 
   const cartes = [
     {
-      id: 'type', label: T('Neuf ou seconde main ?'),
-      resume: () => TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf'),
-      get: () => TUNNEL.revente === true ? 'oui' : (TUNNEL.revente === false ? 'non' : null),
-      set: (v) => { TUNNEL.revente = v === 'oui'; },
-      choix: [
-        {v:'non', t:T('Projet neuf'),
-         aide:T('Paiement échelonné selon l’avancement du chantier. Nous sommes rémunérés par le promoteur : aucun frais d’agence.')},
-        {v:'oui', t:T('Seconde main'),
-         aide:T('Pas de calendrier de chantier : le prix se règle en une ou deux fois. Comme nous ne sommes pas payés par un promoteur sur ce type de bien, des frais d’agence de 2 % s’appliquent.')},
-      ],
-    },
-    {
-      id: 'montant', label: T(TUNNEL.apport ? 'Votre apport' : 'Le prix du bien'),
+      // Premiere carte du formulaire (Hillel, 16/10/2026) : la tuile de la
+      // home choisit deja le mode (apport ou prix), donc le visiteur arrive
+      // directement ici, sans etape avant. Le toggle au-dessus du champ
+      // (voir v2CorpsMontantSeul) permet de changer de mode SANS quitter le
+      // formulaire — jamais de retour en arriere vers la tuile.
+      id: 'montant',
+      label: T(TUNNEL.apport ? 'Je veux simuler à partir de mon apport' : 'Je connais le prix de mon bien'),
       // Les trois devises partout, meme sur le prix (Hillel, 16/10/2026) :
       // avant, seul l'apport pouvait se taper en euros/dollars. Le prix tape
       // reste la valeur brute saisie (`TUNNEL.montant`), convertie tout de
@@ -7929,6 +7932,23 @@ function v2Cartes() {
       id: 'financement', label: T('Part financée par le prêt'),
       resume: () => TUNNEL.comptant ? T('Sans crédit')
         : TUNNEL.ltv + ' % · ' + TUNNEL.duree + ' ' + T('ans'),
+    },
+    {
+      // Repositionnee au milieu du formulaire le 16/10/2026 (Hillel) : elle
+      // n'ouvre plus le tunnel (c'est la tuile de la home qui choisit
+      // apport/prix desormais), elle garde juste son role de decider neuf vs
+      // ancien, qui conditionne les frais d'agence (carte 'accompagnement'
+      // plus loin).
+      id: 'type', label: T('Neuf ou seconde main ?'),
+      resume: () => TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf'),
+      get: () => TUNNEL.revente === true ? 'oui' : (TUNNEL.revente === false ? 'non' : null),
+      set: (v) => { TUNNEL.revente = v === 'oui'; },
+      choix: [
+        {v:'non', t:T('Projet neuf'),
+         aide:T('Paiement échelonné selon l’avancement du chantier. Nous sommes rémunérés par le promoteur : aucun frais d’agence.')},
+        {v:'oui', t:T('Seconde main'),
+         aide:T('Pas de calendrier de chantier : le prix se règle en une ou deux fois. Comme nous ne sommes pas payés par un promoteur sur ce type de bien, des frais d’agence de 2 % s’appliquent.')},
+      ],
     },
     {
       id: 'avocat', label: T('Accompagnement juridique'),
@@ -8072,7 +8092,15 @@ function v2CorpsMontantSeul(c) {
     ? `<div class="s2-sous-devises">${[{code:'ILS',s:'₪'},{code:'EUR',s:'€'},{code:'USD',s:'$'}].map(x => `<button type="button"
         class="s2-devise-opt ${x.code === dCode ? 'choisi' : ''}" data-v2-montant-devise="${x.code}">${x.s} ${x.code}</button>`).join('')}</div>` : '';
   const symbole = c.montantSeul.avecDevise ? ({EUR:'€', USD:'$', ILS:'₪'}[dCode] || '₪') : '₪';
-  return `<div class="s2-q-choix"><div class="s2-sous ouvert" style="margin-top:0;padding-top:0;border-top:0">
+  // Pas un retour en arriere : juste un interrupteur pour changer d'avis
+  // sans quitter le formulaire (Hillel, 16/10/2026). Change de tunnel actif
+  // (TUNNELS.apport <-> TUNNELS.credit, chacun garde sa propre saisie), et
+  // peindreV2 remet V2_ACTIF a 0 tout seul des que TUNNEL change — on reste
+  // donc bien sur cette meme carte.
+  const autre = TUNNEL.apport ? T('Je connais le prix de mon bien') : T('Je pars de mon apport');
+  return `<div class="s2-q-choix">
+    <button type="button" class="s2-mode-toggle" data-v2-mode-toggle="1">${autre}</button>
+    <div class="s2-sous ouvert" style="margin-top:10px;padding-top:0;border-top:0">
     ${devises}
     <div class="s2-sous-montant"><input type="text" inputmode="numeric"
       id="v2-montant-seul" placeholder="${c.montantSeul.placeholder}"
@@ -8131,7 +8159,13 @@ function v2CorpsCarte(c) {
   if (c.id === 'montant') return v2CorpsMontantSeul(c);
   if (c.id === 'financement') return v2CorpsFinancement();
   if (c.id === 'coordonnees') return v2CorpsCoordonnees();
-  return `<div class="s2-q-choix">${(c.choix || []).map(opt => v2RenduOpt(c, opt)).join('')}</div>`;
+  // Texte clair, visible tout de suite, pas cache derriere un « ? » (Hillel,
+  // 16/10/2026) : neuf ou ancien, c'est toujours avec nous, seuls les frais
+  // d'agence changent.
+  const intro = c.id === 'type'
+    ? `<p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Neuf ou ancien, c’est toujours avec nous. Neuf : sans frais d’agence, nous sommes payés par le promoteur. Ancien : 2 % de frais d’agence.')}</p>`
+    : '';
+  return `<div class="s2-q-choix">${intro}${(c.choix || []).map(opt => v2RenduOpt(c, opt)).join('')}</div>`;
 }
 function v2RenduCarte(c, i, total) {
   const repondu = v2Fait(c);
@@ -8252,6 +8286,13 @@ function v2Brancher(zone) {
       v2Avancer(zone);
     };
   });
+  const bascule = zone.querySelector('[data-v2-mode-toggle]');
+  if (bascule) {
+    bascule.onclick = () => {
+      choisirModeSimu(TUNNEL.apport ? 'credit' : 'apport');
+      peindreV2(zone);
+    };
+  }
   const montantSeulInp = zone.querySelector('#v2-montant-seul');
   if (montantSeulInp) {
     const c = v2Carte('montant');
