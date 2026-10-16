@@ -105,6 +105,11 @@ body{margin:0;background:var(--fond);color:var(--encre);
   border-top:1px solid var(--trait)}
 .sous-label{font-size:12px;font-weight:700;color:var(--gris);
   text-transform:uppercase;letter-spacing:.03em;margin:0 0 8px}
+.sous-devises{display:flex;gap:6px;margin-bottom:8px}
+.devise-opt{flex:1;padding:8px 6px;border-radius:8px;border:1.5px solid var(--trait);
+  background:var(--fond);font:inherit;font-weight:700;font-size:12.5px;
+  text-align:center;cursor:pointer;color:var(--gris)}
+.devise-opt.choisi{background:var(--or-clair);border-color:var(--or);color:var(--or-fonce)}
 .sous-montant{display:flex;align-items:center;gap:8px;background:var(--fond);
   border:1.5px solid var(--trait);border-radius:10px;padding:11px 13px}
 .sous-montant input{flex:1;border:0;background:none;font:inherit;font-size:18px;
@@ -159,9 +164,9 @@ body{margin:0;background:var(--fond);color:var(--encre);
 const QUESTIONS = [
   { id:'depart', label:'Point de départ', choix:[
       {v:'apport', t:'Mon apport', s:'« J’ai 200.000 €, qu’est-ce que je peux acheter ? »',
-       montant:{label:'Montant disponible', devise:'€', placeholder:'200 000'}},
+       montant:{label:'Montant disponible', placeholder:'200 000'}},
       {v:'prix', t:'Le prix du bien', s:'Vous donnez un prix, on calcule le reste',
-       montant:{label:'Prix du bien', devise:'₪', placeholder:'2 500 000'}}
+       montant:{label:'Prix du bien', placeholder:'2 500 000'}}
     ] },
   { id:'type', label:'Type de bien', choix:[
       {v:'neuf', t:'Projet neuf',
@@ -193,9 +198,15 @@ const QUESTIONS = [
     ] },
 ];
 
+// La devise se choisit a chaque montant, apport comme prix — un client a
+// qui le prix a ete annonce en dollars doit pouvoir le taper en dollars,
+// pas se forcer a convertir de tete (Hillel, 16/10/2026).
+const DEVISES = [{code:'ILS', s:'₪'}, {code:'EUR', s:'€'}, {code:'USD', s:'$'}];
+
 let actif = 0;
 const reponses = {};       // id -> valeur choisie
 const montants = {};       // id -> montant saisi
+const devises = {};        // id -> code devise choisi (ILS par defaut)
 const pourcentages = {};   // id -> % choisi
 let aideOuverte = null;    // "id:v" de l'aide actuellement deroulee
 let sousOuvert = null;     // "id:v" du sous-champ actuellement ouvert
@@ -208,7 +219,10 @@ function libelle(q){
   const c = choixActuel(q);
   if (!c) return '';
   let texte = c.t;
-  if (c.montant && montants[q.id] != null) texte += ' · ' + montants[q.id].toLocaleString('fr-FR') + ' ' + c.montant.devise;
+  if (c.montant && montants[q.id] != null) {
+    const d = DEVISES.find(x => x.code === (devises[q.id] || 'ILS'));
+    texte += ' · ' + montants[q.id].toLocaleString('fr-FR') + ' ' + d.s;
+  }
   if (c.pct && pourcentages[q.id] != null) texte += ' · ' + pourcentages[q.id] + ' %';
   return texte;
 }
@@ -241,12 +255,17 @@ function peindre(){
           let sous = '';
           if (c.montant) {
             const val = montants[q.id];
+            const dCode = devises[q.id] || 'ILS';
+            const d = DEVISES.find(x => x.code === dCode);
             sous = `<div class="sous-champ ${sousActif ? 'ouvert' : ''}">
               <p class="sous-label">${c.montant.label}</p>
+              <div class="sous-devises">${DEVISES.map(x => `<button type="button"
+                class="devise-opt ${x.code === dCode ? 'choisi' : ''}"
+                data-devise-pour="${q.id}" data-devise-code="${x.code}">${x.s} ${x.code}</button>`).join('')}</div>
               <div class="sous-montant"><input type="text" inputmode="numeric"
                 data-montant="${q.id}" placeholder="${c.montant.placeholder}"
                 value="${val != null ? val.toLocaleString('fr-FR') : ''}">
-                <span class="devise">${c.montant.devise}</span></div>
+                <span class="devise">${d.s}</span></div>
               <button type="button" class="sous-suite" data-suite="${q.id}" ${val ? '' : 'disabled'}>Continuer</button>
             </div>`;
           } else if (c.pct) {
@@ -332,6 +351,16 @@ function peindre(){
       inp.value = montants[id] != null ? montants[id].toLocaleString('fr-FR') : '';
       const bouton = fil.querySelector(`[data-suite="${id}"]`);
       if (bouton) bouton.disabled = !montants[id];
+    };
+  });
+
+  fil.querySelectorAll('[data-devise-pour]').forEach(b => {
+    b.onclick = () => {
+      const id = b.dataset.devisePour;
+      devises[id] = b.dataset.deviseCode;
+      peindre();
+      const champ = fil.querySelector(`[data-montant="${id}"]`);
+      if (champ) champ.focus();
     };
   });
 
