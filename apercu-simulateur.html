@@ -218,7 +218,10 @@ const QUESTIONS = [
     dynamique(r){
       const ancien = r.type === 'ancien';
       return ancien
-        ? { label:'Frais d’agence', choix:[
+        // `impose` : ce n'est pas une question, juste un fait a confirmer —
+        // jamais « a repondre » comme un vrai choix (Hillel, 16/10/2026,
+        // apres avoir vu ce libelle sur l'ancien, qui n'a rien a decider ici).
+        ? { label:'Frais d’agence', impose:true, choix:[
             {v:'oui', t:'Frais d’agence', s:'2 % du prix, non négociables',
              aide:'Comme nous ne sommes pas payés par un promoteur sur ce type de bien, ces frais couvrent la négociation, le dossier et le suivi jusqu’aux clés.'}
           ] }
@@ -305,7 +308,7 @@ function peindre(){
   const fil = document.getElementById('fil');
   const visibles = questionsVisibles();
   fil.innerHTML = visibles.map((q, i) => {
-    const { label, choix } = resoudre(q);
+    const { label, choix, impose } = resoudre(q);
     const repondu = reponses[q.id] != null;
     const estActif = i === actif;
     const classe = ['q'];
@@ -387,7 +390,8 @@ function peindre(){
         <div class="q-num">${repondu ? '✓' : (i + 1)}</div>
         <div class="q-texte">
           <p class="q-label">${label}</p>
-          <p class="q-reponse">${repondu ? libelle(q) : 'À répondre'}</p>
+          <p class="q-reponse">${repondu ? libelle(q)
+            : (impose ? choix[0].t + (choix[0].s ? ' · ' + choix[0].s : '') : 'À répondre')}</p>
         </div>
         <div class="q-modif">modifier</div>
       </div>
