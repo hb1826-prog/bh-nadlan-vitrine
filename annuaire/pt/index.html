@@ -7824,6 +7824,14 @@ function v2Cartes() {
   const notesProfil = DONNEES.profils_note || {};
   const profils = DONNEES.profils || {};
   const accompagnementImpose = !!TUNNEL.revente;
+  // Le conseil de Hillel deja choisi d'office, exactement comme l'ancien
+  // tunnel (`if (!TUNNEL.avocatMode) TUNNEL.avocatMode = 'notre';`) : poser
+  // la valeur reellement dans TUNNEL des maintenant, pas seulement comme
+  // repli d'affichage — sinon un visiteur qui confirme via le bouton
+  // Continuer sans jamais cliquer l'option laisserait `avocatMode` a
+  // `undefined`, et le calcul des frais (`v2LireFrais`) manquerait son
+  // 0,5 % (Hillel, 16/10/2026).
+  if (!TUNNEL.avocatMode) { TUNNEL.avocatMode = 'notre'; TUNNEL.avocatLibre = defaut.avocat || 0.5; }
 
   const cartes = [
     {
@@ -7875,17 +7883,21 @@ function v2Cartes() {
     },
     {
       id: 'avocat', label: T('Accompagnement juridique'),
+      // Notre avocat est deja choisi d'office (Hillel, 16/10/2026, meme
+      // conseil que l'ancien tunnel : `if (!TUNNEL.avocatMode) TUNNEL.avocatMode
+      // = 'notre';`) : il suffit d'appuyer sur Continuer, le visiteur reste
+      // libre de prendre une autre option avant de confirmer.
       resume: () => {
         if (TUNNEL.avocatMode === 'notre') return T('L’avocat que nous recommandons');
         if (TUNNEL.avocatMode === 'non') return T('Sans avocat');
         return T('Mon propre avocat') + ' · ' + TUNNEL.avocatLibre
           + (TUNNEL.avocatLibreType === 'pct' ? ' %' : ' ₪');
       },
-      get: () => TUNNEL.avocatMode || null,
+      get: () => TUNNEL.avocatMode,
       set: (v) => { TUNNEL.avocatMode = v; if (v === 'notre') TUNNEL.avocatLibre = defaut.avocat || 0.5; },
       choix: [
         {v:'notre', t:T('L’avocat que nous recommandons'), s:T('Honoraires fixes : 0,5 %'),
-         aide: notesFrais.avocat || ''},
+         aide: notesFrais.avocat || '', defaut:true},
         {v:'libre', t:T('Mon propre avocat'), s:T('Vous avez déjà quelqu’un en tête'),
          libre:{label:T('Ses honoraires'),
            modeGet:()=>TUNNEL.avocatLibreType||'pct', modeSet:(m)=>{TUNNEL.avocatLibreType=m;},
@@ -8000,7 +8012,7 @@ function v2RenduOpt(c, opt) {
     ${opt.avertissement && estChoisi ? `<div class="s2-avertissement">⚠ ${opt.avertissement}
       <button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>
     </div>` : ''}
-    ${c.impose && estChoisi ? `<button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>` : ''}
+    ${(c.impose || opt.defaut) && estChoisi ? `<button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" style="margin-top:10px">${T('Continuer')}</button>` : ''}
     ${estChoisi ? sous : ''}
   </div>`;
 }
