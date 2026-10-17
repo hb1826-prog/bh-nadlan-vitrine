@@ -2404,7 +2404,19 @@ table.ag th{width:64%}
   line-height:1.38;margin-top:14px;padding-top:14px;
   border-top:1px solid rgba(255,255,255,.28)}
  .hero h1 em{font-style:normal;color:var(--or)}
- .hero-simu{align-self:center}
+ /* La tuile simplifiee du 16/10/2026 (juste titre + deux boutons) etait
+    etiree sur toute la hauteur de la colonne (son grid-area couvre les 4
+    lignes "sp/zf/h1/pr"), laissant un grand vide creme en dessous des
+    boutons – moche sur ordinateur (Hillel, 17/10/2026, capture a
+    l'appui : "pas beau du tout"). align-self:start au lieu de center
+    pour qu'elle se cale sur son contenu plutot que de s'etirer ; habillage
+    desktop un peu plus genereux pour qu'elle reste une vraie carte, pas
+    une ligne perdue en haut d'un grand cadre vide. */
+ .hero-simu{align-self:start;padding:26px 24px!important;gap:16px}
+ .hero-simu .hs-titre{font-size:19px!important;line-height:1.35}
+ .hs-modes{gap:12px}
+ .hs-modes button{min-height:78px;font-size:14px;padding:18px 18px}
+ .hs-modes button::after{font-size:17px}
  /* la recherche d'abord, le modele ensuite */
  .bloc-accueil{display:flex;flex-direction:column}
  .bloc-accueil .cherche{order:-1;margin-top:-76px;width:100%}
