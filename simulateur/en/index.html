@@ -2789,8 +2789,13 @@ body:has(#bh-cookies:not([hidden])) .eli-panneau{bottom:150px;
    large — elle masquait aussi l'icone du micro, qui n'a pas de texte pour la
    remplacer : il ne restait qu'une pastille grise vide, et personne ne
    pouvait deviner qu'on peut dicter sa recherche (Hillel, 14/10/2026, sur
-   capture du premier ecran PC). Elle ne vise plus que le bouton d'envoi. */
-.eli-une-form button[type=submit] svg{display:none}
+   capture du premier ecran PC). Elle ne vise plus que le bouton d'envoi.
+   Reservee au format ordinateur (17/10/2026) : son [type=submit] la rend
+   plus specifique que la regle mobile `.eli-une-form button svg{display:
+   block}` plus bas, qui perdait donc la cascade malgre le media query —
+   bouton bleu d'envoi sans fleche sur telephone (Hillel, capture a
+   l'appui, "j'en ai envoye [un message], c'est pas normal"). */
+@media(min-width:901px){.eli-une-form button[type=submit] svg{display:none}}
 [dir=rtl] .eli-une-form button svg{transform:scaleX(-1)}
 /* Sur ordinateur, la grande entree est une grille (portail.css). Le bandeau
    y a sa propre ligne, sous le titre, et la colonne de gauche (bandeau
