@@ -342,6 +342,31 @@ button,input,select,textarea{font:inherit;color:inherit}
 .theme button.on{background:var(--carte);color:var(--action);box-shadow:var(--ombre)}
 .theme svg{width:15px;height:15px;display:block}
 
+/* Galerie "Nos programmes" ajoutee le 19/10/2026 (apercu de direction
+   visuelle) : juste sous la banniere, cartes photo + ville + prix,
+   defilement horizontal sur telephone. */
+.galerie-programmes{padding:34px 22px;background:var(--fond)}
+.gp-dedans{max-width:1240px;margin:0 auto}
+.galerie-programmes .eyebrow{font-size:11px;letter-spacing:.1em;
+ text-transform:uppercase;color:var(--or);font-weight:800;margin:0 0 4px}
+.galerie-programmes h2{font-size:26px;margin:0 0 18px;color:var(--encre)}
+.gp-cartes{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px}
+.gp-carte{flex:none;width:230px;border-radius:16px;overflow:hidden;
+ background:var(--carte);box-shadow:0 8px 20px rgba(15,23,42,.1);
+ border:1px solid var(--trait);display:block;color:inherit}
+.gp-carte img{width:100%;height:150px;object-fit:cover;display:block}
+.gp-corps{padding:12px 14px 14px}
+.gp-ville{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--gris);font-weight:700}
+.gp-nom{font-size:15.5px;font-weight:800;color:var(--encre);margin:2px 0 6px}
+.gp-prix{font-size:12.5px;color:var(--or-fonce,#7A6013);font-weight:800}
+.gp-prix span{color:var(--gris);font-weight:500;font-size:10.5px;
+ display:block;margin-bottom:1px}
+@media(max-width:640px){
+ .galerie-programmes{padding:26px 16px}
+ .gp-carte{width:200px}
+}
+
 /* ============================== la banniere ============================== */
 .hero{position:relative;background:var(--fond-2);overflow:hidden;
  border-bottom:1px solid var(--trait)}
@@ -430,6 +455,21 @@ button,input,select,textarea{font:inherit;color:inherit}
    grossi le meme jour, ce bandeau doit rester le premier repere de l'oeil. */
 .zf-bandeau{margin:0 0 14px;font-size:48px;font-weight:800;line-height:1.05;
  color:#fff;text-transform:uppercase}
+/* Badges de confiance ajoutes le 19/10/2026 (apercu de direction visuelle,
+   Hillel) : le 0% y reparait, mis en avant par la couleur (pastille or)
+   plutot que par la taille — vient s'ajouter au grand zero existant, pas
+   le remplacer, pour que les deux versions soient comparables a l'apercu. */
+.hero-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;
+ list-style:none;margin:18px 0 0;padding:0;max-width:30em}
+.hero-badges li{display:flex;align-items:center;gap:9px;
+ background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+ border-radius:12px;padding:9px 11px;font-size:12.5px;font-weight:650;
+ color:#fff;line-height:1.25}
+.hb-ic{flex:none;width:26px;height:26px;border-radius:50%;
+ background:var(--or);color:#0F172A;display:flex;align-items:center;
+ justify-content:center;font-size:12px}
+.hb-ic.hb-or{font-size:10.5px;font-weight:800}
+@media(max-width:640px){.hero-badges{max-width:none}}
 /* `white-space:nowrap` (Hillel, 24/09/2026, capture d'ecran a l'appui) :
    sans lui, l'espace entre le chiffre et le signe pouvait tomber en fin de
    ligne et le "%" repartait seul dessous — "0" et "%" doivent rester
@@ -3163,6 +3203,12 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   </div>
 </div>
     <ul class=hero-preuves><li><b>119</b><span>programmes suivis</span></li><li><b>52</b><span>villes</span></li></ul>
+    <ul class=hero-badges>
+      <li><span class=hb-ic>👤</span>Conseiller francophone</li>
+      <li><span class="hb-ic hb-or">0%</span>De frais d’agence</li>
+      <li><span class=hb-ic>🏗</span>Direct promoteur</li>
+      <li><span class=hb-ic>🤝</span>Accompagnement complet</li>
+    </ul>
     <a class=hero-decouvrir href="#vue">Découvrir nos biens →</a>
    </div>
    <div class=hero-choix id=hero-choix>
@@ -3187,6 +3233,56 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
       <button type=button data-hs-depart=apport><span class=hs-ic><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2.2"/><path d="M3 10.5h18"/><circle cx="16" cy="15" r="1" fill="currentColor" stroke="none"/></svg></span><span>Je pars de mon apport</span></button>
     </div>
   </div>
+  </div>
+</section>
+
+<section class=galerie-programmes>
+  <div class=gp-dedans>
+    <p class=eyebrow>Nos programmes immobiliers</p>
+    <h2>Les meilleurs projets en Israël</h2>
+    <div class=gp-cartes><a class=gp-carte href="#/bavli-tel-aviv">
+        <img src="../../img/bavli-tel-aviv.v4a78441b.jpg" alt="" loading=lazy onerror="this.closest('a').remove()">
+        <div class=gp-corps>
+          <div class=gp-ville>Tel Aviv</div>
+          <div class=gp-nom>Bavli</div>
+          <div class=gp-prix><span>À partir de</span>5.422.947 ₪</div>
+        </div>
+      </a><a class=gp-carte href="#/nordau-netanya">
+        <img src="../../img/nordau-netanya.vcba2fceb.jpg" alt="" loading=lazy onerror="this.closest('a').remove()">
+        <div class=gp-corps>
+          <div class=gp-ville>Netanya</div>
+          <div class=gp-nom>Nordau</div>
+          <div class=gp-prix><span>À partir de</span>2.125.000 ₪</div>
+        </div>
+      </a><a class=gp-carte href="#/harmony-ashdod">
+        <img src="../../img/harmony-ashdod.v5cdc3ea9.jpg" alt="" loading=lazy onerror="this.closest('a').remove()">
+        <div class=gp-corps>
+          <div class=gp-ville>Ashdod</div>
+          <div class=gp-nom>Harmony</div>
+          <div class=gp-prix><span>À partir de</span>1.735.000 ₪</div>
+        </div>
+      </a><a class=gp-carte href="#/sde-dov-tel-aviv">
+        <img src="../../img/sde-dov-tel-aviv.v312d9935.jpg" alt="" loading=lazy onerror="this.closest('a').remove()">
+        <div class=gp-corps>
+          <div class=gp-ville>Tel Aviv</div>
+          <div class=gp-nom>Sde Dov</div>
+          <div class=gp-prix><span>À partir de</span>3.764.000 ₪</div>
+        </div>
+      </a><a class=gp-carte href="#/soho-africa-jerusalem">
+        <img src="../../img/soho-africa-jerusalem.v498f3831.jpg" alt="" loading=lazy onerror="this.closest('a').remove()">
+        <div class=gp-corps>
+          <div class=gp-ville>Jerusalem</div>
+          <div class=gp-nom>Soho Africa</div>
+          <div class=gp-prix><span>À partir de</span>2.330.000 ₪</div>
+        </div>
+      </a><a class=gp-carte href="#/ramot-ashkelon">
+        <img src="../../img/ramot-ashkelon.v144eb292.jpg" alt="" loading=lazy onerror="this.closest('a').remove()">
+        <div class=gp-corps>
+          <div class=gp-ville>Ashkelon</div>
+          <div class=gp-nom>Ramot</div>
+          <div class=gp-prix><span>À partir de</span>1.875.000 ₪</div>
+        </div>
+      </a></div>
   </div>
 </section>
 

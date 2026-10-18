@@ -360,6 +360,31 @@ button,input,select,textarea{font:inherit;color:inherit}
 .theme button.on{background:var(--carte);color:var(--action);box-shadow:var(--ombre)}
 .theme svg{width:15px;height:15px;display:block}
 
+/* Galerie "Nos programmes" ajoutee le 19/10/2026 (apercu de direction
+   visuelle) : juste sous la banniere, cartes photo + ville + prix,
+   defilement horizontal sur telephone. */
+.galerie-programmes{padding:34px 22px;background:var(--fond)}
+.gp-dedans{max-width:1240px;margin:0 auto}
+.galerie-programmes .eyebrow{font-size:11px;letter-spacing:.1em;
+ text-transform:uppercase;color:var(--or);font-weight:800;margin:0 0 4px}
+.galerie-programmes h2{font-size:26px;margin:0 0 18px;color:var(--encre)}
+.gp-cartes{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px}
+.gp-carte{flex:none;width:230px;border-radius:16px;overflow:hidden;
+ background:var(--carte);box-shadow:0 8px 20px rgba(15,23,42,.1);
+ border:1px solid var(--trait);display:block;color:inherit}
+.gp-carte img{width:100%;height:150px;object-fit:cover;display:block}
+.gp-corps{padding:12px 14px 14px}
+.gp-ville{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--gris);font-weight:700}
+.gp-nom{font-size:15.5px;font-weight:800;color:var(--encre);margin:2px 0 6px}
+.gp-prix{font-size:12.5px;color:var(--or-fonce,#7A6013);font-weight:800}
+.gp-prix span{color:var(--gris);font-weight:500;font-size:10.5px;
+ display:block;margin-bottom:1px}
+@media(max-width:640px){
+ .galerie-programmes{padding:26px 16px}
+ .gp-carte{width:200px}
+}
+
 /* ============================== la banniere ============================== */
 .hero{position:relative;background:var(--fond-2);overflow:hidden;
  border-bottom:1px solid var(--trait)}
@@ -448,6 +473,21 @@ button,input,select,textarea{font:inherit;color:inherit}
    grossi le meme jour, ce bandeau doit rester le premier repere de l'oeil. */
 .zf-bandeau{margin:0 0 14px;font-size:48px;font-weight:800;line-height:1.05;
  color:#fff;text-transform:uppercase}
+/* Badges de confiance ajoutes le 19/10/2026 (apercu de direction visuelle,
+   Hillel) : le 0% y reparait, mis en avant par la couleur (pastille or)
+   plutot que par la taille — vient s'ajouter au grand zero existant, pas
+   le remplacer, pour que les deux versions soient comparables a l'apercu. */
+.hero-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;
+ list-style:none;margin:18px 0 0;padding:0;max-width:30em}
+.hero-badges li{display:flex;align-items:center;gap:9px;
+ background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+ border-radius:12px;padding:9px 11px;font-size:12.5px;font-weight:650;
+ color:#fff;line-height:1.25}
+.hb-ic{flex:none;width:26px;height:26px;border-radius:50%;
+ background:var(--or);color:#0F172A;display:flex;align-items:center;
+ justify-content:center;font-size:12px}
+.hb-ic.hb-or{font-size:10.5px;font-weight:800}
+@media(max-width:640px){.hero-badges{max-width:none}}
 /* `white-space:nowrap` (Hillel, 24/09/2026, capture d'ecran a l'appui) :
    sans lui, l'espace entre le chiffre et le signe pouvait tomber en fin de
    ligne et le "%" repartait seul dessous — "0" et "%" doivent rester
@@ -3118,13 +3158,18 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     </nav>
   </div>
   <a class=pub-logo href="https://bh-nadlan.com/" title="Retour à l'accueil"
-     aria-label="BH"><svg viewBox="0 0 152 64" width="95.00" height="40"
- style="aspect-ratio:152/64;direction:ltr" role="img"
- aria-label="BH" xmlns="http://www.w3.org/2000/svg">
+     aria-label="BH"><svg viewBox="0 0 300 64" width="187.50" height="40"
+ style="aspect-ratio:300/64;direction:ltr" role="img"
+ aria-label="BH Nadlan — l'immobilier autrement" xmlns="http://www.w3.org/2000/svg">
   <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
   <g transform="translate(13.25 12) scale(0.5)" fill="#c9a227"><path d="M5 76 V32 L19 22 V76 Z"/><path d="M25 76 V12 L42 0 V76 Z"/><path d="M48 76 V30 L62 40 V76 Z"/><rect x="0" y="75.5" width="67" height="4.5" rx="2.2"/></g>
-  <text x="74" y="47" font-family="Helvetica,Arial,sans-serif" font-size="40"
-        font-weight="800" letter-spacing="-1.5" fill="currentColor">BH</text>
+  <text x="74" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="800" letter-spacing="-.5" fill="currentColor">BH</text>
+  <text x="112" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="300" letter-spacing="3.4" fill="currentColor">NADLAN</text>
+  <text x="75" y="52" font-family="Helvetica,Arial,sans-serif" font-size="9.5"
+        letter-spacing="2.6" font-weight="600" fill="#c9a227"
+        >L’IMMOBILIER AUTREMENT</text>
 </svg></a>
   <div class=grow></div>
   <div class="pub-flanc pub-flanc-d">
@@ -3186,8 +3231,8 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 
 <section class=hero id=hero>
   <div class=photo>
-    <img class=ph-jour src="/annuaire/img/villes/jerusalem.jpg" alt="" onerror="this.remove()">
-    <img class=ph-nuit src="/annuaire/img/villes/jerusalem.jpg" alt="" loading=lazy onerror="this.remove()">
+    <img class=ph-jour src="/annuaire/img/soho-africa-jerusalem-1.v60b39d49.jpg" alt="" onerror="this.remove()">
+    <img class=ph-nuit src="/annuaire/img/savyoney-ashmoura-netanya.vd22b25be.jpg" alt="" loading=lazy onerror="this.remove()">
   </div>
   <div class=voile></div>
   <div class=dedans>
@@ -3197,12 +3242,20 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
     
     <ul class=hero-preuves><li><b>119</b><span>programmes suivis</span></li><li><b>52</b><span>villes</span></li><li class=pr-ligne><b>15</b><span>ans d’expérience dans la promotion immobilière en Israël</span></li></ul>
+    <ul class=hero-badges>
+      <li><span class=hb-ic>👤</span>Conseiller francophone</li>
+      <li><span class="hb-ic hb-or">0%</span>De frais d’agence</li>
+      <li><span class=hb-ic>🏗</span>Direct promoteur</li>
+      <li><span class=hb-ic>🤝</span>Accompagnement complet</li>
+    </ul>
     <a class=hero-decouvrir href="#vue">Découvrir nos biens →</a>
    </div>
    
    
   </div>
 </section>
+
+
 
 <div class=bloc-accueil>
 <section class=modele id=modele>
@@ -3318,13 +3371,18 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 <footer class=pub-foot>
   <div class=pied-haut>
     <div class=pied-marque>
-      <svg viewBox="0 0 152 64" width="90.25" height="38"
- style="aspect-ratio:152/64;direction:ltr" role="img"
- aria-label="BH" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 300 64" width="178.12" height="38"
+ style="aspect-ratio:300/64;direction:ltr" role="img"
+ aria-label="BH Nadlan — l'immobilier autrement" xmlns="http://www.w3.org/2000/svg">
   <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
   <g transform="translate(13.25 12) scale(0.5)" fill="#c9a227"><path d="M5 76 V32 L19 22 V76 Z"/><path d="M25 76 V12 L42 0 V76 Z"/><path d="M48 76 V30 L62 40 V76 Z"/><rect x="0" y="75.5" width="67" height="4.5" rx="2.2"/></g>
-  <text x="74" y="47" font-family="Helvetica,Arial,sans-serif" font-size="40"
-        font-weight="800" letter-spacing="-1.5" fill="currentColor">BH</text>
+  <text x="74" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="800" letter-spacing="-.5" fill="currentColor">BH</text>
+  <text x="112" y="34" font-family="Helvetica,Arial,sans-serif" font-size="27"
+        font-weight="300" letter-spacing="3.4" fill="currentColor">NADLAN</text>
+  <text x="75" y="52" font-family="Helvetica,Arial,sans-serif" font-size="9.5"
+        letter-spacing="2.6" font-weight="600" fill="#c9a227"
+        >L’IMMOBILIER AUTREMENT</text>
 </svg>
       <p>BH Nadlan accompagne les acheteurs francophones dans l'achat d'un logement neuf en Israël, du premier contact à la signature, et jusqu'à la remise des clés si vous le souhaitez.</p>
       <div class=pied-tel>
