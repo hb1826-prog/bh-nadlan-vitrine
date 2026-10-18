@@ -438,6 +438,11 @@ button,input,select,textarea{font:inherit;color:inherit}
    c'est mon gros truc d'appel ». Aussi grand que l'ancien zero geant qu'il
    remplace, meme logique de couleurs (or sur fond sombre = seul cas ou l'or
    porte du texte, voir identite.py). */
+/* Slogan ajoute le 18/10/2026 (Hillel : "le slogan c'est BH NADLAN
+   L'immobilier autrement") — petit repere discret au-dessus du bandeau
+   "Frais d'agence", jamais plus gros que lui. */
+.hero-slogan{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;
+ text-transform:uppercase;color:var(--or-clair)}
 /* Agrandi et mis en capitales le 24/09/2026 (Hillel : « il est un peu
    ecrase par la longue phrase du dessous ») — la phrase d'accroche a
    grossi le meme jour, ce bandeau doit rester le premier repere de l'oeil. */
@@ -3181,12 +3186,13 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 
 <section class=hero id=hero>
   <div class=photo>
-    <img class=ph-jour src="/annuaire/img/soho-africa-jerusalem-1.v60b39d49.jpg" alt="" onerror="this.remove()">
-    <img class=ph-nuit src="/annuaire/img/savyoney-ashmoura-netanya.vd22b25be.jpg" alt="" loading=lazy onerror="this.remove()">
+    <img class=ph-jour src="/annuaire/img/villes/jerusalem.jpg" alt="" onerror="this.remove()">
+    <img class=ph-nuit src="/annuaire/img/villes/jerusalem.jpg" alt="" loading=lazy onerror="this.remove()">
   </div>
   <div class=voile></div>
   <div class=dedans>
    <div class=hero-texte>
+    <p class=hero-slogan>BH NADLAN · L’immobilier autrement</p>
     <p class=zf-bandeau>Frais d’agence&nbsp;: <span class=zf-pct>0 %</span></p>
     <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
     
