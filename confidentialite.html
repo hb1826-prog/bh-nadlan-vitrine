@@ -514,10 +514,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hc-simu .hc-btn,.hc-progs .hc-btn{background:var(--action);color:#fff}
 /* Couleurs FIXES (jamais var(--carte)/var(--fond), qui basculent sombres
    la nuit) : ce bloc reste lisible quel que soit le theme du telephone
-   (Hillel, 16/10/2026, "on ne le voit pas bien"). */
-.hero-simu{background:#FBF5E4 !important;border-radius:var(--r-xl);
- box-shadow:0 10px 30px -14px rgba(0,0,0,.25);padding:14px;
- display:flex !important;flex-direction:column;border:1.5px solid #E6D9B0}
+   (Hillel, 16/10/2026, "on ne le voit pas bien"). Reprises le 18/10/2026
+   sur celles de la carte EliA juste a cote (Hillel : "reprend les couleurs
+   de EliA") — meme blanc casse, meme bordure et ombre douces, pour que les
+   deux cartes du premier ecran se repondent au lieu de jurer (creme contre
+   blanc). */
+.hero-simu{background:rgba(255,255,255,.96) !important;border-radius:var(--r-xl);
+ box-shadow:0 10px 30px rgba(15,23,42,.14);padding:14px;
+ display:flex !important;flex-direction:column;border:1px solid rgba(15,23,42,.08) !important}
 /* Carte et panneau de la grande phrase au cordeau : meme haut, meme bas
    (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
    Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
