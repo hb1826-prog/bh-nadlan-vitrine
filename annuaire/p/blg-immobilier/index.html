@@ -456,12 +456,19 @@ button,input,select,textarea{font:inherit;color:inherit}
    « ecran » pour un serif elegant — remplace par le blanc casse chaud de
    la marque, --or-clair, qui reste largement assez lisible sur le fond
    vitre sombre). */
+/* Panneau elargi et un peu plus premium le 18/10/2026 (Hillel, capture a
+   l'appui : "ca fait un peu trop cheap, j'aurais aime une presentation
+   plus premium, plus belle, plus claire et plus equilibree") : plus de
+   largeur (moins de retours a la ligne serres), plus de respiration
+   interieure, un filet or fin pour le cadrage plutot qu'une simple boite
+   sombre. */
 .hero .zf-bandeau + h1{font-family:'Titre Accroche',Georgia,'Times New Roman',serif;
- font-size:42px;font-weight:600;line-height:1.32;letter-spacing:.002em;
- max-width:16em;text-align:center;color:var(--or-clair);
+ font-size:42px;font-weight:600;line-height:1.36;letter-spacing:.002em;
+ max-width:22em;text-align:center;color:var(--or-clair);
  background:rgba(6,12,24,.55);-webkit-backdrop-filter:blur(6px);
- backdrop-filter:blur(6px);border-radius:var(--r-lg);padding:14px 18px;
- box-shadow:0 8px 24px rgba(0,0,0,.25)}
+ backdrop-filter:blur(6px);border-radius:var(--r-xl);padding:22px 26px;
+ border:1px solid rgba(201,162,39,.3);
+ box-shadow:0 10px 28px rgba(0,0,0,.28)}
 .simu-carte{display:block;margin:8px 0 0;text-align:center;font-weight:700;
  color:var(--action);border:1.5px solid var(--action);border-radius:999px;
  padding:11px 14px;font-size:15px;cursor:pointer}
@@ -477,7 +484,7 @@ button,input,select,textarea{font:inherit;color:inherit}
     de rester enorme, pour tenir a cote sur la meme ligne. */
  .zf-bandeau{margin:0 0 10px;font-size:26px}
  .zf-pct{font-size:30px}
- .hero .zf-bandeau + h1{font-size:25px;line-height:1.38;padding:10px 14px}
+ .hero .zf-bandeau + h1{font-size:25px;line-height:1.4;padding:18px 20px;max-width:none}
 }
 .zero-frais{display:flex;align-items:center;gap:16px;margin:0 0 18px}
 .zf-zero{font-size:132px;line-height:.78;font-weight:800;color:var(--or);
@@ -529,18 +536,21 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hc-simu .hc-btn,.hc-progs .hc-btn{background:var(--action);color:#fff}
 /* Couleurs FIXES (jamais var(--carte)/var(--fond), qui basculent sombres
    la nuit) : ce bloc reste lisible quel que soit le theme du telephone
-   (Hillel, 16/10/2026, "on ne le voit pas bien"). Passee en carte sombre
-   premium le 18/10/2026 (Hillel : "plus de couleurs, plus de design, un
-   truc plus moderne aux couleurs du site") — degrade ardoise du logo avec
-   lueur or, au lieu du blanc plat essaye juste avant : elle se distingue
-   volontairement de la carte EliA (blanche) et reprend le fond sombre du
-   bandeau "FRAIS D'AGENCE : 0%" juste au-dessus, pour un ensemble qui se
-   tient plutot que deux cartes au hasard. */
-.hero-simu{background:linear-gradient(145deg,#111A2C,#0B1322) !important;
+   (Hillel, 16/10/2026, "on ne le voit pas bien"). La version sombre
+   essayee le 18/10/2026 ("plus de couleurs, plus moderne") recreait sans
+   le vouloir un probleme deja corrige le 15/10/2026 (voir eli.css,
+   ".eli-une") : sur telephone, le panneau "Enfin le premier site..." + la
+   tuile sombre + le bloc "Nos programmes" juste en dessous empilaient
+   TROIS blocs sombres d'affilee, avec EliA (blanc) comme seule respiration
+   — Hillel a montre la meme capture circulee sans un mot, exactement le
+   schema qui avait fait passer EliA en blanc la premiere fois. Repassee en
+   degrade or/creme CLAIR, qui garde la couleur et le relief demandes sans
+   reempiler le sombre. */
+.hero-simu{background:linear-gradient(145deg,#FBF0D9,#F0DBA0) !important;
  border-radius:var(--r-xl);
- box-shadow:0 20px 40px -14px rgba(0,0,0,.45),0 0 0 1px rgba(201,162,39,.18);
+ box-shadow:0 20px 40px -16px rgba(166,130,26,.35),0 0 0 1px rgba(201,162,39,.25);
  padding:14px;
- display:flex !important;flex-direction:column;border:1px solid rgba(201,162,39,.35) !important}
+ display:flex !important;flex-direction:column;border:1px solid rgba(166,130,26,.3) !important}
 /* Carte et panneau de la grande phrase au cordeau : meme haut, meme bas
    (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
    Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
@@ -586,9 +596,14 @@ button,input,select,textarea{font:inherit;color:inherit}
     juste ".hero h1" — sinon le "max-width:16em" de cette regle-la calcule
     sa largeur sur SON PROPRE font-size (42px), pas le mien, et la carte
     restait presque pleine largeur au lieu de se resserrer et se centrer
-    (Hillel, 03/10/2026 : "le bloc texte plus centre"). */
- .hero .zf-bandeau + h1{font-size:19px!important;line-height:1.3!important;
-  margin:0 auto 4px!important;max-width:15em!important;padding:12px 16px!important}
+    (Hillel, 03/10/2026 : "le bloc texte plus centre"). C'est CETTE regle
+    (en !important, donc la seule vraiment appliquee sur telephone, celle
+    de la ligne ~900 du fichier etant plus bas dans la cascade mais sans
+    !important) qui doit elargir — Hillel, 18/10/2026, capture a l'appui :
+    "ca fait trop cheap, plus premium, plus large". */
+ .hero .zf-bandeau + h1{font-size:19px!important;line-height:1.4!important;
+  margin:0 auto 4px!important;max-width:20em!important;padding:18px 20px!important;
+  border:1px solid rgba(201,162,39,.3)!important}
 }
 @media(max-width:640px){
  .hero .zf-bandeau{margin:0 0 12px;line-height:1}
@@ -618,44 +633,50 @@ button,input,select,textarea{font:inherit;color:inherit}
  font-weight:650;padding:12px 14px;border:1px solid var(--trait);
  border-radius:var(--r);background:var(--fond);color:var(--encre)}
 .hero-simu input:focus{outline:2px solid var(--action);outline-offset:1px}
-/* Relief de fond, plus marque depuis le 18/10/2026 sur la carte sombre :
-   une lueur or en haut a droite, plus une seconde, douce, en bas a gauche
-   — ca donne de la profondeur sans image a fabriquer. */
+/* Relief de fond : une lueur blanche en haut a droite, plus une seconde,
+   douce et or, en bas a gauche — de la profondeur sur un fond clair, sans
+   image a fabriquer. */
 .hero-simu{position:relative;overflow:hidden}
 .hero-simu::before{content:'';position:absolute;top:-70px;right:-70px;
  width:220px;height:220px;border-radius:50%;
- background:radial-gradient(circle,rgba(201,162,39,.45),rgba(201,162,39,0) 70%);
+ background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,0) 70%);
  pointer-events:none}
 .hero-simu::after{content:'';position:absolute;bottom:-90px;left:-60px;
  width:200px;height:200px;border-radius:50%;
- background:radial-gradient(circle,rgba(201,162,39,.18),rgba(201,162,39,0) 72%);
+ background:radial-gradient(circle,rgba(166,130,26,.22),rgba(166,130,26,0) 72%);
  pointer-events:none}
 .hero-simu>*{position:relative}
-/* Titre et sous-titre en blanc/creme sur la carte sombre (18/10/2026) —
-   taille alignee sur celui d'EliA (18px) pour que les deux cartes ecrivent
-   a la meme echelle (Hillel : "equilibre les ecritures"). */
+/* Titre et sous-titre en ardoise sur la carte claire — taille alignee sur
+   celui d'EliA (18px) pour que les deux cartes ecrivent a la meme echelle
+   (Hillel : "equilibre les ecritures"). */
 .hero-simu .hs-titre{font-size:18px;line-height:1.3;font-weight:750;
- margin:0 0 6px;color:#FFFFFF !important}
-.hero-simu .hs-sous{margin:0 0 14px;color:rgba(255,255,255,.72) !important}
-/* Boutons en degrade or (18/10/2026, "plus de couleurs, plus moderne") au
-   lieu de l'aplat uni — plus de relief, toujours la meme palette du site.
-   Pastille ardoise/or pour l'icone, fleche discrete, legere reduction au
-   toucher. Couleurs fixes, jamais sombres la nuit. */
-.hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ margin:0 0 6px;color:#0F172A !important}
+.hero-simu .hs-sous{margin:0 0 14px;color:#5A4318 !important}
+/* Boutons en degrade ardoise (contraste fort sur la carte claire, Hillel :
+   "plus de couleurs, plus moderne") avec icone et texte en or — l'inverse
+   du fond, pour que les deux carres restent le point le plus lisible de la
+   carte. Fleche discrete, legere reduction au toucher. Couleurs fixes. */
+/* Empiles plutot que cote a cote (18/10/2026, Hillel : « il y a marqué
+   "Je" et après ça passe à la ligne... peut-être les mettre un au-dessus
+   de l'autre ») — chaque bouton garde toute la largeur de la carte, le
+   texte raccourci n'a plus besoin de se couper au milieu d'un mot. Vaut
+   pour telephone ET ordinateur (Hillel : « ça s'applique aussi bien pour
+   la version web que pour la version PC »). */
+.hs-modes{display:grid;grid-template-columns:1fr;gap:10px}
 .hs-modes button{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
- padding:12px 14px;min-height:60px;border-radius:12px;border:1px solid rgba(255,255,255,.25) !important;
- background:linear-gradient(145deg,#E2BE5C,#C9A227) !important;color:#0F172A !important;text-align:left;line-height:1.3;
+ padding:12px 14px;min-height:60px;border-radius:12px;border:1px solid rgba(0,0,0,.25) !important;
+ background:linear-gradient(145deg,#1C2740,#0B1322) !important;color:#F0DBA0 !important;text-align:left;line-height:1.3;
  display:flex;align-items:center;gap:10px;
- box-shadow:0 10px 22px -8px rgba(0,0,0,.45);
+ box-shadow:0 10px 22px -8px rgba(15,23,42,.45);
  transition:transform .12s ease,box-shadow .12s ease}
 .hs-ic{flex:none;width:32px;height:32px;border-radius:50%;
- background:#0F172A !important;color:#E2BE5C !important;
+ background:#C9A227 !important;color:#0F172A !important;
  display:flex;align-items:center;justify-content:center}
 .hs-ic svg{width:17px;height:17px}
 .hs-modes button>span:last-child{flex:1}
-.hs-modes button::after{content:'→';font-size:15px;font-weight:800;opacity:.65;flex:none}
-.hs-modes button:active{background:#A6821A !important;transform:scale(.97);
- box-shadow:0 3px 10px -4px rgba(166,130,26,.5)}
+.hs-modes button::after{content:'→';font-size:15px;font-weight:800;opacity:.75;flex:none}
+.hs-modes button:active{background:#0B1322 !important;transform:scale(.97);
+ box-shadow:0 3px 10px -4px rgba(15,23,42,.5)}
 /* La monnaie de l'apport, toujours visible et au choix (Hillel,
    24/09/2026 : il avait tape 500.000 sans savoir si c'etait des euros). */
 .hs-devise{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
