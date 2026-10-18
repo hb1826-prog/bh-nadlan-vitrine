@@ -547,10 +547,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hc-simu .hc-btn,.hc-progs .hc-btn{background:var(--action);color:#fff}
 /* Couleurs FIXES (jamais var(--carte)/var(--fond), qui basculent sombres
    la nuit) : ce bloc reste lisible quel que soit le theme du telephone
-   (Hillel, 16/10/2026, "on ne le voit pas bien"). */
-.hero-simu{background:#FBF5E4 !important;border-radius:var(--r-xl);
- box-shadow:0 10px 30px -14px rgba(0,0,0,.25);padding:14px;
- display:flex !important;flex-direction:column;border:1.5px solid #E6D9B0}
+   (Hillel, 16/10/2026, "on ne le voit pas bien"). Reprises le 18/10/2026
+   sur celles de la carte EliA juste a cote (Hillel : "reprend les couleurs
+   de EliA") — meme blanc casse, meme bordure et ombre douces, pour que les
+   deux cartes du premier ecran se repondent au lieu de jurer (creme contre
+   blanc). */
+.hero-simu{background:rgba(255,255,255,.96) !important;border-radius:var(--r-xl);
+ box-shadow:0 10px 30px rgba(15,23,42,.14);padding:14px;
+ display:flex !important;flex-direction:column;border:1px solid rgba(15,23,42,.08) !important}
 /* Carte et panneau de la grande phrase au cordeau : meme haut, meme bas
    (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
    Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
@@ -639,9 +643,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero-simu>*{position:relative}
 /* Titre remis le 16/10/2026 au-dessus des deux carres, mais plus petit que
    le .hs-titre d'origine (26px) qui etait pense pour l'ancienne carte plus
-   large — ici la carte est reduite au strict minimum. */
-.hero-simu .hs-titre{font-size:16px;line-height:1.3;font-weight:750;
- margin:0 0 12px;color:#0F172A !important}
+   large — ici la carte est reduite au strict minimum. Taille alignee le
+   18/10/2026 sur le titre d'EliA (18px) pour que les deux cartes ecrivent
+   a la meme echelle (Hillel : "equilibre les ecritures"). Le sous-titre
+   explique ce que fait le simulateur, meme texte-gris qu'EliA (classe
+   .hs-sous, deja prevue plus bas). */
+.hero-simu .hs-titre{font-size:18px;line-height:1.3;font-weight:750;
+ margin:0 0 6px;color:#0F172A !important}
+.hero-simu .hs-sous{margin:0 0 14px;color:#5A6172 !important}
 /* Deux boutons nets (Hillel, 16/10/2026), en or du site — pas de carre
    force (l'aspect-ratio:1/1 d'une version precedente les rendait enormes
    et desequilibres sur telephone, capture a l'appui) : hauteur confortable
@@ -692,7 +701,6 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hs-ligne .hs-go{margin-top:0;flex:none;padding:10px 16px;white-space:nowrap}
  .hs-long{display:none}
  .hs-court{display:inline}
- .hero-simu .hs-sous{display:none}
  /* Le libelle du champ reste : « prix » ou « apport en euros », il faut
     savoir ce qu on tape (24/09/2026). */
  .hero-simu .hs-lab{margin-top:2px}
@@ -2429,7 +2437,8 @@ table.ag th{width:64%}
     desktop un peu plus genereux pour qu'elle reste une vraie carte, pas
     une ligne perdue en haut d'un grand cadre vide. */
  .hero-simu{align-self:start;padding:26px 24px!important;gap:16px}
- .hero-simu .hs-titre{font-size:19px!important;line-height:1.35}
+ .hero-simu .hs-titre{font-size:18px!important;line-height:1.35}
+ .hero-simu .hs-sous{font-size:14px!important}
  .hs-modes{gap:12px}
  .hs-modes button{min-height:78px;font-size:14px;padding:18px 18px}
  .hs-modes button::after{font-size:17px}
