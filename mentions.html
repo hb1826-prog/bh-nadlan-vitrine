@@ -2987,6 +2987,38 @@ table.ag th{width:64%}
 }
 @media(max-width:900px){.hero .eli-une-form input{font-size:13.5px}}
 
+/* En-tête en une seule ligne (Hillel, 19/10/2026 : « trop fouillis ») : logo | menu | langue +
+   bouton. Menu dans l'ordre voulu, sans « Nous contacter » (le bouton le remplace ; il reste
+   dans le menu du téléphone et en pied de page). Les réseaux sociaux passent dans une fine
+   bande au-dessus de l'en-tête, alignée à droite. */
+@media(min-width:901px){
+ .pub-top{display:flex;flex-direction:column}
+ .pub-top .entete-reseaux{order:-1;justify-content:flex-end;gap:14px;
+  padding-top:5px;padding-bottom:5px;border-bottom:1px solid #F1EDE4}
+ .pub-top .entete-reseaux a svg{width:16px;height:16px}
+ .pub-bar{align-items:center;min-height:76px;gap:28px}
+ .nav{display:flex;align-items:center;gap:30px;margin:0 auto}
+ .nav a{white-space:nowrap;margin:0;padding:8px 0;font-size:14.5px}
+ .nav a::after{left:0;right:0}
+ .nav a[href="#/nous-contacter"]{display:none}
+ .nav a[href="#/"]{order:1}.nav a[href="#/seconde-main"]{order:2}.nav a.nav-eli{order:3}
+ .nav a.nav-simu{order:4}.nav a[href="#/blog"]{order:5}
+ .pub-flanc-d{display:flex;align-items:center;gap:14px;flex:none}
+ .pub-flanc-d .cta,.cta{white-space:nowrap;padding:12px 22px}
+}
+@media(min-width:901px){
+ .pub-top .entete-reseaux{width:100%;box-sizing:border-box;max-width:1240px}
+ .nav a,.nav a.nav-eli,.nav a.nav-simu{margin:0!important;padding:8px 0!important}
+ .nav a::after{left:0!important;right:0!important}
+}
+@media(min-width:901px) and (max-width:1240px){
+ .pub-bar{gap:16px}
+ .nav{gap:18px}
+ .nav a{font-size:13.5px}
+ .nav .nav-eli-long{display:none}.nav .nav-eli-court{display:inline}
+ .cta{padding:10px 16px;font-size:13.5px}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
