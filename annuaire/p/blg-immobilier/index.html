@@ -3702,7 +3702,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   </div>
 </section>
 
-<section class=galerie-programmes>
+<section class=galerie-programmes id=galerie-programmes>
   <div class=gp-dedans>
     <p class=eyebrow>Nos programmes immobiliers</p>
     <h2>Les meilleurs projets en Israël</h2>
@@ -5105,7 +5105,7 @@ function basculer(mode) {
   // Elle n'avait pas d'id et restait donc affichee sur le simulateur, ou
   // Hillel n'en veut pas (23/09/2026) : on la cache avec le bloc « qui »,
   // dont elle est la suite.
-  ['hero', 'entete', 'modele', 'ou', 'simu-bande', 'qui', 'preuve', 'avis', 'rassure'].forEach(id => {
+  ['hero', 'entete', 'modele', 'ou', 'simu-bande', 'qui', 'preuve', 'avis', 'rassure', 'galerie-programmes'].forEach(id => {
     const bloc = document.getElementById(id);
     if (bloc) bloc.style.display = liste ? '' : 'none';
   });
