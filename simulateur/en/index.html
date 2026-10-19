@@ -2818,6 +2818,34 @@ table.ag th{width:64%}
  .hb-ic{width:28px;height:28px}.hb-ic svg{width:16px;height:16px}
  .hb-texte{overflow-wrap:normal;word-break:keep-all}}
 
+/* ---- Équilibrage, 19/10/2026 (Hillel, capture à l'appui) ---- */
+.logo-tag{display:block;width:100%;letter-spacing:0;font-size:8.5px;font-weight:600}
+.logo-tag .lt-in{display:flex;justify-content:space-between;width:100%}
+.logo-tag i{font-style:normal}
+.logo-tag i.esp{width:.5em}
+.logo-tag-bloc{text-align:justify;text-align-last:justify}
+/* Quatre pastilles identiques : même largeur, même hauteur. */
+.hero-badges{grid-auto-rows:1fr}
+.hero-badges li{min-height:78px;box-sizing:border-box}
+/* Le moteur de recherche ne remonte plus sur la galerie de programmes. */
+.bloc-accueil .cherche{margin-top:28px!important}
+@media(min-width:901px){
+ /* Le titre en haut ; dessous, pastilles + EliA à gauche et le simulateur à
+    droite, du haut des pastilles au bas d'EliA : les deux colonnes ont
+    exactement la même hauteur. Le simulateur est maintenant DANS
+    `.hero-texte`, qui devient la grille (plus de display:contents ni de
+    zones nommées héritées). */
+ .hero .dedans{display:block!important;padding-top:56px;padding-bottom:72px}
+ .hero-texte{display:grid!important;grid-template-columns:minmax(0,1fr) 400px;
+  grid-template-rows:auto auto auto;column-gap:56px;row-gap:16px;align-items:start}
+ .hero .dedans .hero-texte h1{grid-column:1 / -1;grid-row:1;margin:0 0 10px!important;max-width:none!important}
+ .hero-badges{grid-column:1;grid-row:2;margin:0!important;max-width:none}
+ .hero .hero-texte .eli-une{grid-column:1!important;grid-row:3!important;margin:0!important}
+ .hero-simu{grid-column:2!important;grid-row:2 / span 2!important;grid-area:auto;
+  align-self:stretch!important;position:static!important;max-width:none;margin:0}
+ .hero-simu .hs-modes{margin-top:auto}
+}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -3276,7 +3304,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
       <img src='/annuaire/img/logo-officiel.png' alt='BH Nadlan — L’immobilier autrement' height='44' style='height:44px;width:auto;display:block'>
       <span class=logo-mot>BH NADLAN</span>
     </span>
-    <span class=logo-tag>Real estate differently</span>
+    <span class=logo-tag aria-label="Real estate differently"><span aria-hidden=true class=lt-in><i>R</i><i>e</i><i>a</i><i>l</i><i class=esp></i><i>e</i><i>s</i><i>t</i><i>a</i><i>t</i><i>e</i><i class=esp></i><i>d</i><i>i</i><i>f</i><i>f</i><i>e</i><i>r</i><i>e</i><i>n</i><i>t</i><i>l</i><i>y</i></span></span>
   </a>
   <div class=grow></div>
   <div class="pub-flanc pub-flanc-d">
@@ -3355,8 +3383,8 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     
     <ul class=hero-preuves><li><b>124</b><span>developments tracked</span></li><li><b>52</b><span>cities</span></li><li class=pr-ligne><b>15</b><span>years of experience in Israeli real estate development</span></li></ul>
     <a class=hero-decouvrir href="#vue">Discover our properties →</a>
+    
    </div>
-   
   </div>
 </section>
 
