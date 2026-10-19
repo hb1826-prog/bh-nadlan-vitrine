@@ -14,7 +14,7 @@
 
 
 <title>BLG Immobilier — Programmes neufs · Israël</title>
-<meta name=description content="124 programmes neufs en Israël suivis par
+<meta name=description content="109 programmes neufs en Israël suivis par
  BLG Immobilier, dans 52 villes : prix, typologies, simulateur d'achat et accompagnement francophone.">
 <style>/* L'annuaire BH — la peau « portail immobilier ».
    ============================================================
@@ -3046,6 +3046,34 @@ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35p
  [dir=rtl] .hero .dedans .hero-texte h1{font-size:22px!important}
 }
 
+@media(max-width:900px){
+ /* Plus de tuile « Nos programmes » : redondante avec les gros chiffres juste au-dessus. */
+ .hero .hero-choix{display:none!important}
+ /* Logo plus gros et plus net sur téléphone (Hillel, 19/10/2026 : « trop petit, trop fin »). */
+ .pub-logo img{height:56px!important}
+ .logo-mot{font-size:22px;font-weight:700;letter-spacing:.06em}
+ .logo-tag{font-size:9.5px;font-weight:700;letter-spacing:0}
+}
+
+/* ===== Moteur de recherche allégé (Hillel, 19/10/2026) : quatre menus déroulants sur une
+   ligne — nombre de pièces, typologie, ville, budget — et un bouton. Plus de villes « en un
+   clic », plus de pastilles, plus de « Affiner ma recherche ». ===== */
+.cherche .raccourcis,.cherche .filtres-toggle,.cherche .voir-res{display:none!important}
+.cherche .boite{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr)) auto;
+ gap:12px 14px;align-items:end;padding:18px 20px}
+.cherche .onglets{grid-column:1 / -1}
+.cherche .ligne-pieces{display:contents!important}
+.cherche .champs,.cherche .champs[hidden]{display:contents!important}
+.cherche .ligne-pieces .champ,.cherche .champs .champ{width:auto!important;max-width:none!important;
+ margin:0!important;grid-column:auto!important;grid-row:auto!important}
+.cherche .champ label{font-size:11px}
+.cherche .chercher{grid-column:auto!important;grid-row:auto!important;width:auto;
+ white-space:nowrap;padding:0 22px;height:48px}
+@media(max-width:900px){
+ .cherche .boite{grid-template-columns:1fr 1fr;padding:14px}
+ .cherche .chercher{grid-column:1 / -1!important;width:100%}
+}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -3525,9 +3553,9 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 <nav class="nav-mobile" id=nav-mobile hidden>
   <a href="#/">Programmes neufs</a>
   
-  
   <a class=nav-eli href="#/eli"><span class=nav-eli-long>EliA, conseiller IA</span><span class=nav-eli-court>EliA</span></a>
   <a class=nav-simu href="#/simulateur">Simulateur d'achat</a>
+  
   <a href="#/nous-contacter" onclick="fermerMenuMobile()">Nous contacter</a>
   <a class=wa href="https://wa.me/33666590022?text=Bonjour+BLG+Immobilier%2C+je+suis+int%C3%A9ress%C3%A9%2C+je+voudrais+%C3%A9changer+avec+vous."><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 22c-1.836 0-3.63-.494-5.198-1.43l-.373-.222-3.865 1.014 1.033-3.769-.243-.386A9.937 9.937 0 0 1 2.05 12c0-5.523 4.494-10 10.05-10 2.685 0 5.208 1.043 7.106 2.941A9.933 9.933 0 0 1 22.1 12c0 5.523-4.494 10-10.05 10zm8.413-18.363A11.815 11.815 0 0 0 12.05 0C5.495 0 .15 5.35.15 11.9c0 2.097.547 4.145 1.588 5.945L0 24l6.304-1.654a11.87 11.87 0 0 0 5.744 1.464h.005c6.554 0 11.9-5.35 11.9-11.9 0-3.181-1.24-6.169-3.49-8.273z"/></svg> WhatsApp</a>
   <button type=button class=nav-installer id=nav-installer hidden>Installer l’application</button>
@@ -3546,7 +3574,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <ul class=hero-badges>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 7.5h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg></span><span class=hb-texte>Simulateur gratuit<small>Réponse instantanée</small></span></li>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="17" r="2.4"/></svg></span><span class=hb-texte>0 % frais d’agence<small>Aucun frais d’agence n’est demandé : cela ne vous coûte rien.</small></span></li>
-      <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5M9 11h.01M15 11h.01"/></svg></span><span class=hb-texte>Direct promoteur</span></li>
+      <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5M9 11h.01M15 11h.01"/></svg></span><span class=hb-texte>Direct promoteur<small>Prix exclusif aux clients BH Nadlan</small></span></li>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5l2.5 2.5 5.5-6"/><path d="M12 3l7 3v5.5c0 4.2-2.9 7.7-7 9.5-4.1-1.8-7-5.3-7-9.5V6z"/></svg></span><span class=hb-texte>Accompagnement complet<small>Choix du bien, juridique, fiscal, financement</small></span></li>
     </ul>
     <div class=hero-choix id=hero-choix>
@@ -3559,7 +3587,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <a class="hc-carte hc-progs" href="#vue">
      <span class=hc-ic><svg viewBox="0 0 24 24" aria-hidden=true><rect x=3 y=12 width=5 height=10 rx=1 style="fill:var(--encre)"/><rect x=9.5 y=7 width=5 height=15 rx=1 style="fill:var(--encre)"/><rect x=16 y=10 width=5 height=12 rx=1 style="fill:var(--encre)"/><rect x=9.5 y=7 width=5 height=4 rx=1 style="fill:var(--or)"/></svg></span>
      <span class=hc-titre>Nos programmes</span>
-     <span class=hc-chiffres><b>52</b> villes · <b>124</b> programmes</span>
+     <span class=hc-chiffres><b>52</b> villes · <b>109</b> programmes</span>
      <span class=hc-btn>Découvrir nos programmes</span>
     </a>
    </div>
@@ -3583,7 +3611,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     </div>
   </div>
 </div>
-    <ul class=hero-preuves><li><b>124</b><span>programmes suivis</span></li><li><b>52</b><span>villes</span></li></ul>
+    <ul class=hero-preuves><li><b>109</b><span>programmes suivis</span></li><li><b>52</b><span>villes</span></li></ul>
     <a class=hero-decouvrir href="#vue">Découvrir nos biens →</a>
     <div class=hero-simu id=hero-simu>
     <p class=hs-titre>Votre simulation immobilière gratuite, immédiate et sans engagement</p>
@@ -3650,7 +3678,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
 
 <div class=bloc-accueil>
 <section class=modele id=modele>
-    <p class=modele-preuve><span><b>124</b> programmes suivis · <b>52</b> villes</span></p>
+    <p class=modele-preuve><span><b>109</b> programmes suivis · <b>52</b> villes</span></p>
     <div>
       <b>Le prix du promoteur. Sans surcoût.</b>
       <span><b>Zéro frais d’agence.</b> Vous achetez directement au prix du promoteur, sans intermédiaire ni commission supplémentaire. Nous vous accompagnons à chaque étape, avec un avantage simple : vous bénéficiez de notre expertise sans payer plus cher.</span>
@@ -3672,16 +3700,19 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <button type=button id=onglet-simuler
       onclick="location.hash='#/simulateur'">Simuler mon achat</button>
   </div>
-  <div class=raccourcis id=raccourcis></div>
   <div class=ligne-pieces>
-    <span class=rac-lab>Nombre de pièces</span>
-    <div class=pastilles id=f-pieces><button type=button data-p='2.0'>2<small>p.</small></button><button type=button data-p='2.5'>2,5<small>p.</small></button><button type=button data-p='3.0'>3<small>p.</small></button><button type=button data-p='3.5'>3,5<small>p.</small></button><button type=button data-p='4.0'>4<small>p.</small></button><button type=button data-p='4.5'>4,5<small>p.</small></button><button type=button data-p='5.0'>5<small>p.</small></button><button type=button data-p='6' data-et-plus='1'>6+<small>p.</small></button><span class=pastilles-sep></span><button type=button data-type='Mini penthouse'>Mini penthouse</button><button type=button data-type='Penthouse'>Penthouse</button><button type=button data-type='Rez-de-jardin'>Rez-de-jardin</button></div>
+    <div class=champ><label for=f-nb>Nombre de pièces</label>
+      <select id=f-nb><option value="">Indifférent</option>
+        <option value='2.0'>2 p.</option><option value='2.5'>2,5 p.</option><option value='3.0'>3 p.</option><option value='3.5'>3,5 p.</option><option value='4.0'>4 p.</option><option value='4.5'>4,5 p.</option><option value='5.0'>5 p.</option><option value='6'>6+ p.</option></select></div>
+    <div class=champ><label for=f-type>Typologie</label>
+      <select id=f-type><option value="">Toutes</option>
+        <option value='Mini penthouse'>Mini penthouse</option><option value='Penthouse'>Penthouse</option><option value='Rez-de-jardin'>Rez-de-jardin</option></select></div>
     <div class="champ champ-ville"><label for=f-ville>Ville</label>
       <select id=f-ville><option value="">Toutes les villes</option>
         <option value='Ashdod'>Ashdod</option><option value='Ashkelon'>Ashkelon</option><option value='Bat Yam'>Bat Yam</option><option value='Beer Sheva'>Beer Sheva</option><option value='Beit Shemesh'>Beit Shemesh</option><option value='Givat Shmuel'>Givat Shmuel</option><option value='Givatayim'>Givatayim</option><option value='Haïfa'>Haïfa</option><option value='Herzliya'>Herzliya</option><option value='Holon'>Holon</option><option value='Jerusalem'>Jerusalem</option><option value='Kiryat Bialik'>Kiryat Bialik</option><option value='Kiryat Gat'>Kiryat Gat</option><option value='Kiryat Ono'>Kiryat Ono</option><option value='Netanya'>Netanya</option><option value='Netivot'>Netivot</option><option value='Ofakim'>Ofakim</option><option value='Or Yehuda'>Or Yehuda</option><option value='Petah Tikva'>Petah Tikva</option><option value='Ramat Gan'>Ramat Gan</option><option value='Rehovot'>Rehovot</option><option value='Rishon LeZion'>Rishon LeZion</option><option value='Tel Aviv'>Tel Aviv</option></select></div>
   </div>
   <button type=button class=filtres-toggle id=filtres-toggle>Affiner ma recherche <span class=chev>▾</span></button>
-  <div class=champs id=pub-filtres hidden>
+  <div class=champs id=pub-filtres>
     <div class=champ><label for=f-budget>Budget maximum</label>
       <select id=f-budget><option value="">Indifférent</option>
         <option value='1500000'>jusqu'à 1 500 000 ₪</option><option value='2000000'>jusqu'à 2 000 000 ₪</option><option value='2500000'>jusqu'à 2 500 000 ₪</option><option value='3000000'>jusqu'à 3 000 000 ₪</option><option value='4000000'>jusqu'à 4 000 000 ₪</option><option value='5000000'>jusqu'à 5 000 000 ₪</option><option value='7000000'>jusqu'à 7 000 000 ₪</option><option value='8700000'>jusqu'à 8 700 000 ₪</option></select></div>
@@ -4619,6 +4650,7 @@ function ordreGrille(vus, sd) {
 
 function liste() {
   basculer(true);
+  syncMenus();
   const r = chercher();
   const vus = r.vus;
   // Les « prix sur demande » subissent les memes filtres que les autres :
@@ -9833,8 +9865,7 @@ function accueil() {
   });
   F.pieces = [];
   F.types = [];
-  document.querySelectorAll('#f-pieces button').forEach(b =>
-    b.classList.remove('on'));
+  syncMenus();
   if (location.hash && location.hash !== '#/') location.hash = '#/';
   else liste();
   window.scrollTo(0, 0);
@@ -9981,27 +10012,29 @@ addEventListener('scroll', fermerLanguesMenus, {passive: true});
 
 addEventListener('hashchange', router);
 
-/* Les pastilles de typologie : on en coche plusieurs, et un second clic
-   decoche. C'est la facon dont on choisit un nombre de pieces — pas une liste
-   deroulante « a partir de », qui est un filtre de base de donnees. */
-(function pastilles() {
-  const zone = document.getElementById('f-pieces');
-  if (!zone) return;
-  zone.addEventListener('click', e => {
-    const b = e.target.closest('button[data-p], button[data-type]');
-    if (!b) return;
-    if (b.dataset.type) {
-      const i = F.types.indexOf(b.dataset.type);
-      if (i < 0) F.types.push(b.dataset.type); else F.types.splice(i, 1);
-      b.classList.toggle('on', i < 0);
-    } else {
-      const valeur = parseFloat(b.dataset.p);
-      const i = F.pieces.indexOf(valeur);
-      if (i < 0) F.pieces.push(valeur); else F.pieces.splice(i, 1);
-      b.classList.toggle('on', i < 0);
-    }
+/* Nombre de pièces et typologie : deux menus déroulants, comme la ville (Hillel,
+   19/10/2026 : « enlève les pastilles, mets-le avec des menus »). Un seul choix
+   chacun ; « Indifférent » les remet à zéro. */
+function syncMenus() {
+  const nb = document.getElementById('f-nb');
+  const ty = document.getElementById('f-type');
+  if (nb) nb.value = F.pieces.length === 1 ? String(F.pieces[0]) : '';
+  if (ty) ty.value = F.types.length === 1 ? F.types[0] : '';
+}
+(function menus() {
+  const nb = document.getElementById('f-nb');
+  const ty = document.getElementById('f-type');
+  const relancer = () => {
     if (location.hash && location.hash !== '#/') location.hash = '#/';
     else liste();
+  };
+  if (nb) nb.addEventListener('input', () => {
+    F.pieces = nb.value ? [parseFloat(nb.value)] : [];
+    relancer();
+  });
+  if (ty) ty.addEventListener('input', () => {
+    F.types = ty.value ? [ty.value] : [];
+    relancer();
   });
 })();
 
