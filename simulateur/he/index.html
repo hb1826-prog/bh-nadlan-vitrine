@@ -2846,6 +2846,130 @@ table.ag th{width:64%}
  .hero-simu .hs-modes{margin-top:auto}
 }
 
+/* ======================= direction « Lumineux et moderne » (1c) – 19/10/2026 =======================
+   Choisie par Hillel parmi trois propositions de Claude Design. Bannière
+   claire (plus de photo plein écran) : le texte à gauche, une grande photo
+   arrondie à droite avec la carte du simulateur posée en bas. Couleurs FIXES
+   (jamais var(--fond)/var(--carte), qui basculent en mode sombre) : la
+   bannière reste lisible quel que soit le thème du téléphone.
+   « Frais d'agence : 0 % » reste dans les quatre pastilles, pas de pastille
+   à part en haut (Hillel, 19/10/2026). */
+.hero{background:#fff!important;border-bottom:0}
+.hero .voile,.hero .ph-nuit,.nuit .hero .ph-nuit{display:none!important}
+.hero .ph-jour,.nuit .hero .ph-jour{display:block!important}
+.hero .photo{position:absolute;inset:auto;top:36px;bottom:36px;left:auto;
+ right:max(22px,calc((100% - 1240px)/2 + 22px));width:min(520px,42vw);
+ border-radius:28px;overflow:hidden;box-shadow:0 24px 50px -22px rgba(15,23,42,.35)}
+.hero .dedans{color:#0F172A;padding-top:36px;padding-bottom:36px}
+.hero .dedans .hero-texte h1{color:#0F172A!important;text-shadow:none;
+ font-weight:600;font-size:clamp(28px,3.3vw,46px)!important;line-height:1.16!important;
+ margin:0 0 20px!important}
+.hero .dedans .hero-texte h1 em{color:#0F172A;
+ background:linear-gradient(transparent 62%,#F1E3B4 62%);padding:0 .06em}
+.hero .dedans .hero-texte h1 .h1-b{color:#333B4D;opacity:1;text-shadow:none;margin-top:16px}
+.hero .dedans .hero-texte h1 .h1-b::before{display:none}
+.hero-badges li{background:#fff;border:1.5px solid #EEE8DC;color:#0F172A;
+ border-radius:16px;font-weight:650}
+.hero-badges li:hover{border-color:#C9A227}
+.hb-ic{background:#FAF7F1;color:#7A6013;box-shadow:none}
+.hb-texte small{color:#6A7284;opacity:1;font-style:normal;font-weight:500;font-size:11px}
+.hero-preuves{display:flex!important;gap:12px 40px;flex-wrap:wrap;list-style:none;
+ margin:26px 0 0;padding:0;color:#0F172A}
+.hero-preuves li{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:start}
+.hero-preuves b{font-family:'Titre Accroche',Georgia,serif;font-size:32px;font-weight:600;
+ line-height:1;color:#0F172A}
+.hero-preuves span{font-size:12.5px;color:#5A6172;line-height:1.35;text-shadow:none;max-width:15em}
+.hero .eli-une-dedans{background:#FAF7F1!important;border:0!important;box-shadow:none!important;
+ border-radius:22px;-webkit-backdrop-filter:none;backdrop-filter:none}
+.hero .eli-une-texte b{font-family:'Titre Accroche',Georgia,serif;font-weight:600;font-size:20px}
+.hero .eli-une{max-width:none}
+/* La carte du simulateur : blanche, posée en bas de la photo. Bouton principal
+   bleu nuit, secondaire crème (comme la maquette). */
+.hero-simu{background:#fff!important;border:0!important;border-radius:22px!important;
+ box-shadow:0 18px 40px -14px rgba(15,23,42,.4)!important}
+.hero-simu::before,.hero-simu::after{display:none}
+.hero-simu .hs-titre{font-family:'Titre Accroche',Georgia,serif;font-weight:600;
+ font-size:22px!important;border-bottom:0;padding-bottom:0}
+.hero-simu .hs-sous,.hero-simu .hs-sous:last-of-type{color:#5A6172!important;
+ font-size:13px!important;line-height:1.5;margin:0 0 8px!important}
+.hs-modes button{background:#0F172A!important;color:#fff!important;border:0!important;
+ box-shadow:none}
+.hs-modes button:hover{box-shadow:0 12px 22px -10px rgba(15,23,42,.6);filter:none}
+.hs-modes button+button{background:#FAF7F1!important;color:#0F172A!important;
+ border:1px solid #EEE8DC!important}
+.hs-ic{background:#C9A227!important;color:#0F172A!important}
+.hs-modes button+button .hs-ic{background:#fff!important;color:#7A6013!important}
+@media(min-width:901px){
+ .hero-texte{grid-template-columns:minmax(0,1fr) min(520px,42vw)!important;
+  grid-template-rows:auto auto auto auto}
+ .hero .dedans .hero-texte h1{grid-row:1}
+ .hero-badges{grid-row:2}
+ .hero-preuves{grid-column:1;grid-row:3}
+ .hero .hero-texte .eli-une{grid-row:4!important}
+ .hero-simu{grid-column:2!important;grid-row:1 / -1!important;align-self:end!important;
+  margin:0 18px 18px!important;width:auto}
+}
+@media(max-width:900px){
+ .hero .photo{position:relative;top:auto;right:auto;bottom:auto;width:auto;
+  height:210px;margin:16px 16px 0;border-radius:22px}
+ .hero .dedans{padding:20px 16px 26px}
+ .hero .dedans .hero-texte h1{text-align:left;font-size:27px!important}
+ .hero .dedans .hero-texte h1 .h1-b{text-align:left;margin-left:0}
+ .hero-simu{margin:20px 0 0!important;max-width:none;
+  border:1px solid #EEE8DC!important;box-shadow:0 10px 26px -14px rgba(15,23,42,.25)!important}
+}
+/* Sous la bannière : galerie, recherche, trois arguments en cartes, portrait. */
+.galerie-programmes h2,.ou-tete h2,#pub-titre{font-family:'Titre Accroche',Georgia,serif;font-weight:600}
+.galerie-programmes h2{font-size:32px}
+.gp-carte{border-radius:20px;border:1.5px solid #EEE8DC;box-shadow:none}
+.gp-carte img{border-radius:14px;margin:8px 8px 0;width:calc(100% - 16px)}
+.cherche .boite{border-radius:22px;border:1.5px solid #EEE8DC}
+.modele{border-bottom:0;padding-top:34px}
+.modele-preuve{display:none}
+.modele > div{background:#FAF7F1;border-radius:22px;padding:26px 24px}
+.modele > div > b{font-family:'Titre Accroche',Georgia,serif;font-weight:600;font-size:21px;
+ line-height:1.25;margin-bottom:12px}
+.modele > div > b::before{display:none}
+.qui{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:48px;align-items:center;
+ background:transparent;border:0;box-shadow:none;padding:28px 0;margin-top:48px}
+.qui img{width:100%;height:auto;aspect-ratio:4/4.6;border:0;border-radius:28px;
+ object-position:center 25%;box-shadow:0 24px 50px -24px rgba(15,23,42,.45)}
+.qui > div > b{font-family:'Titre Accroche',Georgia,serif;font-weight:600;font-size:40px;
+ margin-bottom:14px}
+.qui p.dim{font-family:'Titre Accroche',Georgia,serif;font-style:italic;font-size:19px;
+ color:#0F172A}
+@media(max-width:900px){
+ .qui{grid-template-columns:1fr;gap:20px;text-align:left}
+ .qui > div > b{font-size:30px}
+ .modele{padding-left:16px;padding-right:16px}
+}
+/* 1c – retouches après première capture */
+@media(min-width:901px){.hero .dedans .hero-texte h1{grid-column:1!important}}
+.hero-preuves{justify-content:flex-start!important;align-items:flex-start}
+.hero-preuves li{flex:0 0 auto!important;align-items:flex-start!important;text-align:start!important;
+ text-transform:none!important;letter-spacing:0!important;padding:0!important;border:0!important}
+.hero-preuves li.pr-ligne{flex-basis:auto!important}
+.hero-preuves b{text-shadow:none}
+.modele > div{background:#fff;border:1.5px solid #EEE8DC}
+.hero-preuves span{text-transform:none!important;letter-spacing:0!important}
+@media(max-width:900px){
+ .hero-texte{display:flex!important;flex-direction:column}
+ .hero .dedans .hero-texte h1{order:1}.hero-badges{order:2}
+ .hero-preuves{order:3;margin:18px 0 6px;gap:10px 26px}
+ .hero-preuves b{font-size:26px}
+ .hero-choix{order:4}.hero .eli-une{order:5}.hero-simu{order:6}
+ .hero .hc-carte,.hero .hc-progs{background:#FAF7F1!important;color:#0F172A!important;
+  border:1.5px solid #EEE8DC!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+ .hero .hc-progs .hc-titre,.hero .hc-progs .hc-chiffres{color:#0F172A!important}
+ .hero .eli-une-texte b{font-size:17px}
+}
+@media(max-width:900px){
+ .hero .hero-texte>h1{order:1!important}.hero .hero-texte>.hero-badges{order:2!important}
+ .hero .hero-texte>.hero-preuves{order:3!important}.hero .hero-texte>.hero-choix{order:4!important}
+ .hero .hero-texte>.eli-une{order:5!important}.hero .hero-texte>.hero-simu{order:6!important}
+}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
