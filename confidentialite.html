@@ -2969,6 +2969,23 @@ table.ag th{width:64%}
 [dir=rtl] .hs-modes button::after{content:'←'}
 @media(max-width:900px){[dir=rtl] .hero .dedans .hero-texte h1{text-align:right}}
 
+/* EliA : plus de pastille d'exemple sous le champ (Hillel, 19/10/2026) — la phrase d'exemple
+   est dans le champ lui-même. */
+.hero .eli-exemples{display:none}
+/* Icônes des tuiles « Nos programmes » / « Simulateur » : encre sombre fixe (elles étaient
+   blanc sur blanc, la variable --encre étant claire dans la bannière d'origine). */
+.hero .hc-ic svg rect,.hero .hc-ic svg path,.hero .hc-ic svg circle{fill:#0F172A!important}
+.hero .hc-ic svg rect:nth-child(4){fill:#C9A227!important}
+@media(max-width:900px){
+ /* Chiffres du téléphone : « 124 programmes · 52 villes » en grand, sur toute la largeur,
+    sans la ligne « 15 ans d'expérience ». */
+ .hero-preuves li.pr-ligne{display:none!important}
+ .hero-preuves{gap:0;width:100%;justify-content:space-between!important}
+ .hero-preuves li{flex:1 1 0!important;align-items:center!important;text-align:center!important}
+ .hero-preuves b{font-size:42px}
+ .hero-preuves span{font-size:14px;max-width:none}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}

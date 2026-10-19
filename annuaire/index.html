@@ -3002,6 +3002,23 @@ table.ag th{width:64%}
 [dir=rtl] .hs-modes button::after{content:'←'}
 @media(max-width:900px){[dir=rtl] .hero .dedans .hero-texte h1{text-align:right}}
 
+/* EliA : plus de pastille d'exemple sous le champ (Hillel, 19/10/2026) — la phrase d'exemple
+   est dans le champ lui-même. */
+.hero .eli-exemples{display:none}
+/* Icônes des tuiles « Nos programmes » / « Simulateur » : encre sombre fixe (elles étaient
+   blanc sur blanc, la variable --encre étant claire dans la bannière d'origine). */
+.hero .hc-ic svg rect,.hero .hc-ic svg path,.hero .hc-ic svg circle{fill:#0F172A!important}
+.hero .hc-ic svg rect:nth-child(4){fill:#C9A227!important}
+@media(max-width:900px){
+ /* Chiffres du téléphone : « 124 programmes · 52 villes » en grand, sur toute la largeur,
+    sans la ligne « 15 ans d'expérience ». */
+ .hero-preuves li.pr-ligne{display:none!important}
+ .hero-preuves{gap:0;width:100%;justify-content:space-between!important}
+ .hero-preuves li{flex:1 1 0!important;align-items:center!important;text-align:center!important}
+ .hero-preuves b{font-size:42px}
+ .hero-preuves span{font-size:14px;max-width:none}
+}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -3574,7 +3591,7 @@ ecrireCookie(c,'fr');
     </div>
     <form class=eli-une-form id=eli-une-form autocomplete=off>
       <input type=text enterkeyhint=send maxlength=300
-             placeholder="Ex. : j’ai 200.000€ d’apport, que puis-je acheter ?"
+             placeholder="J’ai 200.000 € d’apport. Que puis-je acheter avec ça ?"
              aria-label="Écrivez librement ce que vous cherchez…">
       <button type=button class=eli-micro aria-label="Dicter votre recherche" hidden><svg class=eli-ic-micro viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span class=eli-micro-envoi><svg class=eli-ic-envoi viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Envoyer</span></button>
       <button type=submit aria-label="Demander à EliA"><span>Demander à EliA</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
@@ -3653,16 +3670,16 @@ ecrireCookie(c,'fr');
 <section class=modele id=modele>
     <p class=modele-preuve><span class=mp-compte><b>124</b> programmes suivis · <b>52</b> villes</span><span><b>15</b> ans d’expérience dans la promotion immobilière en Israël</span></p>
     <div>
-      <b>Le prix du promoteur, pas un centime de plus</b>
-      <span><b>Zéro frais d’agence</b> sur votre achat : vous signez au prix que vous auriez obtenu en poussant vous-même la porte du bureau de vente. Sauf que la porte, nous l’avons déjà poussée.</span>
+      <b>Le prix du promoteur. Sans surcoût.</b>
+      <span><b>Zéro frais d’agence.</b> Vous achetez directement au prix du promoteur, sans intermédiaire ni commission supplémentaire. Nous vous accompagnons à chaque étape, avec un avantage simple : vous bénéficiez de notre expertise sans payer plus cher.</span>
     </div>
     <div>
-      <b>Sauf que le prix, lui, est négocié</b>
-      <span>Remise, étage, orientation, cuisine, échéancier de paiement : tout ce qui se discute est discuté en hébreu, et avant vous.</span>
+      <b>Le prix se négocie. Nous négocions pour vous.</b>
+      <span>Remise, étage, orientation, cuisine, échéancier de paiement… Chaque détail compte. Nous négocions directement avec le promoteur, en hébreu, pour obtenir les meilleures conditions d’achat possibles et faire valoir vos intérêts à chaque étape.</span>
     </div>
     <div>
-      <b>Le vrai coût, avant de vous engager</b>
-      <span>Taxe d'acquisition, honoraires d'avocat, échéancier du promoteur, mensualité du prêt : vous avez le chiffrage complet dès le premier rendez-vous, et pas le jour de la signature.</span>
+      <b>Le vrai coût, sans mauvaises surprises.</b>
+      <span>Taxe d’acquisition, honoraires d’avocat, échéancier du promoteur, mensualités du prêt… Dès notre premier rendez-vous, vous disposez d’une vision claire du coût global de votre achat. Vous avancez avec tous les chiffres en main, bien avant la signature.</span>
     </div>
   </section>
 
