@@ -3019,6 +3019,18 @@ table.ag th{width:64%}
  .cta{padding:10px 16px;font-size:13.5px}
 }
 
+/* Titre long des traductions (une seule phrase, sans les trois lignes du français) : plus petit,
+   et réparti à égalité entre les lignes (text-wrap:balance) pour ne jamais finir sur un mot
+   seul (Hillel, 19/10/2026 : « en très très gros en anglais, un petit morceau à la fin »). */
+.hero .dedans .hero-texte h1{text-wrap:balance}
+html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35px)!important;
+ line-height:1.25!important}
+[dir=rtl] .hero .dedans .hero-texte h1{font-size:clamp(24px,2.35vw,33px)!important}
+@media(max-width:900px){
+ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:22px!important}
+ [dir=rtl] .hero .dedans .hero-texte h1{font-size:22px!important}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
