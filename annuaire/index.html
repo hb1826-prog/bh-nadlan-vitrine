@@ -1226,6 +1226,51 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
  text-transform:uppercase;color:var(--gris);margin:20px 0 8px}
 .si-note{font-size:13px;color:var(--gris);margin:9px 0 0;line-height:1.55}
 .si-note.manque{color:var(--alerte)}
+.si-note.coacq-ok{color:var(--vert);font-weight:650}
+/* La repartition co-acquisition, meme gabarit que les recapitulatifs de
+   frais deja presents dans le simulateur (Hillel, 19/10/2026). */
+.coacq-resultat .ligne{display:flex;justify-content:space-between;align-items:baseline;
+ gap:12px;font-size:14px;padding:8px 0;border-bottom:1px solid var(--trait-fin)}
+.coacq-resultat .ligne:last-child{border-bottom:0}
+.coacq-resultat .ligne .label{color:var(--gris)}
+.coacq-resultat .ligne b{color:var(--encre);font-size:15px;white-space:nowrap}
+
+/* La page « Co-acquisition » (Hillel, 19/10/2026, partenariat EquityLiving) :
+   memes blocs `.card`/`.pad` que le reste du site, juste un habillage propre
+   au modele resident/Backer. */
+.coacq-modele{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;
+ gap:0;margin:0 0 6px}
+.coacq-modele .card{margin-bottom:0}
+.coacq-mod-plus{display:flex;align-items:center;justify-content:center;
+ font-size:22px;font-weight:800;color:var(--or-fonce);padding:0 12px}
+.coacq-mod-titre{font-size:12.5px;font-weight:800;text-transform:uppercase;
+ letter-spacing:.06em;color:var(--or-fonce);margin:0 0 6px}
+.coacq-mod-part{font-size:28px;font-weight:800;color:var(--encre);margin:0 0 8px}
+.coacq-mod-texte{font-size:13.5px;color:var(--gris);margin:0 0 6px;line-height:1.5}
+.coacq-mod-texte:last-child{margin-bottom:0}
+@media(max-width:640px){.coacq-modele{grid-template-columns:1fr}
+ .coacq-mod-plus{padding:6px 0}}
+
+.coacq-exemple{background:var(--or-clair);border-color:var(--or-trait)}
+.coacq-ex-titre{font-size:15px;font-weight:750;margin:0 0 3px;color:var(--encre)}
+.coacq-ex-sub{font-size:12.5px;color:var(--gris);margin:0 0 14px}
+
+.coacq-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;list-style:none;
+ margin:0 0 22px;padding:0}
+.coacq-badges li{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:13px 14px;font-size:13.5px;font-weight:650;
+ color:var(--encre)}
+@media(max-width:560px){.coacq-badges{grid-template-columns:1fr}}
+
+.coacq-etapes{counter-reset:coacq-etape;margin:0 0 26px;padding:0;list-style:none}
+.coacq-etapes li{counter-increment:coacq-etape;position:relative;
+ padding:0 0 20px 42px;border-left:2px solid var(--trait);margin-left:15px}
+.coacq-etapes li:last-child{border-left-color:transparent;padding-bottom:0}
+.coacq-etapes li::before{content:counter(coacq-etape);position:absolute;left:-16px;top:-2px;
+ width:30px;height:30px;border-radius:50%;background:var(--encre);color:#fff;
+ font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.coacq-etapes b{display:block;font-size:14px;margin-bottom:2px;color:var(--encre)}
+.coacq-etapes span{font-size:13px;color:var(--gris)}
 /* Le resume d'une etape deja remplie du simulateur, empile au-dessus de la
    question active (Hillel, 15/10/2026) : discret, mais le lien « modifier »
    reste bien visible — c'est lui qui permet de remonter corriger une
@@ -3629,6 +3674,7 @@ ecrireCookie(c,'fr');
     <nav class=nav>
       <a href="#/">Programmes neufs</a>
       <a href="#/seconde-main">Seconde main</a>
+      <a href="#/co-acquisition">Co-acquisition</a>
       <a href="#/blog">Blog</a>
       <a class=nav-eli href="#/eli"><span class=nav-eli-long>EliA, conseiller IA</span><span class=nav-eli-court>EliA</span></a>
       <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
@@ -3692,6 +3738,7 @@ ecrireCookie(c,'fr');
 <nav class="nav-mobile" id=nav-mobile hidden>
   <a href="#/">Programmes neufs</a>
   <a href="#/seconde-main" onclick="fermerMenuMobile()">Seconde main</a>
+  <a href="#/co-acquisition" onclick="fermerMenuMobile()">Co-acquisition</a>
   <a class=nav-eli href="#/eli"><span class=nav-eli-long>EliA, conseiller IA</span><span class=nav-eli-court>EliA</span></a>
   <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
   <a href="#/blog">Blog</a>
@@ -3975,6 +4022,7 @@ ecrireCookie(c,'fr');
       <b>Acheter</b>
       <a href="#/">Tous les programmes</a>
       <a href="#/seconde-main">Seconde main</a>
+      <a href="#/co-acquisition">Co-acquisition</a>
       <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
       <a href="#/" onclick="versContact(this);return false">Un conseiller vous rappelle aujourd’hui</a>
     </div>
@@ -5936,6 +5984,69 @@ function pageSecondeMain() {
     ${contactHTML(null, 'seconde-main')}
     ${rassureMini(true)}`;
   wireContact(null, 'seconde-main');
+  window.scrollTo(0, 0);
+}
+
+/* La page du partenariat EquityLiving (Hillel, 19/10/2026) : une troisieme
+   voie d'achat, a cote du neuf et de la seconde main — pas une sous-page,
+   une entree de menu a part entiere. Le detail chiffre (commission
+   EquityLiving, frais eventuels) n'est volontairement pas invente ici :
+   Hillel le precise lui-meme au premier echange, exactement comme la
+   validation du cahier des charges l'a pose. */
+function pageCoAcquisition() {
+  basculer(false);
+  const exPrix = 2000000, exBacker = exPrix * 0.5, exPart = exPrix * 0.5,
+    exCredit = exPrix * 0.25, exCash = exPrix * 0.25;
+  vue.innerHTML = `
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${T('Co-acquisition')}</p>
+    <article class="texte">
+      <h1>${T('Devenir propriétaire en Israël avec un apport réduit')}</h1>
+      <p>${T('Un bien ne s’achète pas toujours seul. Grâce à notre partenariat avec EquityLiving, vous pouvez devenir propriétaire à Tel-Aviv avec un apport cash réduit — à partir de 25 % du prix, crédit bancaire classique compris sur votre propre part.')}</p>
+    </article>
+    <div class="coacq-modele">
+      <div class="card">
+        <div class="pad">
+          <p class="coacq-mod-titre">${T('Vous — le résident')}</p>
+          <p class="coacq-mod-part">50 %</p>
+          <p class="coacq-mod-texte">${T('Vous achetez la moitié du bien et y emménagez.')}</p>
+          <p class="coacq-mod-texte">${T('Cette part peut elle-même être financée en partie par un crédit bancaire classique, jusqu’à 25 % du prix total.')}</p>
+        </div>
+      </div>
+      <div class="coacq-mod-plus">+</div>
+      <div class="card">
+        <div class="pad">
+          <p class="coacq-mod-titre">${T('Le « Backer »')}</p>
+          <p class="coacq-mod-part">50 %</p>
+          <p class="coacq-mod-texte">${T('Un investisseur finance l’autre moitié. Il ne gère rien : pas de locataire, pas de travaux.')}</p>
+          <p class="coacq-mod-texte">${T('À la revente (horizon 10 ans), chacun récupère son capital et sa part de plus-value.')}</p>
+        </div>
+      </div>
+    </div>
+    <div class="card coacq-exemple">
+      <div class="pad">
+        <p class="coacq-ex-titre">${T('Exemple, pour un bien à')} ${mil(exPrix)} ₪</p>
+        <p class="coacq-ex-sub">${T('Illustration générale — chaque dossier est chiffré individuellement avant tout engagement.')}</p>
+        <div class="coacq-resultat">
+          <div class="ligne"><span class="label">${T('Part du Backer (investisseur)')}</span><b>${mil(exBacker)} ₪</b></div>
+          <div class="ligne"><span class="label">${T('Votre part (résident)')}</span><b>${mil(exPart)} ₪</b></div>
+          <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire possible (jusqu’à 25 %)')}</span><b>${mil(exCredit)} ₪</b></div>
+          <div class="ligne"><span class="label">${T('Apport cash réel à prévoir')}</span><b>${mil(exCash)} ₪</b></div>
+        </div>
+      </div>
+    </div>
+    <ul class="coacq-badges">
+      <li>${T('Co-propriétaire inscrit au registre foncier (Tabu)')}</li>
+      <li>${T('Accompagnement BH Nadlan de bout en bout')}</li>
+      <li>${T('Aucune gestion locative à votre charge')}</li>
+      <li>${T('Structure juridique prise en charge par EquityLiving')}</li>
+    </ul>
+    <ol class="coacq-etapes">
+      <li><b>${T('Un échange avec Hillel')}</b><span>${T('On regarde ensemble votre budget, votre apport réel, et si cette voie vous correspond.')}</span></li>
+      <li><b>${T('Mise en relation avec EquityLiving')}</b><span>${T('Qualification du dossier, recherche du Backer, structuration juridique.')}</span></li>
+      <li><b>${T('Closing et emménagement')}</b><span>${T('Vous devenez copropriétaire inscrit, sans attendre d’avoir 50 % en cash.')}</span></li>
+    </ol>
+    ${contactHTML(null, 'co-acquisition')}`;
+  wireContact(null, 'co-acquisition');
   window.scrollTo(0, 0);
 }
 
@@ -8812,9 +8923,73 @@ function v2CorpsCoordonnees() {
     <button type="button" class="s2-sous-suite" id="v2-envoi" style="margin-top:14px">${T('Recevoir ma simulation')}</button>
   </div>`;
 }
+/* La repartition co-acquisition (Hillel, 19/10/2026 : « pas juste une
+   proposition mais un calcul reel »). Prix deja connu du tunnel (carte
+   'montant'), seul l'apport cash manque ici. Le detail du calcul :
+   part Backer = 50 % du prix, part residente = 50 % du prix, dont jusqu'a
+   25 % du prix financable par un credit bancaire classique sur la part
+   residente — donc un apport cash minimum de 25 % du prix (regle confirmee
+   par Hillel, pas encore de commission/frais EquityLiving a chiffrer). */
+function v2CoacqChiffres() {
+  const prix = TUNNEL.prix || 0;
+  const apport = TUNNEL.coacqApport || 0;
+  const partBacker = prix * 0.5;
+  const partResident = prix * 0.5;
+  const plafondCredit = prix * 0.25;
+  const cash = Math.min(apport, partResident);
+  const resteAFinancer = partResident - cash;
+  const credit = Math.min(resteAFinancer, plafondCredit);
+  const manque = resteAFinancer - credit;
+  return {prix, apport, partBacker, partResident, plafondCredit, cash, credit, manque};
+}
+function v2CoacqPeindreResultat(zone) {
+  const r = v2CoacqChiffres();
+  const champ = (sel, val) => { const el = zone.querySelector(sel); if (el) el.textContent = val; };
+  champ('#v2-coacq-backer', mil(r.partBacker) + ' ₪');
+  champ('#v2-coacq-part', mil(r.partResident) + ' ₪');
+  champ('#v2-coacq-credit', mil(r.credit) + ' ₪');
+  champ('#v2-coacq-cash', mil(r.cash) + ' ₪');
+  const statut = zone.querySelector('#v2-coacq-statut');
+  const bouton = zone.querySelector('#v2-coacq-suite');
+  if (statut) {
+    if (r.prix && r.manque > 1) {
+      statut.className = 'si-note manque';
+      statut.textContent = T('Il manque encore') + ' ' + mil(r.manque) + ' ₪ — '
+        + T('au-delà du crédit possible sur votre part (plafond 25 % du prix). Apport cash minimum à prévoir :')
+        + ' ' + mil(r.plafondCredit) + ' ₪.';
+    } else if (r.prix && r.apport) {
+      statut.className = 'si-note coacq-ok';
+      statut.textContent = T('Avec cet apport, l’achat en co-acquisition est possible.');
+    } else {
+      statut.className = 'si-note';
+      statut.textContent = '';
+    }
+  }
+  if (bouton) bouton.disabled = !(r.prix && r.apport);
+}
+function v2CorpsCoacqCalcul() {
+  const r = v2CoacqChiffres();
+  return `<div class="s2-q-choix">
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Un investisseur partenaire (EquityLiving) finance 50 % du bien. Indiquez votre apport cash disponible pour voir la répartition.')}</p>
+    <p class="s2-sous-label">${T('Votre apport cash disponible')}</p>
+    <div class="s2-sous-montant"><input type="text" inputmode="numeric"
+      id="v2-coacq-apport" placeholder="500 000"
+      value="${r.apport ? mil(r.apport) : ''}"><span class="s2-devise">₪</span></div>
+    <div class="coacq-resultat" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
+      <div class="ligne"><span class="label">${T('Part du Backer (investisseur) — 50 %')}</span><b id="v2-coacq-backer">${mil(r.partBacker)} ₪</b></div>
+      <div class="ligne"><span class="label">${T('Votre part (résident) — 50 %')}</span><b id="v2-coacq-part">${mil(r.partResident)} ₪</b></div>
+      <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire (plafond 25 % du prix)')}</span><b id="v2-coacq-credit">${mil(r.credit)} ₪</b></div>
+      <div class="ligne"><span class="label">${T('Apport cash nécessaire')}</span><b id="v2-coacq-cash">${mil(r.cash)} ₪</b></div>
+    </div>
+    <p class="si-note" id="v2-coacq-statut"></p>
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:11px;line-height:1.5;margin-top:14px;color:var(--gris-clair)">${T('Non chiffré ici : la commission EquityLiving, d’éventuels frais côté résident et le taux du crédit sur la part financée. Hillel les précise lors du premier échange.')}</p>
+    <button type="button" class="s2-sous-suite" id="v2-coacq-suite" style="margin-top:14px" ${r.prix && r.apport ? '' : 'disabled'}>${T('Continuer')}</button>
+  </div>`;
+}
 function v2CorpsCarte(c) {
   if (c.id === 'montant') return v2CorpsMontantSeul(c);
   if (c.id === 'financement') return v2CorpsFinancement();
+  if (c.id === 'coacq_calcul') return v2CorpsCoacqCalcul();
   if (c.id === 'coordonnees') return v2CorpsCoordonnees();
   // Texte clair, visible tout de suite, pas cache derriere un « ? » (Hillel,
   // 16/10/2026) : neuf ou ancien, c'est toujours avec nous, seuls les frais
@@ -8967,6 +9142,18 @@ function v2Brancher(zone) {
     const bouton = zone.querySelector('#v2-montant-seul-suite');
     if (bouton) bouton.onclick = () => { V2_REPONDU.montant = true; v2Avancer(zone); };
   }
+  const coacqApportInp = zone.querySelector('#v2-coacq-apport');
+  if (coacqApportInp) {
+    coacqApportInp.oninput = () => {
+      const chiffres = coacqApportInp.value.replace(/[^\d]/g, '');
+      const val = chiffres ? parseInt(chiffres, 10) : null;
+      TUNNEL.coacqApport = val;
+      coacqApportInp.value = val != null ? mil(val) : '';
+      v2CoacqPeindreResultat(zone);
+    };
+    const coacqSuite = zone.querySelector('#v2-coacq-suite');
+    if (coacqSuite) coacqSuite.onclick = () => { V2_REPONDU.coacq_calcul = true; v2Avancer(zone); };
+  }
   zone.querySelectorAll('[data-v2-ltv]').forEach(b => {
     b.onclick = () => {
       const v = +b.dataset.v2Ltv;
@@ -9090,6 +9277,10 @@ function contactHTML(p, intention) {
       titre: T('Dites-nous ce que vous cherchez'),
       texte: T('Ces biens sont proposés par des particuliers, avec un accompagnement complet de notre part. Dites-nous votre budget et ce que vous cherchez : nous revenons vers vous avec une sélection.'),
       bouton: T('Un conseiller vous rappelle aujourd’hui')},
+    'co-acquisition': {
+      titre: T('Je veux en savoir plus'),
+      texte: T('Un premier échange, sans engagement, pour voir si cette voie vous correspond. Nous vous mettons ensuite en relation avec EquityLiving.'),
+      bouton: T('Être rappelé par Hillel')},
   }[I];
 
   return `
@@ -9963,6 +10154,7 @@ function cleDeVue(cle) {
   if (!cle) return 'page-accueil';
   if (cle === 'simulateur') return 'page-simulateur';
   if (cle === 'seconde-main') return 'page-seconde-main';
+  if (cle === 'co-acquisition') return 'page-co-acquisition';
   if (cle === 'blog' || cle === 'videos') return 'page-blog';
   if (cle === 'nous-contacter') return 'page-contact';
   if (cle === 'eli') return 'page-eli';
@@ -10012,6 +10204,7 @@ async function router() {
   // p)` directement depuis `fiche(p)`.
   if (cle === 'simulateur') return vueSimulateurEtapes();
   if (cle === 'seconde-main') return pageSecondeMain();
+  if (cle === 'co-acquisition') return pageCoAcquisition();
   if (cle === 'blog' || cle === 'videos') return pageBlog();
   if (cle === 'nous-contacter') return pageNousContacter();
   // La page des pubs : l'accueil, avec Eli ouvert en grand par-dessus

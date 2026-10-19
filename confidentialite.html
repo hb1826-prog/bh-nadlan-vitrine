@@ -1193,6 +1193,51 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
  text-transform:uppercase;color:var(--gris);margin:20px 0 8px}
 .si-note{font-size:13px;color:var(--gris);margin:9px 0 0;line-height:1.55}
 .si-note.manque{color:var(--alerte)}
+.si-note.coacq-ok{color:var(--vert);font-weight:650}
+/* La repartition co-acquisition, meme gabarit que les recapitulatifs de
+   frais deja presents dans le simulateur (Hillel, 19/10/2026). */
+.coacq-resultat .ligne{display:flex;justify-content:space-between;align-items:baseline;
+ gap:12px;font-size:14px;padding:8px 0;border-bottom:1px solid var(--trait-fin)}
+.coacq-resultat .ligne:last-child{border-bottom:0}
+.coacq-resultat .ligne .label{color:var(--gris)}
+.coacq-resultat .ligne b{color:var(--encre);font-size:15px;white-space:nowrap}
+
+/* La page « Co-acquisition » (Hillel, 19/10/2026, partenariat EquityLiving) :
+   memes blocs `.card`/`.pad` que le reste du site, juste un habillage propre
+   au modele resident/Backer. */
+.coacq-modele{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;
+ gap:0;margin:0 0 6px}
+.coacq-modele .card{margin-bottom:0}
+.coacq-mod-plus{display:flex;align-items:center;justify-content:center;
+ font-size:22px;font-weight:800;color:var(--or-fonce);padding:0 12px}
+.coacq-mod-titre{font-size:12.5px;font-weight:800;text-transform:uppercase;
+ letter-spacing:.06em;color:var(--or-fonce);margin:0 0 6px}
+.coacq-mod-part{font-size:28px;font-weight:800;color:var(--encre);margin:0 0 8px}
+.coacq-mod-texte{font-size:13.5px;color:var(--gris);margin:0 0 6px;line-height:1.5}
+.coacq-mod-texte:last-child{margin-bottom:0}
+@media(max-width:640px){.coacq-modele{grid-template-columns:1fr}
+ .coacq-mod-plus{padding:6px 0}}
+
+.coacq-exemple{background:var(--or-clair);border-color:var(--or-trait)}
+.coacq-ex-titre{font-size:15px;font-weight:750;margin:0 0 3px;color:var(--encre)}
+.coacq-ex-sub{font-size:12.5px;color:var(--gris);margin:0 0 14px}
+
+.coacq-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;list-style:none;
+ margin:0 0 22px;padding:0}
+.coacq-badges li{background:var(--carte);border:1px solid var(--trait);
+ border-radius:var(--r-lg);padding:13px 14px;font-size:13.5px;font-weight:650;
+ color:var(--encre)}
+@media(max-width:560px){.coacq-badges{grid-template-columns:1fr}}
+
+.coacq-etapes{counter-reset:coacq-etape;margin:0 0 26px;padding:0;list-style:none}
+.coacq-etapes li{counter-increment:coacq-etape;position:relative;
+ padding:0 0 20px 42px;border-left:2px solid var(--trait);margin-left:15px}
+.coacq-etapes li:last-child{border-left-color:transparent;padding-bottom:0}
+.coacq-etapes li::before{content:counter(coacq-etape);position:absolute;left:-16px;top:-2px;
+ width:30px;height:30px;border-radius:50%;background:var(--encre);color:#fff;
+ font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.coacq-etapes b{display:block;font-size:14px;margin-bottom:2px;color:var(--encre)}
+.coacq-etapes span{font-size:13px;color:var(--gris)}
 /* Le resume d'une etape deja remplie du simulateur, empile au-dessus de la
    question active (Hillel, 15/10/2026) : discret, mais le lien « modifier »
    reste bien visible — c'est lui qui permet de remonter corriger une
