@@ -8511,15 +8511,33 @@ function v2Cartes() {
       // ancien, qui conditionne les frais d'agence (carte 'accompagnement'
       // plus loin).
       id: 'type', label: T('Neuf ou seconde main ?'),
-      resume: () => TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf'),
-      get: () => TUNNEL.revente === true ? 'oui' : (TUNNEL.revente === false ? 'non' : null),
-      set: (v) => { TUNNEL.revente = v === 'oui'; },
+      resume: () => TUNNEL.coacquisition ? T('Co-acquisition')
+        : (TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf')),
+      get: () => TUNNEL.coacquisition ? 'coacq'
+        : (TUNNEL.revente === true ? 'oui' : (TUNNEL.revente === false ? 'non' : null)),
+      set: (v) => { TUNNEL.coacquisition = v === 'coacq'; TUNNEL.revente = v === 'oui'; },
       choix: [
         {v:'non', t:T('Projet neuf'),
          aide:T('Paiement échelonné selon l’avancement du chantier. Nous sommes rémunérés par le promoteur : aucun frais d’agence.')},
         {v:'oui', t:T('Seconde main'),
          aide:T('Pas de calendrier de chantier : le prix se règle en une ou deux fois. Comme nous ne sommes pas payés par un promoteur sur ce type de bien, des frais d’agence de 2 % s’appliquent.')},
+        {v:'coacq', t:T('Co-acquisition'),
+         aide:T('Vous achetez 50 % du bien avec un investisseur partenaire (EquityLiving), qui finance l’autre moitié. Votre part peut elle-même être financée en partie par un crédit bancaire classique.')},
       ],
+    },
+    {
+      // Nouvelle carte, partenariat EquityLiving (Hillel, 19/10/2026) :
+      // visible seulement si 'coacq' est choisi juste au-dessus. Pas un
+      // simple texte de suggestion – un vrai calcul, sur le prix et
+      // l'apport deja connus du tunnel (Hillel : « pas juste une
+      // proposition mais un calcul reel »).
+      id: 'coacq_calcul', label: T('Votre répartition'),
+      visible: () => TUNNEL.coacquisition,
+      resume: () => {
+        const prix = TUNNEL.prix || 0;
+        const cash = Math.min(TUNNEL.coacqApport || 0, prix * 0.5);
+        return T('Apport cash') + ' ' + mil(cash) + ' ₪';
+      },
     },
     {
       id: 'avocat', label: T('Accompagnement juridique'),
@@ -8550,6 +8568,10 @@ function v2Cartes() {
       id: 'accompagnement',
       label: accompagnementImpose ? T("Frais d'agence") : T('Accompagnement après la signature'),
       impose: accompagnementImpose,
+      // Frais EquityLiving pas encore confirmes (Hillel, 19/10/2026) : on ne
+      // montre jamais un pourcentage qu'on ne peut pas garantir – ce volet
+      // reste traite par Hillel directement, apres le premier echange.
+      visible: () => !TUNNEL.coacquisition,
       resume: () => accompagnementImpose
         ? T("Frais d'agence") + ' · ' + T('2 % du prix, non négociables')
         : (TUNNEL.accompagnementMode === 'non' ? T('Sans accompagnement')
@@ -8568,7 +8590,7 @@ function v2Cartes() {
     },
     {
       id: 'courtier', label: T('Courtier en crédit'),
-      visible: () => !TUNNEL.comptant,
+      visible: () => !TUNNEL.comptant && !TUNNEL.coacquisition,
       resume: () => {
         if (TUNNEL.courtierMode === 'notre') return T('Le courtier que nous recommandons') + ' · ' + mil(COURTIER_RECOMMANDE) + ' ₪';
         if (TUNNEL.courtierMode === 'non') return T('Sans courtier');
@@ -8726,9 +8748,73 @@ function v2CorpsCoordonnees() {
     <button type="button" class="s2-sous-suite" id="v2-envoi" style="margin-top:14px">${T('Recevoir ma simulation')}</button>
   </div>`;
 }
+/* La repartition co-acquisition (Hillel, 19/10/2026 : « pas juste une
+   proposition mais un calcul reel »). Prix deja connu du tunnel (carte
+   'montant'), seul l'apport cash manque ici. Le detail du calcul :
+   part Backer = 50 % du prix, part residente = 50 % du prix, dont jusqu'a
+   25 % du prix financable par un credit bancaire classique sur la part
+   residente – donc un apport cash minimum de 25 % du prix (regle confirmee
+   par Hillel, pas encore de commission/frais EquityLiving a chiffrer). */
+function v2CoacqChiffres() {
+  const prix = TUNNEL.prix || 0;
+  const apport = TUNNEL.coacqApport || 0;
+  const partBacker = prix * 0.5;
+  const partResident = prix * 0.5;
+  const plafondCredit = prix * 0.25;
+  const cash = Math.min(apport, partResident);
+  const resteAFinancer = partResident - cash;
+  const credit = Math.min(resteAFinancer, plafondCredit);
+  const manque = resteAFinancer - credit;
+  return {prix, apport, partBacker, partResident, plafondCredit, cash, credit, manque};
+}
+function v2CoacqPeindreResultat(zone) {
+  const r = v2CoacqChiffres();
+  const champ = (sel, val) => { const el = zone.querySelector(sel); if (el) el.textContent = val; };
+  champ('#v2-coacq-backer', mil(r.partBacker) + ' ₪');
+  champ('#v2-coacq-part', mil(r.partResident) + ' ₪');
+  champ('#v2-coacq-credit', mil(r.credit) + ' ₪');
+  champ('#v2-coacq-cash', mil(r.cash) + ' ₪');
+  const statut = zone.querySelector('#v2-coacq-statut');
+  const bouton = zone.querySelector('#v2-coacq-suite');
+  if (statut) {
+    if (r.prix && r.manque > 1) {
+      statut.className = 'si-note si-note-attention';
+      statut.textContent = T('Il manque encore') + ' ' + mil(r.manque) + ' ₪ – '
+        + T('au-delà du crédit possible sur votre part (plafond 25 % du prix). Apport cash minimum à prévoir :')
+        + ' ' + mil(r.plafondCredit) + ' ₪.';
+    } else if (r.prix && r.apport) {
+      statut.className = 'si-note si-note-ok';
+      statut.textContent = T('Avec cet apport, l’achat en co-acquisition est possible.');
+    } else {
+      statut.className = 'si-note';
+      statut.textContent = '';
+    }
+  }
+  if (bouton) bouton.disabled = !(r.prix && r.apport);
+}
+function v2CorpsCoacqCalcul() {
+  const r = v2CoacqChiffres();
+  return `<div class="s2-q-choix">
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Un investisseur partenaire (EquityLiving) finance 50 % du bien. Indiquez votre apport cash disponible pour voir la répartition.')}</p>
+    <p class="s2-sous-label">${T('Votre apport cash disponible')}</p>
+    <div class="s2-sous-montant"><input type="text" inputmode="numeric"
+      id="v2-coacq-apport" placeholder="500 000"
+      value="${r.apport ? mil(r.apport) : ''}"><span class="s2-devise">₪</span></div>
+    <div class="coacq-resultat" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
+      <div class="ligne"><span class="label">${T('Part du Backer (investisseur) – 50 %')}</span><b id="v2-coacq-backer">${mil(r.partBacker)} ₪</b></div>
+      <div class="ligne"><span class="label">${T('Votre part (résident) – 50 %')}</span><b id="v2-coacq-part">${mil(r.partResident)} ₪</b></div>
+      <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire (plafond 25 % du prix)')}</span><b id="v2-coacq-credit">${mil(r.credit)} ₪</b></div>
+      <div class="ligne"><span class="label">${T('Apport cash nécessaire')}</span><b id="v2-coacq-cash">${mil(r.cash)} ₪</b></div>
+    </div>
+    <p class="si-note" id="v2-coacq-statut"></p>
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:11px;line-height:1.5;margin-top:14px;color:var(--gris-clair)">${T('Non chiffré ici : la commission EquityLiving, d’éventuels frais côté résident et le taux du crédit sur la part financée. Hillel les précise lors du premier échange.')}</p>
+    <button type="button" class="s2-sous-suite" id="v2-coacq-suite" style="margin-top:14px" ${r.prix && r.apport ? '' : 'disabled'}>${T('Continuer')}</button>
+  </div>`;
+}
 function v2CorpsCarte(c) {
   if (c.id === 'montant') return v2CorpsMontantSeul(c);
   if (c.id === 'financement') return v2CorpsFinancement();
+  if (c.id === 'coacq_calcul') return v2CorpsCoacqCalcul();
   if (c.id === 'coordonnees') return v2CorpsCoordonnees();
   // Texte clair, visible tout de suite, pas cache derriere un « ? » (Hillel,
   // 16/10/2026) : neuf ou ancien, c'est toujours avec nous, seuls les frais

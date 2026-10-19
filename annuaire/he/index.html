@@ -8625,15 +8625,33 @@ function v2Cartes() {
       // ancien, qui conditionne les frais d'agence (carte 'accompagnement'
       // plus loin).
       id: 'type', label: T('Neuf ou seconde main ?'),
-      resume: () => TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf'),
-      get: () => TUNNEL.revente === true ? 'oui' : (TUNNEL.revente === false ? 'non' : null),
-      set: (v) => { TUNNEL.revente = v === 'oui'; },
+      resume: () => TUNNEL.coacquisition ? T('Co-acquisition')
+        : (TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf')),
+      get: () => TUNNEL.coacquisition ? 'coacq'
+        : (TUNNEL.revente === true ? 'oui' : (TUNNEL.revente === false ? 'non' : null)),
+      set: (v) => { TUNNEL.coacquisition = v === 'coacq'; TUNNEL.revente = v === 'oui'; },
       choix: [
         {v:'non', t:T('Projet neuf'),
          aide:T('Paiement échelonné selon l’avancement du chantier. Nous sommes rémunérés par le promoteur : aucun frais d’agence.')},
         {v:'oui', t:T('Seconde main'),
          aide:T('Pas de calendrier de chantier : le prix se règle en une ou deux fois. Comme nous ne sommes pas payés par un promoteur sur ce type de bien, des frais d’agence de 2 % s’appliquent.')},
+        {v:'coacq', t:T('Co-acquisition'),
+         aide:T('Vous achetez 50 % du bien avec un investisseur partenaire (EquityLiving), qui finance l’autre moitié. Votre part peut elle-même être financée en partie par un crédit bancaire classique.')},
       ],
+    },
+    {
+      // Nouvelle carte, partenariat EquityLiving (Hillel, 19/10/2026) :
+      // visible seulement si 'coacq' est choisi juste au-dessus. Pas un
+      // simple texte de suggestion – un vrai calcul, sur le prix et
+      // l'apport deja connus du tunnel (Hillel : « pas juste une
+      // proposition mais un calcul reel »).
+      id: 'coacq_calcul', label: T('Votre répartition'),
+      visible: () => TUNNEL.coacquisition,
+      resume: () => {
+        const prix = TUNNEL.prix || 0;
+        const cash = Math.min(TUNNEL.coacqApport || 0, prix * 0.5);
+        return T('Apport cash') + ' ' + mil(cash) + ' ₪';
+      },
     },
     {
       id: 'avocat', label: T('Accompagnement juridique'),
@@ -8664,6 +8682,10 @@ function v2Cartes() {
       id: 'accompagnement',
       label: accompagnementImpose ? T("Frais d'agence") : T('Accompagnement après la signature'),
       impose: accompagnementImpose,
+      // Frais EquityLiving pas encore confirmes (Hillel, 19/10/2026) : on ne
+      // montre jamais un pourcentage qu'on ne peut pas garantir – ce volet
+      // reste traite par Hillel directement, apres le premier echange.
+      visible: () => !TUNNEL.coacquisition,
       resume: () => accompagnementImpose
         ? T("Frais d'agence") + ' · ' + T('2 % du prix, non négociables')
         : (TUNNEL.accompagnementMode === 'non' ? T('Sans accompagnement')
@@ -8682,7 +8704,7 @@ function v2Cartes() {
     },
     {
       id: 'courtier', label: T('Courtier en crédit'),
-      visible: () => !TUNNEL.comptant,
+      visible: () => !TUNNEL.comptant && !TUNNEL.coacquisition,
       resume: () => {
         if (TUNNEL.courtierMode === 'notre') return T('Le courtier que nous recommandons') + ' · ' + mil(COURTIER_RECOMMANDE) + ' ₪';
         if (TUNNEL.courtierMode === 'non') return T('Sans courtier');
