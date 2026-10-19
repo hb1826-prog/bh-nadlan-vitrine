@@ -455,20 +455,21 @@ button,input,select,textarea{font:inherit;color:inherit}
    grossi le meme jour, ce bandeau doit rester le premier repere de l'oeil. */
 .zf-bandeau{margin:0 0 14px;font-size:48px;font-weight:800;line-height:1.05;
  color:#fff;text-transform:uppercase}
-/* Badges de confiance ajoutes le 19/10/2026 (apercu de direction visuelle,
-   Hillel) : le 0% y reparait, mis en avant par la couleur (pastille or)
-   plutot que par la taille — vient s'ajouter au grand zero existant, pas
-   le remplacer, pour que les deux versions soient comparables a l'apercu. */
+/* Badges de confiance, 19/10/2026 : premier essai transparent rejete le
+   soir meme (Hillel : "bien foncé, là c'est trop transparent") — fond
+   plein, opaque, plus de grand zero a part (zf-bandeau retire du hero) :
+   le "0%" vit desormais ici, dans sa pastille, au meme niveau que les
+   trois autres reassurances. */
 .hero-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;
  list-style:none;margin:18px 0 0;padding:0;max-width:30em}
-.hero-badges li{display:flex;align-items:center;gap:9px;
- background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
- border-radius:12px;padding:9px 11px;font-size:12.5px;font-weight:650;
+.hero-badges li{display:flex;align-items:center;gap:10px;
+ background:#0B1322;border:1px solid rgba(201,162,39,.3);
+ border-radius:12px;padding:11px 12px;font-size:12.5px;font-weight:650;
  color:#fff;line-height:1.25}
-.hb-ic{flex:none;width:26px;height:26px;border-radius:50%;
+.hb-ic{flex:none;width:28px;height:28px;border-radius:50%;
  background:var(--or);color:#0F172A;display:flex;align-items:center;
- justify-content:center;font-size:12px}
-.hb-ic.hb-or{font-size:10.5px;font-weight:800}
+ justify-content:center;font-size:12.5px}
+.hb-ic.hb-or{font-size:11px;font-weight:800}
 @media(max-width:640px){.hero-badges{max-width:none}}
 /* `white-space:nowrap` (Hillel, 24/09/2026, capture d'ecran a l'appui) :
    sans lui, l'espace entre le chiffre et le signe pouvait tomber en fin de
@@ -591,11 +592,15 @@ button,input,select,textarea{font:inherit;color:inherit}
    schema qui avait fait passer EliA en blanc la premiere fois. Repassee en
    degrade or/creme CLAIR, qui garde la couleur et le relief demandes sans
    reempiler le sombre. */
-.hero-simu{background:linear-gradient(145deg,#FBF0D9,#F0DBA0) !important;
+/* Couleurs reprises EXACTEMENT de la carte EliA (.eli-une-dedans, eli.css)
+   le 19/10/2026 — Hillel, apres l'essai gradient or/creme : "les couleurs
+   du simulateur ne sont pas bonnes du tout, reprends vraiment ce que tu as
+   fait pour EliA". Meme blanc casse, meme bordure et ombre douces. */
+.hero-simu{background:rgba(255,255,255,.96) !important;
  border-radius:var(--r-xl);
- box-shadow:0 20px 40px -16px rgba(166,130,26,.35),0 0 0 1px rgba(201,162,39,.25);
+ box-shadow:0 10px 30px rgba(15,23,42,.14);
  padding:14px;
- display:flex !important;flex-direction:column;border:1px solid rgba(166,130,26,.3) !important}
+ display:flex !important;flex-direction:column;border:1px solid rgba(15,23,42,.08) !important}
 /* Carte et panneau de la grande phrase au cordeau : meme haut, meme bas
    (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
    Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
@@ -696,11 +701,10 @@ button,input,select,textarea{font:inherit;color:inherit}
    (Hillel : "equilibre les ecritures"). */
 .hero-simu .hs-titre{font-size:18px;line-height:1.3;font-weight:750;
  margin:0 0 6px;color:#0F172A !important}
-.hero-simu .hs-sous{margin:0 0 14px;color:#5A4318 !important}
-/* Boutons en degrade ardoise (contraste fort sur la carte claire, Hillel :
-   "plus de couleurs, plus moderne") avec icone et texte en or — l'inverse
-   du fond, pour que les deux carres restent le point le plus lisible de la
-   carte. Fleche discrete, legere reduction au toucher. Couleurs fixes. */
+.hero-simu .hs-sous{margin:0 0 14px;color:#5A6172 !important}
+/* Boutons en or plein (couleur de la marque), meme logique que les
+   pastilles d'icone qu'Hillel a validees — seul le fond de carte changeait
+   pour EliA, pas ces boutons-la. */
 /* Empiles plutot que cote a cote (18/10/2026, Hillel : « il y a marqué
    "Je" et après ça passe à la ligne... peut-être les mettre un au-dessus
    de l'autre ») — chaque bouton garde toute la largeur de la carte, le
@@ -709,19 +713,19 @@ button,input,select,textarea{font:inherit;color:inherit}
    la version web que pour la version PC »). */
 .hs-modes{display:grid;grid-template-columns:1fr;gap:10px}
 .hs-modes button{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
- padding:12px 14px;min-height:60px;border-radius:12px;border:1px solid rgba(0,0,0,.25) !important;
- background:linear-gradient(145deg,#1C2740,#0B1322) !important;color:#F0DBA0 !important;text-align:left;line-height:1.3;
+ padding:12px 14px;min-height:60px;border-radius:12px;border:1.5px solid #A6821A !important;
+ background:#C9A227 !important;color:#0F172A !important;text-align:left;line-height:1.3;
  display:flex;align-items:center;gap:10px;
- box-shadow:0 10px 22px -8px rgba(15,23,42,.45);
+ box-shadow:0 6px 16px -6px rgba(166,130,26,.5);
  transition:transform .12s ease,box-shadow .12s ease}
 .hs-ic{flex:none;width:32px;height:32px;border-radius:50%;
- background:#C9A227 !important;color:#0F172A !important;
+ background:#0F172A !important;color:#C9A227 !important;
  display:flex;align-items:center;justify-content:center}
 .hs-ic svg{width:17px;height:17px}
 .hs-modes button>span:last-child{flex:1}
 .hs-modes button::after{content:'→';font-size:15px;font-weight:800;opacity:.75;flex:none}
-.hs-modes button:active{background:#0B1322 !important;transform:scale(.97);
- box-shadow:0 3px 10px -4px rgba(15,23,42,.5)}
+.hs-modes button:active{background:#A6821A !important;transform:scale(.97);
+ box-shadow:0 3px 10px -4px rgba(166,130,26,.5)}
 /* La monnaie de l'apport, toujours visible et au choix (Hillel,
    24/09/2026 : il avait tape 500.000 sans savoir si c'etait des euros). */
 .hs-devise{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
@@ -3178,7 +3182,6 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   <div class=dedans>
    <div class=hero-texte>
     <p class=hero-slogan>BH NADLAN · L’immobilier autrement</p>
-    <p class=zf-bandeau>Frais d’agence&nbsp;: <span class=zf-pct>0 %</span></p>
     <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
     <div class=eli-une id=eli-une>
   <div class=eli-une-dedans>
