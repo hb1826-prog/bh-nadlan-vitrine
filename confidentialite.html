@@ -3074,6 +3074,15 @@ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35p
  .pub-logo:hover{transform:translateX(-18px)}
 }
 
+/* Téléphone : le logo seul, en plus gros (Hillel, 19/10/2026, version « A ») — l'image du logo
+   porte déjà « BH NADLAN » et la baseline, le texte à côté faisait doublon. */
+@media(max-width:900px){
+ .pub-logo .logo-mot,.pub-logo .logo-tag{display:none!important}
+ .pub-logo img{height:88px!important}
+ .pub-logo{transform:none!important;padding:6px 0!important}
+ .pub-logo:hover{transform:none!important}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
