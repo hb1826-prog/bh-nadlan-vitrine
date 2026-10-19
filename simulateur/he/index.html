@@ -242,12 +242,22 @@ button,input,select,textarea{font:inherit;color:inherit}
 .pub-top{position:sticky;top:0;z-index:20;background:var(--fond);
  border-bottom:1px solid var(--trait)}
 .pub-in{max-width:1240px;margin:0 auto;padding:0 22px}
-.pub-bar{display:flex;align-items:center;gap:20px;height:70px}
+.pub-bar{display:flex;align-items:center;gap:20px;min-height:70px}
 .langues-bande{display:none}
-.pub-logo{display:block;flex:none;line-height:0;border-radius:10px;
- transition:transform .18s var(--ease)}
+.pub-logo{display:inline-flex;flex-direction:column;align-items:flex-start;
+ flex:none;gap:4px;border-radius:10px;text-decoration:none;
+ padding:10px 0;transition:transform .18s var(--ease)}
 .pub-logo:hover{transform:translateY(-1px)}
 .pub-logo svg{display:block}
+/* Le nom et la baseline, ecrits a cote de la vraie photo du logo – pas dans
+   l'image (illisible une fois ramenee a 44px) mais en texte HTML net, net a
+   toute taille (Hillel, 19/10/2026 : « BH NADLAN » a cote, la baseline en
+   dessous, sur toute la largeur jusqu'au bout du N). */
+.logo-ligne{display:flex;align-items:center;gap:10px;line-height:0}
+.logo-mot{font-family:inherit;font-size:19px;font-weight:800;
+ letter-spacing:.02em;color:var(--encre);line-height:1;white-space:nowrap}
+.logo-tag{display:block;width:100%;font-size:10px;font-weight:650;
+ letter-spacing:.1em;text-transform:uppercase;color:var(--gris)}
 /* Sur ordinateur, le logo passe tout a gauche (avant le menu) – demande le
    22/09/2026. Sur telephone il reste au milieu (voir le commentaire du
    media 900px plus bas : deplace deux fois pour Safari, ne pas y toucher).
@@ -412,6 +422,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  padding:64px 22px 78px;color:#fff}
 .hero h1{font-size:40px;line-height:1.12;font-weight:750;max-width:16em;
  text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.hero h1 em{font-style:normal}
 .hero p.chapeau{margin:14px 0 0;font-size:17.5px;max-width:34em;
  color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 
@@ -478,9 +489,10 @@ button,input,select,textarea{font:inherit;color:inherit}
    plein, opaque, plus de grand zero a part (zf-bandeau retire du hero) :
    le "0%" vit desormais ici, dans sa pastille, au meme niveau que les
    trois autres reassurances. */
-.hero-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;
- list-style:none;margin:18px 0 0;padding:0;max-width:30em}
-.hero-badges li{display:flex;align-items:center;gap:12px;
+.hero-badges{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+ gap:10px;list-style:none;margin:18px 0 0;padding:0;max-width:30em;width:100%;
+ box-sizing:border-box}
+.hero-badges li{display:flex;align-items:center;gap:12px;min-width:0;
  background:#0B1322;border:1px solid rgba(201,162,39,.3);
  border-radius:12px;padding:13px 14px;font-size:15px;font-weight:650;
  color:#fff;line-height:1.25}
@@ -3246,7 +3258,13 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     </nav>
   </div>
   <a class=pub-logo href="https://bh-nadlan.com/annuaire/he/" title="חזרה לדף הבית"
-     aria-label="BH"><img src='/annuaire/img/logo-officiel.png' alt='BH Nadlan – L’immobilier autrement' height='52' style='height:52px;width:auto;display:block'></a>
+     aria-label="BH">
+    <span class=logo-ligne>
+      <img src='/annuaire/img/logo-officiel.png' alt='BH Nadlan – L’immobilier autrement' height='44' style='height:44px;width:auto;display:block'>
+      <span class=logo-mot>BH NADLAN</span>
+    </span>
+    <span class=logo-tag>נדל״ן אחרת</span>
+  </a>
   <div class=grow></div>
   <div class="pub-flanc pub-flanc-d">
     <div class=langues-dd>
@@ -3313,16 +3331,16 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   <div class=voile></div>
   <div class=dedans>
    <div class=hero-texte>
-    <h1>סוף סוף האתר הראשון לרכישת דירות על הנייר בישראל ישירות מהיזם ובמחיר שסוכם במשא ומתן עבור לקוחותינו, שבו תוכלו לדמות את הרכישה שלכם ולדעת את כל ההוצאות הנלוות שלכם.</h1>
-    
-    
-    <ul class=hero-preuves><li><b>124</b><span>פרויקטים במעקב</span></li><li><b>52</b><span>ערים</span></li><li class=pr-ligne><b>15</b><span>שנות ניסיון בייזום נדל״ן בישראל</span></li></ul>
     <ul class=hero-badges>
       <li><span class=hb-ic>👤</span>יועץ דובר צרפתית</li>
       <li><span class="hb-ic hb-or">0%</span>דמי תיווך</li>
       <li><span class=hb-ic>🏗</span>ישירות מהיזם</li>
       <li><span class=hb-ic>🤝</span>ליווי מלא</li>
     </ul>
+    
+    <h1>סוף סוף האתר הראשון לרכישת דירות על הנייר בישראל ישירות מהיזם ובמחיר שסוכם במשא ומתן עבור לקוחותינו, שבו תוכלו לדמות את הרכישה שלכם ולדעת את כל ההוצאות הנלוות שלכם.</h1>
+    
+    <ul class=hero-preuves><li><b>124</b><span>פרויקטים במעקב</span></li><li><b>52</b><span>ערים</span></li><li class=pr-ligne><b>15</b><span>שנות ניסיון בייזום נדל״ן בישראל</span></li></ul>
     <a class=hero-decouvrir href="#vue">לגלות את הנכסים שלנו →</a>
    </div>
    
