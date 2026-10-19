@@ -462,14 +462,14 @@ button,input,select,textarea{font:inherit;color:inherit}
    trois autres reassurances. */
 .hero-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;
  list-style:none;margin:18px 0 0;padding:0;max-width:30em}
-.hero-badges li{display:flex;align-items:center;gap:10px;
+.hero-badges li{display:flex;align-items:center;gap:12px;
  background:#0B1322;border:1px solid rgba(201,162,39,.3);
- border-radius:12px;padding:11px 12px;font-size:12.5px;font-weight:650;
+ border-radius:12px;padding:13px 14px;font-size:15px;font-weight:650;
  color:#fff;line-height:1.25}
-.hb-ic{flex:none;width:28px;height:28px;border-radius:50%;
+.hb-ic{flex:none;width:36px;height:36px;border-radius:50%;
  background:var(--or);color:#0F172A;display:flex;align-items:center;
- justify-content:center;font-size:12.5px}
-.hb-ic.hb-or{font-size:11px;font-weight:800}
+ justify-content:center;font-size:16px}
+.hb-ic.hb-or{font-size:14px;font-weight:800}
 @media(max-width:640px){.hero-badges{max-width:none}}
 /* `white-space:nowrap` (Hillel, 24/09/2026, capture d'ecran a l'appui) :
    sans lui, l'espace entre le chiffre et le signe pouvait tomber en fin de
@@ -631,6 +631,7 @@ button,input,select,textarea{font:inherit;color:inherit}
    « 0 % » passe seul sur sa ligne, en tres gros : c'est le premier
    argument, il doit se voir avant la phrase. */
 @media(max-width:900px){
+ .hero h1{text-align:center;margin-left:auto;margin-right:auto}
  .hero .zf-bandeau{text-align:center;text-shadow:0 2px 16px rgba(0,0,0,.45)}
  .hero-preuves{justify-content:center;gap:16px 44px}
  .hero-preuves li{align-items:center;text-align:center}
@@ -700,8 +701,8 @@ button,input,select,textarea{font:inherit;color:inherit}
    celui d'EliA (18px) pour que les deux cartes ecrivent a la meme echelle
    (Hillel : "equilibre les ecritures"). */
 .hero-simu .hs-titre{font-size:18px;line-height:1.3;font-weight:750;
- margin:0 0 6px;color:#0F172A !important}
-.hero-simu .hs-sous{margin:0 0 14px;color:#5A6172 !important}
+ margin:0 0 6px;color:#0F172A !important;text-align:center}
+.hero-simu .hs-sous{margin:0 0 14px;color:#5A6172 !important;text-align:center}
 /* Boutons en or plein (couleur de la marque), meme logique que les
    pastilles d'icone qu'Hillel a validees — seul le fond de carte changeait
    pour EliA, pas ces boutons-la. */
@@ -3148,7 +3149,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     </nav>
   </div>
   <a class=pub-logo href="#/" title="Retour à l'accueil"
-     aria-label="BLG Immobilier"><span style='display:inline-flex;align-items:center;background:#053c37;border-radius:10px;padding:4px 9px'><img src='logo.svg' alt='BLG Immobilier' height='40' style='height:40px;width:auto;display:block'></span></a>
+     aria-label="BLG Immobilier"><span style='display:inline-flex;align-items:center;background:#053c37;border-radius:10px;padding:5px 11px'><img src='logo.svg' alt='BLG Immobilier' height='52' style='height:52px;width:auto;display:block'></span></a>
   <div class=grow></div>
   <div class="pub-flanc pub-flanc-d">
     
@@ -3232,8 +3233,8 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <p class=hs-titre>Simulez ici le montant exact de votre acquisition</p>
     <p class=hs-sous>En deux minutes, découvrez le prix total de votre achat : frais annexes, mensualités de crédit, selon votre statut fiscal (Alya, résident étranger, citoyen israélien…). Recevez votre simulation détaillée par WhatsApp ou par mail.</p>
     <div class=hs-modes role=tablist>
-      <button type=button data-hs-depart=prix><span class=hs-ic><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12.6 2.6 21 11l-9 9-9-9V3h8.6Z"/><circle cx="7.3" cy="7.3" r="1.1" fill="currentColor" stroke="none"/></svg></span><span>Je connais le prix</span></button>
-      <button type=button data-hs-depart=apport><span class=hs-ic><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2.2"/><path d="M3 10.5h18"/><circle cx="16" cy="15" r="1" fill="currentColor" stroke="none"/></svg></span><span>Je pars de mon apport</span></button>
+      <button type=button data-hs-depart=prix><span class=hs-ic><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12.6 2.6 21 11l-9 9-9-9V3h8.6Z"/><circle cx="7.3" cy="7.3" r="1.1" fill="currentColor" stroke="none"/></svg></span><span>Je connais le prix du bien</span></button>
+      <button type=button data-hs-depart=apport><span class=hs-ic><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2.2"/><path d="M3 10.5h18"/><circle cx="16" cy="15" r="1" fill="currentColor" stroke="none"/></svg></span><span>Mon apport (₪ € $)</span></button>
     </div>
   </div>
   </div>
