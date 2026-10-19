@@ -2970,6 +2970,38 @@ table.ag th{width:64%}
  .hero .hero-texte>.eli-une{order:5!important}.hero .hero-texte>.hero-simu{order:6!important}
 }
 
+/* Menu sobre (Hillel, 19/10/2026 : « le bleu au milieu... change, fais-moi quelque chose
+   qui tienne la route ») : tous les liens en texte encre, un simple filet doré au
+   survol ; EliA et le simulateur ne sont plus des pastilles colorées. Le seul bouton
+   plein reste « Un conseiller vous rappelle », en bleu nuit. Les réseaux sociaux
+   passent en monochrome discret. */
+.nav a,.nav a.nav-eli,.nav a.nav-simu{background:transparent!important;color:#0F172A!important;
+ font-weight:550;border-radius:0;padding:8px 4px;margin:0 8px;position:relative}
+.nav a::after{content:'';position:absolute;left:4px;right:4px;bottom:3px;height:2px;
+ background:#C9A227;transform:scaleX(0);transform-origin:left;transition:transform .22s var(--ease)}
+.nav a:hover::after,.nav a.nav-eli:hover::after,.nav a.nav-simu:hover::after{transform:scaleX(1)}
+.nav a:hover,.nav a.nav-eli:hover,.nav a.nav-simu:hover{background:transparent!important;color:#0F172A!important}
+.pub-top{background:#fff}
+.pub-top .btn-rappel,.pub-flanc-d>button:last-child{background:#0F172A}
+.entete-reseaux a svg{width:20px;height:20px;filter:brightness(0);opacity:.55;transition:opacity .2s}
+.entete-reseaux a:hover svg{opacity:1}
+.entete-reseaux{padding-top:6px;padding-bottom:6px}
+
+/* Hébreu / arabe (sens inverse) : la photo passe à GAUCHE, comme la deuxième colonne de la
+   grille, le texte reste à droite. Le grand titre prend Rubik (Playfair n'a pas l'hébreu). */
+@media(min-width:901px){
+ [dir=rtl] .hero .photo{right:auto;left:max(22px,calc((100% - 1240px)/2 + 22px))}
+}
+[dir=rtl] .hero .dedans .hero-texte h1{font-family:'Rubik',system-ui,sans-serif!important;
+ font-weight:700;font-size:clamp(26px,2.9vw,40px)!important;line-height:1.3!important;text-align:right}
+[dir=rtl] .hero .dedans .hero-texte h1 .h1-b{text-align:right}
+[dir=rtl] .hero-simu .hs-titre,[dir=rtl] .hero .eli-une-texte b,[dir=rtl] .hero-preuves b,
+[dir=rtl] .galerie-programmes h2,[dir=rtl] .modele > div > b,[dir=rtl] .qui > div > b{
+ font-family:'Rubik',system-ui,sans-serif;font-weight:700}
+[dir=rtl] .hero-simu .hs-sous{text-align:right}
+[dir=rtl] .hs-modes button::after{content:'←'}
+@media(max-width:900px){[dir=rtl] .hero .dedans .hero-texte h1{text-align:right}}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -3499,7 +3531,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
     <ul class=hero-badges>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 7.5h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg></span><span class=hb-texte>Simulateur gratuit<small>Réponse instantanée</small></span></li>
-      <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="17" r="2.4"/></svg></span><span class=hb-texte>Frais d’agence<small>Sur tous les programmes neufs</small></span></li>
+      <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="17" r="2.4"/></svg></span><span class=hb-texte>0 % frais d’agence<small>Aucun frais d’agence n’est demandé : cela ne vous coûte rien.</small></span></li>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5M9 11h.01M15 11h.01"/></svg></span><span class=hb-texte>Direct promoteur</span></li>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5l2.5 2.5 5.5-6"/><path d="M12 3l7 3v5.5c0 4.2-2.9 7.7-7 9.5-4.1-1.8-7-5.3-7-9.5V6z"/></svg></span><span class=hb-texte>Accompagnement complet<small>Choix du bien, juridique, fiscal, financement</small></span></li>
     </ul>
