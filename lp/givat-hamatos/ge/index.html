@@ -196,7 +196,7 @@ footer{padding:36px 0 90px;color:var(--gris);font-size:14px}
   <li>Un conseiller qui vous répond personnellement</li>
  </ul></div>
  <div id="zone">
- <form id="f" novalidate data-partenaire="tel:526700455" data-page="lp-givat-hamatos · dan-assouline">
+ <form id="f" novalidate data-source="GE" data-support="lien" data-page="lp-givat-hamatos · ge">
   <div class="deux-champs">
    <label>Prénom<input id="prenom" autocomplete="given-name" required></label>
    <label>Nom<input id="nom" autocomplete="family-name" required></label>
@@ -230,10 +230,11 @@ footer{padding:36px 0 90px;color:var(--gris);font-size:14px}
   if(chiffres.length<8||chiffres.length>15){err.textContent='Votre numéro de téléphone semble incomplet.';document.getElementById('tel').focus();return;}
   var mail=v('mail'); if(mail&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){err.textContent='Cette adresse e-mail semble incorrecte.';document.getElementById('mail').focus();return;}
   var libelle=go.textContent; go.disabled=true; go.textContent='Envoi…';
+  var prov=f.dataset.source?{source:f.dataset.source,support:f.dataset.support||'lien',campagne:'',contenu:'',arrivee:location.pathname.slice(0,120),vu_le:new Date().toISOString().slice(0,16),t:Date.now()}:{};
   var corps={prenom:v('prenom'),nom:v('nom'),tel:v('tel'),mail:mail,
    mot:['Landing Givat Hamatos','Intéressé par : '+v('piece'),v('mot')].filter(Boolean).join(' — '),
    societe:v('pot'),projet:"Givat Hamatos — Jérusalem",ville:'Jérusalem',budget:'',page:f.dataset.page,
-   partenaire:f.dataset.partenaire||'',langue:'fr',url:location.href.slice(0,500),t:Date.now()-DEPART};
+   partenaire:'',provenance:prov,langue:'fr',url:location.href.slice(0,500),t:Date.now()-DEPART};
   fetch(GUICHET+'/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corps)})
   .then(function(r){if(!r.ok)throw new Error('refus');return r.json().catch(function(){return {};});})
   .then(function(){
