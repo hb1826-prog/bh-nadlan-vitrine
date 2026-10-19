@@ -8554,10 +8554,14 @@ function v2LireFrais() {
     avocat = (TUNNEL.avocatLibreType === 'montant' && TUNNEL.prix)
       ? (TUNNEL.avocatLibre / TUNNEL.prix * 100) : TUNNEL.avocatLibre;
   }
-  const agence = TUNNEL.accompagnementMode === 'oui'
+  // Co-acquisition : la commission EquityLiving et d'eventuels frais
+  // resident ne sont pas confirmes (Hillel, 19/10/2026) — on n'invente
+  // jamais un pourcentage ici, agence et courtier restent a 0, l'avocat
+  // (service independant d'EquityLiving) reste calcule normalement.
+  const agence = (!TUNNEL.coacquisition && TUNNEL.accompagnementMode === 'oui')
     ? (accompagnementImpose ? 2 : (defaut.agence || 1)) : 0;
   let courtier = 0;
-  if (!TUNNEL.comptant) {
+  if (!TUNNEL.comptant && !TUNNEL.coacquisition) {
     if (TUNNEL.courtierMode === 'notre') courtier = COURTIER_RECOMMANDE;
     else if (TUNNEL.courtierMode === 'libre') {
       courtier = TUNNEL.courtierLibreType === 'pct'
