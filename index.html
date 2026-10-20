@@ -8937,6 +8937,7 @@ function v2CorpsCoordonnees() {
 function v2CoacqChiffres() {
   const prix = TUNNEL.prix || 0;
   const apport = TUNNEL.coacqApport || 0;
+  const loyerMarche = TUNNEL.coacqLoyer || 0;
   const partBacker = prix * 0.5;
   const partResident = prix * 0.5;
   const plafondCredit = prix * 0.25;
@@ -8944,7 +8945,20 @@ function v2CoacqChiffres() {
   const resteAFinancer = partResident - cash;
   const credit = Math.min(resteAFinancer, plafondCredit);
   const manque = resteAFinancer - credit;
-  return {prix, apport, partBacker, partResident, plafondCredit, cash, credit, manque};
+  // Taxe d'acquisition sur la part residente : le meme chiffrage par
+  // tranches que le reste du site (`blocAuPrix`, aliment par
+  // fiscalite.py), interroge sur la MOITIE du prix plutot que le prix
+  // entier — chaque co-acquereur declare et paie sur son propre apport
+  // foncier, selon son propre statut (Hillel, confirme le 19/10/2026,
+  // verifie aupres de sources professionnelles : la taxe par tranches
+  // s'applique au palier de CHAQUE acquereur sur sa propre quote-part, pas
+  // au prix total divise ensuite). La part de l'investisseur depend de
+  // SON statut a lui, inconnu ici : non simulee.
+  const blocPart = prix ? blocAuPrix(partResident, TUNNEL.profil + '|' + TUNNEL.cadre) : null;
+  const taxe = blocPart ? Math.round(blocPart.taxe) : 0;
+  const loyerPart = loyerMarche / 3;
+  return {prix, apport, partBacker, partResident, plafondCredit, cash, credit, manque,
+    taxe, loyerMarche, loyerPart};
 }
 function v2CoacqPeindreResultat(zone) {
   const r = v2CoacqChiffres();
@@ -8953,6 +8967,8 @@ function v2CoacqPeindreResultat(zone) {
   champ('#v2-coacq-part', mil(r.partResident) + ' ₪');
   champ('#v2-coacq-credit', mil(r.credit) + ' ₪');
   champ('#v2-coacq-cash', mil(r.cash) + ' ₪');
+  champ('#v2-coacq-taxe', mil(r.taxe) + ' ₪');
+  champ('#v2-coacq-loyer-part', mil(Math.round(r.loyerPart)) + ' ₪');
   const statut = zone.querySelector('#v2-coacq-statut');
   const bouton = zone.querySelector('#v2-coacq-suite');
   if (statut) {
@@ -8984,9 +9000,17 @@ function v2CorpsCoacqCalcul() {
       <div class="ligne"><span class="label">${T('Votre part (résident) — 50 %')}</span><b id="v2-coacq-part">${mil(r.partResident)} ₪</b></div>
       <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire (plafond 25 % du prix)')}</span><b id="v2-coacq-credit">${mil(r.credit)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Apport cash nécessaire')}</span><b id="v2-coacq-cash">${mil(r.cash)} ₪</b></div>
+      <div class="ligne"><span class="label">${T('Taxe d’acquisition sur votre part (mas rekhicha)')}</span><b id="v2-coacq-taxe">${mil(r.taxe)} ₪</b></div>
     </div>
     <p class="si-note" id="v2-coacq-statut"></p>
-    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:11px;line-height:1.5;margin-top:14px;color:var(--gris-clair)">${T('Non chiffré ici : la commission EquityLiving, d’éventuels frais côté résident et le taux du crédit sur la part financée. Hillel les précise lors du premier échange.')}</p>
+    <p class="s2-sous-label">${T('Loyer mensuel estimé pour ce bien (optionnel)')}</p>
+    <div class="s2-sous-montant"><input type="text" inputmode="numeric"
+      id="v2-coacq-loyer" placeholder="6 000"
+      value="${r.loyerMarche ? mil(r.loyerMarche) : ''}"><span class="s2-devise">₪</span></div>
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:12.5px;line-height:1.5;margin-top:10px">${T('Pendant les 10 ans, vous versez au Backer un tiers du loyer de marché — bien moins qu’un crédit classique sur 100 % du bien, en plus du crédit éventuel sur votre propre part.')}</p>
+    <div class="ligne" style="padding:10px 0"><span class="label">${T('Votre versement mensuel au Backer (1/3 du loyer)')}</span><b id="v2-coacq-loyer-part">${mil(Math.round(r.loyerPart))} ₪</b></div>
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:12.5px;line-height:1.5;margin-top:4px">${T('À la revente, après 10 ans : 75 % de la plus-value pour le Backer, 25 % pour vous.')}</p>
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:11px;line-height:1.5;margin-top:14px;color:var(--gris-clair)">${T('Non chiffré ici : la commission EquityLiving, d’éventuels frais côté résident, le taux et la mensualité exacte du crédit sur la part financée, et la taxe d’acquisition de l’investisseur (dépend de son propre statut). Hillel les précise lors du premier échange.')}</p>
     <button type="button" class="s2-sous-suite" id="v2-coacq-suite" style="margin-top:14px" ${r.prix && r.apport ? '' : 'disabled'}>${T('Continuer')}</button>
   </div>`;
 }
@@ -9157,6 +9181,16 @@ function v2Brancher(zone) {
     };
     const coacqSuite = zone.querySelector('#v2-coacq-suite');
     if (coacqSuite) coacqSuite.onclick = () => { V2_REPONDU.coacq_calcul = true; v2Avancer(zone); };
+  }
+  const coacqLoyerInp = zone.querySelector('#v2-coacq-loyer');
+  if (coacqLoyerInp) {
+    coacqLoyerInp.oninput = () => {
+      const chiffres = coacqLoyerInp.value.replace(/[^\d]/g, '');
+      const val = chiffres ? parseInt(chiffres, 10) : null;
+      TUNNEL.coacqLoyer = val;
+      coacqLoyerInp.value = val != null ? mil(val) : '';
+      v2CoacqPeindreResultat(zone);
+    };
   }
   zone.querySelectorAll('[data-v2-ltv]').forEach(b => {
     b.onclick = () => {
