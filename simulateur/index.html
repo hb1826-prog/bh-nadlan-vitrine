@@ -8572,7 +8572,7 @@ function v2Cartes() {
         {v:'oui', t:T('Seconde main'),
          aide:T('Pas de calendrier de chantier : le prix se règle en une ou deux fois. Comme nous ne sommes pas payés par un promoteur sur ce type de bien, des frais d’agence de 2 % s’appliquent.')},
         {v:'coacq', t:T('Co-acquisition'),
-         aide:T('Vous achetez 50 % du bien avec un investisseur partenaire (EquityLiving), qui finance l’autre moitié. Votre part peut elle-même être financée en partie par un crédit bancaire classique.')},
+         aide:T('Vous achetez 50 % du bien avec un investisseur, mis en relation avec vous par notre partenaire EquityLiving, qui finance l’autre moitié. Votre part peut elle-même être financée en partie par un crédit bancaire classique.')},
       ],
     },
     {
@@ -8845,7 +8845,7 @@ function v2CoacqPeindreResultat(zone) {
 function v2CorpsCoacqCalcul() {
   const r = v2CoacqChiffres();
   return `<div class="s2-q-choix">
-    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Un investisseur partenaire (EquityLiving) finance 50 % du bien. Indiquez votre apport cash disponible pour voir la répartition.')}</p>
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Un investisseur, mis en relation avec vous par notre partenaire EquityLiving, finance 50 % du bien. Indiquez votre apport cash disponible pour voir la répartition.')}</p>
     <p class="s2-sous-label">${T('Votre apport cash disponible')}</p>
     <div class="s2-sous-montant"><input type="text" inputmode="numeric"
       id="v2-coacq-apport" placeholder="500 000"
