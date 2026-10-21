@@ -3232,6 +3232,21 @@ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35p
  .pub-flanc-d .cta,.cta{max-width:132px}
 }
 
+/* Tuile de l'accueil : « Plus d'info » EquityLiving + page explicative en
+   surimpression (21/10/2026). Couleurs fixes, comme le reste de la tuile. */
+.hs-info{margin:10px 0 0;text-align:center}
+.hs-info button{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:none !important;
+ border:0 !important;color:#0F172A !important;text-decoration:underline;text-underline-offset:3px;padding:6px 8px}
+#coacq-overlay{position:fixed;inset:0;z-index:9999;background:#FAF7F1;color:#0F172A;overflow-y:auto;
+ -webkit-overflow-scrolling:touch}
+.coacq-ov-barre{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;
+ padding:12px 16px;background:#FFFFFF;border-bottom:1px solid #E7E2D8}
+.coacq-ov-fermer{font:inherit;font-size:14px;font-weight:700;cursor:pointer;padding:9px 16px;border-radius:999px;
+ border:1.5px solid #0F172A;background:#FFFFFF;color:#0F172A}
+.coacq-ov-corps{max-width:760px;margin:0 auto;padding:16px 16px 40px}
+.coacq-ov-simuler{font:inherit;font-size:15px;font-weight:700;cursor:pointer;padding:14px 22px;border-radius:999px;
+ border:1.5px solid #A6821A;background:#C9A227;color:#0F172A}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -4217,6 +4232,8 @@ function choisirModeSimu(mode) {
   let q;
   try { q = new URLSearchParams(location.search); } catch (e) { return; }
   if (q.get('mode')) choisirModeSimu(q.get('mode'));
+  // Arrivee depuis la tuile « En co-acquisition » de l'accueil (21/10/2026).
+  if (q.get('coacq')) { TUNNELS.credit.coacquisition = true; TUNNELS.credit.revente = false; }
   if (q.get('projet')) TUNNELS.credit.projet = TUNNELS.comptant.projet = q.get('projet');
   // L'apport tape dans la carte de la page d'accueil, en euros : on
   // repart directement de l'etape suivante (la situation fiscale).
@@ -4236,7 +4253,7 @@ function choisirModeSimu(mode) {
 /* Ouvre le simulateur, depuis n'importe quel bouton du site. Sur le site de
    BH : sa page a part, dans un nouvel onglet. Sur une page partenaire (pas
    de page a part) : la vue du simulateur, dans la page. */
-function ouvrirSimulateur(mode, prix, projet, apport, devise, v2) {
+function ouvrirSimulateur(mode, prix, projet, apport, devise, v2, coacq) {
   if (DONNEES.simulateur_url) {
     const p = [];
     if (mode) p.push('mode=' + ((mode === 'comptant' || mode === 'apport') ? mode : 'credit'));
@@ -4244,6 +4261,7 @@ function ouvrirSimulateur(mode, prix, projet, apport, devise, v2) {
     // qu'il n'a pas remplace l'ancien pour de bon, seuls les appels qui le
     // demandent explicitement l'ouvrent — voir `SIMU_V2` plus bas.
     if (v2) p.push('v2=1');
+    if (coacq) p.push('coacq=1');
     if (prix > 0) p.push('prix=' + prix);
     if (apport > 0) p.push('apport=' + apport + '&devise=' + (devise === 'ILS' ? 'ILS' : 'EUR'));
     if (projet) p.push('projet=' + encodeURIComponent(projet));
@@ -4273,6 +4291,7 @@ function ouvrirSimulateur(mode, prix, projet, apport, devise, v2) {
   }
   if (v2) SIMU_V2 = true;
   if (mode) choisirModeSimu(mode); else MODE_SIMU = null;
+  if (coacq) { TUNNELS.credit.coacquisition = true; TUNNELS.credit.revente = false; }
   TUNNELS.credit.projet = TUNNELS.comptant.projet = projet || null;
   if (apport > 0) {
     Object.assign(TUNNELS.apport, {montant: apport,
@@ -5999,12 +6018,10 @@ function pageSecondeMain() {
    EquityLiving, frais eventuels) n'est volontairement pas invente ici :
    Hillel le precise lui-meme au premier echange, exactement comme la
    validation du cahier des charges l'a pose. */
-function pageCoAcquisition() {
-  basculer(false);
+function coacqCorpsHTML() {
   const exPrix = 2000000, exBacker = exPrix * 0.5, exPart = exPrix * 0.5,
     exCredit = exPrix * 0.25, exCash = exPrix * 0.25;
-  vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${T('Co-acquisition')}</p>
+  return `
     <article class="texte">
       <h1>${T('Devenir propriétaire en Israël avec un apport réduit')}</h1>
       <p>${T('Un bien ne s’achète pas toujours seul. Grâce à notre partenariat avec EquityLiving, vous pouvez devenir propriétaire en Israël avec un apport cash réduit — à partir de 25 % du prix, crédit bancaire classique compris sur votre propre part.')}</p>
@@ -6015,7 +6032,7 @@ function pageCoAcquisition() {
           <p class="coacq-mod-titre">${T('Vous — le résident')}</p>
           <p class="coacq-mod-part">50 %</p>
           <p class="coacq-mod-texte">${T('Vous achetez la moitié du bien et y emménagez.')}</p>
-          <p class="coacq-mod-texte">${T('Cette part peut elle-même être financée en partie par un crédit bancaire classique, jusqu’à 25 % du prix total.')}</p>
+          <p class="coacq-mod-texte">${T('Cette part peut elle-même être financée en partie par un crédit bancaire classique, jusqu’à 25 % du prix total, soit la moitié de votre part.')}</p>
           <p class="coacq-mod-texte">${T('Pendant les 10 ans, vous versez au Backer un tiers du loyer de marché du bien — bien moins cher qu’un crédit classique sur 100 % du bien.')}</p>
         </div>
       </div>
@@ -6053,8 +6070,45 @@ function pageCoAcquisition() {
       <li><b>${T('Closing et emménagement')}</b><span>${T('Vous devenez copropriétaire inscrit, sans attendre d’avoir 50 % en cash.')}</span></li>
     </ol>
     ${contactHTML(null, 'co-acquisition')}`;
+}
+function pageCoAcquisition() {
+  basculer(false);
+  vue.innerHTML = `
+    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${T('Co-acquisition')}</p>` + coacqCorpsHTML();
   wireContact(null, 'co-acquisition');
   window.scrollTo(0, 0);
+}
+/* « Plus d'info » de la tuile de l'accueil (Hillel, 21/10/2026) : la page
+   explicative d'EquityLiving s'ouvre PAR-DESSUS l'accueil, sans changer
+   d'adresse ni faire quitter la page ; le bouton Fermer, toujours visible en
+   haut, ramene a l'accueil exactement ou l'internaute l'avait laissee. */
+function ouvrirInfoCoacq() {
+  let ov = document.getElementById('coacq-overlay');
+  if (ov) ov.remove();
+  ov = document.createElement('div');
+  ov.id = 'coacq-overlay';
+  ov.setAttribute('role', 'dialog');
+  ov.setAttribute('aria-modal', 'true');
+  ov.innerHTML = `<div class="coacq-ov-barre"><b>EquityLiving</b>
+      <button type="button" class="coacq-ov-fermer" id="coacq-ov-fermer">${T('Fermer')} ✕</button></div>
+    <div class="coacq-ov-corps">${coacqCorpsHTML()}
+      <p style="text-align:center;margin:18px 0 8px"><button type="button" class="coacq-ov-simuler" id="coacq-ov-simuler">${T('Simuler ma co-acquisition')}</button></p>
+    </div>`;
+  document.body.appendChild(ov);
+  const html = document.documentElement;
+  const avant = html.style.overflow;
+  html.style.overflow = 'hidden';
+  const fermer = () => {
+    ov.remove();
+    html.style.overflow = avant;
+    document.removeEventListener('keydown', surEchap);
+  };
+  const surEchap = ev => { if (ev.key === 'Escape') fermer(); };
+  document.addEventListener('keydown', surEchap);
+  ov.querySelector('#coacq-ov-fermer').onclick = fermer;
+  ov.querySelector('#coacq-ov-simuler').onclick = () => { fermer(); ouvrirSimulateur('credit', 0, null, 0, null, true, true); };
+  wireContact(null, 'co-acquisition');
+  ov.scrollTop = 0;
 }
 
 function pageVille(cle) {
@@ -8082,8 +8136,12 @@ async function etapeFinancement(zone) {
   // Meme regle que le simulateur classique : les durees offertes viennent du
   // cadre d'acquisition (une societe n'emprunte pas sur trente ans), jamais
   // d'une liste unique.
-  const durees = (DONNEES.durees_par_cadre || {})[TUNNEL.cadre] || DONNEES.durees || [10, 15, 20, 25, 30];
-  if (!TUNNEL.duree || !durees.includes(TUNNEL.duree)) TUNNEL.duree = durees[durees.length - 1];
+  // Co-acquisition : 10 ans par defaut, c'est l'ideal (duree du montage) ;
+  // le resident peut choisir plus long (Hillel, 21/10/2026).
+  const durees = TUNNEL.coacquisition ? [5, 7, 10, 15, 20, 25, 30]
+    : ((DONNEES.durees_par_cadre || {})[TUNNEL.cadre] || DONNEES.durees || [10, 15, 20, 25, 30]);
+  if (!TUNNEL.duree || !durees.includes(TUNNEL.duree))
+    TUNNEL.duree = TUNNEL.coacquisition ? 10 : durees[durees.length - 1];
   zone.innerHTML = `
     ${jaugeHTML(3)}
     <div class="si-lab">${T('Part financée par le prêt')}</div>
@@ -8686,7 +8744,7 @@ function v2Cartes() {
       // deja le parcours apport — jamais masquee en cours de route, sinon
       // la carte disparaitrait sous les pieds du visiteur au moment meme
       // ou il clique « Sans credit ».
-      id: 'financement', label: T('Part financée par le prêt'),
+      id: 'financement', label: TUNNEL.coacquisition ? T('Part de votre moitié financée par un prêt') : T('Part financée par le prêt'),
       resume: () => TUNNEL.comptant ? T('Sans crédit')
         : TUNNEL.ltv + ' % · ' + TUNNEL.duree + ' ' + T('ans'),
     },
@@ -8889,13 +8947,17 @@ function v2CorpsMontantSeul(c) {
 }
 function v2CorpsFinancement() {
   const f = v2TauxBloc();
-  const plafond = f.plafond || 75;
+  // Co-acquisition : le resident finance au plus 50 % de SA moitie (Hillel,
+  // 21/10/2026) ; les boutons parlent donc de sa part, pas du prix entier.
+  const plafond = TUNNEL.coacquisition ? 50 : (f.plafond || 75);
   if (TUNNEL.ltv == null) TUNNEL.ltv = plafond;
   if (!TUNNEL.comptant && TUNNEL.ltv > plafond) TUNNEL.ltv = plafond;
   const ltvs = (DONNEES.ltv || []).filter(v => v <= plafond);
   const durees = (DONNEES.durees_par_cadre || {})[TUNNEL.cadre] || DONNEES.durees || [10, 15, 20, 25, 30];
   if (!TUNNEL.duree || !durees.includes(TUNNEL.duree)) TUNNEL.duree = durees[durees.length - 1];
-  return `<div class="s2-q-choix">
+  const introCoacq = TUNNEL.coacquisition
+    ? `<p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Votre moitié du bien peut être financée en partie par un prêt bancaire, jusqu’à 50 % de cette moitié. Choisissez la part que vous empruntez et la durée.')}</p>` : '';
+  return `<div class="s2-q-choix">${introCoacq}
     <div class="s2-sous-devises">
       <button type="button" class="s2-devise-opt ${TUNNEL.comptant ? 'choisi' : ''}" data-v2-ltv="0">${T('Sans crédit')}</button>
       ${ltvs.map(v => `<button type="button"
@@ -8904,7 +8966,8 @@ function v2CorpsFinancement() {
     ${TUNNEL.comptant ? '' : `
     <p class="s2-sous-label" style="margin-top:14px">${T('Durée du prêt')}</p>
     <div class="s2-sous-devises">${durees.map(v => `<button type="button"
-      class="s2-devise-opt ${v === TUNNEL.duree ? 'choisi' : ''}" data-v2-duree="${v}">${v} ${T('ans')}</button>`).join('')}</div>`}
+      class="s2-devise-opt ${v === TUNNEL.duree ? 'choisi' : ''}" data-v2-duree="${v}">${v} ${T('ans')}${TUNNEL.coacquisition && v === 10 ? ' · ' + T('idéal') : ''}</button>`).join('')}</div>
+    ${TUNNEL.coacquisition ? `<p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:12px;line-height:1.5;margin-top:8px">${T('10 ans est l’idéal : c’est la durée du montage. Plus long, la mensualité baisse, mais à la sortie vous soldez le reste du prêt avec le capital récupéré, et vous payez plus d’intérêts.')}</p>` : ''}`}
     <button type="button" class="s2-sous-suite" id="v2-financement-suite" style="margin-top:14px">${T('Continuer')}</button>
   </div>`;
 }
@@ -8952,12 +9015,16 @@ function v2CoacqChiffres() {
   // Frais et facteurs de credit : tous fabriques par coacquisition.py
   // (sim.json, cle « coacq ») — aucun taux ici, seulement des facteurs par
   // shekel emprunte. Reference : data/sources/coacquisition.py.
-  const P = (SIM && SIM.coacq) || {structuring: 1, legaux: 1, gestion: 10, sortie: 0.5, hausse: 3,
-    mensualite_par_shekel: 0, solde_5: 0, solde_10: 0};
+  const P = (SIM && SIM.coacq) || {structuring: 1, legaux: 1, gestion_bien_an: 0.25, sortie: 1, indemnite: {1: 14, 2: 11, 3: 8, 4: 5, 5: 2}, hausse: 3,
+    duree_defaut: 20, credit: {}};
   const hausse = TUNNEL.coacqHausse != null ? TUNNEL.coacqHausse : P.hausse;
+  const duree = TUNNEL.duree && P.credit[String(TUNNEL.duree)] ? TUNNEL.duree : P.duree_defaut;
+  const F = P.credit[String(duree)] || {mensualite_par_shekel: 0, solde_5: 0, solde_10: 0};
+  // Part de SA moitie que le resident finance (50 % au plus) ; sans credit : 0.
+  const pctCredit = TUNNEL.comptant ? 0 : Math.min(TUNNEL.ltv == null ? 50 : TUNNEL.ltv, 50);
   const partBacker = prix * 0.5;
   const partResident = prix * 0.5;
-  const plafondCredit = partResident * 0.5;
+  const plafondCredit = partResident * pctCredit / 100;
   const cash = Math.min(apport, partResident);
   const resteAFinancer = partResident - cash;
   const credit = Math.min(resteAFinancer, plafondCredit);
@@ -8971,27 +9038,34 @@ function v2CoacqChiffres() {
   const legaux = prix * P.legaux / 100;
   const fraisEntree = structuring + legaux;
   const loyerPart = loyerMarche / 3;
-  const gestion = loyerMarche * P.gestion / 100;
-  const mensualiteCredit = credit * P.mensualite_par_shekel;
+  // Les 10 % de gestion d'EquityLiving sont payes par le BACKER (Hillel,
+  // 21/10/2026). Le resident paie le tiers du loyer + la gestion du bien par
+  // un partenaire (estimation 5 % du loyer, a confirmer) — coacquisition.py.
+  const gestion = prix * P.gestion_bien_an / 100 / 12;
+  const mensualiteCredit = credit * F.mensualite_par_shekel;
   const sorties = [5, 10].map(an => {
     const mois = an * 12;
     const revente = prix * Math.pow(1 + hausse / 100, an);
     const plusValue = revente - prix;
+    // Commission 0,5 % par partie ; + indemnite de sortie anticipee (14/11/8/5/2 %
+    // de la valeur du bien selon l'annee) pour celui qui part (le resident, a 5 ans).
     const fraisSortie = revente * P.sortie / 100;
-    const partR = 0.5 * prix + 0.25 * plusValue - fraisSortie / 2;
-    const resteCredit = credit * (an === 5 ? P.solde_5 : P.solde_10);
+    const penalite = an < 10 ? revente * ((P.indemnite || {})[String(an)] || 0) / 100 : 0;
+    const partR = 0.5 * prix + 0.25 * plusValue - fraisSortie / 2 - penalite;
+    const resteCredit = credit * (an === 5 ? F.solde_5 : F.solde_10);
     const encaisse = partR - resteCredit;
     const loyersVerses = (loyerPart + gestion) * mois;
-    const creditVerse = mensualiteCredit * mois;
+    const creditVerse = mensualiteCredit * Math.min(mois, duree * 12);
     const sortiDePoche = cash + fraisEntree + taxe + loyersVerses + creditVerse;
     const coutNet = sortiDePoche - encaisse;
     const loyerEvite = loyerMarche * mois;
-    return {an, revente, plusValue, fraisSortie, resteCredit, encaisse, coutNet, loyerEvite,
+    return {an, revente, plusValue, fraisSortie, penalite, resteCredit, encaisse, coutNet, loyerEvite,
       economie: loyerEvite - coutNet, gainPV: 0.25 * plusValue};
   });
   return {prix, apport, partBacker, partResident, plafondCredit, cash, credit, manque,
     taxe, loyerMarche, loyerPart, gestion, versement: loyerPart + gestion, mensualiteCredit,
-    structuring, legaux, fraisEntree, cashSignature: cash + fraisEntree + taxe, hausse, sorties};
+    structuring, legaux, fraisEntree, cashSignature: cash + fraisEntree + taxe, hausse, sorties,
+    pctCredit, duree};
 }
 function v2CoacqPeindreResultat(zone) {
   const r = v2CoacqChiffres();
@@ -9012,8 +9086,8 @@ function v2CoacqPeindreResultat(zone) {
     if (r.prix && r.manque > 1) {
       statut.className = 'si-note manque';
       statut.textContent = T('Il manque encore') + ' ' + mil(r.manque) + ' ₪ — '
-        + T('au-delà du crédit possible sur votre part (jusqu’à 50 % de votre part). Apport cash minimum à prévoir :')
-        + ' ' + mil(r.plafondCredit) + ' ₪.';
+        + T('au-delà du crédit que vous avez choisi (50 % de votre part au maximum). Apport cash minimum à prévoir :')
+        + ' ' + mil(r.partResident - r.plafondCredit) + ' ₪.';
     } else if (r.prix && r.apport) {
       statut.className = 'si-note coacq-ok';
       statut.textContent = T('Avec cet apport, l’achat en co-acquisition est possible.');
@@ -9033,7 +9107,7 @@ function v2CoacqDetailHTML(r) {
   let h = '';
   if (r.loyerMarche) {
     h += `<p class="s2-sous-label" style="margin-top:14px">${T('Chaque mois')}</p>`
-      + ligne(T('Versement au Backer (⅓ du loyer + frais de gestion)'), mil(Math.round(r.versement)) + ' ₪')
+      + ligne(T('Versement au Backer (⅓ du loyer) + gestion du bien (0,25 % du prix par an)'), mil(Math.round(r.versement)) + ' ₪')
       + (r.credit ? ligne(T('Mensualité du crédit sur votre part'), mil(Math.round(r.mensualiteCredit)) + ' ₪') : '');
     h += `<p class="s2-sous-label" style="margin-top:14px">${T('Si le bien prend')} ${String(r.hausse).replace('.', ',')} % ${T('par an (hypothèse, pas une promesse)')}</p>`;
     r.sorties.forEach(x => {
@@ -9047,7 +9121,7 @@ function v2CoacqDetailHTML(r) {
         + `</div>`;
     });
   }
-  return h;
+  return `<div class="coacq-resultat">${h}</div>`;
 }
 function v2CorpsCoacqCalcul() {
   const r = v2CoacqChiffres();
@@ -9060,7 +9134,7 @@ function v2CorpsCoacqCalcul() {
     <div class="coacq-resultat" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
       <div class="ligne"><span class="label">${T('Part du Backer (investisseur) — 50 %')}</span><b id="v2-coacq-backer">${mil(r.partBacker)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Votre part (résident) — 50 %')}</span><b id="v2-coacq-part">${mil(r.partResident)} ₪</b></div>
-      <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire (jusqu’à 50 % de votre part)')}</span><b id="v2-coacq-credit">${mil(r.credit)} ₪</b></div>
+      <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire')}</span><b id="v2-coacq-credit">${mil(r.credit)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Apport cash nécessaire')}</span><b id="v2-coacq-cash">${mil(r.cash)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Taxe d’acquisition sur votre part (mas rekhicha)')}</span><b id="v2-coacq-taxe">${mil(r.taxe)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Frais EquityLiving à l’entrée (structuration + juridique, votre moitié)')}</span><b id="v2-coacq-frais">${mil(Math.round(r.fraisEntree))} ₪</b></div>
@@ -9072,7 +9146,7 @@ function v2CorpsCoacqCalcul() {
       id="v2-coacq-loyer" placeholder="6 000"
       value="${r.loyerMarche ? mil(r.loyerMarche) : ''}"><span class="s2-devise">₪</span></div>
     <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:12.5px;line-height:1.5;margin-top:10px">${T('Pendant les 10 ans, vous versez au Backer un tiers du loyer de marché — bien moins qu’un crédit classique sur 100 % du bien, en plus du crédit éventuel sur votre propre part.')}</p>
-    <div class="ligne" style="padding:10px 0"><span class="label">${T('Votre versement mensuel au Backer (1/3 du loyer)')}</span><b id="v2-coacq-loyer-part">${mil(Math.round(r.loyerPart))} ₪</b></div>
+    <div class="coacq-resultat"><div class="ligne" style="padding:10px 0"><span class="label">${T('Votre versement mensuel au Backer (1/3 du loyer)')}</span><b id="v2-coacq-loyer-part">${mil(Math.round(r.loyerPart))} ₪</b></div></div>
     <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:12.5px;line-height:1.5;margin-top:4px">${T('À la revente, après 10 ans (ou dès 5 ans si vous sortez) : 75 % de la plus-value pour le Backer, 25 % pour vous.')}</p>
     <p class="s2-sous-label" style="margin-top:12px">${T('Hausse annuelle du bien à simuler')}</p>
     <div class="s2-sous-montant"><select id="v2-coacq-hausse">${[0, 2, 3, 4, 5].map(h => `<option value="${h}"${h === r.hausse ? ' selected' : ''}>${h} %</option>`).join('')}</select></div>
@@ -9086,12 +9160,12 @@ function v2CorpsCoacqCalcul() {
         <ul class="coacq-badges" style="margin:10px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55">
           <li>${T('Le contrat et la structure du montage sont préparés et suivis par EquityLiving et son avocat : vous n’avez rien à monter vous-même.')}</li>
           <li>${T('Les droits de chacun sont posés d’avance : 50 % / 50 %, loyer versé, plus-value 75 % / 25 %, 10 ans, sortie possible dès 5 ans.')}</li>
-          <li>${T('Tous les frais sont annoncés avant de s’engager : 2 % de structuration et 2 % de frais juridiques (partagés à parts égales avec le Backer), 10 % de gestion sur le loyer, 0,5 % à la sortie.')}</li>
-          <li>${T('Vous pouvez faire relire le contrat par votre propre avocat.')}</li>
+          <li>${T('Tous les frais sont annoncés avant de s’engager : 2 % de structuration et 2 % de frais juridiques (partagés à parts égales avec le Backer), 0,5 % du prix de vente à la sortie (à votre charge, autant pour le Backer), et une indemnité de 14 à 2 % de la valeur du bien pour celui qui part avant la 6e année. Vous avez la possibilité de passer par votre propre avocat si vous le souhaitez.')}</li>
+          <li>${T('Possibilité de passer par votre propre avocat si vous le souhaitez.')}</li>
         </ul>
       </div>
     </div>
-    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:11px;line-height:1.5;margin-top:14px;color:var(--gris-clair)">${T('Simulation indicative : frais d’entrée comptés sur le prix du bien, frais de gestion à votre charge, loyer et frais constants, impôts éventuels sur la plus-value non inclus. Hillel précise votre dossier lors du premier échange.')}</p>
+    <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:11px;line-height:1.5;margin-top:14px;color:var(--gris-clair)">${T('Simulation indicative : frais d’entrée comptés sur le prix du bien, gestion du bien à 0,25 % du prix par an, loyer et frais constants, impôts éventuels sur la plus-value non inclus. Hillel précise votre dossier lors du premier échange.')}</p>
     <button type="button" class="s2-sous-suite" id="v2-coacq-suite" style="margin-top:14px" ${r.prix && r.apport ? '' : 'disabled'}>${T('Continuer')}</button>
   </div>`;
 }
@@ -10385,9 +10459,12 @@ const LOGO = document.querySelector('.pub-logo');
     carte.querySelectorAll('[data-hs-depart]').forEach(b => {
       b.onclick = () => {
         if (b.dataset.hsDepart === 'apport') ouvrirSimulateur('apport', 0, null, 0, null, true);
+        else if (b.dataset.hsDepart === 'coacq') ouvrirSimulateur('credit', 0, null, 0, null, true, true);
         else ouvrirSimulateur('credit', 0, null, 0, null, true);
       };
     });
+    const info = carte.querySelector('[data-hs-info]');
+    if (info) info.onclick = () => ouvrirInfoCoacq();
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-simu-cle]');
