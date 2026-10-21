@@ -11191,7 +11191,7 @@ window.addEventListener('beforeinstallprompt', e => {
         // refait pas un — c'est lui qui, au moment de laisser ses
         // coordonnees, transforme la demande en vrai mini-site chiffre au
         // lieu d'un simple message (Hillel, 22/10/2026).
-        if (r.qualif) S.qualif = r.qualif;
+        if (r.qualif) { S.qualif = r.qualif; envoyerQualifSiDeja(); }
         if (r.formulaire && !S.lead) {
           S.demandes++;
           if (r.formulaire.telephone) S.telSaisi = r.formulaire.telephone;
@@ -11601,6 +11601,44 @@ window.addEventListener('beforeinstallprompt', e => {
     if (form) brancherFormulaire(form);
   }
 
+  /* Un vrai chiffrage fait pendant la conversation (simuler_achat,
+     budget_selon_apport ou simuler_coacquisition) : le lead porte alors de
+     quoi generer un vrai mini-site, exactement comme le simulateur du site,
+     au lieu d'un simple message a lire (Hillel, 22/10/2026). `base` porte
+     les valeurs par defaut (budget approximatif issu des criteres de
+     recherche, libelle de page) qu'un chiffrage reel vient preciser. */
+  function extraDepuisQualif(base) {
+    const q = S.qualif;
+    let extra = Object.assign({}, base);
+    if (q && q.mode === 'achat' && q.prix) {
+      extra = Object.assign(extra, {budget: q.prix, canal: 'whatsapp', profil: q.profil,
+        emprunt_pct: q.emprunt_pct != null ? q.emprunt_pct : 0, emprunt_duree: q.emprunt_duree || null});
+    } else if (q && q.mode === 'apport' && q.apport) {
+      extra = Object.assign(extra, {budget: '', apport: q.apport, canal: 'whatsapp', profil: q.profil,
+        emprunt_pct: q.emprunt_pct != null ? q.emprunt_pct : 0, emprunt_duree: q.emprunt_duree || null});
+    } else if (q && q.mode === 'coacquisition' && q.prix && q.apport) {
+      extra = Object.assign(extra, {budget: q.prix, canal: 'whatsapp', profil: q.profil,
+        coacq: {apport: q.apport, hausse: 3, legaux: 1, duree: 10}});
+    }
+    return extra;
+  }
+
+  /* Le numero a deja ete laisse PLUS TOT dans la conversation (moment 1,
+     avant meme la qualification) : pas de second formulaire a remplir, le
+     mini-site chiffre part tout seul des que le chiffrage arrive (Hillel,
+     22/10/2026 : « poser les questions et envoyer directement »). Jamais
+     plus d'un envoi pour le meme chiffrage (`S.qualifEnvoye`). */
+  function envoyerQualifSiDeja() {
+    if (!S.lead || !S.telConfirme || !S.qualif) return;
+    const cle = JSON.stringify(S.qualif);
+    if (S.qualifEnvoye === cle) return;
+    S.qualifEnvoye = cle;
+    const extra = extraDepuisQualif({page: 'EliA · qualification'});
+    if (!extra.canal) return;
+    envoyerLead({nom: S.nom, prenom: S.prenom, tel: S.telConfirme, mot: resume(), societe: ''},
+      projet(S.montres[0]) || null, 'eli', extra).catch(() => {});
+  }
+
   function resume() {
     const c = S.crit, l = [];
     if (c.ville) l.push(nomVille(c.ville));
@@ -11659,31 +11697,18 @@ window.addEventListener('beforeinstallprompt', e => {
       bouton.textContent = T('Envoi…');
       S.nom = nomSaisi;
       S.prenom = prenomChamp.value.trim();
+      S.telConfirme = numero;
       const c = S.crit;
       const budget = c.budget != null && TABLE ? (TABLE.budgets[c.budget] || [])[1] : '';
       const p0 = projet(S.montres[0]) || null;
-      // Un vrai chiffrage a ete fait pendant la conversation (simuler_achat,
-      // budget_selon_apport ou simuler_coacquisition) : le lead porte alors
-      // de quoi generer un vrai mini-site, exactement comme le simulateur du
-      // site, au lieu d'un simple message a lire (Hillel, 22/10/2026).
-      const q = S.qualif;
-      let extra = {budget: budget || '', page: 'EliA · moment ' + d.m};
-      if (q && q.mode === 'achat' && q.prix) {
-        extra = Object.assign(extra, {budget: q.prix, canal: 'whatsapp', profil: q.profil,
-          emprunt_pct: q.emprunt_pct != null ? q.emprunt_pct : 0, emprunt_duree: q.emprunt_duree || null});
-      } else if (q && q.mode === 'apport' && q.apport) {
-        extra = Object.assign(extra, {budget: '', apport: q.apport, canal: 'whatsapp', profil: q.profil,
-          emprunt_pct: q.emprunt_pct != null ? q.emprunt_pct : 0, emprunt_duree: q.emprunt_duree || null});
-      } else if (q && q.mode === 'coacquisition' && q.prix && q.apport) {
-        extra = Object.assign(extra, {budget: q.prix, canal: 'whatsapp', profil: q.profil,
-          coacq: {apport: q.apport, hausse: 3, legaux: 1, duree: 10}});
-      }
+      const extra = extraDepuisQualif({budget: budget || '', page: 'EliA · moment ' + d.m});
       try {
         const r = await envoyerLead({
           nom: S.nom, prenom: S.prenom, tel: numero, mot: resume(),
           societe: form.querySelector('#eli-pot').value.trim(),
         }, p0, 'eli', extra);
         S.lead = true;
+        S.qualifEnvoye = JSON.stringify(S.qualif);
         compterVue('eli-m' + d.m + '-numero');
         S.etapes.push({t: 'merci', rappel: (r && r.rappel) || '', langue: DONNEES.langue});
         // Les programmes gardes par la garde des trois s'ouvrent maintenant.
