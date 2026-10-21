@@ -2220,7 +2220,12 @@ table.ag th{width:64%}
    WhatsApp. */
 @media(max-width:900px){
  .flottant:not(.simu){display:none!important}
- .flottant.simu{bottom:98px}
+ /* Empilee AU-DESSUS de la fleche « remonter » (bottom:100px sur ce meme
+    format), pas dessus : les deux occupaient le meme coin et se
+    recouvraient totalement — Hillel ne voyait jamais la bulle simulateur,
+    seulement la fleche par-dessus (trouve le 21/10/2026, capture a l'appui). */
+ .flottant.simu{right:14px;bottom:calc(166px + env(safe-area-inset-bottom));
+  width:46px;height:46px}
 }
 /* Pendant une simulation, sur telephone et tablette, le trio flottant se
    retire (Hillel, 24/09/2026 : « sur des petits mobiles, le bouton flottant
@@ -2899,6 +2904,13 @@ table.ag th{width:64%}
 .hero-badges li:hover{border-color:#C9A227}
 .hb-ic{background:#FAF7F1;color:#7A6013;box-shadow:none}
 .hb-texte small{color:#6A7284;opacity:1;font-style:normal;font-weight:500;font-size:11px}
+/* Le simulateur ressort des 3 autres badges (Hillel, 21/10/2026 : il ne se
+   distinguait pas assez) — lavis bleu d'action, le seul bleu de la charte,
+   pas un bleu invente pour l'occasion. */
+.hero-badges li.hb-simu{background:var(--action-lavis)!important;
+ border-color:var(--action)!important}
+.hero-badges li.hb-simu:hover{border-color:var(--action-vive)!important}
+.hb-simu .hb-ic{background:var(--action)!important;color:#fff!important}
 .hero-preuves{display:flex!important;gap:12px 40px;flex-wrap:wrap;list-style:none;
  margin:26px 0 0;padding:0;color:#0F172A}
 .hero-preuves li{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:start}
