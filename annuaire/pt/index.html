@@ -2239,12 +2239,21 @@ table.ag th{width:64%}
 .flottant svg{width:22px;height:22px;display:block}
 .flottant.wa{bottom:98px;background:#25d366;color:#052e16}
 .flottant.mail{bottom:156px;background:var(--encre);color:var(--fond)}
+/* Le simulateur, flottant lui aussi (Hillel, 21/10/2026 : un client l'a
+   zappe sur PC, il le veut visible partout) — en encre, pas en bleu : le
+   bleu a ete retire du menu le 19/10/2026 et ne revient pas ici. */
+.flottant.simu{bottom:214px;background:var(--encre);color:var(--fond)}
 /* Sur telephone et tablette, plus de bulles WhatsApp et mail (Hillel,
    24/09/2026 : « ca derange plus qu'autre chose »). Le contact y reste a
    portee par la barre fixe du bas et par le menu ; seule la fleche
-   « remonter » flotte encore. Sur ordinateur, rien ne change. */
+   « remonter » flotte encore. Sur ordinateur, rien ne change.
+   Exception posee le 21/10/2026 : le simulateur, lui, reste flottant meme
+   ici — rien ne le remplace sur mobile/tablette tant que la barre fixe du
+   bas ne le propose pas — et reprend la place laissee vide par la bulle
+   WhatsApp. */
 @media(max-width:900px){
- .flottant{display:none!important}
+ .flottant:not(.simu){display:none!important}
+ .flottant.simu{bottom:98px}
 }
 /* Pendant une simulation, sur telephone et tablette, le trio flottant se
    retire (Hillel, 24/09/2026 : « sur des petits mobiles, le bouton flottant
@@ -3115,8 +3124,13 @@ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35p
 }
 
 @media(max-width:900px){
- /* Plus de tuile « Nos programmes » : redondante avec les gros chiffres juste au-dessus. */
- .hero .hero-choix{display:none!important}
+ /* La tuile « Nos programmes » reste redondante avec les gros chiffres
+    juste au-dessus, mais plus celle du Simulateur : retrouvee pleine
+    largeur (Hillel, 21/10/2026, un client l'avait zappee sur PC — il la
+    veut visible mobile/tablette/PC, pas seulement en flottant). */
+ .hero .hero-choix{display:block!important}
+ .hero .hc-progs{display:none!important}
+ .hero .hc-simu{width:100%}
  /* Logo plus gros et plus net sur téléphone (Hillel, 19/10/2026 : « trop petit, trop fin »). */
  .pub-logo img{height:56px!important}
  .logo-mot{font-size:22px;font-weight:700;letter-spacing:.06em}
@@ -3957,6 +3971,8 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   </section>
 </main>
 
+<a class="flottant simu" href="https://bh-nadlan.com/simulateur/pt/" target="_blank" rel="noopener"
+   aria-label="Simular minha compra"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><rect x="8" y="5" width="8" height="3.5" rx=".5"/><circle cx="8.6" cy="13" r=".55" fill="currentColor" stroke="none"/><circle cx="12" cy="13" r=".55" fill="currentColor" stroke="none"/><circle cx="15.4" cy="13" r=".55" fill="currentColor" stroke="none"/><circle cx="8.6" cy="16.6" r=".55" fill="currentColor" stroke="none"/><circle cx="12" cy="16.6" r=".55" fill="currentColor" stroke="none"/><circle cx="15.4" cy="16.6" r=".55" fill="currentColor" stroke="none"/></svg></a>
 <a class="flottant mail" href="mailto:hillel@bh-nadlan.com" aria-label="Escrever por e-mail"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></a>
 <a class="flottant wa" href="https://wa.me/972585678926?text=Ol%C3%A1+BH+Nadlan%2C+tenho+interesse+e+gostaria+de+conversar+com+voc%C3%AAs." target="_blank" rel="noopener"
    aria-label="Escreva para nós no WhatsApp"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 22c-1.836 0-3.63-.494-5.198-1.43l-.373-.222-3.865 1.014 1.033-3.769-.243-.386A9.937 9.937 0 0 1 2.05 12c0-5.523 4.494-10 10.05-10 2.685 0 5.208 1.043 7.106 2.941A9.933 9.933 0 0 1 22.1 12c0 5.523-4.494 10-10.05 10zm8.413-18.363A11.815 11.815 0 0 0 12.05 0C5.495 0 .15 5.35.15 11.9c0 2.097.547 4.145 1.588 5.945L0 24l6.304-1.654a11.87 11.87 0 0 0 5.744 1.464h.005c6.554 0 11.9-5.35 11.9-11.9 0-3.181-1.24-6.169-3.49-8.273z"/></svg></a>
