@@ -11743,12 +11743,18 @@ window.addEventListener('beforeinstallprompt', e => {
     if (c.pieces != null && c.ville) l.push(libellePieces(c.pieces));
     if (c.budget != null && c.ville) l.push(libelleBudget(c.budget));
     const vus = S.montres.map(projet).filter(Boolean).map(p => p.nom);
-    // Ce que le visiteur a ecrit de sa main part tel quel : c'est souvent
-    // ce qui en dit le plus (« pour ma retraite, pres de la mer »).
-    const ecrits = (S.ecrits || []).join(' / ');
+    // L'echange complet, questions ET reponses d'EliA (Hillel, 22/10/2026) :
+    // il a besoin de juger le serieux d'un contact avant de le rappeler, pas
+    // seulement de voir ce que le visiteur a tape de son cote. Toujours en
+    // francais, jamais traduit (T()) : c'est une note pour Hillel, pas un
+    // texte pour le visiteur, quelle que soit la langue de sa page.
+    const echange = (S.etapes || [])
+      .filter(e => e.t === 'texte' || e.t === 'ia')
+      .map(e => (e.t === 'texte' ? 'Visiteur : ' : 'EliA : ') + e.v)
+      .join('\n');
     return ((l.length ? T('Cherche') + ' : ' + l.join(', ') : '')
       + (vus.length ? (l.length ? ' · ' : '') + T('Programmes vus') + ' : ' + vus.join(', ') : '')
-      + (ecrits ? ' · A écrit : « ' + ecrits + ' »' : '')).slice(0, 520);
+      + (echange ? '\n' + echange : '')).slice(0, 1600);
   }
 
   function brancherFormulaire(form) {
