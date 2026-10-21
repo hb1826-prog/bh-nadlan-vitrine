@@ -2722,7 +2722,7 @@ table.ag th{width:64%}
 .s2-q.fait .s2-q-modif{display:block}
 
 .s2-q-corps{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.65,0,.35,1)}
-.s2-q.active .s2-q-corps{max-height:1400px}
+.s2-q.active .s2-q-corps{max-height:3000px}
 .s2-q-choix{padding:4px 16px 16px;display:grid;gap:9px}
 
 .s2-opt{display:block;width:100%;padding:15px 16px;border-radius:12px;
@@ -8850,13 +8850,17 @@ function v2CorpsCoordonnees() {
     <button type="button" class="s2-sous-suite" id="v2-envoi" style="margin-top:14px">${T('Recevoir ma simulation')}</button>
   </div>`;
 }
-/* La repartition co-acquisition (Hillel, 19/10/2026 : « pas juste une
-   proposition mais un calcul reel »). Prix deja connu du tunnel (carte
-   'montant'), seul l'apport cash manque ici. Le detail du calcul :
-   part Backer = 50 % du prix, part residente = 50 % du prix, dont jusqu'a
-   25 % du prix financable par un credit bancaire classique sur la part
-   residente — donc un apport cash minimum de 25 % du prix (regle confirmee
-   par Hillel, pas encore de commission/frais EquityLiving a chiffrer). */
+/* La repartition co-acquisition (Hillel, 19/10/2026 puis reconfirme le
+   21/10/2026 avec l'exemple d'un bien a 1M ILS : 500k Backer, 500k pour le
+   client, dont jusqu'a 250k financables - « 50 % de sa part », pas « 25 %
+   du prix » : les deux valent pareil tant que le partage reste 50/50, mais
+   exprime a partir de la part residente pour rester juste si ce partage
+   change un jour). Prix deja connu du tunnel (carte 'montant'), seul
+   l'apport cash manque ici. Le detail du calcul : part Backer = 50 % du
+   prix, part residente = 50 % du prix, dont jusqu'a 50 % de la part
+   residente financable par un credit bancaire classique — donc un apport
+   cash minimum de 25 % du prix (pas encore de commission/frais
+   EquityLiving a chiffrer). */
 function v2CoacqChiffres() {
   const prix = TUNNEL.prix || 0;
   const apport = TUNNEL.coacqApport || 0;
@@ -8869,7 +8873,7 @@ function v2CoacqChiffres() {
   const hausse = TUNNEL.coacqHausse != null ? TUNNEL.coacqHausse : P.hausse;
   const partBacker = prix * 0.5;
   const partResident = prix * 0.5;
-  const plafondCredit = prix * 0.25;
+  const plafondCredit = partResident * 0.5;
   const cash = Math.min(apport, partResident);
   const resteAFinancer = partResident - cash;
   const credit = Math.min(resteAFinancer, plafondCredit);
@@ -8924,7 +8928,7 @@ function v2CoacqPeindreResultat(zone) {
     if (r.prix && r.manque > 1) {
       statut.className = 'si-note manque';
       statut.textContent = T('Il manque encore') + ' ' + mil(r.manque) + ' ₪ — '
-        + T('au-delà du crédit possible sur votre part (plafond 25 % du prix). Apport cash minimum à prévoir :')
+        + T('au-delà du crédit possible sur votre part (jusqu’à 50 % de votre part). Apport cash minimum à prévoir :')
         + ' ' + mil(r.plafondCredit) + ' ₪.';
     } else if (r.prix && r.apport) {
       statut.className = 'si-note coacq-ok';
@@ -8972,7 +8976,7 @@ function v2CorpsCoacqCalcul() {
     <div class="coacq-resultat" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
       <div class="ligne"><span class="label">${T('Part du Backer (investisseur) — 50 %')}</span><b id="v2-coacq-backer">${mil(r.partBacker)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Votre part (résident) — 50 %')}</span><b id="v2-coacq-part">${mil(r.partResident)} ₪</b></div>
-      <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire (plafond 25 % du prix)')}</span><b id="v2-coacq-credit">${mil(r.credit)} ₪</b></div>
+      <div class="ligne"><span class="label">&nbsp;&nbsp;${T('dont crédit bancaire (jusqu’à 50 % de votre part)')}</span><b id="v2-coacq-credit">${mil(r.credit)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Apport cash nécessaire')}</span><b id="v2-coacq-cash">${mil(r.cash)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Taxe d’acquisition sur votre part (mas rekhicha)')}</span><b id="v2-coacq-taxe">${mil(r.taxe)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Frais EquityLiving à l’entrée (structuration + juridique, votre moitié)')}</span><b id="v2-coacq-frais">${mil(Math.round(r.fraisEntree))} ₪</b></div>
