@@ -1232,8 +1232,13 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 .coacq-resultat .ligne{display:flex;justify-content:space-between;align-items:baseline;
  gap:12px;font-size:14px;padding:8px 0;border-bottom:1px solid var(--trait-fin)}
 .coacq-resultat .ligne:last-child{border-bottom:0}
-.coacq-resultat .ligne .label{color:var(--gris)}
-.coacq-resultat .ligne b{color:var(--encre);font-size:15px;white-space:nowrap}
+.coacq-resultat .ligne .label{color:var(--gris);flex:1 1 auto;min-width:0}
+.coacq-resultat .ligne b{color:var(--encre);font-size:15px;flex:0 0 auto;
+ max-width:42%;text-align:right}
+@media (max-width:380px){
+ .coacq-resultat .ligne{font-size:13px;gap:8px}
+ .coacq-resultat .ligne b{font-size:13.5px;max-width:38%}
+}
 
 /* La page « Co-acquisition » (Hillel, 19/10/2026, partenariat EquityLiving) :
    memes blocs `.card`/`.pad` que le reste du site, juste un habillage propre
