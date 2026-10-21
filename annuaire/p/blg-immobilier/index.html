@@ -8985,13 +8985,18 @@ function v2CorpsCoacqCalcul() {
     <div class="s2-sous-montant"><select id="v2-coacq-hausse">${[0, 2, 3, 4, 5].map(h => `<option value="${h}"${h === r.hausse ? ' selected' : ''}>${h} %</option>`).join('')}</select></div>
     <div id="v2-coacq-detail">${v2CoacqDetailHTML(r)}</div>
     <div class="card" style="padding:14px 16px;margin:16px 0 4px">
-      <p class="s2-sous-label" style="margin:0 0 8px">${T('Un cadre juridique complet, géré par EquityLiving')}</p>
-      <ul class="coacq-badges" style="margin:0;padding-left:18px;font-size:12.5px;line-height:1.55">
-        <li>${T('Le contrat et la structure du montage sont préparés et suivis par EquityLiving et son avocat : vous n’avez rien à monter vous-même.')}</li>
-        <li>${T('Les droits de chacun sont posés d’avance : 50 % / 50 %, loyer versé, plus-value 75 % / 25 %, 10 ans, sortie possible dès 5 ans.')}</li>
-        <li>${T('Tous les frais sont annoncés avant de s’engager : 2 % de structuration et 2 % de frais juridiques (partagés à parts égales avec le Backer), 10 % de gestion sur le loyer, 0,5 % à la sortie.')}</li>
-        <li>${T('Vous pouvez faire relire le contrat par votre propre avocat.')}</li>
-      </ul>
+      <div class="s2-opt-ligne">
+        <p class="s2-sous-label" style="margin:0">${T('Un cadre juridique complet, géré par EquityLiving')}</p>
+        <button type="button" class="s2-aide-bouton" data-v2-aide="coacq_calcul:juridique">${V2_AIDE === 'coacq_calcul:juridique' ? '−' : '+'}</button>
+      </div>
+      <div class="s2-aide-texte ${V2_AIDE === 'coacq_calcul:juridique' ? 'ouvert' : ''}" style="${V2_AIDE === 'coacq_calcul:juridique' ? 'max-height:500px' : ''}">
+        <ul class="coacq-badges" style="margin:10px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55">
+          <li>${T('Le contrat et la structure du montage sont préparés et suivis par EquityLiving et son avocat : vous n’avez rien à monter vous-même.')}</li>
+          <li>${T('Les droits de chacun sont posés d’avance : 50 % / 50 %, loyer versé, plus-value 75 % / 25 %, 10 ans, sortie possible dès 5 ans.')}</li>
+          <li>${T('Tous les frais sont annoncés avant de s’engager : 2 % de structuration et 2 % de frais juridiques (partagés à parts égales avec le Backer), 10 % de gestion sur le loyer, 0,5 % à la sortie.')}</li>
+          <li>${T('Vous pouvez faire relire le contrat par votre propre avocat.')}</li>
+        </ul>
+      </div>
     </div>
     <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:11px;line-height:1.5;margin-top:14px;color:var(--gris-clair)">${T('Simulation indicative : frais d’entrée comptés sur le prix du bien, frais de gestion à votre charge, loyer et frais constants, impôts éventuels sur la plus-value non inclus. Hillel précise votre dossier lors du premier échange.')}</p>
     <button type="button" class="s2-sous-suite" id="v2-coacq-suite" style="margin-top:14px" ${r.prix && r.apport ? '' : 'disabled'}>${T('Continuer')}</button>
