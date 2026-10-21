@@ -2938,12 +2938,18 @@ table.ag th{width:64%}
 .hb-ic{background:#FAF7F1;color:#7A6013;box-shadow:none}
 .hb-texte small{color:#6A7284;opacity:1;font-style:normal;font-weight:500;font-size:11px}
 /* Le simulateur ressort des 3 autres badges (Hillel, 21/10/2026 : il ne se
-   distinguait pas assez) — lavis bleu d'action, le seul bleu de la charte,
-   pas un bleu invente pour l'occasion. */
+   distinguait pas assez, puis « en relief ») — lavis bleu d'action, le seul
+   bleu de la charte, pas un bleu invente pour l'occasion ; bordure plus
+   epaisse et ombre portee pour le detacher visuellement des 3 autres cartes,
+   plates. */
 .hero-badges li.hb-simu{background:var(--action-lavis)!important;
- border-color:var(--action)!important}
-.hero-badges li.hb-simu:hover{border-color:var(--action-vive)!important}
-.hb-simu .hb-ic{background:var(--action)!important;color:#fff!important}
+ border:2px solid var(--action)!important;
+ box-shadow:0 6px 16px -4px rgba(11,107,214,.35)!important;
+ transform:translateY(-1px)}
+.hero-badges li.hb-simu:hover{border-color:var(--action-vive)!important;
+ box-shadow:0 9px 20px -4px rgba(11,107,214,.45)!important}
+.hb-simu .hb-ic{background:var(--action)!important;color:#fff!important;
+ box-shadow:0 0 0 4px var(--action-lavis)!important}
 .hero-preuves{display:flex!important;gap:12px 40px;flex-wrap:wrap;list-style:none;
  margin:26px 0 0;padding:0;color:#0F172A}
 .hero-preuves li{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:start}
@@ -3789,7 +3795,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
    <div class=hero-texte>
     <h1><span class=h1-a>Enfin le premier site d’achat sur plan en Israël</span> <span class=h1-a><em>direct promoteur</em> et <em>au prix négocié</em> pour nos clients</span> <span class=h1-b>où vous pouvez simuler votre achat et connaître tous vos frais annexes.</span></h1>
     <ul class=hero-badges>
-      <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 7.5h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg></span><span class=hb-texte>Simulateur gratuit<small>Réponse instantanée</small></span></li>
+      <li class=hb-simu><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 7.5h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg></span><span class=hb-texte>Simulateur gratuit<small>Réponse instantanée</small></span></li>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="17" r="2.4"/></svg></span><span class=hb-texte>0 % frais d’agence<small>Aucun frais d’agence n’est demandé : cela ne vous coûte rien.</small></span></li>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5M9 11h.01M15 11h.01"/></svg></span><span class=hb-texte>Direct promoteur<small>Prix exclusif aux clients BH Nadlan</small></span></li>
       <li><span class=hb-ic><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5l2.5 2.5 5.5-6"/><path d="M12 3l7 3v5.5c0 4.2-2.9 7.7-7 9.5-4.1-1.8-7-5.3-7-9.5V6z"/></svg></span><span class=hb-texte>Accompagnement complet<small>Choix du bien, juridique, fiscal, financement</small></span></li>
