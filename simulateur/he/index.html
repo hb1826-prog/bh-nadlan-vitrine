@@ -9947,6 +9947,14 @@ async function envoyerLead(champs, p, I, extra) {
       avocat: extra.avocat != null ? extra.avocat : '',
       agence: extra.agence != null ? extra.agence : '',
       courtier: extra.courtier != null ? extra.courtier : '',
+      // Le montage co-acquisition chiffre par EliA (Hillel, 22/10/2026) :
+      // vide partout ailleurs. Memes noms de champs que le simulateur dedie
+      // (build/serveur-vps/simulateur/service.py), pour que le guichet lise
+      // les deux au meme endroit.
+      coacq_apport: extra.coacq ? extra.coacq.apport || '' : '',
+      coacq_hausse: extra.coacq && extra.coacq.hausse != null ? extra.coacq.hausse : '',
+      coacq_legaux: extra.coacq && extra.coacq.legaux != null ? extra.coacq.legaux : '',
+      coacq_duree: extra.coacq && extra.coacq.duree != null ? extra.coacq.duree : '',
       // Vide partout sauf la simulation « a main levee » basculee sur
       // seconde main (Hillel, 07/10/2026) – voir `leads/service.py`,
       // qui force alors les memes regles qu'un vrai bien de seconde main.

@@ -9914,6 +9914,14 @@ async function envoyerLead(champs, p, I, extra) {
       avocat: extra.avocat != null ? extra.avocat : '',
       agence: extra.agence != null ? extra.agence : '',
       courtier: extra.courtier != null ? extra.courtier : '',
+      // Le montage co-acquisition chiffre par EliA (Hillel, 22/10/2026) :
+      // vide partout ailleurs. Memes noms de champs que le simulateur dedie
+      // (build/serveur-vps/simulateur/service.py), pour que le guichet lise
+      // les deux au meme endroit.
+      coacq_apport: extra.coacq ? extra.coacq.apport || '' : '',
+      coacq_hausse: extra.coacq && extra.coacq.hausse != null ? extra.coacq.hausse : '',
+      coacq_legaux: extra.coacq && extra.coacq.legaux != null ? extra.coacq.legaux : '',
+      coacq_duree: extra.coacq && extra.coacq.duree != null ? extra.coacq.duree : '',
       // Vide partout sauf la simulation « a main levee » basculee sur
       // seconde main (Hillel, 07/10/2026) — voir `leads/service.py`,
       // qui force alors les memes regles qu'un vrai bien de seconde main.
@@ -11178,6 +11186,12 @@ window.addEventListener('beforeinstallprompt', e => {
           compterVue('eli-resultat');
         }
         if (r.retenus && r.retenus.length) S.retenus = r.retenus;
+        // Le dernier chiffrage reel (simuler_achat / budget_selon_apport /
+        // simuler_coacquisition) : garde, jamais efface par un tour qui n'en
+        // refait pas un — c'est lui qui, au moment de laisser ses
+        // coordonnees, transforme la demande en vrai mini-site chiffre au
+        // lieu d'un simple message (Hillel, 22/10/2026).
+        if (r.qualif) S.qualif = r.qualif;
         if (r.formulaire && !S.lead) {
           S.demandes++;
           if (r.formulaire.telephone) S.telSaisi = r.formulaire.telephone;
@@ -11648,11 +11662,27 @@ window.addEventListener('beforeinstallprompt', e => {
       const c = S.crit;
       const budget = c.budget != null && TABLE ? (TABLE.budgets[c.budget] || [])[1] : '';
       const p0 = projet(S.montres[0]) || null;
+      // Un vrai chiffrage a ete fait pendant la conversation (simuler_achat,
+      // budget_selon_apport ou simuler_coacquisition) : le lead porte alors
+      // de quoi generer un vrai mini-site, exactement comme le simulateur du
+      // site, au lieu d'un simple message a lire (Hillel, 22/10/2026).
+      const q = S.qualif;
+      let extra = {budget: budget || '', page: 'EliA · moment ' + d.m};
+      if (q && q.mode === 'achat' && q.prix) {
+        extra = Object.assign(extra, {budget: q.prix, canal: 'whatsapp', profil: q.profil,
+          emprunt_pct: q.emprunt_pct != null ? q.emprunt_pct : 0, emprunt_duree: q.emprunt_duree || null});
+      } else if (q && q.mode === 'apport' && q.apport) {
+        extra = Object.assign(extra, {budget: '', apport: q.apport, canal: 'whatsapp', profil: q.profil,
+          emprunt_pct: q.emprunt_pct != null ? q.emprunt_pct : 0, emprunt_duree: q.emprunt_duree || null});
+      } else if (q && q.mode === 'coacquisition' && q.prix && q.apport) {
+        extra = Object.assign(extra, {budget: q.prix, canal: 'whatsapp', profil: q.profil,
+          coacq: {apport: q.apport, hausse: 3, legaux: 1, duree: 10}});
+      }
       try {
         const r = await envoyerLead({
           nom: S.nom, prenom: S.prenom, tel: numero, mot: resume(),
           societe: form.querySelector('#eli-pot').value.trim(),
-        }, p0, 'eli', {budget: budget || '', page: 'EliA · moment ' + d.m});
+        }, p0, 'eli', extra);
         S.lead = true;
         compterVue('eli-m' + d.m + '-numero');
         S.etapes.push({t: 'merci', rappel: (r && r.rappel) || '', langue: DONNEES.langue});
