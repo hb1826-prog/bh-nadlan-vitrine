@@ -11776,7 +11776,7 @@ window.addEventListener('beforeinstallprompt', e => {
           societe: form.querySelector('#eli-pot').value.trim(),
         }, p0, 'eli', extra);
         S.lead = true;
-        S.qualifEnvoye = S.qualif;
+        S.qualifEnvoye = JSON.stringify(S.qualif);
         compterVue('eli-m' + d.m + '-numero');
         S.etapes.push({t: 'merci', rappel: (r && r.rappel) || '', langue: DONNEES.langue});
         // Les programmes gardes par la garde des trois s'ouvrent maintenant.

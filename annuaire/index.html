@@ -11713,8 +11713,9 @@ window.addEventListener('beforeinstallprompt', e => {
      plus d'un envoi pour le meme chiffrage (`S.qualifEnvoye`). */
   function envoyerQualifSiDeja() {
     if (!S.lead || !S.telConfirme || !S.qualif) return;
-    if (S.qualifEnvoye === S.qualif) return;
-    S.qualifEnvoye = S.qualif;
+    const cle = JSON.stringify(S.qualif);
+    if (S.qualifEnvoye === cle) return;
+    S.qualifEnvoye = cle;
     const extra = extraDepuisQualif({page: 'EliA · qualification'});
     if (!extra.canal) return;
     envoyerLead({nom: S.nom, prenom: S.prenom, tel: S.telConfirme, mot: resume(), societe: ''},
@@ -11790,7 +11791,7 @@ window.addEventListener('beforeinstallprompt', e => {
           societe: form.querySelector('#eli-pot').value.trim(),
         }, p0, 'eli', extra);
         S.lead = true;
-        S.qualifEnvoye = S.qualif;
+        S.qualifEnvoye = JSON.stringify(S.qualif);
         compterVue('eli-m' + d.m + '-numero');
         S.etapes.push({t: 'merci', rappel: (r && r.rappel) || '', langue: DONNEES.langue});
         // Les programmes gardes par la garde des trois s'ouvrent maintenant.
