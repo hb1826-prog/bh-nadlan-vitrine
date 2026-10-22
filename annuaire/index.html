@@ -9514,6 +9514,15 @@ function v2Brancher(zone) {
         agence: TUNNEL.frais ? TUNNEL.frais.agence : undefined,
         courtier: TUNNEL.frais ? TUNNEL.frais.courtier : undefined,
         revente: TUNNEL.revente ? '1' : '',
+        // Co-acquisition : le montage voyage avec la simulation (23/10/2026).
+        // Sans lui, le guichet fabriquait un mini-site « projet neuf »
+        // (20 % a la signature) au lieu du chiffrage du montage.
+        coacq: TUNNEL.coacquisition ? {
+          apport: TUNNEL.coacqApport || Math.round((TUNNEL.prix || 0) * 0.25),
+          hausse: TUNNEL.coacqHausse, duree: TUNNEL.duree || 10,
+          loyer: TUNNEL.coacqLoyer || 0,
+          credit_pct: TUNNEL.comptant ? 0 : Math.min(TUNNEL.ltv == null ? 50 : TUNNEL.ltv, 50),
+        } : undefined,
       });
       confirmerTout(zone, canal, envoi, () => peindreV2(zone));
     };
@@ -10056,6 +10065,8 @@ async function envoyerLead(champs, p, I, extra) {
       coacq_hausse: extra.coacq && extra.coacq.hausse != null ? extra.coacq.hausse : '',
       coacq_legaux: extra.coacq && extra.coacq.legaux != null ? extra.coacq.legaux : '',
       coacq_duree: extra.coacq && extra.coacq.duree != null ? extra.coacq.duree : '',
+      coacq_loyer: extra.coacq && extra.coacq.loyer ? extra.coacq.loyer : '',
+      coacq_credit_pct: extra.coacq && extra.coacq.credit_pct != null ? extra.coacq.credit_pct : '',
       // Vide partout sauf la simulation « a main levee » basculee sur
       // seconde main (Hillel, 07/10/2026) — voir `leads/service.py`,
       // qui force alors les memes regles qu'un vrai bien de seconde main.
