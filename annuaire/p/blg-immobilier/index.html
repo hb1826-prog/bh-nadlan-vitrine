@@ -6038,42 +6038,6 @@ function coacqCorpsHTML() {
     </ol>
     ${contactHTML(null, 'co-acquisition')}`;
 }
-/* Avant de cocher « Co-acquisition » dans la simulation d'un bien (Hillel,
-   22/10/2026) : une fenetre explique le principe, puis l'internaute choisit
-   de continuer en co-acquisition ou de simuler autrement. Fermer (✕, Echap)
-   n'engage rien : la question reste posee. */
-function ouvrirChoixCoacq(choisir) {
-  let ov = document.getElementById('coacq-overlay');
-  if (ov) ov.remove();
-  ov = document.createElement('div');
-  ov.id = 'coacq-overlay';
-  ov.setAttribute('role', 'dialog');
-  ov.setAttribute('aria-modal', 'true');
-  ov.innerHTML = `<div class="coacq-ov-barre"><b>${T('Avant de continuer')}</b>
-      <button type="button" class="coacq-ov-fermer" id="coacq-ov-fermer">${T('Fermer')} ✕</button></div>
-    <div class="coacq-ov-corps">${coacqPrincipeHTML()}
-      <div class="coacq-choix">
-        <button type="button" class="coacq-ov-simuler" id="coacq-ch-oui">${T('Simuler une co-acquisition')}</button>
-        <button type="button" class="coacq-ov-fermer" id="coacq-ch-non">${T('Simuler un achat direct')}</button>
-      </div>
-    </div>`;
-  document.body.appendChild(ov);
-  const html = document.documentElement;
-  const avant = html.style.overflow;
-  html.style.overflow = 'hidden';
-  const fermer = () => {
-    ov.remove();
-    html.style.overflow = avant;
-    document.removeEventListener('keydown', surEchap);
-  };
-  const surEchap = ev => { if (ev.key === 'Escape') fermer(); };
-  document.addEventListener('keydown', surEchap);
-  ov.querySelector('#coacq-ov-fermer').onclick = fermer;
-  ov.querySelector('#coacq-ch-oui').onclick = () => { fermer(); choisir('coacq'); };
-  ov.querySelector('#coacq-ch-non').onclick = () => { fermer(); choisir('non'); };
-  ov.scrollTop = 0;
-}
-
 function pageCoAcquisition() {
   basculer(false);
   vue.innerHTML = `
@@ -8767,7 +8731,7 @@ function v2Cartes() {
       // apport/prix desormais), elle garde juste son role de decider neuf vs
       // ancien, qui conditionne les frais d'agence (carte 'accompagnement'
       // plus loin).
-      id: 'type', label: T('Neuf ou seconde main ?'),
+      id: 'type', label: T('Votre projet ?'),
       resume: () => TUNNEL.coacquisition ? T('Co-acquisition')
         : (TUNNEL.revente === true ? T('Seconde main') : T('Projet neuf')),
       get: () => TUNNEL.coacquisition ? 'coacq'
@@ -8777,7 +8741,7 @@ function v2Cartes() {
         {v:'non', t:T('Projet neuf'),
          aide:T('Paiement échelonné selon l’avancement du chantier. Nous sommes rémunérés par le promoteur : aucun frais d’agence.')},
         {v:'coacq', t:T('Co-acquisition'),
-         aide:T('Vous achetez 50 % du bien avec un investisseur, mis en relation avec vous par notre partenaire EquityLiving, qui finance l’autre moitié. Votre part peut elle-même être financée en partie par un crédit bancaire classique.')},
+         aideLabel: T('Découvrir Equity'), aideHTML: coacqPrincipeHTML()},
       ],
     },
     {
@@ -8789,7 +8753,7 @@ function v2Cartes() {
       id: 'coacq_calcul', label: T('Votre répartition'),
       visible: () => TUNNEL.coacquisition,
       resume: () => {
-        const prix = TUNNEL.prix || 0;
+        const prix = prixDeReference() || 0;
         const cash = Math.min(TUNNEL.coacqApport || 0, prix * 0.5);
         return T('Apport cash') + ' ' + mil(cash) + ' ₪';
       },
@@ -9188,13 +9152,10 @@ function v2CorpsCarte(c) {
   if (c.id === 'financement') return v2CorpsFinancement();
   if (c.id === 'coacq_calcul') return v2CorpsCoacqCalcul();
   if (c.id === 'coordonnees') return v2CorpsCoordonnees();
-  // Texte clair, visible tout de suite, pas cache derriere un « ? » (Hillel,
-  // 16/10/2026) : neuf ou ancien, c'est toujours avec nous, seuls les frais
-  // d'agence changent.
-  const intro = c.id === 'type'
-    ? `<p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Neuf ou ancien, c’est toujours avec nous. Neuf : sans frais d’agence, nous sommes payés par le promoteur. Ancien : 2 % de frais d’agence.')}</p>`
-    : '';
-  return `<div class="s2-q-choix">${intro}${(c.choix || []).map(opt => v2RenduOpt(c, opt)).join('')}</div>`;
+  // Plus de choix "ancien" depuis le 23/10/2026 (Hillel : plus un mot sur la
+  // seconde main ou les 2 % de frais d'agence) — chaque option garde sa
+  // propre explication (`aide`), l'intro generale n'a plus lieu d'etre.
+  return `<div class="s2-q-choix">${(c.choix || []).map(opt => v2RenduOpt(c, opt)).join('')}</div>`;
 }
 function v2RenduCarte(c, i, total) {
   const repondu = v2Fait(c);
