@@ -7506,8 +7506,8 @@ function confirmationSimulationFiche(cible, canal) {
     <div class="merci">
       <div class="coche">✓</div>
       <h3>${T('Votre simulation vous a été envoyée')} ${moyen}.</h3>
-      <p><b>${canal === 'mail' ? T('Consultez votre boîte mail dans la prochaine minute.')
-                               : T('Consultez votre WhatsApp dans la prochaine minute.')}</b></p>
+      <p><b>${canal === 'mail' ? T('Consultez votre boîte mail dans quelques instants.')
+                               : T('Consultez votre WhatsApp dans quelques instants.')}</b></p>
       <p>${T('Le lien reste valable')} <b>${T('7 jours')}</b>.</p>
     </div>`;
   // La confirmation doit se voir tout de suite, sans remonter l'ecran — en
@@ -8543,6 +8543,8 @@ function etapeConfirmation(zone, canal, prixMax) {
     <div class="merci">
       <div class="coche">✓</div>
       <h3>${T('Votre simulation vous a été envoyée')} ${moyen}.</h3>
+      <p><b>${canal === 'mail' ? T('Consultez votre boîte mail dans quelques instants.')
+                               : T('Consultez votre WhatsApp dans quelques instants.')}</b></p>
       <p>${T('Le lien reste valable')} <b>${T('7 jours')}</b> : ${T('passé ce délai, il vous '
         + 'suffira de nous rappeler pour le faire prolonger.')}</p>
       <p class="dim">${T('Vous préférez en parler tout de suite ?')}
