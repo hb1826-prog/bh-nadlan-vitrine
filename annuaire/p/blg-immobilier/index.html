@@ -9022,7 +9022,12 @@ function v2CorpsCoordonnees() {
    cash minimum de 25 % du prix (pas encore de commission/frais
    EquityLiving a chiffrer). */
 function v2CoacqChiffres() {
-  const prix = TUNNEL.prix || 0;
+  // prixDeReference(), pas TUNNEL.prix : en mode "je pars de mon apport",
+  // le vrai prix n'est calcule que cote serveur (fiscalite.py) — sans ce
+  // repli, tout le calcul (part Backer, part residente, apport necessaire)
+  // restait a 0 et le bouton Continuer ne se debloquait jamais (Hillel,
+  // 22/10/2026, bloque sur cette etape).
+  const prix = prixDeReference() || 0;
   const apport = TUNNEL.coacqApport || 0;
   const loyerMarche = TUNNEL.coacqLoyer || 0;
   // Frais et facteurs de credit : tous fabriques par coacquisition.py
