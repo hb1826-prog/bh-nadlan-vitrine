@@ -9327,6 +9327,11 @@ function v2Brancher(zone) {
           hausse: TUNNEL.coacqHausse, duree: TUNNEL.duree || 10,
           loyer: TUNNEL.coacqLoyer || 0,
           credit_pct: TUNNEL.comptant ? 0 : Math.min(TUNNEL.ltv == null ? 50 : TUNNEL.ltv, 50),
+          // Oublie le 23/10/2026 (Hillel : avocat perso a 0,5 % jamais pris
+          // en compte) : le serveur sait deja lire ce champ (coacq_legaux),
+          // seul cet envoi ne le remplissait pas — la fiche montrait donc
+          // toujours le defaut EquityLiving (1 %), jamais le choix reel.
+          legaux: TUNNEL.frais ? TUNNEL.frais.avocat : undefined,
         } : undefined,
       });
       confirmerTout(zone, canal, envoi, () => peindreV2(zone));

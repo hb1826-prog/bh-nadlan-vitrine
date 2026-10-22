@@ -6008,45 +6008,10 @@ function quartierHTML(ville) {
    se pose vraiment — il cherche une ville avant de chercher un programme.
    Pour Google, c'est la seule facon d'exister sur « acheter un appartement a
    Netanya », et c'est le seul canal gratuit dont Hillel dispose. */
-/* ---------------- la seconde main, a part (Hillel, 07/10/2026)
-
-   Un bien en seconde main n'est jamais mele au catalogue direct-promoteur :
-   ca embrouille le client (le promoteur n'est pas le vendeur, les frais
-   d'agence ne sont pas negociables). `DONNEES.reventes` est deja filtree
-   cote Python (`articles(conn, direct=False, revente=True)`) — ici on ne
-   fait qu'afficher, jamais retrier par promoteur direct. */
-function pageSecondeMain() {
-  basculer(false);
-  const items = (DONNEES.reventes || []).slice()
-    .sort((a, b) => a.prix_min - b.prix_min);
-  const prix = items.length
-    ? Math.min.apply(null, items.map(p => p.prix_min)) : 0;
-  // La ville de couverture : celle qui domine la liste du jour (Hillel,
-  // 07/10/2026, « belle photo moderne de ma ville en image de couverture »)
-  // — jamais un visuel du bien lui-meme ici, uniquement dans sa propre
-  // fiche (meme principe que `pageVille`, voir `villeBanniere`/`_images_source`
-  // : le filet ville et la galerie du bien ne se melangent jamais).
-  const comptesVilles = {};
-  items.forEach(p => { comptesVilles[p.ville] = (comptesVilles[p.ville] || 0) + 1; });
-  const villePrincipale = Object.keys(comptesVilles)
-    .sort((a, b) => comptesVilles[b] - comptesVilles[a])[0];
-  vue.innerHTML = `
-    <p class="fil"><a href="#/">${T('Programmes neufs')}</a> ${SEP} ${T('Seconde main')}</p>
-    ${villeBanniere(photoVille(villePrincipale), T('Seconde main'))}
-    <div class="ville-tete">
-      <h1>${T('Biens en revente, proposés par des particuliers')}</h1>
-      <p class="sub">${items.length
-        ? items.length + ' ' + T(items.length > 1 ? 'biens disponibles' : 'bien disponible')
-          + ' · ' + T('à partir de') + ' ' + shek(prix)
-        : T('Aucun bien en revente publié en ce moment.')}</p>
-      <p class="dim" style="margin-top:8px">${T("Ces biens ne sont pas vendus directement par un promoteur : ils nous sont confiés par leur propriétaire actuel. Un accompagnement complet reste inclus, avec des frais d’agence transparents, affichés sur chaque fiche.")}</p>
-    </div>
-    <div class="progs">${items.map(carte).join('')}</div>
-    ${contactHTML(null, 'seconde-main')}
-    ${rassureMini(true)}`;
-  wireContact(null, 'seconde-main');
-  window.scrollTo(0, 0);
-}
+// La page « Biens en revente » (seconde main) a ete retiree du site le
+// 23/10/2026 (Hillel : « je ne vends que du neuf des maintenant ») — cette
+// fonction n'etait deja plus appelee nulle part (le menu avait ete retire
+// avant), elle est supprimee pour de bon plutot que laissee morte.
 
 /* La page du partenariat EquityLiving (Hillel, 19/10/2026) : une troisieme
    voie d'achat, a cote du neuf et de la seconde main — pas une sous-page,
@@ -9479,6 +9444,11 @@ function v2Brancher(zone) {
           hausse: TUNNEL.coacqHausse, duree: TUNNEL.duree || 10,
           loyer: TUNNEL.coacqLoyer || 0,
           credit_pct: TUNNEL.comptant ? 0 : Math.min(TUNNEL.ltv == null ? 50 : TUNNEL.ltv, 50),
+          // Oublie le 23/10/2026 (Hillel : avocat perso a 0,5 % jamais pris
+          // en compte) : le serveur sait deja lire ce champ (coacq_legaux),
+          // seul cet envoi ne le remplissait pas — la fiche montrait donc
+          // toujours le defaut EquityLiving (1 %), jamais le choix reel.
+          legaux: TUNNEL.frais ? TUNNEL.frais.avocat : undefined,
         } : undefined,
       });
       confirmerTout(zone, canal, envoi, () => peindreV2(zone));
