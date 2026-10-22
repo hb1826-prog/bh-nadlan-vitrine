@@ -3267,6 +3267,11 @@ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35p
 .coacq-ov-simuler{font:inherit;font-size:15px;font-weight:700;cursor:pointer;padding:14px 22px;border-radius:999px;
  border:1.5px solid #A6821A;background:#C9A227;color:#0F172A}
 
+/* Exemple grisé dans les champs : clairement plus pâle et plus fin que ce qu'on tape,
+   pour qu'un champ vide ne ressemble jamais à un champ déjà rempli. */
+input::placeholder,textarea::placeholder{color:var(--gris);opacity:.5;font-weight:400;font-style:italic}
+.s2-sous-montant input::placeholder{font-weight:400}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un

@@ -3267,6 +3267,17 @@ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35p
 .coacq-ov-simuler{font:inherit;font-size:15px;font-weight:700;cursor:pointer;padding:14px 22px;border-radius:999px;
  border:1.5px solid #A6821A;background:#C9A227;color:#0F172A}
 
+/* Exemple grisé dans les champs : clairement plus pâle et plus fin que ce qu'on tape,
+   pour qu'un champ vide ne ressemble jamais à un champ déjà rempli. */
+input::placeholder,textarea::placeholder{color:var(--gris);opacity:.5;font-weight:400;font-style:italic}
+.s2-sous-montant input::placeholder{font-weight:400}
+
+/* « Mon propre avocat / courtier » : choix pourcentage/montant et champ sur une seule ligne. */
+.s2-sous-ligne{display:flex;align-items:stretch;gap:8px}
+.s2-sous-ligne .s2-sous-devises{flex:1.2;margin-bottom:0}
+.s2-sous-ligne .s2-sous-montant{flex:1;min-width:0}
+.s2-sous.ouvert{max-height:200px}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -7578,6 +7589,8 @@ function confirmationSimulationFiche(cible, canal) {
     <div class="merci">
       <div class="coche">✓</div>
       <h3>${T('Votre simulation vous a été envoyée')} ${moyen}.</h3>
+      <p><b>${canal === 'mail' ? T('Consultez votre boîte mail dans la prochaine minute.')
+                               : T('Consultez votre WhatsApp dans la prochaine minute.')}</b></p>
       <p>${T('Le lien reste valable')} <b>${T('7 jours')}</b>.</p>
     </div>`;
   // La confirmation doit se voir tout de suite, sans remonter l'ecran — en
@@ -8536,11 +8549,8 @@ function etapeCoordonnees(zone) {
         : ' (crédit jusqu’à ' + TUNNEL.ltv + ' % sur ' + TUNNEL.duree + ' ans)')
       + ' — Profil : ' + profilLabel
       + ' — Reçue par : ' + (canal === 'mail' ? 'mail' : 'WhatsApp');
-    const etiquette = bouton.textContent;
-    bouton.disabled = true;
-    bouton.textContent = T('Envoi…');
-    try {
-      const reponse = await envoyerLead({
+    // Confirmation tout de suite, l'envoi part en arriere-plan (voir v2).
+    const envoi = envoyerLead({
         prenom: val('t-prenom'), nom: val('t-nom'), tel: tel, mail: mail,
         mot: mot, societe: val('t-pot'),
       }, TUNNEL.apport ? null : programmeDuTunnel(), 'simulateur', {
@@ -8560,16 +8570,29 @@ function etapeCoordonnees(zone) {
         // aussi bien du parcours prix que du parcours apport.
         revente: TUNNEL.revente ? '1' : '',
       });
-      compterVue('simu-envoye');
-      etapeConfirmation(zone, canal, TUNNEL.apport ? (reponse || {}).prix_max : null);
-    } catch (err) {
-      bouton.disabled = false;
-      bouton.textContent = etiquette;
-      note.textContent = T('L’envoi a échoué. Réessayez, ou écrivez-nous '
-        + 'directement sur WhatsApp.');
-      note.classList.add('manque');
-    }
+    confirmerTout(zone, canal, envoi, () => etapeCoordonnees(zone));
   };
+}
+
+/* Confirmation immediate, envoi en arriere-plan. Si le guichet repond avec
+   un prix maximum (parcours « apport »), l'ecran se complete ; s'il echoue,
+   on le dit et on propose de reessayer ou d'ecrire sur WhatsApp. */
+function confirmerTout(zone, canal, envoi, reessayer) {
+  etapeConfirmation(zone, canal, null);
+  envoi.then(reponse => {
+    compterVue('simu-envoye');
+    const prixMax = TUNNEL.apport ? (reponse || {}).prix_max : null;
+    if (prixMax) etapeConfirmation(zone, canal, prixMax);
+  }).catch(() => {
+    zone.innerHTML = `
+    <div class="merci">
+      <h3>${T('L’envoi n’a pas abouti.')}</h3>
+      <p>${T('Réessayez, ou écrivez-nous directement sur WhatsApp.')}</p>
+      <p><button type="button" class="s2-sous-suite" id="envoi-reessayer">${T('Réessayer')}</button></p>
+      <p class="dim"><a href="https://wa.me/${DONNEES.wa}" target="_blank" rel="noopener">${T('Écrivez sur WhatsApp')}</a></p>
+    </div>`;
+    $('#envoi-reessayer', zone).onclick = reessayer;
+  });
 }
 
 /* Ecran final : une confirmation d'envoi, jamais les chiffres en direct. Le
@@ -8928,13 +8951,15 @@ function v2RenduSousLibre(c, opt) {
   const val = opt.libre.valGet();
   return `<div class="s2-sous ouvert">
     <p class="s2-sous-label">${opt.libre.label}</p>
-    <div class="s2-sous-devises">
-      <button type="button" class="s2-devise-opt ${mode === 'pct' ? 'choisi' : ''}" data-v2-libre-mode="${c.id}" data-v2-mv="pct">${T('Pourcentage')}</button>
-      <button type="button" class="s2-devise-opt ${mode === 'montant' ? 'choisi' : ''}" data-v2-libre-mode="${c.id}" data-v2-mv="montant">${T('Montant fixe')}</button>
+    <div class="s2-sous-ligne">
+      <div class="s2-sous-devises">
+        <button type="button" class="s2-devise-opt ${mode === 'pct' ? 'choisi' : ''}" data-v2-libre-mode="${c.id}" data-v2-mv="pct">${T('Pourcentage')}</button>
+        <button type="button" class="s2-devise-opt ${mode === 'montant' ? 'choisi' : ''}" data-v2-libre-mode="${c.id}" data-v2-mv="montant">${T('Montant fixe')}</button>
+      </div>
+      <div class="s2-sous-montant"><input type="text" inputmode="decimal"
+        data-v2-libre="${c.id}" placeholder="${mode === 'pct' ? '0,5' : '15 000'}"
+        value="${val != null ? val : ''}"><span class="s2-devise">${mode === 'pct' ? '%' : '₪'}</span></div>
     </div>
-    <div class="s2-sous-montant"><input type="text" inputmode="decimal"
-      data-v2-libre="${c.id}" placeholder="${mode === 'pct' ? '0,5' : '15 000'}"
-      value="${val != null ? val : ''}"><span class="s2-devise">${mode === 'pct' ? '%' : '₪'}</span></div>
     <button type="button" class="s2-sous-suite" data-v2-suite="${c.id}:${opt.v}" ${val != null ? '' : 'disabled'}>${T('Continuer')}</button>
   </div>`;
 }
@@ -9439,32 +9464,24 @@ function v2Brancher(zone) {
           : ' (crédit jusqu’à ' + TUNNEL.ltv + ' % sur ' + TUNNEL.duree + ' ans)')
         + ' — Profil : ' + profilLabel
         + ' — Reçue par : ' + (canal === 'mail' ? 'mail' : 'WhatsApp');
-      const etiquette = envoiBtn.textContent;
-      envoiBtn.disabled = true;
-      envoiBtn.textContent = T('Envoi…');
-      try {
-        const reponse = await envoyerLead({
-          prenom: val('v2-prenom'), nom: val('v2-nom'), tel: tel, mail: mail,
-          mot: mot, societe: val('v2-pot'),
-        }, TUNNEL.apport ? null : programmeDuTunnel(), 'simulateur', {
-          budget: TUNNEL.apport ? '' : TUNNEL.prix,
-          apport: TUNNEL.apport ? apportIls() : '', canal: canal,
-          profil: TUNNEL.profil, cadre: TUNNEL.cadre,
-          emprunt_pct: TUNNEL.comptant ? 0 : TUNNEL.ltv,
-          emprunt_duree: TUNNEL.comptant ? null : TUNNEL.duree,
-          avocat: TUNNEL.frais ? TUNNEL.frais.avocat : undefined,
-          agence: TUNNEL.frais ? TUNNEL.frais.agence : undefined,
-          courtier: TUNNEL.frais ? TUNNEL.frais.courtier : undefined,
-          revente: TUNNEL.revente ? '1' : '',
-        });
-        compterVue('simu-envoye');
-        etapeConfirmation(zone, canal, TUNNEL.apport ? (reponse || {}).prix_max : null);
-      } catch (err) {
-        envoiBtn.disabled = false;
-        envoiBtn.textContent = etiquette;
-        note.textContent = T('L’envoi a échoué. Réessayez, ou écrivez-nous directement sur WhatsApp.');
-        note.classList.add('manque');
-      }
+      // Confirmation tout de suite : le guichet met quelques secondes a
+      // repondre (Hillel, 22/10/2026 : « 5 ou 6 secondes, beaucoup trop
+      // long »). L'envoi part en arriere-plan, l'ecran ne l'attend pas.
+      const envoi = envoyerLead({
+        prenom: val('v2-prenom'), nom: val('v2-nom'), tel: tel, mail: mail,
+        mot: mot, societe: val('v2-pot'),
+      }, TUNNEL.apport ? null : programmeDuTunnel(), 'simulateur', {
+        budget: TUNNEL.apport ? '' : TUNNEL.prix,
+        apport: TUNNEL.apport ? apportIls() : '', canal: canal,
+        profil: TUNNEL.profil, cadre: TUNNEL.cadre,
+        emprunt_pct: TUNNEL.comptant ? 0 : TUNNEL.ltv,
+        emprunt_duree: TUNNEL.comptant ? null : TUNNEL.duree,
+        avocat: TUNNEL.frais ? TUNNEL.frais.avocat : undefined,
+        agence: TUNNEL.frais ? TUNNEL.frais.agence : undefined,
+        courtier: TUNNEL.frais ? TUNNEL.frais.courtier : undefined,
+        revente: TUNNEL.revente ? '1' : '',
+      });
+      confirmerTout(zone, canal, envoi, () => peindreV2(zone));
     };
   }
 }
