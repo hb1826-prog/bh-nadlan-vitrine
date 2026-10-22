@@ -9082,12 +9082,26 @@ function v2CoacqDetailHTML(r) {
 }
 function v2CorpsCoacqCalcul() {
   const r = v2CoacqChiffres();
+  // Meme devise que la premiere ligne remplie, par defaut — et modifiable
+  // ici aussi (Hillel, 23/10/2026 : « on part de l'euro au shekel, faut
+  // garder une logique » — le visiteur qui a tape son prix/apport en euros
+  // ne doit pas retomber sur des shekels sans prevenir un peu plus loin).
+  if (!TUNNEL.coacqDevise) TUNNEL.coacqDevise = TUNNEL.devise || 'ILS';
+  const dCode = TUNNEL.coacqDevise;
+  const symbole = {EUR:'€', USD:'$', ILS:'₪'}[dCode] || '₪';
+  const devises = `<div class="s2-sous-devises">${[{code:'ILS',s:'₪'},{code:'EUR',s:'€'},{code:'USD',s:'$'}].map(x => `<button type="button"
+      class="s2-devise-opt ${x.code === dCode ? 'choisi' : ''}" data-v2-coacq-devise="${x.code}">${x.s} ${x.code}</button>`).join('')}</div>`;
+  const t = tauxDevise(dCode);
+  const versDevise = (ils) => (dCode !== 'ILS' && t) ? Math.round(ils / t) : Math.round(ils || 0);
+  const apportAffiche = TUNNEL.coacqApportRaw != null ? TUNNEL.coacqApportRaw : (r.apport ? versDevise(r.apport) : null);
+  const loyerAffiche = TUNNEL.coacqLoyerRaw != null ? TUNNEL.coacqLoyerRaw : (r.loyerMarche ? versDevise(r.loyerMarche) : null);
   return `<div class="s2-q-choix">
     <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:13px;line-height:1.5;margin-bottom:12px">${T('Un investisseur, mis en relation avec vous par notre partenaire EquityLiving, finance 50 % du bien. Indiquez votre apport cash disponible pour voir la répartition.')}</p>
+    ${devises}
     <p class="s2-sous-label">${T('Votre apport cash disponible')}</p>
     <div class="s2-sous-montant"><input type="text" inputmode="numeric"
       id="v2-coacq-apport" placeholder="500 000"
-      value="${r.apport ? mil(r.apport) : ''}"><span class="s2-devise">₪</span></div>
+      value="${apportAffiche != null ? mil(apportAffiche) : ''}"><span class="s2-devise">${symbole}</span></div>
     <div class="coacq-resultat" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--trait)">
       <div class="ligne"><span class="label">${T('Part du Backer (investisseur) — 50 %')}</span><b id="v2-coacq-backer">${mil(r.partBacker)} ₪</b></div>
       <div class="ligne"><span class="label">${T('Votre part (résident) — 50 %')}</span><b id="v2-coacq-part">${mil(r.partResident)} ₪</b></div>
@@ -9098,7 +9112,7 @@ function v2CorpsCoacqCalcul() {
     <p class="s2-sous-label">${T('Loyer mensuel estimé pour ce bien (optionnel)')}</p>
     <div class="s2-sous-montant"><input type="text" inputmode="numeric"
       id="v2-coacq-loyer" placeholder="6 000"
-      value="${r.loyerMarche ? mil(r.loyerMarche) : ''}"><span class="s2-devise">₪</span></div>
+      value="${loyerAffiche != null ? mil(loyerAffiche) : ''}"><span class="s2-devise">${symbole}</span></div>
     <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:12.5px;line-height:1.5;margin-top:10px">${T('Pendant les 10 ans, vous versez au Backer un tiers du loyer de marché — bien moins qu’un crédit classique sur 100 % du bien, en plus du crédit éventuel sur votre propre part.')}</p>
     <p class="s2-sous-label" style="text-transform:none;letter-spacing:0;font-size:12.5px;line-height:1.5;margin-top:4px">${T('À la revente, après 10 ans (ou dès 5 ans si vous sortez) : 75 % de la plus-value pour le Backer, 25 % pour vous.')}</p>
     <p class="s2-sous-label" style="margin-top:12px">${T('Hausse annuelle du bien à simuler')}</p>
@@ -9275,18 +9289,37 @@ function v2Brancher(zone) {
     const bouton = zone.querySelector('#v2-montant-seul-suite');
     if (bouton) bouton.onclick = () => { V2_REPONDU.montant = true; v2Avancer(zone); };
   }
+  // Conversion vers le shekel (ce que lit tout le calcul) depuis la devise
+  // choisie sur cette carte — meme mecanisme que le montant de l'etape 1.
+  const versIls = (brut) => {
+    const t = tauxDevise(TUNNEL.coacqDevise);
+    return (TUNNEL.coacqDevise && TUNNEL.coacqDevise !== 'ILS' && t)
+      ? Math.round(brut * t) : Math.round(brut);
+  };
   const coacqApportInp = zone.querySelector('#v2-coacq-apport');
   if (coacqApportInp) {
     coacqApportInp.oninput = () => {
       const chiffres = coacqApportInp.value.replace(/[^\d]/g, '');
       const val = chiffres ? parseInt(chiffres, 10) : null;
-      TUNNEL.coacqApport = val;
+      TUNNEL.coacqApportRaw = val;
+      TUNNEL.coacqApport = val != null ? versIls(val) : null;
       coacqApportInp.value = val != null ? mil(val) : '';
       v2CoacqPeindreResultat(zone);
     };
     const coacqSuite = zone.querySelector('#v2-coacq-suite');
     if (coacqSuite) coacqSuite.onclick = () => { V2_REPONDU.coacq_calcul = true; v2Avancer(zone); };
   }
+  zone.querySelectorAll('[data-v2-coacq-devise]').forEach(b => {
+    b.onclick = () => {
+      // Reinterprete les montants deja tapes sous la nouvelle devise — meme
+      // logique que `deviseSet` de l'etape 1 : le chiffre brut ne bouge pas,
+      // c'est son unite qui change, donc le shekel recalcule doit suivre.
+      TUNNEL.coacqDevise = b.dataset.v2CoacqDevise;
+      if (TUNNEL.coacqApportRaw != null) TUNNEL.coacqApport = versIls(TUNNEL.coacqApportRaw);
+      if (TUNNEL.coacqLoyerRaw != null) TUNNEL.coacqLoyer = versIls(TUNNEL.coacqLoyerRaw);
+      peindreV2(zone);
+    };
+  });
   const coacqHausseSel = zone.querySelector('#v2-coacq-hausse');
   if (coacqHausseSel) coacqHausseSel.onchange = () => {
     TUNNEL.coacqHausse = parseFloat(coacqHausseSel.value);
@@ -9297,7 +9330,8 @@ function v2Brancher(zone) {
     coacqLoyerInp.oninput = () => {
       const chiffres = coacqLoyerInp.value.replace(/[^\d]/g, '');
       const val = chiffres ? parseInt(chiffres, 10) : null;
-      TUNNEL.coacqLoyer = val;
+      TUNNEL.coacqLoyerRaw = val;
+      TUNNEL.coacqLoyer = val != null ? versIls(val) : null;
       coacqLoyerInp.value = val != null ? mil(val) : '';
       v2CoacqPeindreResultat(zone);
     };
