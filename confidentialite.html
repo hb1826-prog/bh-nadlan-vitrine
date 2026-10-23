@@ -2771,6 +2771,13 @@ table.ag th{width:64%}
 .s2-sous-montant input{flex:1;border:0;background:none;font:inherit;font-size:18px;
   font-weight:800;color:var(--encre);min-width:0}
 .s2-sous-montant input:focus{outline:none}
+/* Une valeur reprise automatiquement (Hillel, 23/10/2026 : l'apport de
+   l'etape 1 recopie dans la carte co-acquisition) ne doit pas se lire comme
+   si le visiteur l'avait lui-meme tapee — sinon « on dirait que c'est deja
+   rempli ». Plus clair et moins gras que la vraie saisie ; redevient normal
+   des qu'il y touche (voir l'oninput qui retire cette classe). */
+.s2-sous-montant input.pre-rempli{color:var(--gris);font-weight:600}
+.s2-sous-montant input::placeholder{opacity:.35}
 .s2-sous-montant .s2-devise{font-size:14px;font-weight:700;color:var(--gris)}
 .s2-sous-suite{width:100%;margin-top:10px;padding:12px;border-radius:10px;border:0;
   background:var(--encre);color:var(--or);font:inherit;font-weight:800;
