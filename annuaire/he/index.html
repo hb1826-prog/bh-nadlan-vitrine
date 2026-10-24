@@ -7547,10 +7547,10 @@ function formulaireSimulationFiche(zone, cible, p) {
         <button type="button" data-canal="mail">${T('Par mail')}</button>
       </div>
       <div class="duo duo-nom" style="margin-top:14px">
-        <div class="f"><label for="fs-nom">${T('Nom')}</label>
-          <input id="fs-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
         <div class="f"><label for="fs-prenom">${T('Prénom')}</label>
           <input id="fs-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div>
+        <div class="f"><label for="fs-nom">${T('Nom')}</label>
+          <input id="fs-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
       </div>
       <div class="duo" style="margin-top:14px">
         ${champTelHTML('fs-tel', T('Téléphone'))}
@@ -8571,10 +8571,10 @@ function etapeCoordonnees(zone) {
     </div>
 
     <div class="duo duo-nom" style="margin-top:14px">
-      <div class="f"><label for="t-nom">${T('Nom')}</label>
-        <input id="t-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
       <div class="f"><label for="t-prenom">${T('Prénom')}</label>
         <input id="t-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div>
+      <div class="f"><label for="t-nom">${T('Nom')}</label>
+        <input id="t-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
     </div>
     <div class="duo" style="margin-top:14px">
       ${champTelHTML('t-tel', T('Téléphone'))}
@@ -9124,10 +9124,10 @@ function v2CorpsCoordonnees() {
       <button type="button" data-v2-canal="whatsapp" class="${TUNNEL.canal !== 'mail' ? 'on' : ''}">${T('Par WhatsApp')}</button>
       <button type="button" data-v2-canal="mail" class="${TUNNEL.canal === 'mail' ? 'on' : ''}">${T('Par mail')}</button>
     </div>
-    <div class="duo duo-nom" style="margin-top:16px"><div class="f"><label for="v2-nom">${T('Nom')}</label>
-      <input id="v2-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div>
-      <div class="f"><label for="v2-prenom">${T('Prénom')}</label>
-      <input id="v2-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div></div>
+    <div class="duo duo-nom" style="margin-top:16px"><div class="f"><label for="v2-prenom">${T('Prénom')}</label>
+      <input id="v2-prenom" autocomplete="given-name" placeholder="${T('Votre prénom')}"></div>
+      <div class="f"><label for="v2-nom">${T('Nom')}</label>
+      <input id="v2-nom" autocomplete="family-name" placeholder="${T('Votre nom')}"></div></div>
     <div class="duo" style="margin-top:14px">
       ${champTelHTML('v2-tel', T('Téléphone'))}
       <div class="f"><label for="v2-mail">${T('E-mail')}</label>
