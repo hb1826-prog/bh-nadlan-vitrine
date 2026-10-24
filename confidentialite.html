@@ -2778,6 +2778,11 @@ table.ag th{width:64%}
    des qu'il y touche (voir l'oninput qui retire cette classe). */
 .s2-sous-montant input.pre-rempli{color:var(--gris);font-weight:600}
 .s2-sous-montant input::placeholder{opacity:.35}
+/* Le loyer co-acquisition n'est plus saisissable (Hillel, 24/10/2026) : un
+   span prend la place de l'input, mais garde le meme poids visuel qu'une
+   vraie valeur — ce n'est pas une estimation floue, c'est le calcul. */
+.s2-sous-montant.s2-sous-lecture span:first-child{flex:1;font-size:18px;
+  font-weight:800;color:var(--encre)}
 .s2-sous-montant .s2-devise{font-size:14px;font-weight:700;color:var(--gris)}
 .s2-sous-suite{width:100%;margin-top:10px;padding:12px;border-radius:10px;border:0;
   background:var(--encre);color:var(--or);font:inherit;font-weight:800;
