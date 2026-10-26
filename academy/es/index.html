@@ -91,6 +91,7 @@
 
 *{box-sizing:border-box}
 html{scroll-padding-top:130px}
+@media (max-width:900px){html{scroll-padding-top:160px}}
 body{margin:0;background:var(--fond);color:var(--encre);font-family:var(--police);
  font-size:17px;line-height:1.65;-webkit-text-size-adjust:100%}
 a{color:var(--action)}
@@ -398,7 +399,22 @@ footer{text-align:center;font-size:13px;color:var(--gris);padding-block:0 40px;
 @media (max-width:1440px){
  .cta .long{display:none}
 }
+/* Sur telephone, le haut reste fixe (Hillel, 26/10/2026) : l'en-tete porte
+   une bande compacte, progression, note et « Inviter », qui suit la lecture.
+   La grande carte du sommaire, elle, s'efface. */
+.barre-prog{display:none}
 @media (max-width:900px){
+ .barre-prog{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 12px;
+  padding:8px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));
+  border-top:1px solid var(--trait)}
+ .barre-prog .bp-chiffres{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:13px;color:var(--gris);min-width:0}
+ .barre-prog .bp-chiffres span{white-space:nowrap}
+ .barre-prog .bp-chiffres b{color:var(--encre)}
+ .barre-prog .jauge{grid-column:1;margin:0;height:7px}
+ .barre-prog .inviter{grid-column:2;grid-row:1 / span 2;font-size:14px;padding:10px 14px;gap:6px}
+ .barre-prog .inviter svg{width:17px;height:17px}
+ nav.sommaire .carte-prog{display:none}
+ .barre .pastille-note{display:none}
  .cadre{grid-template-columns:1fr;gap:20px;padding-top:18px}
  nav.sommaire{position:static;max-height:none}
  nav.sommaire details{background:var(--surface);border:1px solid var(--trait);border-radius:16px;padding:10px 12px}
@@ -411,7 +427,6 @@ footer{text-align:center;font-size:13px;color:var(--gris);padding-block:0 40px;
 @media (max-width:800px){
  .inscription{grid-template-columns:1fr;gap:26px;padding-top:24px}
  .inscription h1{font-size:30px}
- .barre .inviter{display:none}
 }
 @media (max-width:600px){
  body{font-size:16px}
