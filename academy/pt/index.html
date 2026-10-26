@@ -509,6 +509,12 @@ footer{text-align:center;font-size:13px;color:var(--gris);padding-block:0 40px;
 })();
 (function(){
  var D=JSON.parse(document.getElementById('inscription-donnees').textContent);
+ // Deja inscrit sur cet appareil (Hillel, 26/10/2026 : « quand je me suis
+ // deja connecte une fois, pas la peine de me redemander ») : on l'emmene
+ // dans SA formation. Le navigateur garde le lien, pas l'adresse IP, qui
+ // change en 4G et que tout un wifi partage.
+ var MEMO='bh-academy-lien',RE=/^https:\/\/espace\.bh-nadlan\.com\/academie\/[A-Za-z0-9_-]{16,128}$/;
+ try{var deja=localStorage.getItem(MEMO);if(deja&&RE.test(deja)){location.replace(deja);return;}}catch(e){}
  if(D.publique){var m=/[?&]ref=([A-Za-z0-9_-]{16,128})/.exec(location.search);
   if(m){D.ref=m[1];[].forEach.call(document.querySelectorAll('.langues-menu a'),function(a){
    a.href=a.href.split('?')[0]+'?ref='+m[1];});}}
@@ -533,7 +539,7 @@ footer{text-align:center;font-size:13px;color:var(--gris);padding-block:0 40px;
     url:location.href,academie:{ref:D.ref||''}})})
   .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
   .then(function(x){
-   if(x.ok&&x.j.lien){location.href=x.j.lien;return;}
+   if(x.ok&&x.j.lien){try{localStorage.setItem(MEMO,x.j.lien);}catch(e){}location.href=x.j.lien;return;}
    if(x.ok){b.textContent=D.t.merci;return;}
    b.disabled=false;b.textContent=lib;dire((x.j&&x.j.erreur)||D.t.envoi_ko);})
   .catch(function(){b.disabled=false;b.textContent=lib;dire(D.t.envoi_ko);});
