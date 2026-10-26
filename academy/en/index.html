@@ -251,7 +251,7 @@ dl.lexique dd{margin:0;color:var(--encre-2)}
 
 /* Le quiz : une correction qu'on ne peut pas rater */
 .quiz{margin-top:34px;border-top:1px solid var(--trait);padding-top:26px}
-.quiz-tete{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.quiz-tete{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .quiz-tete h4{margin:0}
 .score-module{font-weight:700;font-size:15px;background:var(--creux);border-radius:999px;padding:6px 14px;
  font-variant-numeric:tabular-nums}
@@ -277,9 +277,12 @@ dl.lexique dd{margin:0;color:var(--encre-2)}
 .verdict p{margin:0;color:var(--encre-2);font-size:15.5px}
 .regle{font-size:14px;color:var(--gris);margin:-6px 0 18px}
 .question.essai .verdict .expl{display:none}
-.remise{background:none;border:0;font:inherit;font-size:14px;color:var(--gris);cursor:pointer;
- text-decoration:underline;text-underline-offset:3px;padding:6px 4px;align-self:flex-start}
-.remise:hover{color:var(--alerte)}
+.remise-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ background:var(--surface);color:var(--encre);border:2px solid var(--encre);border-radius:999px;
+ font:inherit;font-size:15px;font-weight:700;padding:10px 18px;cursor:pointer;white-space:nowrap}
+.remise-bouton:hover{background:var(--encre);color:var(--fond)}
+.remise-bouton.large{width:100%;margin-top:10px}
+.quiz-tete .remise-bouton{margin-left:auto}
 .panneau .danger{background:var(--alerte);color:#fff;border:0;border-radius:999px;font:inherit;
  font-weight:700;padding:13px 20px;cursor:pointer}
 .verdict.vrai{background:var(--ok-lavis);border-color:var(--ok)}
