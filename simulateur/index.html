@@ -3130,7 +3130,7 @@ table.ag th{width:64%}
  .nav a::after{left:0;right:0}
  .nav a[href="#/nous-contacter"]{display:none}
  .nav a[href="#/"]{order:1}.nav a.nav-eli{order:2}
- .nav a.nav-simu{order:3}.nav a[href="#/co-acquisition"]{order:4}.nav a[href="#/blog"]{order:5}
+ .nav a.nav-simu{order:3}.nav a.nav-academy{order:4}.nav a[href="#/blog"]{order:5}
  .pub-flanc-d{display:flex;align-items:center;gap:14px;flex:none}
  .pub-flanc-d .cta,.cta{white-space:nowrap;padding:12px 22px}
 }
@@ -3302,6 +3302,22 @@ input::placeholder,textarea::placeholder{color:var(--gris);opacity:.5;font-weigh
 .s2-sous-ligne .s2-sous-devises{flex:1.2;margin-bottom:0}
 .s2-sous-ligne .s2-sous-montant{flex:1;min-width:0}
 .s2-sous.ouvert{max-height:200px}
+
+/* BH Academy s'ouvre PAR-DESSUS le site, en grand, avec une barre pour
+   revenir (Hillel, 27/10/2026 : « je ne veux pas que les gens sortent de mon
+   site »). La formation reste servie a part ; seul le cadre est ici. */
+.academy-voile{position:fixed;inset:0;z-index:1000;background:var(--fond);
+ display:flex;flex-direction:column}
+.academy-voile[hidden]{display:none}
+.academy-barre{flex:none;display:flex;align-items:center;justify-content:space-between;
+ gap:12px;padding:10px 16px;border-bottom:1px solid var(--trait);background:var(--fond)}
+.academy-barre b{font-size:15px;color:var(--encre);letter-spacing:.02em}
+.academy-fermer{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;
+ background:var(--encre);color:var(--fond);border-radius:999px;padding:10px 18px;
+ font:inherit;font-size:14px;font-weight:650;white-space:nowrap}
+.academy-fermer:hover{opacity:.9}
+.academy-voile iframe{flex:1;width:100%;border:0;background:var(--fond)}
+body.academy-ouverte{overflow:hidden}
 
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
@@ -3750,7 +3766,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
       <a href="#/">Programmes neufs</a>
       <a class=nav-eli href="#/eli"><span class=nav-eli-long>EliA, conseiller IA</span><span class=nav-eli-court>EliA</span></a>
       <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
-      <a href="https://bh-nadlan.com/academy/">BH Academy</a>
+      <a class=nav-academy href="https://bh-nadlan.com/academy/">BH Academy</a>
       <a href="#/blog">Blog</a>
       <a href="#/nous-contacter">Nous contacter</a>
     </nav>
@@ -3813,7 +3829,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   <a href="#/">Programmes neufs</a>
   <a class=nav-eli href="#/eli"><span class=nav-eli-long>EliA, conseiller IA</span><span class=nav-eli-court>EliA</span></a>
   <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
-  <a href="https://bh-nadlan.com/academy/">BH Academy</a>
+  <a class=nav-academy href="https://bh-nadlan.com/academy/">BH Academy</a>
   <a href="#/blog">Blog</a>
   <a href="#/nous-contacter" onclick="fermerMenuMobile()">Nous contacter</a>
   <a class=wa href="https://wa.me/972585678926?text=Bonjour+BH+Nadlan%2C+je+suis+int%C3%A9ress%C3%A9%2C+je+voudrais+%C3%A9changer+avec+vous."><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 22c-1.836 0-3.63-.494-5.198-1.43l-.373-.222-3.865 1.014 1.033-3.769-.243-.386A9.937 9.937 0 0 1 2.05 12c0-5.523 4.494-10 10.05-10 2.685 0 5.208 1.043 7.106 2.941A9.933 9.933 0 0 1 22.1 12c0 5.523-4.494 10-10.05 10zm8.413-18.363A11.815 11.815 0 0 0 12.05 0C5.495 0 .15 5.35.15 11.9c0 2.097.547 4.145 1.588 5.945L0 24l6.304-1.654a11.87 11.87 0 0 0 5.744 1.464h.005c6.554 0 11.9-5.35 11.9-11.9 0-3.181-1.24-6.169-3.49-8.273z"/></svg> WhatsApp</a>
@@ -3988,7 +4004,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
     <div class=pied-col>
       <b>À propos</b>
       <a href="#/qui-sommes-nous">Qui sommes-nous</a>
-      <a href="https://bh-nadlan.com/academy/">BH Academy</a>
+      <a class=nav-academy href="https://bh-nadlan.com/academy/">BH Academy</a>
       <a href="#/blog">Blog</a>
       <a href="#/informations-legales">Informations légales</a>
       <a href="#/donnees-personnelles">Données personnelles</a>
@@ -10944,6 +10960,46 @@ window.addEventListener('beforeinstallprompt', e => {
   addEventListener('scroll', plus_tard, {passive: true});
   addEventListener('resize', plus_tard);
   addEventListener('hashchange', () => { forcerSimuEnVue = false; setTimeout(maj, 400); });
+})();
+
+/* BH Academy s'ouvre par-dessus le site, en grand, avec « Revenir au site »
+   en haut (Hillel, 27/10/2026 : « je ne veux pas que les gens sortent de mon
+   site »). Le bouton retour du telephone et la touche Echap referment aussi.
+   La formation garde sa progression : le cadre n'est charge qu'une fois. */
+(function () {
+  var voile = null, cadre = null;
+  function fermer(depuisHistorique) {
+    if (!voile || voile.hidden) return;
+    voile.hidden = true;
+    document.body.classList.remove('academy-ouverte');
+    if (!depuisHistorique && history.state && history.state.academy) history.back();
+  }
+  function ouvrir(url) {
+    if (!voile) {
+      voile = document.createElement('div');
+      voile.className = 'academy-voile';
+      voile.hidden = true;
+      voile.innerHTML = '<div class="academy-barre"><b>BH Academy</b>'
+        + '<button type="button" class="academy-fermer">\u2715 ' + T('Revenir au site') + '</button></div>'
+        + '<iframe title="BH Academy" allow="clipboard-write"></iframe>';
+      document.body.appendChild(voile);
+      cadre = voile.querySelector('iframe');
+      voile.querySelector('.academy-fermer').addEventListener('click', function () { fermer(false); });
+    }
+    if (!cadre.getAttribute('src')) cadre.setAttribute('src', url);
+    voile.hidden = false;
+    document.body.classList.add('academy-ouverte');
+    history.pushState({academy: 1}, '', location.href);
+  }
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest && ev.target.closest('a.nav-academy');
+    if (!a || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
+    ev.preventDefault();
+    if (typeof fermerMenuMobile === 'function') fermerMenuMobile();
+    ouvrir(a.href);
+  });
+  addEventListener('popstate', function () { fermer(true); });
+  addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fermer(false); });
 })();
 </script>
 
