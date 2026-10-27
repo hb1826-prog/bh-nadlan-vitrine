@@ -3285,21 +3285,24 @@ input::placeholder,textarea::placeholder{color:var(--gris);opacity:.5;font-weigh
 .s2-sous-ligne .s2-sous-montant{flex:1;min-width:0}
 .s2-sous.ouvert{max-height:200px}
 
-/* BH Academy s'ouvre PAR-DESSUS le site, en grand, avec une barre pour
-   revenir (Hillel, 27/10/2026 : « je ne veux pas que les gens sortent de mon
-   site »). La formation reste servie a part ; seul le cadre est ici. */
-.academy-voile{position:fixed;inset:0;z-index:1000;background:var(--fond);
+/* BH Academy et le simulateur s'ouvrent PAR-DESSUS le site, en grand, avec
+   une barre pour revenir (Hillel, 27/10/2026 : « je ne veux pas que les gens
+   sortent de mon site »). Code : `ouvrirCadre` dans annuaire.js. */
+.cadre-voile{position:fixed;inset:0;z-index:1000;background:var(--fond);
  display:flex;flex-direction:column}
-.academy-voile[hidden]{display:none}
-.academy-barre{flex:none;display:flex;align-items:center;justify-content:space-between;
+.cadre-voile[hidden],.cadre-voile iframe[hidden]{display:none}
+.cadre-barre{flex:none;display:flex;align-items:center;justify-content:space-between;
  gap:12px;padding:10px 16px;border-bottom:1px solid var(--trait);background:var(--fond)}
-.academy-barre b{font-size:15px;color:var(--encre);letter-spacing:.02em}
-.academy-fermer{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;
+.cadre-barre b{font-size:15px;color:var(--encre);letter-spacing:.02em}
+.cadre-fermer{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;
  background:var(--encre);color:var(--fond);border-radius:999px;padding:10px 18px;
  font:inherit;font-size:14px;font-weight:650;white-space:nowrap}
-.academy-fermer:hover{opacity:.9}
-.academy-voile iframe{flex:1;width:100%;border:0;background:var(--fond)}
-body.academy-ouverte{overflow:hidden}
+.cadre-fermer:hover{opacity:.9}
+.cadre-voile iframe{flex:1;width:100%;border:0;background:var(--fond)}
+body.cadre-ouvert{overflow:hidden}
+/* Le simulateur ouvert dans le cadre : la barre du dessus ramene au site,
+   son propre lien de retour ferait doublon. */
+html.dans-cadre .retour-site{display:none}
 
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
@@ -4286,9 +4289,7 @@ function ouvrirSimulateur(mode, prix, projet, apport, devise, v2, coacq) {
     // Pas de 'noopener' dans window.open : le navigateur renvoie alors null
     // meme quand l'onglet s'est ouvert, et la page d'accueil partait AUSSI
     // vers le simulateur. On coupe le lien a la main.
-    const w = window.open(DONNEES.simulateur_url + q, '_blank');
-    if (w) { try { w.opener = null; } catch (e) { /* rien */ } }
-    else location.href = DONNEES.simulateur_url + q;
+    ouvrirCadre(DONNEES.simulateur_url + q);
     return;
   }
   if (v2) SIMU_V2 = true;
@@ -11010,44 +11011,80 @@ window.addEventListener('beforeinstallprompt', e => {
   addEventListener('hashchange', () => { forcerSimuEnVue = false; setTimeout(maj, 400); });
 })();
 
-/* BH Academy s'ouvre par-dessus le site, en grand, avec « Revenir au site »
-   en haut (Hillel, 27/10/2026 : « je ne veux pas que les gens sortent de mon
-   site »). Le bouton retour du telephone et la touche Echap referment aussi.
-   La formation garde sa progression : le cadre n'est charge qu'une fois. */
-(function () {
-  var voile = null, cadre = null;
+/* BH Academy et le simulateur s'ouvrent PAR-DESSUS le site, en grand, avec
+   « Revenir au site » en haut (Hillel, 27/10/2026 : « je ne veux pas que les
+   gens sortent de mon site »). Le bouton retour du telephone et Echap
+   referment aussi. Chaque page garde sa place si on la rouvre : un cadre par
+   adresse, charge une seule fois. */
+var ouvrirCadre = (function () {
+  var voile = null, titre = null, cadres = {}, actif = null;
   function fermer(depuisHistorique) {
     if (!voile || voile.hidden) return;
     voile.hidden = true;
-    document.body.classList.remove('academy-ouverte');
-    if (!depuisHistorique && history.state && history.state.academy) history.back();
+    document.body.classList.remove('cadre-ouvert');
+    if (!depuisHistorique && history.state && history.state.cadre) history.back();
   }
-  function ouvrir(url) {
+  function nomDe(url) {
+    return /\/academy\//.test(url) ? 'BH Academy' : T("Simulateur d'achat");
+  }
+  function ouvrir(url, nom) {
+    // Deja dans un cadre (le simulateur ouvert par-dessus le site) : c'est
+    // la page du dessous qui ouvre, jamais un cadre dans le cadre.
+    if (window.top !== window) {
+      try { if (parent.ouvrirCadre) { parent.ouvrirCadre(url, nom); return; } } catch (e) { /* autre site */ }
+    }
     if (!voile) {
       voile = document.createElement('div');
-      voile.className = 'academy-voile';
+      voile.className = 'cadre-voile';
       voile.hidden = true;
-      voile.innerHTML = '<div class="academy-barre"><b>BH Academy</b>'
-        + '<button type="button" class="academy-fermer">\u2715 ' + T('Revenir au site') + '</button></div>'
-        + '<iframe title="BH Academy" allow="clipboard-write"></iframe>';
+      voile.innerHTML = '<div class="cadre-barre"><b></b>'
+        + '<button type="button" class="cadre-fermer">\u2715 ' + T('Revenir au site') + '</button></div>';
       document.body.appendChild(voile);
-      cadre = voile.querySelector('iframe');
-      voile.querySelector('.academy-fermer').addEventListener('click', function () { fermer(false); });
+      titre = voile.querySelector('b');
+      voile.querySelector('.cadre-fermer').addEventListener('click', function () { fermer(false); });
     }
-    if (!cadre.getAttribute('src')) cadre.setAttribute('src', url);
+    var cle = url.split('?')[0];
+    var f = cadres[cle];
+    if (!f) {
+      f = cadres[cle] = document.createElement('iframe');
+      f.setAttribute('allow', 'clipboard-write');
+      voile.appendChild(f);
+    }
+    if (f.getAttribute('src') !== url) f.setAttribute('src', url);
+    for (var k in cadres) cadres[k].hidden = cadres[k] !== f;
+    titre.textContent = nom || nomDe(url);
+    f.title = titre.textContent;
+    actif = f;
     voile.hidden = false;
-    document.body.classList.add('academy-ouverte');
-    history.pushState({academy: 1}, '', location.href);
+    document.body.classList.add('cadre-ouvert');
+    history.pushState({cadre: 1}, '', location.href);
   }
+  // Les liens du menu, du pied de page, de l'accueil et le bouton flottant.
   document.addEventListener('click', function (ev) {
-    var a = ev.target.closest && ev.target.closest('a.nav-academy');
+    var a = ev.target.closest && ev.target.closest('a[href]');
     if (!a || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
+    var simu = DONNEES.simulateur_url;
+    var estSimu = simu && a.href.indexOf(simu) === 0
+      && location.href.indexOf(simu) !== 0;
+    if (!a.classList.contains('nav-academy') && !estSimu) return;
     ev.preventDefault();
     if (typeof fermerMenuMobile === 'function') fermerMenuMobile();
     ouvrir(a.href);
   });
+  // Page ouverte dans le cadre : son lien de retour est cache (la barre du
+  // dessus le fait), et un lien qui mene ailleurs sur le site remplace la
+  // page entiere au lieu de s'ouvrir dans le cadre.
+  if (window.top !== window) {
+    document.documentElement.classList.add('dans-cadre');
+    document.addEventListener('click', function (ev) {
+      var a = ev.target.closest && ev.target.closest('a[href]');
+      if (!a || ev.defaultPrevented || a.target) return;
+      if (a.pathname !== location.pathname || a.host !== location.host) a.target = '_top';
+    });
+  }
   addEventListener('popstate', function () { fermer(true); });
   addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fermer(false); });
+  return ouvrir;
 })();
 </script>
 <script>/* =====================================================================
