@@ -4732,7 +4732,7 @@ function voisines(ville, rayon) {
 }
 
 /* Ce qu'on affiche, et la phrase qui dit pourquoi. */
-function chercher() {
+function chercher(nbSurDemande) {
   const base = {ville: F.ville, budget: +F.budget || 0,
                 pieces: (F.pieces || []).slice(),
                 types: (F.types || []).slice()};
@@ -4742,6 +4742,10 @@ function chercher() {
 
   let vus = essai(base);
   if (vus.length) return {vus: vus, note: ''};
+  // La ville choisie n'a que des programmes « prix sur demande » (Eilat,
+  // Hillel 29/10/2026) : ce sont eux qu'on montre, sans aller chercher
+  // ailleurs ni annoncer « rien ne correspond » — il y a bien quelque chose.
+  if (F.ville && nbSurDemande) return {vus: [], note: ''};
 
   // 1. On s'eloigne : la ville demandee reste le centre, le cercle grandit.
   if (F.ville) {
@@ -4881,12 +4885,12 @@ function ordreGrille(vus, sd) {
 function liste() {
   basculer(true);
   syncMenus();
-  const r = chercher();
-  const vus = r.vus;
   // Les « prix sur demande » subissent les memes filtres que les autres :
   // une recherche par ville ou par nombre de pieces doit les voir aussi.
   const sd = (DONNEES.sur_demande || []).filter(p =>
     filtre(p, {ville: F.ville, pieces: F.pieces, types: F.types}));
+  const r = chercher(sd.length);
+  const vus = r.vus;
   const melange = ordreGrille(vus, sd);
   const villes = [...new Set(melange.map(x => x.p.ville))].length;
   $('#pub-titre').textContent = F.ville ? T('Programmes à') + ' ' + T(F.ville)
@@ -6090,8 +6094,9 @@ function ouvrirInfoCoacq() {
 function pageVille(cle) {
   basculer(false);
   const n = (DONNEES.villes || {})[cle];
+  const sdVille = (DONNEES.sur_demande || []).filter(p => cleVille(p.ville) === cle);
   const nom = n ? n.ville
-    : (DONNEES.projets.find(p => cleVille(p.ville) === cle) || {}).ville;
+    : (DONNEES.projets.find(p => cleVille(p.ville) === cle) || sdVille[0] || {}).ville;
   if (!nom) { location.hash = '#/'; return; }
   F.ville = nom;
   const champ = document.getElementById('f-ville');
@@ -6106,7 +6111,10 @@ function pageVille(cle) {
 
   // Rien a cette adresse ne veut pas dire page vide : on montre le plus
   // proche, comme la recherche le fait deja.
-  const autour = dedans.length ? [] : (DONNEES.projets.slice()
+  // Ses programmes « prix sur demande » comptent aussi : une ville qui n'a
+  // qu'eux (Eilat) n'est pas une ville vide.
+  const total = dedans.length + sdVille.length;
+  const autour = total ? [] : (DONNEES.projets.slice()
     .sort((a, b) => a.prix_min - b.prix_min).slice(0, 6));
 
   vue.innerHTML = `
@@ -6114,10 +6122,10 @@ function pageVille(cle) {
     ${villeBanniere(photoVille(nom), esc(nomAffiche))}
     <div class="ville-tete">
       <h1>${T('Acheter un appartement neuf à')} ${esc(nomAffiche)}</h1>
-      <p class="sub">${dedans.length
-        ? dedans.length + ' ' + T(dedans.length > 1 ? 'programmes suivis' : 'programme suivi')
-          + ' · ' + T('à partir de') + ' '
-          + shek(prix) + ' · ' + T('0 frais d’agence')
+      <p class="sub">${total
+        ? total + ' ' + T(total > 1 ? 'programmes suivis' : 'programme suivi')
+          + (dedans.length ? ' · ' + T('à partir de') + ' ' + shek(prix) : '')
+          + ' · ' + T('0 frais d’agence')
         : T('Aucun programme publié à') + ' ' + esc(nomAffiche) + ' '
           + T("en ce moment : nous en suivons d’autres, et nous allons chercher au cas par cas.")}</p>
     </div>
@@ -6127,9 +6135,9 @@ function pageVille(cle) {
       <dl class="ville-reperes">${(n.reperes || []).map(r =>
         '<div><dt>' + esc(T(r[0])) + '</dt><dd>' + esc(T(r[1])) + '</dd></div>'
       ).join('')}</dl></section>` : ''}
-    ${dedans.length
+    ${total
       ? '<h2 class="ville-h2">' + T('Les programmes à') + ' ' + esc(nomAffiche) + '</h2>'
-        + '<div class="progs">' + dedans.map(carte).join('') + '</div>'
+        + '<div class="progs">' + dedans.map(carte).concat(sdVille.map(carteSurDemande)).join('') + '</div>'
       : '<h2 class="ville-h2">' + T('Ce que nous suivons ailleurs') + '</h2>'
         + '<div class="progs">' + autour.map(carte).join('') + '</div>'}
     ${contactHTML(null, 'ville')}
