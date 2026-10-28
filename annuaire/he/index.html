@@ -11497,7 +11497,7 @@ var ouvrirCadre = (function () {
     // grandie a la main, le temps du flux – la bulle definitive (cartes,
     // formulaire…) reste posee par `peindre()` comme avant, une fois le
     // flux termine.
-    let bulleFlux = null, texteFlux = '';
+    let bulleFlux = null, texteFlux = '', cartesFlux = null;
     fetch(DONNEES.eli_url, {method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({cid: S.cid, langue: DONNEES.langue || 'fr', texte: texte, etat: etat}),
       signal: fin.signal})
@@ -11519,11 +11519,28 @@ var ouvrirCadre = (function () {
               if (!bulleFlux) {
                 ecritEli(false);
                 const fil = PANNEAU.querySelector('.eli-fil');
-                fil.insertAdjacentHTML('beforeend', '<div class="eli-msg eli-lui"></div>');
-                bulleFlux = fil.querySelector('.eli-msg.eli-lui:last-child');
+                // Le texte se place au-dessus des cartes deja montrees,
+                // dans l'ordre de la bulle definitive.
+                const html = '<div class="eli-msg eli-lui eli-flux"></div>';
+                if (cartesFlux) cartesFlux.insertAdjacentHTML('beforebegin', html);
+                else fil.insertAdjacentHTML('beforeend', html);
+                bulleFlux = fil.querySelector('.eli-flux');
               }
               bulleFlux.textContent = texteFlux;
               bulleFlux.closest('.eli-fil').scrollTop = 1e9;
+            } else if (evt.cartes) {
+              // Les programmes trouves arrivent avant le texte (~2 s) : on
+              // les montre tout de suite, la bulle definitive les reprend a
+              // la fin (Hillel, 28/10/2026 : « il faut que ça réponde plus
+              // vite »).
+              const fil = PANNEAU.querySelector('.eli-fil');
+              if (cartesFlux) cartesFlux.remove();
+              const ecrit = fil.querySelector('.eli-ecrit');
+              const html = '<div class="eli-cartes-flux">' + cartes(evt.cartes) + '</div>';
+              if (ecrit) ecrit.insertAdjacentHTML('beforebegin', html);
+              else fil.insertAdjacentHTML('beforeend', html);
+              cartesFlux = fil.querySelector('.eli-cartes-flux');
+              fil.scrollTop = 1e9;
             } else if (evt.final) {
               return evt.final;
             }
@@ -11538,6 +11555,7 @@ var ouvrirCadre = (function () {
         attente = false;
         ecritEli(false);
         if (bulleFlux) bulleFlux.remove();
+        if (cartesFlux) cartesFlux.remove();
         if (!r || r.mode !== 'ia') {
           // Pas d'IA pour cette visite : on retire la phrase posee pour elle
           // et on la relit sans IA, comme avant.
