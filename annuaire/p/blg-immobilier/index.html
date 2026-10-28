@@ -1457,22 +1457,24 @@ body.simulateur-seul .retour-site:hover{border-color:var(--action)}
 /* ====================== la barre d'action du telephone =================== */
 .barre-mobile{display:none}
 @media(max-width:900px){
+ /* Barre basse, une seule ligne par bouton (Hillel, 28/10/2026 : sur iPhone
+    elle prenait 1/6 de l'ecran, le titre passait sur 3 lignes + la mention
+    « Gratuit, sans engagement », et cachait EliA et les ronds de droite).
+    Hauteur : 6 + 44 + 6 = 56 px, plus la marge de securite de l'iPhone.
+    44 px = la cible tactile minimale, ne pas descendre en dessous.
+    Si cette hauteur change, reporter BARRE_BAS (56 px) dans eli.css
+    (.eli-pastille) et ici (.remonter, .flottant.simu). */
  .barre-mobile{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
-  gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  gap:8px;padding:6px 12px calc(6px + env(safe-area-inset-bottom));
   background:var(--fond);border-top:1px solid var(--trait);
   box-shadow:0 -6px 20px -8px rgba(15,23,42,.22)}
- .barre-mobile button,.barre-mobile a{flex:1;border:0;border-radius:20px;
-  padding:10px 10px;font-size:14px;font-weight:700;text-align:center;
-  line-height:1.25;background:var(--encre);color:var(--fond);cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:1px}
- .barre-mobile a{flex-direction:row;gap:8px}
- /* Le rappel gratuit se dit en deux lignes : le titre, puis la reassurance
-    en petit — sans elle, l'engagement est ce qui retient le plus un
-    visiteur d'entrer son numero. */
- .barre-mobile button small{font-size:10.5px;font-weight:600;opacity:.72}
+ .barre-mobile button,.barre-mobile a{flex:1;min-width:0;border:0;border-radius:16px;
+  min-height:44px;padding:6px 10px;font-size:14px;font-weight:700;text-align:center;
+  line-height:1.2;background:var(--encre);color:var(--fond);cursor:pointer;
+  display:flex;flex-direction:row;align-items:center;justify-content:center;
+  gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
  .barre-mobile .wa{background:#25d366;color:#052e16}
- body{padding-bottom:86px}
+ body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
  body.tunnel-plein{padding-bottom:0}
 }
 
@@ -2202,7 +2204,7 @@ table.ag th{width:64%}
  /* Au-dessus de la barre d'action, jamais dessous, et sans son libelle :
     la place manque. Relevé et rendu un peu transparent — demande le
     19/09/2026, pour que le trio flotte sans peser sur le contenu. */
- .remonter{right:14px;bottom:calc(100px + env(safe-area-inset-bottom));
+ .remonter{right:14px;bottom:calc(68px + env(safe-area-inset-bottom));
   padding:12px;font-size:0;gap:0;width:46px;height:46px;
   justify-content:center}
  .remonter span{font-size:19px}
@@ -2239,7 +2241,7 @@ table.ag th{width:64%}
     format), pas dessus : les deux occupaient le meme coin et se
     recouvraient totalement — Hillel ne voyait jamais la bulle simulateur,
     seulement la fleche par-dessus (trouve le 21/10/2026, capture a l'appui). */
- .flottant.simu{right:14px;bottom:calc(166px + env(safe-area-inset-bottom));
+ .flottant.simu{right:14px;bottom:calc(124px + env(safe-area-inset-bottom));
   width:46px;height:46px}
 }
 /* Pendant une simulation, sur telephone et tablette, le trio flottant se
@@ -3332,7 +3334,7 @@ html.dans-cadre .retour-site{display:none}
 body.eli-ouvert .eli-pastille,body.eli-une-visible .eli-pastille{display:none}
 @media(max-width:900px){
  .eli-pastille{left:14px;right:72px;width:auto;transform:none;
-  bottom:calc(98px + env(safe-area-inset-bottom));padding:6px 16px 6px 6px}
+  bottom:calc(68px + env(safe-area-inset-bottom));padding:6px 16px 6px 6px}
  .eli-pastille:hover{transform:none}
  /* De droite a gauche, la fleche « Haut de page » passe a gauche. */
  [dir=rtl] .eli-pastille{left:72px;right:14px}
