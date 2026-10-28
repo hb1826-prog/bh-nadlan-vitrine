@@ -3324,6 +3324,42 @@ body.cadre-ouvert{overflow:hidden}
    son propre lien de retour ferait doublon. */
 html.dans-cadre .retour-site{display:none}
 
+/* ---- Cartes d'accueil sur petit écran (Hillel, 28/10/2026, capture iPhone) ----
+   1. Un mot avec apostrophe ne se coupe plus (« d’ » / « agence ») : le mot
+      entier est dans <span class=nw>, posé par `_colle()` dans generer.py.
+   2. « Accompagnement » (RU « сопровождение », « финансирование »…)
+      débordait de la carte : sous 420 px, l'icône passe AU-DESSUS du texte
+      (le texte récupère toute la largeur de la carte), et un mot encore trop
+      long se coupe avec un trait d'union (hyphens:auto, langue de <html>)
+      plutôt que de sortir du cadre. */
+.nw{white-space:nowrap}
+.hb-texte{hyphens:auto;-webkit-hyphens:auto}
+@media(max-width:420px){
+ .hero-badges li,.hb-simu-lien{flex-direction:column;align-items:flex-start;
+  justify-content:center;gap:6px}
+ .hero-badges li{padding:10px 10px}
+ .hb-ic{width:26px;height:26px}.hb-ic svg{width:15px;height:15px}
+ .hb-texte{width:100%;overflow-wrap:break-word;word-break:normal}
+}
+
+/* ---- Les ronds flottants du téléphone ne couvrent plus le texte ----
+   (Hillel, 28/10/2026 : calculatrice + flèche posées sur le bloc EliA.)
+   - La flèche « haut de page » avait l'attribut `hidden` en haut de page,
+     mais `display:inline-flex` l'emportait : elle restait toujours là.
+   - Le simulateur flottant ne sert à rien quand la carte « Simulateur
+     gratuit » de l'accueil est à l'écran : il s'efface près du haut de page
+     (`pres-du-haut`, annuaire.js) et tant que le bloc EliA est visible
+     (`eli-une-visible`, eli.js), dont il cachait le bouton d'envoi.
+   - Ailleurs, un peu plus discrets (44 px = cible tactile minimale).
+   La barre du bas (commit 3c3a064) n'est pas touchée. */
+.remonter[hidden]{display:none!important}
+@media(max-width:900px){
+ body.pres-du-haut .flottant.simu,
+ body.eli-une-visible .flottant.simu,
+ body.eli-une-visible .remonter{display:none!important}
+ .remonter,.flottant.simu{width:44px;height:44px;opacity:.6}
+}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
