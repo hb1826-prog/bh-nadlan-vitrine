@@ -5638,7 +5638,7 @@ async function fiche(p) {
               [t.parking ? T('parking') : '', t.cave ? T('cave') : '']
                 .filter(Boolean).join(' · ')}</td>` : ''}
             <td class="num strong" data-label="${esc(T('À partir de'))}">${
-              prixDouble(t.prix_min)}</td>
+              t.sur_demande ? T('sur demande') : prixDouble(t.prix_min)}</td>
           </tr>`).join('')}</tbody>
         </table></div>
       </div>
@@ -7135,7 +7135,7 @@ async function simulateur(zone, p) {
       <span class="f-eur" id="s-prix-eur">${E.prix ? eur(E.prix) : ''}</span></div>`;
   const choix = p
     ? `<div class="f"><label>${T('Appartement')}</label><select id="s-typo">${
-        p.typologies.map(x => '<option value="' + x.cle + '"'
+        p.typologies.filter(x => x.prix_min).map(x => '<option value="' + x.cle + '"'
           + (x.cle === E.typo && !E.libre ? ' selected' : '') + '>' + x.libelle
           + ' ' + T('pièces') + (x.type ? ' · ' + T(x.type) : '')
           + ' · ' + shek(x.prix_min) + '</option>').join('')
