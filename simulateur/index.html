@@ -265,7 +265,6 @@ button,input,select,textarea{font:inherit;color:inherit}
  padding:10px 0;transition:transform .18s var(--ease)}
 .pub-logo:hover{transform:translateY(-1px)}
 .pub-logo svg{display:block}
-<<<<<<< Updated upstream
 /* Le nom et la baseline, ecrits a cote de la vraie photo du logo — pas dans
    l'image (illisible une fois ramenee a 44px) mais en texte HTML net, net a
    toute taille (Hillel, 19/10/2026 : « BH NADLAN » a cote, la baseline en
@@ -275,8 +274,6 @@ button,input,select,textarea{font:inherit;color:inherit}
  letter-spacing:.02em;color:var(--encre);line-height:1;white-space:nowrap}
 .logo-tag{display:block;width:100%;font-size:10px;font-weight:650;
  letter-spacing:.1em;text-transform:uppercase;color:var(--gris)}
-=======
->>>>>>> Stashed changes
 /* Sur ordinateur, le logo passe tout a gauche (avant le menu) — demande le
    22/09/2026. Sur telephone il reste au milieu (voir le commentaire du
    media 900px plus bas : deplace deux fois pour Safari, ne pas y toucher).
@@ -1164,13 +1161,10 @@ h1.h1-partage{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .block-head{padding:18px 22px 0;font-size:12px;font-weight:750;
  letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
 .pad{padding:14px 22px 22px}
-<<<<<<< Updated upstream
 /* Le prix au m² de la fiche, juste au-dessus du tableau des typologies
    (Hillel, 24/09/2026). */
 .m2-projet{margin:8px 22px 0;font-size:14px;color:var(--gris)}
 @media(max-width:640px){.m2-projet{margin-left:16px;margin-right:16px}}
-=======
->>>>>>> Stashed changes
 
 /* Le petit « ? » cliquable a cote d'un titre (identite.aide(), cote Python,
    pose par generer.py dans window.AIDES puis lu par aide() dans
@@ -5503,11 +5497,7 @@ function offre(p) {
     </div>` : ''}
     <p class="offre-lieu">◎ ${esc(p.quartier ? p.quartier + ' · ' + T(p.ville)
                                              : T(p.ville))}</p>
-<<<<<<< Updated upstream
     <div class="offre-prix"><span>${T('à partir de')}${aide(p.revente ? 'prix-revente' : 'prix')}</span>
-=======
-    <div class="offre-prix"><span>${T('à partir de')}${aide('prix')}</span>
->>>>>>> Stashed changes
       <b>${shek(p.prix_min)}</b>
       <i class="offre-eur">${eur(p.prix_min)}</i>
       <em>${p.revente ? T('proposé par un particulier · 2 % de frais d’agence')
@@ -5626,11 +5616,7 @@ async function fiche(p) {
     </div>
     <div class="card">
       <details class="block simu-plier" id="simu-bloc">
-<<<<<<< Updated upstream
         <summary class="simu-resume">${picto('calculatrice')}<span>${(p.revente ? T('Simulation gratuite pour ce bien') : T('Simuler l’achat dans ce projet'))}</span>
-=======
-        <summary class="simu-resume">${picto('calculatrice')}<span>${T('Simuler l’achat dans ce projet')}</span>
->>>>>>> Stashed changes
           ${CHEV}</summary>
         <div id="simu"></div>
       </details>
@@ -5638,12 +5624,8 @@ async function fiche(p) {
     ${rassureMini(p.revente)}
     <div class="card">
       <div class="block">
-<<<<<<< Updated upstream
         <div class="block-head" style="display:flex;align-items:center;gap:8px">${picto('immeuble')}<span>${p.revente ? T('L’appartement') : T('Les appartements')}</span>${aide(p.revente ? 'appartements-revente' : 'appartements')}</div>
         ${typoGrande ? `<p class="m2-projet">${T('Prix au m²')} : ${T('à partir de')} ${mil(prixM2)} ₪/m²${eurM2 ? `<small class="eu">${eurM2}</small>` : ''}</p>` : ''}
-=======
-        <div class="block-head" style="display:flex;align-items:center;gap:8px">${picto('immeuble')}<span>${T('Les appartements')}</span>${aide('appartements')}</div>
->>>>>>> Stashed changes
         <div class="scroll" style="max-height:none">
         <table>
           <thead><tr><th>${T('Typologies')}</th>${aSurface ? `<th>${T('Surface')}</th>` : ''}${aEquip ? `<th>${T('Équipements')}</th>` : ''}
@@ -5668,11 +5650,7 @@ async function fiche(p) {
     ${contactHTML(p, 'fiche')}
     <div class="card">
       <button class="simu-resume simu-resume-bas" type="button" onclick="ouvrirSimu()">
-<<<<<<< Updated upstream
         ${picto('calculatrice')}<span>${(p.revente ? T('Simulation gratuite pour ce bien') : T('Simuler l’achat dans ce projet'))}</span></button>
-=======
-        ${picto('calculatrice')}<span>${T('Simuler l’achat dans ce projet')}</span></button>
->>>>>>> Stashed changes
     </div>
     ${ailleurs(p)}`;
   wireGalerie(p);
