@@ -8125,10 +8125,10 @@ function resumeEtape(i) {
       return T('Votre apport') + ' : ' + somme;
     }
     if (!TUNNEL.prix) return null;
-    const type = TUNNEL.revente === true ? T('Seconde main')
-      : TUNNEL.revente === false ? T('Projet neuf') : null;
-    return T('Prix du bien') + ' : ' + mil(TUNNEL.prix) + ' ₪'
-      + (type ? ' · ' + type : '');
+    // Plus de « · Projet neuf » accole au prix (Hillel, 01/11/2026) : tout
+    // est neuf sur le site, la mention rappelait une question qui n'existe
+    // plus.
+    return T('Prix du bien') + ' : ' + mil(TUNNEL.prix) + ' ₪';
   }
   if (i === 2) {
     if (!TUNNEL.profil) return null;
