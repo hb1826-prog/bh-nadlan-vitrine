@@ -566,10 +566,16 @@ footer{text-align:center;font-size:13px;color:var(--gris);padding-block:0 40px;
   if(!/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(mail)){dire(D.t.mail_ko);return;}
   var tel='+'+document.getElementById('ins-indicatif').value+' '+num;
   b.disabled=true;var lib=b.textContent;b.textContent=D.t.ouverture;
-  fetch(D.guichet+'/lead',{method:'POST',headers:{'Content-Type':'application/json'},
-   body:JSON.stringify({prenom:prenom,nom:nom,tel:tel,mail:mail,langue:D.langue,
+  // Deux nouvelles tentatives si le reseau lache (01/11/2026, iPhone de
+  // Hillel) ; une reponse du guichet, meme un refus, n'est jamais relancee.
+  var corps=JSON.stringify({prenom:prenom,nom:nom,tel:tel,mail:mail,langue:D.langue,
     page:'BH Academy',t:Date.now()-debut,societe:document.getElementById('ins-pot').value,
-    url:location.href,academie:{ref:D.ref||''}})})
+    url:location.href,academie:{ref:D.ref||''}});
+  function poster(n){return fetch(D.guichet+'/lead',{method:'POST',
+   headers:{'Content-Type':'application/json'},body:corps})
+   .catch(function(e){if(n>=2)throw e;return new Promise(function(ok){
+    setTimeout(ok,n?4000:1500);}).then(function(){return poster(n+1);});});}
+  poster(0)
   .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
   .then(function(x){
    if(x.ok&&x.j.lien){try{localStorage.setItem(MEMO,x.j.lien);}catch(e){}location.href=x.j.lien;return;}
