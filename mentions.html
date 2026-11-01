@@ -3347,6 +3347,143 @@ html.dans-cadre .retour-site{display:none}
  .remonter,.flottant.simu{width:44px;height:44px;opacity:.6}
 }
 
+/* ======================= Accueil « version A » — 01/11/2026 =======================
+   Choisie par Hillel entre deux propositions (« elle me plaît vraiment
+   beaucoup ») : on doit voir en arrivant qu'on vend des appartements. Ordre :
+   une bannière photo courte (titre « au prix promoteur »), la recherche
+   (ville, pièces en boutons, budget) posée à cheval dessus, trois carrés
+   dans l'ordre de priorité d'Hillel — les villes d'abord, le simulateur,
+   puis EliA — puis toutes les villes en carrés photo, et la liste.
+   Couleurs de la bannière FIXES, comme la direction du 19/10 : elle reste
+   lisible quel que soit le thème du téléphone. */
+.hero.hero-a{position:relative!important;display:block!important;background:#2E3647!important;
+ color:#fff!important;padding:18px 16px 78px!important;min-height:0!important;overflow:hidden;border:0!important}
+.hero-a .ha-photo{position:absolute;inset:0;margin:0}
+.hero-a .ha-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-a .ha-photo::after{content:"";position:absolute;inset:0;
+ background:linear-gradient(180deg,rgba(20,26,38,.70),rgba(20,26,38,.86))}
+.hero-a .ha-dedans{position:relative;max-width:1240px;margin:0 auto}
+.hero-a .ha-sur{margin:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#E9CD7A;font-weight:600}
+.hero-a .ha-titre{margin:6px 0 12px!important;font-family:'Rubik',system-ui,sans-serif!important;
+ font-size:25px!important;font-weight:700!important;line-height:1.18!important;color:#fff!important;
+ text-shadow:none!important;text-wrap:balance;max-width:none!important;text-align:left!important}
+.hero-a .ha-titre em{font-style:normal;color:#E9CD7A;background:none;padding:0}
+.hero-a .ha-gages{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0;padding:0;list-style:none;font-size:13px;color:#DCE1EA}
+.hero-a .ha-gages li::before{content:"✓ ";color:#E9CD7A;font-weight:700}
+
+.cherche.ha-cherche{position:relative;z-index:5;width:calc(100% - 24px)!important;max-width:1240px!important;margin:-66px auto 0!important;padding:0!important;background:none!important}
+.ha-cherche .boite{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;
+ width:100%;max-width:none!important;margin:0!important;background:#fff!important;color:#18202E;border-radius:18px!important;
+ box-shadow:0 16px 38px -12px rgba(20,26,38,.30)!important;padding:16px!important;border:1px solid #ECE8DF!important}
+.ha-cherche .onglets{display:none!important}
+body.sim-actif .ha-cherche .onglets{display:flex!important}
+body.sim-actif .ha-cherche .ha-cherche-titre,body.sim-actif .ha-cherche .ha-champs,
+body.sim-actif .ha-cherche .ha-go,body.sim-actif .ha-cherche .ha-plus,body.sim-actif #ha-carres{display:none!important}
+.ha-cherche-titre{margin:0;font-size:14px;font-weight:700;color:#18202E}
+@media(max-width:699px){.ha-cherche-titre{display:none}.ha-cherche .boite{gap:10px!important;padding:14px!important}}
+.ha-champs{display:grid;gap:10px;min-width:0;grid-template-columns:minmax(0,1fr);
+ grid-template-areas:"ville" "pieces" "budget"}
+.ha-champs .champ-ville{grid-area:ville}.ha-champs .ha-champ-pieces{grid-area:pieces}
+.ha-champs .champ:not(.champ-ville):not(.ha-champ-pieces){grid-area:budget}
+.ha-champs .champ{display:grid;gap:5px;min-width:0;margin:0}
+.ha-champs label,.ha-lab{font-size:10.5px!important;letter-spacing:.08em;text-transform:uppercase;color:#5E6779!important;font-weight:600}
+.ha-champs select,.ha-plus select{width:100%!important;border:1px solid #E4E2DC!important;border-radius:11px!important;
+ padding:11px 34px 11px 10px!important;background-position:calc(100% - 12px) 50%!important;background-color:#F6F4EF!important;color:#18202E!important;font-size:15px!important;
+ text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+.ha-pieces{display:flex;gap:6px}
+.ha-pieces button{flex:1;min-width:0;border:1px solid #E4E2DC;background:#F6F4EF;color:#18202E;border-radius:11px;
+ padding:10px 0;font:inherit;font-weight:600;font-size:15px;cursor:pointer}
+.ha-pieces button.on{background:#18202E;color:#fff;border-color:#18202E}
+.ha-pieces button:focus-visible,.ha-go:focus-visible,.ha-carre:focus-visible,.ha-ville:focus-visible{outline:2px solid #0B6BD6;outline-offset:2px}
+.ha-cherche .chercher.ha-go{display:block!important;width:100%;border:0;border-radius:13px!important;background:#C49A2C!important;
+ color:#fff!important;font-weight:700;font-size:15.5px;padding:14px!important;cursor:pointer;box-shadow:none!important;margin:0!important}
+.ha-cherche .chercher.ha-go:hover{background:#9C7A1F!important}
+.ha-plus{font-size:13px;color:#5E6779}
+.ha-plus summary{cursor:pointer;font-weight:600}
+.ha-plus .champ{display:grid;gap:5px;margin-top:8px}
+#voir-res{display:none!important}
+
+.ha-carres{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr);gap:8px;width:calc(100% - 24px);max-width:1240px;margin:0 auto;padding:14px 0 4px}
+.ha-carre{display:grid;align-content:space-between;gap:6px;min-width:0;min-height:100px;padding:11px;border-radius:15px;
+ border:1px solid #E4E2DC;background:#F6F4EF;color:#18202E;text-decoration:none}
+.ha-carre b{font-size:13px;line-height:1.2;font-weight:700}
+.ha-carre > *{min-width:0;overflow-wrap:break-word;hyphens:auto}
+.ha-carre small{font-size:11.5px;color:#5E6779;line-height:1.25}
+.ha-carre .ha-ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#fff;color:#2E3647}
+.ha-carre .ha-ic svg{width:18px;height:18px}
+.ha-carre:hover{border-color:#C49A2C}
+.ha-carre.ha-villes{background:#2E3647;border-color:#2E3647;color:#fff}
+.ha-villes .ha-chiffre{font-size:28px;font-weight:800;line-height:1;color:#E9CD7A}
+.ha-villes .ha-fl{font-size:11.5px;font-weight:600;color:#E9CD7A}
+
+.ou.ha-ou{display:block;width:calc(100% - 24px);max-width:1240px;margin:0 auto;padding:20px 0 6px!important;background:none!important}
+body.simulateur-seul .ou.ha-ou{display:none}
+.ha-sec-t{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.ha-sec-t h2{margin:0;font-size:18px}
+.ha-sec-t span{font-size:12.5px;color:var(--gris)}
+.ha-sec-t > span:first-of-type{margin-left:auto}
+.ha-fleches{display:none;gap:6px}
+.ha-fleches button{width:34px;height:34px;border-radius:50%;border:1px solid #E4E2DC;background:#fff;color:#18202E;
+ font-size:20px;line-height:1;cursor:pointer}
+.ha-fleches button:hover{border-color:#C49A2C}
+.ha-bande{display:grid;grid-auto-flow:column;grid-auto-columns:108px;gap:8px;overflow-x:auto;padding-bottom:6px;
+ scrollbar-width:none;scroll-snap-type:x proximity}
+.ha-bande::-webkit-scrollbar{display:none}
+.ha-ville{position:relative;aspect-ratio:1;border-radius:13px;overflow:hidden;border:0;padding:0;cursor:pointer;
+ background:#2E3647 center/cover no-repeat;color:#fff;text-align:left;scroll-snap-align:start;font:inherit}
+.ha-ville::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.78))}
+.ha-ville > span{position:absolute;left:9px;right:9px;bottom:8px;z-index:1;display:grid}
+.ha-ville b{font-size:13.5px;line-height:1.15}
+.ha-ville small{font-size:11px;color:#E9CD7A;font-weight:600}
+.ha-ville.on{box-shadow:inset 0 0 0 3px #C49A2C}
+.ha-ville.sans-photo{background:linear-gradient(140deg,#3A4458,#232A38)}
+.ha-ville.ha-toutes{background:#F6F4EF;color:#18202E;box-shadow:inset 0 0 0 1px #E4E2DC}
+.ha-ville.ha-toutes.on{box-shadow:inset 0 0 0 3px #C49A2C}
+.ha-ville.ha-toutes::after{display:none}
+.ha-ville.ha-toutes small{color:#5E6779}
+[dir=rtl] .ha-champs select,[dir=rtl] .ha-plus select{padding:11px 10px 11px 34px!important;background-position:12px 50%!important}
+.ha-pieces button{direction:ltr;unicode-bidi:isolate}
+[dir=rtl] .hero-a .ha-titre,[dir=rtl] .ha-ville,[dir=rtl] .ha-carre{text-align:right!important}
+
+@media(min-width:700px){
+ .hero.hero-a{padding:36px 28px 98px!important}
+ .hero-a .ha-titre{font-size:34px!important;max-width:680px!important}
+ .cherche.ha-cherche{width:calc(100% - 48px)!important;margin-top:-78px!important}
+ .ha-cherche .boite{padding:18px 20px!important}
+ .ha-champs{grid-template-columns:1fr 1.35fr 1fr;grid-template-areas:"ville pieces budget";align-items:end}
+ .ha-carres{width:calc(100% - 48px);padding:16px 0 4px;gap:12px}
+ .ha-carre{grid-template-columns:auto 1fr;align-items:center;min-height:0;padding:14px}
+ .ha-carre.ha-villes{grid-template-columns:auto 1fr;column-gap:14px}
+ .ha-villes .ha-chiffre{grid-row:1 / span 2}
+ .ha-villes b,.ha-villes .ha-fl{grid-column:2}
+ .ha-carre small{grid-column:2}
+ .ha-villes .ha-chiffre{font-size:34px}
+ .ha-carre b{font-size:14.5px}
+ .ou.ha-ou{width:calc(100% - 48px);padding:24px 0 6px!important}
+ .ha-bande{grid-auto-columns:132px}
+}
+@media(min-width:1000px){
+ .hero.hero-a{padding:50px 40px 108px!important}
+ .hero-a .ha-titre{font-size:42px!important;max-width:840px!important}
+ .cherche.ha-cherche{width:calc(100% - 80px)!important;margin-top:-82px!important}
+ .ha-cherche .boite{grid-template-columns:minmax(0,1fr) auto!important;align-items:end;column-gap:18px!important;padding:20px 24px!important}
+ .ha-cherche-titre,.ha-plus{grid-column:1 / -1}
+ .ha-champs{grid-template-columns:1fr 1.4fr 1fr}
+ .ha-cherche .chercher.ha-go{width:auto;padding:14px 28px!important;white-space:nowrap}
+ .ha-carres{width:calc(100% - 80px);padding:18px 0 4px;gap:16px}
+ .ha-carre{padding:16px 18px}
+ .ou.ha-ou{width:calc(100% - 80px);padding:28px 0 6px!important}
+ .ha-bande{grid-auto-columns:calc((100% - 8 * 10px) / 9);gap:10px}
+ .ha-fleches{display:flex}
+}
+/* Ordinateur étroit (1000-1199 px) : à côté du bouton or, « Pardes
+   Hanna-Karkur » ou « jusqu'à 4 000 000 ₪ » ne tenaient plus dans leur
+   menu. Le bouton passe dessous, les trois menus gardent toute la largeur. */
+@media(min-width:1000px) and (max-width:1199px){
+ .ha-cherche .boite{grid-template-columns:minmax(0,1fr)!important}
+ .ha-cherche .chercher.ha-go{width:100%;grid-column:1!important;grid-row:auto!important}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
