@@ -1635,7 +1635,9 @@ body.sim-actif .onglets{padding-bottom:0}
  /* Le prix et sa conversion : la conversion passe sous le prix, alignee
     avec lui, au lieu de deborder de la carte (Hillel, 04/11/2026). */
  .scroll td.num{flex-wrap:wrap}
- .scroll td.num small.eu{flex-basis:100%;text-align:left;margin-left:106px}
+ .scroll td.num small.eu{flex-basis:100%;text-align:start;margin-inline-start:106px}
+ /* (proprietes logiques : en hebreu la conversion partait a droite du prix,
+    audit du 04/11/2026) */
  .kv th,.kv td{display:block;width:auto}
  .kv th{padding:11px 12px 0}
  .kv td{padding:2px 12px 11px}
