@@ -7366,7 +7366,7 @@ async function simulateur(zone, p) {
       <div class="f-choix" style="margin-top:18px">
         <b>${T('Courtier en crédit')}</b>${aideHTML('Courtier', notesFrais.courtier || '')}
         <div class="seg">
-          <button data-s-courtier="notre" class="${E.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant} ₪)').replace('{montant}', COURTIER_RECOMMANDE.toLocaleString('fr-FR'))}</button>
+          <button data-s-courtier="notre" class="${E.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant} ₪)').replace('{montant}', mil(COURTIER_RECOMMANDE))}</button>
           <button data-s-courtier="libre" class="${E.courtierMode === 'libre' ? 'on' : ''}">${T('Votre courtier')}</button>
           <button data-s-courtier="non" class="${E.courtierMode === 'non' ? 'on' : ''}">${T('Sans courtier')}</button>
         </div>
@@ -8458,7 +8458,7 @@ async function etapeFrais(zone) {
     <div class="f-choix" style="margin-top:18px">
       <b>${T('Courtier en crédit')}</b>${aide('Courtier', notes.courtier || '')}
       <div class="seg">
-        <button data-courtier="notre" class="${TUNNEL.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant} ₪)').replace('{montant}', COURTIER_RECOMMANDE.toLocaleString('fr-FR'))}</button>
+        <button data-courtier="notre" class="${TUNNEL.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant} ₪)').replace('{montant}', mil(COURTIER_RECOMMANDE))}</button>
         <button data-courtier="libre" class="${TUNNEL.courtierMode === 'libre' ? 'on' : ''}">${T('Votre courtier')}</button>
         <button data-courtier="non" class="${TUNNEL.courtierMode === 'non' ? 'on' : ''}">${T('Sans courtier')}</button>
       </div>
