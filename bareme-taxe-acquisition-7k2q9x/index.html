@@ -1319,11 +1319,14 @@ tbody td{padding:13px 12px;border-top:1px solid var(--trait-fin)}
 /* Les deux simulations, tenues a part (Hillel, 23/09/2026) : deux grands
    onglets au-dessus du parcours, jamais un bouton de plus perdu dans la
    rangee des pourcentages. */
-.simu-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
-.simu-modes button{display:flex;flex-direction:column;gap:4px;text-align:left;
+/* minmax(0,1fr) + coupure des mots : en russe et en portugais, un mot long
+   (« первоначального », « entrada ») elargissait sa colonne et la page
+   debordait de 18 a 23 px sur telephone (audit du 04/11/2026). */
+.simu-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
+.simu-modes button{display:flex;flex-direction:column;gap:4px;text-align:start;
  cursor:pointer;padding:14px 16px;border-radius:var(--r);
  background:var(--fond);border:1px solid var(--trait);color:inherit;font:inherit}
-.simu-modes button b{font-size:15px}
+.simu-modes button b{font-size:15px;overflow-wrap:anywhere;hyphens:auto}
 .simu-modes button span{font-size:12.5px;opacity:.72;line-height:1.4}
 .simu-modes button:hover{border-color:var(--gris-clair)}
 .simu-modes button.on{border:2px solid var(--action);padding:13px 15px;
