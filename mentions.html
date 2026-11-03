@@ -1628,6 +1628,10 @@ body.sim-actif .onglets{padding-bottom:0}
  .scroll td.mtitle{font-size:17px;font-weight:700;padding:0 0 9px;
   margin-bottom:7px;border-bottom:1px solid var(--trait)}
  .scroll td.mtitle::before{display:none}
+ /* Le prix et sa conversion : la conversion passe sous le prix, alignee
+    avec lui, au lieu de deborder de la carte (Hillel, 04/11/2026). */
+ .scroll td.num{flex-wrap:wrap}
+ .scroll td.num small.eu{flex-basis:100%;text-align:left;margin-left:106px}
  .kv th,.kv td{display:block;width:auto}
  .kv th{padding:11px 12px 0}
  .kv td{padding:2px 12px 11px}
