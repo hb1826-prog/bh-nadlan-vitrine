@@ -11482,6 +11482,14 @@ var ouvrirCadre = (function () {
    (Le moment 2 – la question personnelle – vient avec la conversation
    libre, en tranche 2.)
 
+   LA VRAIE CONVERSATION (en ligne depuis le 04/11/2026, oui d'Hillel) :
+   quand le service IA repond, EliA ouvre sur une question (habiter,
+   investir, les deux ?) au lieu de la liste des villes, discute quelques
+   echanges (petites simulations comprises) et propose les biens ensuite, ou
+   tout de suite si le visiteur en demande un (verrou tenu par le serveur,
+   `variante: "conversation"`). Ses 3 suggestions au plus s'affichent en
+   pastilles. Sans IA (plafond, panne), on retombe sur le mode guide.
+
    La conversation est gardee comme une suite d'ETAPES (des donnees, pas des
    phrases) dans sessionStorage : la page de l'autre langue la relit et la
    redessine dans sa langue – changer de langue garde la conversation.
@@ -11694,7 +11702,7 @@ var ouvrirCadre = (function () {
   // `repli` : ce qu'il faut faire sans IA a la place de relire le texte –
   // le choix exact d'une pastille, qui ne doit pas se perdre en route.
   function ecrire(texte, repli) {
-    texte = String(texte || '').trim().slice(0, 300);
+    texte = String(texte || '').trim().slice(0, 600);
     if (!texte || attente) return;
     const sansIA = () => (repli ? repli() : ecrireSansIA(texte));
     if (!DONNEES.eli_url || S.sansIA) return sansIA();
@@ -11719,7 +11727,8 @@ var ouvrirCadre = (function () {
     // flux termine.
     let bulleFlux = null, texteFlux = '', cartesFlux = null;
     fetch(DONNEES.eli_url, {method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({cid: S.cid, langue: DONNEES.langue || 'fr', texte: texte, etat: etat}),
+      body: JSON.stringify({cid: S.cid, langue: DONNEES.langue || 'fr', texte: texte, etat: etat,
+                            variante: 'conversation'}),
       signal: fin.signal})
       .then(r => {
         if (!r.ok || !r.body) return {mode: 'guide'};
@@ -11746,7 +11755,8 @@ var ouvrirCadre = (function () {
                 else fil.insertAdjacentHTML('beforeend', html);
                 bulleFlux = fil.querySelector('.eli-flux');
               }
-              bulleFlux.textContent = texteFlux;
+              const i = texteFlux.indexOf('§');
+              bulleFlux.textContent = (i < 0 ? texteFlux : texteFlux.slice(0, i)).trim();
               bulleFlux.closest('.eli-fil').scrollTop = 1e9;
             } else if (evt.cartes) {
               // Les programmes trouves arrivent avant le texte (~2 s) : on
@@ -11783,7 +11793,7 @@ var ouvrirCadre = (function () {
           S.etapes.pop(); S.ecrits.pop();
           return sansIA();
         }
-        S.etapes.push({t: 'ia', v: r.texte || ''});
+        S.etapes.push({t: 'ia', v: r.texte || '', sugg: (r.suggestions || []).slice(0, 3)});
         if (r.cartes && r.cartes.length) {
           S.etapes.push({t: 'res', e: [], cartes: r.cartes});
           S.montres = S.montres.concat(r.cartes.filter(k => S.montres.indexOf(k) < 0));
@@ -11873,7 +11883,10 @@ var ouvrirCadre = (function () {
   function demarrer(question) {
     if (!S.demarre) {
       S.demarre = true;
-      if (question !== false) {
+      if (question !== false && DONNEES.eli_url && !S.sansIA) {
+        // Avec l'IA : une question, pas un mur de villes (Hillel, 04/11/2026).
+        S.etapes.push({t: 'accueil-conv'});
+      } else if (question !== false) {
         S.etapes.push({t: 'accueil'});
         S.etapes.push({t: 'q', k: 'ville'});
       }
@@ -12082,6 +12095,9 @@ var ouvrirCadre = (function () {
   function dessinerEtape(e, i) {
     const dernier = i === S.etapes.length - 1;
     switch (e.t) {
+      case 'accueil-conv':
+        return bulle(esc(TM(ACCUEIL_CONV)))
+          + (dernier ? suggestions(SUGG_ACCUEIL.map(x => T(x))) : '');
       case 'accueil':
         return bulle(esc(T('Bonjour, je suis EliA, votre conseiller IA. Écrivez-moi librement ce que vous cherchez (une ville, un budget, un nombre de pièces) ou choisissez ci-dessous : je vous montre les programmes qui vous correspondent.')));
       case 'texte':
@@ -12090,6 +12106,8 @@ var ouvrirCadre = (function () {
         return '<div class="eli-msg eli-moi eli-transcrit"><span class="eli-rond"></span>'
           + esc(T('Transcription en cours…')) + '</div>';
       case 'ia':
+        return bulle(esc(e.v)) + (e.sugg && e.sugg.length && suggereIci(i)
+          ? suggestions(e.sugg) : '');
       case 'info':
         return bulle(esc(e.v));
       case 'compris': {
@@ -12149,6 +12167,19 @@ var ouvrirCadre = (function () {
     return '';
   }
 
+  const ACCUEIL_CONV = 'Bonjour, je suis EliA, le conseiller IA de BH Nadlan. Racontez-moi votre projet en Israël : je vous pose quelques questions, je réponds aux vôtres (frais, taxe d’achat, crédit…) et je vous fais de petites simulations au fil de la discussion. Pour commencer, c’est pour y habiter, pour investir, ou les deux ?';
+  const SUGG_ACCUEIL = ['Pour y habiter', 'Pour investir', 'Les deux'];
+  /* Les suggestions d'EliA (3 au plus) : seulement sous son DERNIER message,
+     et pas quand le formulaire est pose (il a deja ses propres choix). */
+  function suggereIci(i) {
+    return S.etapes.slice(i + 1).every(x => x.t === 'res');
+  }
+  function suggestions(liste) {
+    return '<div class="eli-choix eli-sugg">' + liste.slice(0, 3).map(x =>
+      `<button type="button" class="eli-puce" data-dire="${esc(x)}">${esc(x)}</button>`).join('')
+      + '</div>';
+  }
+
   function suiteChoix() {
     const l = [['autre', T('Une autre recherche')]];
     if (!S.lead && !S.m4) l.push(['reflechir', T('Merci, je vais réfléchir')]);
@@ -12181,7 +12212,7 @@ var ouvrirCadre = (function () {
     // A l'ouverture (rien encore d'echange), le fil part du haut : le
     // visiteur doit lire « Bonjour, je suis EliA… Dans quelle ville ? », pas
     // le bas de la liste des villes (audit du 04/11/2026, sur telephone).
-    const ouverture = !S.etapes.some(e => e.t !== 'accueil' && e.t !== 'q');
+    const ouverture = !S.etapes.some(e => e.t !== 'accueil' && e.t !== 'q' && e.t !== 'accueil-conv');
     if (ouverture) { fil.scrollTop = 0; }
     else {
       const bas = fil.lastElementChild;
@@ -12195,7 +12226,12 @@ var ouvrirCadre = (function () {
     const q = derniere();
     fil.querySelectorAll('.eli-choix .eli-puce').forEach(b => {
       b.onclick = () => {
+        if (b.dataset.dire != null) return ecrire(b.dataset.dire);
         const v = b.dataset.v;
+        // Avec l'IA, « une autre recherche » se dit a EliA, qui reprend la
+        // conversation, plutot que de reposer la liste des villes.
+        if (v === 'autre' && DONNEES.eli_url && !S.sansIA)
+          return ecrire(T('Une autre recherche'), autreRecherche);
         if (v === 'autre') return autreRecherche();
         if (v === 'reflechir') return reflechir();
         if (v === '+') {
@@ -12302,15 +12338,15 @@ var ouvrirCadre = (function () {
       // Un numero tape en entier (« +33 6 12 ... ») garde son indicatif.
       const champ = form.querySelector('#eli-tel-num').value.trim();
       const numero = /^\+/.test(champ) ? champ : (tel ? tel.valeur() : '');
-      const nomSaisi = nomChamp.value.trim();
-      // Nom ET prenom, pas seulement le prenom (Hillel, 15/10/2026) – meme
-      // regle que les autres formulaires de coordonnees du site.
-      if (!nomSaisi || !numero) {
-        note.textContent = !nomSaisi
-          ? T('Il me faut votre nom pour que le conseiller puisse vous écrire.')
+      const nomSaisi = nomChamp.value.trim(), prenomSaisi = prenomChamp.value.trim();
+      // Nom ET prenom, ensemble (Hillel, 15/10/2026) – meme regle que les
+      // autres formulaires de coordonnees du site.
+      if (!nomSaisi || !prenomSaisi || !numero) {
+        note.textContent = !nomSaisi || !prenomSaisi
+          ? T('Il me faut votre nom et votre prénom pour que le conseiller puisse vous écrire.')
           : T('Il me faut votre numéro pour que le conseiller puisse vous écrire.');
         note.classList.add('manque');
-        (!nomSaisi ? nomChamp : form.querySelector('#eli-tel-num')).focus();
+        (!nomSaisi ? nomChamp : !prenomSaisi ? prenomChamp : form.querySelector('#eli-tel-num')).focus();
         return;
       }
       const etiquette = bouton.textContent;
@@ -12322,7 +12358,7 @@ var ouvrirCadre = (function () {
       const c = S.crit;
       const budget = c.budget != null && TABLE ? (TABLE.budgets[c.budget] || [])[1] : '';
       const p0 = projet(S.montres[0]) || null;
-      const extra = extraDepuisQualif({budget: budget || '', page: 'EliA · moment ' + d.m});
+      const extra = extraDepuisQualif({budget: budget || '', page: 'EliA · conversation · moment ' + d.m});
       try {
         const r = await envoyerLead({
           nom: S.nom, prenom: S.prenom, tel: numero, mot: resume(),
