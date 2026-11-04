@@ -1,0 +1,156 @@
+<!doctype html><html lang=fr><head><meta charset=utf-8>
+<!--bh-shabbat--><style>
+.bhs-voile{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;
+ justify-content:center;padding:24px 16px;overflow:auto;color:#F5EFE2;text-align:center;
+ background:radial-gradient(ellipse at 50% 30%,#22304F 0%,#0F172A 62%,#070B16 100%);
+ font:16px/1.55 Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;animation:bhsVenir .8s ease-out}
+.bhs-carte{max-width:520px;width:100%}
+.bhs-bougies{display:flex;justify-content:center;gap:56px;height:150px;align-items:flex-end;margin-bottom:-6px}
+.bhs-bougie{position:relative;width:22px;height:96px;border-radius:4px 4px 2px 2px;
+ background:linear-gradient(90deg,#E9E2D2,#FFFDF6 45%,#D8CFBC)}
+.bhs-bougie:before{content:"";position:absolute;left:50%;top:-9px;width:2px;height:10px;margin-left:-1px;background:#2A2118;border-radius:1px}
+.bhs-flamme{position:absolute;left:50%;bottom:100%;width:16px;height:30px;margin:0 0 6px -8px;
+ border-radius:50% 50% 50% 50%/60% 60% 40% 40%;transform-origin:50% 90%;
+ background:radial-gradient(ellipse at 50% 75%,#fff 0 18%,#FFE38A 32%,#FFA73A 62%,rgba(255,120,30,0) 72%);
+ animation:bhsVacille 1.6s ease-in-out infinite alternate}
+.bhs-bougie+.bhs-bougie .bhs-flamme{animation-duration:1.9s;animation-delay:-.7s}
+.bhs-halo{position:absolute;left:50%;bottom:100%;width:120px;height:120px;margin:0 0 -40px -60px;border-radius:50%;
+ background:radial-gradient(circle,rgba(255,196,90,.30),rgba(255,196,90,0) 65%);animation:bhsHalo 2.4s ease-in-out infinite alternate;pointer-events:none}
+.bhs-pied{width:150px;height:10px;margin:0 auto 18px;border-radius:5px;background:linear-gradient(#C9A227,#8C6D14)}
+.bhs-challah{width:200px;max-width:70%;height:auto;display:block;margin:0 auto 14px}
+.bhs-hebreu{font:600 clamp(40px,11vw,60px)/1.15 "Frank Ruhl Libre","David","Times New Roman",serif;
+ color:#C9A227;margin:6px 0 4px;letter-spacing:.5px;text-shadow:0 0 24px rgba(201,162,39,.35)}
+.bhs-latin{font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#CFC6B2;margin:0 0 20px}
+.bhs-txt{font-size:18px;margin:0 0 8px}
+.bhs-quand{font-size:17px;margin:0 0 8px;color:#fff}
+.bhs-quand b{color:#C9A227;font-weight:600}
+.bhs-merci{font-size:15px;color:#CFC6B2;margin:14px 0 0}
+.bhs-tov{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483646;max-width:460px;margin:0 auto;
+ background:#0F172A;color:#F5EFE2;border-radius:14px;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,.35);
+ font:15px/1.5 Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;animation:bhsMonter .5s ease-out}
+.bhs-tov h3{margin:0 34px 4px 0;font-size:18px;color:#C9A227}
+.bhs-tov[dir=rtl] h3{margin:0 0 4px 34px}
+.bhs-tov p{margin:0 0 12px}
+.bhs-tov button{font:inherit;cursor:pointer;border:0;border-radius:10px}
+.bhs-tov .bhs-ecrire{background:#0B6BD6;color:#fff;padding:10px 16px;font-weight:600}
+.bhs-tov .bhs-x{position:absolute;top:8px;right:8px;width:32px;height:32px;background:none;color:#CFC6B2;font-size:22px;line-height:1}
+.bhs-tov[dir=rtl] .bhs-x{right:auto;left:8px}
+@keyframes bhsVacille{0%{transform:scale(1,1) rotate(-2deg)}50%{transform:scale(.92,1.08) rotate(2deg)}100%{transform:scale(1.04,.95) rotate(-1deg)}}
+@keyframes bhsHalo{from{opacity:.7;transform:scale(.95)}to{opacity:1;transform:scale(1.06)}}
+@keyframes bhsVenir{from{opacity:0}to{opacity:1}}
+@keyframes bhsMonter{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.bhs-flamme,.bhs-halo,.bhs-voile,.bhs-tov{animation:none}}
+</style><script>(function(){
+var BASE="https://espace.bh-nadlan.com",T={"fr": {"locale": "fr-FR", "shabbat": "Le site ne fonctionne pas pendant Shabbat.", "fete": "Le site ne fonctionne pas pendant la fête.", "revenir": "Merci de revenir à partir de {quand} (heure de chez vous).", "merci": "Nous vous remercions pour votre compréhension.", "tov": "Shavoua tov !", "tov_fete": "Bonne semaine !", "fini": "Shabbat est terminé. Dites-nous ce que vous vouliez, nous vous répondons avec plaisir.", "fini_fete": "La fête est terminée. Dites-nous ce que vous vouliez, nous vous répondons avec plaisir.", "ecrire": "Nous écrire", "fermer": "Fermer"}, "en": {"locale": "en-GB", "shabbat": "This website is closed during Shabbat.", "fete": "This website is closed during the holiday.", "revenir": "Please come back from {quand} (your local time).", "merci": "Thank you for your understanding.", "tov": "Shavua tov!", "tov_fete": "Have a good week!", "fini": "Shabbat is over. Tell us what you were looking for, we will be happy to help.", "fini_fete": "The holiday is over. Tell us what you were looking for, we will be happy to help.", "ecrire": "Write to us", "fermer": "Close"}, "he": {"locale": "he-IL", "shabbat": "האתר אינו פעיל בשבת.", "fete": "האתר אינו פעיל בחג.", "revenir": "נשמח לראותכם שוב החל מ{quand} (לפי השעה אצלכם).", "merci": "תודה על ההבנה.", "tov": "שבוע טוב!", "tov_fete": "שבוע טוב!", "fini": "השבת יצאה. ספרו לנו מה חיפשתם, נשמח לעזור.", "fini_fete": "החג הסתיים. ספרו לנו מה חיפשתם, נשמח לעזור.", "ecrire": "כתבו לנו", "fermer": "סגירה"}, "es": {"locale": "es-ES", "shabbat": "El sitio no funciona durante Shabat.", "fete": "El sitio no funciona durante la fiesta.", "revenir": "Vuelva a partir del {quand} (hora local).", "merci": "Le agradecemos su comprensión.", "tov": "¡Shavúa tov!", "tov_fete": "¡Buena semana!", "fini": "Shabat ha terminado. Díganos qué buscaba, le responderemos con gusto.", "fini_fete": "La fiesta ha terminado. Díganos qué buscaba, le responderemos con gusto.", "ecrire": "Escribirnos", "fermer": "Cerrar"}, "pt": {"locale": "pt-PT", "shabbat": "O site não funciona durante o Shabat.", "fete": "O site não funciona durante a festa.", "revenir": "Volte a partir de {quand} (hora local).", "merci": "Agradecemos a sua compreensão.", "tov": "Shavua tov!", "tov_fete": "Boa semana!", "fini": "O Shabat terminou. Diga-nos o que procurava, teremos todo o gosto em ajudar.", "fini_fete": "A festa terminou. Diga-nos o que procurava, teremos todo o gosto em ajudar.", "ecrire": "Escrever-nos", "fermer": "Fechar"}, "ru": {"locale": "ru-RU", "shabbat": "Сайт не работает в Шаббат.", "fete": "Сайт не работает во время праздника.", "revenir": "Пожалуйста, возвращайтесь после {quand} (по вашему времени).", "merci": "Благодарим за понимание.", "tov": "Шавуа тов!", "tov_fete": "Хорошей недели!", "fini": "Шаббат закончился. Расскажите, что вы искали, — мы с радостью ответим.", "fini_fete": "Праздник закончился. Расскажите, что вы искали, — мы с радостью ответим.", "ecrire": "Написать нам", "fermer": "Закрыть"}},CHALLAH="<svg class=bhs-challah viewBox=\"0 0 220 90\" aria-hidden=true><defs><radialGradient id=bhsPain cx=.4 cy=.3 r=.8><stop offset=0 stop-color=#F6CF8A /><stop offset=.55 stop-color=#CC8433 /><stop offset=1 stop-color=#8A4E1C /></radialGradient></defs><ellipse cx=108 cy=80 rx=96 ry=7 fill=#000 opacity=.35 /><g fill=url(#bhsPain) stroke=#7A4316 stroke-width=1.1><ellipse cx=30 cy=44 rx=15 ry=11 transform=\"rotate(-32 30 44)\" /><ellipse cx=30 cy=56 rx=15 ry=11 transform=\"rotate(32 30 56)\" /><ellipse cx=52 cy=44 rx=19 ry=14 transform=\"rotate(32 52 44)\" /><ellipse cx=52 cy=56 rx=19 ry=14 transform=\"rotate(-32 52 56)\" /><ellipse cx=74 cy=44 rx=22 ry=16 transform=\"rotate(-32 74 44)\" /><ellipse cx=74 cy=56 rx=22 ry=16 transform=\"rotate(32 74 56)\" /><ellipse cx=96 cy=44 rx=24 ry=18 transform=\"rotate(32 96 44)\" /><ellipse cx=96 cy=56 rx=24 ry=18 transform=\"rotate(-32 96 56)\" /><ellipse cx=118 cy=44 rx=24 ry=18 transform=\"rotate(-32 118 44)\" /><ellipse cx=118 cy=56 rx=24 ry=18 transform=\"rotate(32 118 56)\" /><ellipse cx=140 cy=44 rx=22 ry=16 transform=\"rotate(32 140 44)\" /><ellipse cx=140 cy=56 rx=22 ry=16 transform=\"rotate(-32 140 56)\" /><ellipse cx=162 cy=44 rx=19 ry=14 transform=\"rotate(-32 162 44)\" /><ellipse cx=162 cy=56 rx=19 ry=14 transform=\"rotate(32 162 56)\" /><ellipse cx=184 cy=44 rx=15 ry=11 transform=\"rotate(32 184 44)\" /><ellipse cx=184 cy=56 rx=15 ry=11 transform=\"rotate(-32 184 56)\" /></g><g fill=#FFF4DC opacity=.9><ellipse cx=122 cy=36 rx=1.6 ry=1 transform=\"rotate(-33 122 36)\" /><ellipse cx=141 cy=33 rx=1.6 ry=1 transform=\"rotate(39 141 33)\" /><ellipse cx=58 cy=49 rx=1.6 ry=1 transform=\"rotate(-14 58 49)\" /><ellipse cx=64 cy=43 rx=1.6 ry=1 transform=\"rotate(23 64 43)\" /><ellipse cx=54 cy=48 rx=1.6 ry=1 transform=\"rotate(28 54 48)\" /><ellipse cx=94 cy=33 rx=1.6 ry=1 transform=\"rotate(14 94 33)\" /><ellipse cx=62 cy=45 rx=1.6 ry=1 transform=\"rotate(0 62 45)\" /><ellipse cx=147 cy=34 rx=1.6 ry=1 transform=\"rotate(19 147 34)\" /><ellipse cx=101 cy=34 rx=1.6 ry=1 transform=\"rotate(34 101 34)\" /><ellipse cx=148 cy=33 rx=1.6 ry=1 transform=\"rotate(18 148 33)\" /><ellipse cx=71 cy=39 rx=1.6 ry=1 transform=\"rotate(6 71 39)\" /><ellipse cx=55 cy=50 rx=1.6 ry=1 transform=\"rotate(-2 55 50)\" /><ellipse cx=141 cy=33 rx=1.6 ry=1 transform=\"rotate(-9 141 33)\" /><ellipse cx=96 cy=33 rx=1.6 ry=1 transform=\"rotate(-17 96 33)\" /><ellipse cx=74 cy=41 rx=1.6 ry=1 transform=\"rotate(-9 74 41)\" /><ellipse cx=147 cy=36 rx=1.6 ry=1 transform=\"rotate(-30 147 36)\" /><ellipse cx=178 cy=35 rx=1.6 ry=1 transform=\"rotate(33 178 35)\" /><ellipse cx=118 cy=49 rx=1.6 ry=1 transform=\"rotate(-2 118 49)\" /><ellipse cx=86 cy=35 rx=1.6 ry=1 transform=\"rotate(27 86 35)\" /><ellipse cx=88 cy=43 rx=1.6 ry=1 transform=\"rotate(23 88 43)\" /><ellipse cx=64 cy=49 rx=1.6 ry=1 transform=\"rotate(3 64 49)\" /><ellipse cx=56 cy=50 rx=1.6 ry=1 transform=\"rotate(17 56 50)\" /></g></svg>",CLE='bh-shabbat-reprise';
+var L=(document.documentElement.getAttribute('lang')||'fr').slice(0,2).toLowerCase();if(!T[L])L='fr';
+var t=T[L],voile=null,minuterie=null,signale=false;
+function lire(){try{return JSON.parse(localStorage.getItem(CLE)||'null');}catch(e){return null;}}
+function garder(v){try{if(v)localStorage.setItem(CLE,JSON.stringify(v));else localStorage.removeItem(CLE);}catch(e){}}
+function quand(ms){try{return new Intl.DateTimeFormat(t.locale,{weekday:'long',hour:'2-digit',minute:'2-digit'}).format(new Date(ms));}
+ catch(e){return new Date(ms).toLocaleString();}}
+function corps(f){if(document.body)f();else document.addEventListener('DOMContentLoaded',f);}
+function figer(oui){var e=document.body.children;for(var i=0;i<e.length;i++){if(e[i]===voile)continue;
+ if(oui)e[i].setAttribute('inert','');else e[i].removeAttribute('inert');}
+ document.documentElement.style.overflow=oui?'hidden':'';}
+function fermer(d){corps(function(){
+ var fete=d.raison==='fete';
+ if(!voile){voile=document.createElement('div');voile.className='bhs-voile';
+  voile.setAttribute('role','dialog');voile.setAttribute('aria-modal','true');
+  voile.setAttribute('dir',L==='he'?'rtl':'ltr');voile.setAttribute('lang',L);
+  voile.innerHTML='<div class=bhs-carte><div class=bhs-bougies>'+
+   '<div class=bhs-bougie><span class=bhs-halo></span><span class=bhs-flamme></span></div>'+
+   '<div class=bhs-bougie><span class=bhs-halo></span><span class=bhs-flamme></span></div></div>'+
+   '<div class=bhs-pied></div>'+CHALLAH+'<p class=bhs-hebreu lang=he dir=rtl></p><p class=bhs-latin></p>'+
+   '<p class=bhs-txt></p><p class=bhs-quand></p><p class=bhs-merci></p></div>';
+  document.body.appendChild(voile);}
+ voile.querySelector('.bhs-hebreu').textContent=fete?'חַג שָׂמֵחַ':'שַׁבָּת שָׁלוֹם';
+ voile.querySelector('.bhs-latin').textContent=fete?"Hag Saméa'h":'Shabbat Shalom';
+ voile.querySelector('.bhs-txt').textContent=fete?t.fete:t.shabbat;
+ var parts=t.revenir.split('{quand}'),q=voile.querySelector('.bhs-quand'),b=document.createElement('b');
+ q.textContent='';q.appendChild(document.createTextNode(parts[0]));b.textContent=quand(d.reprise);
+ q.appendChild(b);q.appendChild(document.createTextNode(parts[1]||''));
+ voile.querySelector('.bhs-merci').textContent=t.merci;
+ figer(true);garder({reprise:d.reprise,raison:d.raison});
+ if(!signale&&window.fbq){signale=true;try{fbq('trackCustom','VisiteShabbat',{raison:d.raison});}catch(e){}}
+ clearTimeout(minuterie);
+ minuterie=setTimeout(verifier,Math.min(Math.max(d.reprise-Date.now()+5000,5000),6*3600*1000));
+});}
+function bienvenue(fete){corps(function(){
+ var c=document.createElement('div');c.className='bhs-tov';c.setAttribute('role','status');
+ c.setAttribute('dir',L==='he'?'rtl':'ltr');
+ c.innerHTML='<button type=button class=bhs-x></button><h3></h3><p></p><button type=button class=bhs-ecrire></button>';
+ c.querySelector('h3').textContent=fete?t.tov_fete:t.tov;
+ c.querySelector('p').textContent=fete?t.fini_fete:t.fini;
+ var x=c.querySelector('.bhs-x');x.textContent='×';x.setAttribute('aria-label',t.fermer);
+ x.onclick=function(){c.remove();};
+ var e=c.querySelector('.bhs-ecrire');e.textContent=t.ecrire;
+ e.onclick=function(){c.remove();if(window.eliOuvrir){window.eliOuvrir(true);}
+  else{location.href='/'+(L==='fr'?'':L+'/')+'#/eli';}};
+ document.body.appendChild(c);});}
+function ouvrir(){
+ if(voile){figer(false);voile.remove();voile=null;}
+ var vu=lire();if(!vu)return;garder(null);
+ var depuis=Date.now()-vu.reprise;
+ if(depuis>=0&&depuis<3*864e5)bienvenue(vu.raison==='fete');}
+function verifier(){var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+ fetch(BASE+'/site/shabbat?tz='+encodeURIComponent(tz),{cache:'no-store'})
+ .then(function(r){return r.json();}).then(function(d){if(d&&d.ferme)fermer(d);else ouvrir();})
+ .catch(function(){});}
+verifier();setInterval(verifier,10*60*1000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)verifier();});
+})();</script><!--/bh-shabbat-->
+
+<link rel=icon href="favicon.ico?v=c8366042" sizes="any">
+<link rel=icon type="image/png" sizes="32x32" href="favicon-32.png?v=c8366042">
+<link rel=apple-touch-icon sizes="180x180" href="icone-180.png?v=c8366042">
+<meta name=viewport content='width=device-width,initial-scale=1'><title>2 pièces, Shenkar 10-14 Holon, Holon — BH Nadlan</title><style>
+/* La vitrine s'ouvre en clair, toujours : c'est une devanture, pas un
+   outil de travail, et le reglage sombre du telephone du visiteur n'a pas
+   a decider de la couleur des photos de programmes. L'ardoise y est du
+   meme gris que sur l'annuaire. */
+:root{--or:#c9a227;--encre:#414A5C;--gris:#5a6474;--fond:#fbfaf8;--carte:#fff;
+      --trait:#e6e2da;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fond);color:var(--encre);
+     font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+header{padding:34px 22px 20px;text-align:center;border-bottom:1px solid var(--trait)}
+header h1{margin:10px 0 4px;font-size:22px;letter-spacing:.14em;font-weight:700}
+header p{margin:0;color:var(--gris);font-size:14px}
+main{max-width:1080px;margin:0 auto;padding:26px 18px 60px}
+.grille{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.carte{background:var(--carte);border:1px solid var(--trait);border-radius:14px;
+       overflow:hidden;text-decoration:none;color:inherit;display:block}
+.carte img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.carte .txt{padding:14px 16px 18px}
+.carte h2{margin:0 0 4px;font-size:17px}
+.carte .lieu{color:var(--gris);font-size:14px;margin:0 0 10px}
+.prix{color:var(--or);font-weight:700}
+.fiche{max-width:760px;margin:0 auto}
+.fiche img{width:100%;border-radius:14px;border:1px solid var(--trait)}
+.fiche h1{font-size:26px;margin:22px 0 2px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:22px 0}
+dt{color:var(--gris);font-size:14px}
+dd{margin:0;font-weight:600}
+.wa{display:inline-block;margin-top:8px;padding:14px 22px;border-radius:999px;
+    background:#25d366;color:#062;font-weight:700;text-decoration:none}
+.retour{display:inline-block;margin-bottom:18px;color:var(--gris);
+        text-decoration:none;font-size:14px}
+footer{padding:26px 18px 40px;text-align:center;color:var(--gris);font-size:13px}
+</style><script>
+window.bhPixelInit=function(){
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','3820890624762303');fbq('track','PageView');
+};
+if(true) window.bhPixelInit();
+</script>
+<script>
+window.BH_ADS_CONVERSION='AW-18507495474/7gu2CMfgv5kdELLwh_lE';
+(function(){if(!window.gtag){var s=document.createElement('script');s.async=true;
+s.src='https://www.googletagmanager.com/gtag/js?id=AW-18507495474';document.head.appendChild(s);
+window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};
+gtag('js',new Date());}gtag('config','AW-18507495474');})();
+</script></head><body><script>try{if(!sessionStorage.getItem('vu-catalogue-bh-shenkar-10-14-holon-2p')){sessionStorage.setItem('vu-catalogue-bh-shenkar-10-14-holon-2p','1');fetch('https://62-238-114-208.sslip.io/vue',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cle:'catalogue-bh-shenkar-10-14-holon-2p'}),keepalive:true}).catch(function(){});}}catch(e){}</script><script>(function(){try{var d=document,c='bh_langue';function lireCookie(n){var m=d.cookie.match(new RegExp('(?:^|; )'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):null;}function ecrireCookie(n,v){d.cookie=n+'='+encodeURIComponent(v)+';path=/;max-age='+(365*86400)+';samesite=lax';}var l=lireCookie(c);if(!l){l=((navigator.languages&&navigator.languages[0])||navigator.language||'fr').slice(0,2).toLowerCase();ecrireCookie(c,l);}if(l!=='en')return;document.querySelectorAll('[data-en]').forEach(function(el){el.textContent=el.getAttribute('data-en');});}catch(e){}})();</script><main class=fiche><a class=retour href='index.html'>← Tous les biens</a><img src='img/bh-shenkar-10-14-holon-2p.jpg' alt=''><h1>2 pièces, Shenkar 10-14 Holon, Holon</h1><p class=prix data-en="From 1,990,000 ₪ · 563,644 € · 630,345 $ · 469,894 £">À partir de 1 990 000 ₪</p><dl><dt>Ville</dt><dd>Holon</dd><dt>Quartier</dt><dd>Agrobank</dd><dt>Typologie</dt><dd>2 pièces</dd><dt>Surface</dt><dd>50 m²</dd><dt>Livraison</dt><dd>2029</dd><dt>Promoteur</dt><dd>Promoteur reconnu</dd></dl><p>Programme neuf à Shenkar 10-14 Holon, quartier Agrobank, Holon. Promoteur reconnu. Appartements de 2 pièces, 50 m². Livraison 2029. Avec parking et cave selon les appartements. À partir de 1 990 000 ₪. BH Nadlan accompagne les acheteurs francophones du premier contact jusqu&#x27;à la remise des clés : sélection, négociation, avocat, banque et suivi du chantier.</p><a class=wa data-en="Message on WhatsApp" href='https://wa.me/972585678926?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%202%20pi%C3%A8ces%20%C3%A0%20Shenkar%2010-14%20Holon%2C%20Holon.'>Écrire sur WhatsApp</a></main><footer>BH Nadlan · L'immobilier autrement<br>+972(0)58.567.89.26 · +33(0)7.67.28.47.10<br><small>Prix indicatifs, susceptibles d'évolution ; disponibilités sous réserve. Document non contractuel.</small></footer></body></html>
