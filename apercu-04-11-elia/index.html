@@ -33,6 +33,7 @@ header .conseiller { font: inherit; font-size: 13px; color: var(--action); backg
   border: 1px solid var(--action-trait); border-radius: 999px; padding: 7px 11px; white-space: nowrap; }
 .fil { flex: 1; overflow-y: auto; padding: 16px 14px 8px; display: flex; flex-direction: column; gap: 10px;
   -webkit-overflow-scrolling: touch; }
+.fil > * { flex-shrink: 0; }
 .msg { max-width: 86%; padding: 11px 14px; border-radius: 18px; font-size: 16px; line-height: 1.45;
   white-space: pre-line; word-wrap: break-word; }
 .lui { align-self: flex-start; background: var(--surface); border: 1px solid var(--trait); border-bottom-left-radius: 6px; }
