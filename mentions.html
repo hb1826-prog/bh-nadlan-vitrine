@@ -3640,6 +3640,54 @@ body.simulateur-seul .ou.ha-ou{display:none}
    annuaire.js seulement si `fiche_sans_banniere` est allume. */
 body.fiche-sans-banniere #hero{display:none!important}
 
+/* ---- EliA a la une (Hillel, 04/11/2026, maquette validee) ----
+   Deux carres seulement (programmes, simulateur) cote a cote, puis EliA sur
+   toute la largeur dessous : seul bloc de l'accueil ou l'on ecrit, donc
+   celui ou l'oeil s'arrete. Le formulaire est branche par eli.js
+   (#eli-une-form) ; les pastilles d'exemples gardent leur style d'eli.css. */
+.ha-carres{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.ha-eli{grid-column:1 / -1;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 14px;align-items:center;
+ margin-top:4px;padding:16px;border-radius:18px;background:#fff;border:1px solid #E4E2DC;border-top:4px solid #C9A227;
+ box-shadow:0 18px 44px -14px rgba(15,23,42,.22);text-align:start}
+.ha-eli-av{position:relative;width:46px;height:46px;border-radius:50%;background:#0F172A;display:grid;place-items:center;align-self:start}
+.ha-eli-av::after{content:"";position:absolute;right:1px;bottom:1px;width:11px;height:11px;border-radius:50%;background:#22C55E;border:2.5px solid #fff}
+.ha-eli-tete{min-width:0}
+.ha-eli-haut{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 4px}
+.ha-eli-badge{background:#C9A227;color:#0B0F18;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
+.ha-eli-dispo{font-size:12px;font-weight:600;color:#0B6E4F}
+.ha-eli-dispo::before{content:"● "}
+.ha-eli h2{margin:0;font-size:17px;line-height:1.25;color:#0F172A;text-wrap:balance}
+.ha-eli-sous{grid-column:1 / -1;margin:0;font-size:13.5px;line-height:1.45;color:#5A6172}
+.ha-eli-form{grid-column:1 / -1;display:flex;align-items:center;gap:6px;margin:2px 0 0;padding:4px 4px 4px 14px;
+ border:1.5px solid #0B6BD6;border-radius:999px;background:#fff;box-shadow:0 0 0 4px #EAF3FE}
+.ha-eli-form input{flex:1;min-width:0;border:0;background:transparent;padding:10px 0;font:inherit;font-size:16px;color:#0F172A}
+.ha-eli-form input::placeholder{color:#6A7284;text-overflow:ellipsis}
+.ha-eli-form input:focus{outline:none}
+.ha-eli-form .eli-micro{flex:none;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:#EEF1F6;color:#0F172A;cursor:pointer}
+.ha-eli-go{flex:none;height:42px;width:42px;padding:0;border:0;border-radius:999px;background:#0B6BD6;color:#fff;
+ display:flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap}
+.ha-eli-go:hover{background:#0A57AE}
+.ha-eli-go span{display:none}
+.ha-eli-form:focus-within{box-shadow:0 0 0 4px #BBD9F8}
+.ha-eli .eli-exemples{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap}
+.ha-eli .eli-exemples button:nth-child(n+3){display:none}
+.ha-eli-form.eli-enreg .ha-eli-go{display:none}
+.ha-eli-form.eli-enreg .eli-micro{width:auto;padding:0 13px;border-radius:999px}
+[dir=rtl] .ha-eli-go svg{transform:scaleX(-1)}
+[dir=rtl] .ha-eli-form{padding:4px 14px 4px 4px}
+@media(min-width:700px){
+ .ha-eli{grid-template-columns:auto minmax(0,1fr);gap:4px 18px;padding:20px 22px 18px}
+ .ha-eli-av{width:58px;height:58px;grid-row:span 2;align-self:center}
+ .ha-eli-av svg{width:30px;height:30px}
+ .ha-eli h2{font-size:21px}
+ .ha-eli-sous{grid-column:2;font-size:14px}
+ .ha-eli-form{margin-top:12px;padding:5px 5px 5px 18px}
+ .ha-eli-go{width:auto;padding:0 20px}
+ .ha-eli-go span{display:inline}
+ .ha-eli .eli-exemples{margin-top:4px}
+ .ha-eli .eli-exemples button:nth-child(n+3){display:inline-block}
+}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
