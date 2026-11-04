@@ -3304,22 +3304,38 @@ html:not([lang=fr]) .hero .dedans .hero-texte h1{font-size:clamp(24px,2.45vw,35p
    un voile ; fiche centrée sur ordinateur, glissée du bas sur téléphone.
    Couleurs fixes, comme le reste de la tuile. */
 .hs-mini{display:block;font-size:11.5px;font-weight:600;opacity:.75;margin-top:2px}
-#coacq-overlay{position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,.55);
- display:flex;align-items:center;justify-content:center;padding:24px 16px}
-.coacq-ov-fiche{width:100%;max-width:620px;max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);
- overflow-y:auto;-webkit-overflow-scrolling:touch;background:#FAF7F1;color:#0F172A;border-radius:18px;
- box-shadow:0 24px 60px -20px rgba(15,23,42,.6)}
-.coacq-ov-barre{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;
- padding:12px 16px;background:#FFFFFF;border-bottom:1px solid #E7E2D8}
-.coacq-ov-fermer{font:inherit;font-size:14px;font-weight:700;cursor:pointer;padding:9px 16px;border-radius:999px;
- border:1.5px solid #0F172A;background:#FFFFFF;color:#0F172A;flex:none}
-.coacq-ov-corps{padding:16px 18px 28px}
-.coacq-ov-corps .texte h1{font-size:22px;line-height:1.25}
-.coacq-ov-note{font-size:13.5px;color:#475569;margin:0 0 16px;line-height:1.5}
-@media(max-width:640px){
- #coacq-overlay{align-items:flex-end;padding:0}
- .coacq-ov-fiche{max-width:none;max-height:88vh;max-height:88dvh;border-radius:18px 18px 0 0}
- .coacq-ov-corps .texte h1{font-size:19px}}
+/* Depuis le 04/11/2026 (Hillel) : au format de la fenetre d'EliA — une carte
+   a droite sur ordinateur (400 px, coins 20 px, en-tete blanc avatar + titre
+   + « Parler à un conseiller » + croix), tout l'ecran sur telephone. Un voile
+   leger derriere : un clic a cote referme. */
+#coacq-overlay{position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,.28)}
+.coacq-ov-fiche{position:fixed;right:22px;bottom:22px;width:min(440px,calc(100vw - 32px));
+ height:min(660px,calc(100vh - 44px));height:min(660px,calc(100dvh - 44px));
+ display:flex;flex-direction:column;overflow:hidden;background:var(--fond,#FAF7F1);color:var(--encre,#0F172A);
+ border:1px solid var(--trait,#E7E2D8);border-radius:var(--r-xl,20px);
+ box-shadow:var(--ombre-3,0 20px 50px rgba(15,23,42,.28))}
+.coacq-ov-barre{flex:none;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 14px;
+ padding-top:calc(12px + env(safe-area-inset-top));background:var(--carte,#fff);border-bottom:1px solid var(--trait,#E7E2D8)}
+.coacq-ov-avatar{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+ background:var(--action,#0B6BD6);color:var(--fond,#fff)}
+.coacq-ov-qui{flex:1;min-width:0;line-height:1.25}
+.coacq-ov-qui b{display:block;font-size:15px}
+.coacq-ov-qui small{display:block;font-size:12px;color:var(--gris,#5A6172)}
+.coacq-ov-conseiller{flex:none;border:1px solid var(--trait,#E7E2D8);background:var(--fond,#FAF7F1);
+ color:var(--encre,#0F172A);border-radius:999px;padding:7px 11px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.coacq-ov-fermer{flex:none;width:36px;height:36px;border:0;border-radius:10px;background:none;
+ color:var(--gris,#5A6172);font-size:24px;line-height:1;cursor:pointer}
+.coacq-ov-fermer:hover{background:var(--fond-2,#F4F0E7)}
+.coacq-ov-corps{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 24px}
+.coacq-ov-corps .texte h1{font-size:19px;line-height:1.3}
+.coacq-ov-corps .coacq-etapes{margin-left:0;margin-right:0}
+.coacq-ov-note{font-size:13.5px;color:var(--gris,#475569);margin:0 0 14px;line-height:1.5}
+.coacq-ov-cta{display:block;width:100%;margin:0 0 18px}
+[dir=rtl] .coacq-ov-fiche{right:auto;left:22px}
+@media(max-width:900px){
+ .coacq-ov-fiche,[dir=rtl] .coacq-ov-fiche{inset:0;width:auto;height:auto;border-radius:0;border:0}
+ .coacq-ov-qui small{white-space:normal}
+ .coacq-ov-conseiller{white-space:normal;max-width:42%;text-align:center;line-height:1.2}}
 .coacq-choix{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:22px 0 8px}
 .coacq-choix button{flex:1 1 240px}
 
@@ -3988,6 +4004,25 @@ body:has(#bh-cookies:not([hidden])) .eli-pastille{bottom:calc(160px + env(safe-a
 .ap-mot-boite textarea{flex:1;min-width:0}
 .ap-merci{margin-top:18px;padding:18px;border-radius:var(--r-xl,16px);
  background:var(--vert-fond,#E9F7F0);color:var(--vert,#0B6E4F);font-weight:650}
+
+/* « Une ville précise » (Hillel, 04/11/2026) : un champ avec autocompletion
+   et la liste deroulante de toutes nos villes, sous le message d'EliA. Le
+   menu montre clairement qu'il propose un choix (bordure + chevron). */
+.eli-ville{margin:4px 0 10px;display:flex;flex-direction:column;gap:8px;max-width:100%}
+.eli-ville-ligne{display:flex;gap:6px}
+.eli-ville input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;
+ border:1.5px solid var(--action,#0B6BD6);border-radius:12px;background:var(--carte,#fff);
+ color:var(--encre,#0F172A)}
+.eli-ville button{flex:none;width:44px;border:0;border-radius:12px;cursor:pointer;
+ background:var(--action,#0B6BD6);color:var(--fond,#fff);display:grid;place-items:center}
+.eli-ville-liste{display:flex;flex-direction:column;gap:4px;font-size:12.5px;
+ color:var(--gris,#5A6172)}
+.eli-ville select{font:inherit;font-size:15px;padding:10px 38px 10px 12px;border-radius:12px;
+ border:1.5px solid var(--trait-fort,#C9C2B4);background-color:var(--carte,#fff);
+ color:var(--encre,#0F172A);-webkit-appearance:none;appearance:none;cursor:pointer;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235A6172' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+ background-repeat:no-repeat;background-position:right 12px center}
+[dir=rtl] .eli-ville select{padding:10px 12px 10px 38px;background-position:left 12px center}
 </style>
 <script>/* La banniere de nuit, de 22 h 30 a 6 h a l'heure du visiteur ; claire le
 reste du temps (Hillel, 24/09/2026). ?nuit=1 / ?jour=1 pour la voir a toute heure. */
@@ -4005,6 +4040,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
       <a href="#/">Programmes neufs</a>
       <a class=nav-eli href="#/eli"><span class=nav-eli-long>EliA, conseiller IA</span><span class=nav-eli-court>EliA</span></a>
       <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
+      <a class=nav-apport href="#/" data-apport-reduit>Apport réduit</a>
       <a class=nav-academy href="https://bh-nadlan.com/academy/">BH Academy</a>
       <a href="#/blog">Blog</a>
       <a href="#/nous-contacter">Nous contacter</a>
@@ -4068,6 +4104,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
   <a href="#/">Programmes neufs</a>
   <a class=nav-eli href="#/eli"><span class=nav-eli-long>EliA, conseiller IA</span><span class=nav-eli-court>EliA</span></a>
   <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
+  <a class=nav-apport href="#/" data-apport-reduit>Apport réduit</a>
   <a class=nav-academy href="https://bh-nadlan.com/academy/">BH Academy</a>
   <a href="#/blog">Blog</a>
   <a href="#/nous-contacter" onclick="fermerMenuMobile()">Nous contacter</a>
@@ -4226,6 +4263,7 @@ if(n)document.documentElement.classList.add('nuit');})();</script>
       <b>Acheter</b>
       <a href="#/">Tous les programmes</a>
       <a class=nav-simu href="https://bh-nadlan.com/simulateur/" target="_blank" rel="noopener">Simulateur d'achat</a>
+      <a class=nav-apport href="#/" data-apport-reduit>Apport réduit</a>
       <a href="#/" onclick="versContact(this);return false">Un conseiller vous rappelle aujourd’hui</a>
     </div>
     <div class=pied-col id=pied-villes><b>Où acheter</b></div>
@@ -6259,24 +6297,49 @@ function coacqFicheHTML() {
       <li><b>${T('À la revente')}</b><span>${T('chacun récupère sa mise et la plus-value se partage. Vous êtes copropriétaire inscrit au registre foncier dès le départ.')}</span></li>
     </ol>
     <p class="coacq-ov-note">${T('Chaque dossier est étudié individuellement : laissez vos coordonnées, un conseiller BH Nadlan vous explique tout lors d’un premier échange, sans engagement.')}</p>
+    <button type="button" class="cta coacq-ov-cta" data-coacq-form>${T('Laisser mes coordonnées')}</button>
     ${contactHTML(null, 'co-acquisition')}`;
 }
+const ICONE_COACQ = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9" r="2.4"/><path d="M3 19c.4-3.2 2.7-5 5.5-5s5.1 1.8 5.5 5"/><path d="M14.5 14.2c.5-.1 1-.2 1.5-.2 2.3 0 4.2 1.5 4.6 4.3"/></svg>';
+/* « Apport réduit » (Hillel, 04/11/2026) : la meme fiche, ouverte depuis le
+   menu du haut, la tuile de l'accueil ou le choix du simulateur, dans une
+   petite fenetre au format de celle d'EliA (en-tete avatar + titre +
+   « Parler à un conseiller » + croix ; carte a droite sur ordinateur, plein
+   ecran sur telephone). Une explication seulement, aucun chiffre. */
 function ouvrirInfoCoacq() {
   let ov = document.getElementById('coacq-overlay');
   if (ov) ov.remove();
+  if (typeof fermerMenuMobile === 'function') { try { fermerMenuMobile(); } catch (e) {} }
+  // Le formulaire de la page (meme identifiants c-nom, c-tel…) sort du
+  // document le temps de la fenetre : sinon le formulaire de la fenetre
+  // lirait les champs vides de la page.
+  const autre = document.getElementById('contact');
+  const place = autre ? document.createComment('contact') : null;
+  if (autre) autre.replaceWith(place);
   ov = document.createElement('div');
   ov.id = 'coacq-overlay';
-  ov.innerHTML = `<div class="coacq-ov-fiche" role="dialog" aria-modal="true">
-      <div class="coacq-ov-barre"><b>${T('J’achète à coût réduit')}</b>
-        <button type="button" class="coacq-ov-fermer" id="coacq-ov-fermer">${T('Fermer')} ✕</button></div>
+  ov.innerHTML = `<section class="coacq-ov-fiche" role="dialog" aria-modal="true" aria-label="${T('Apport réduit')}">
+      <div class="coacq-ov-barre">
+        <span class="coacq-ov-avatar" aria-hidden="true">${ICONE_COACQ}</span>
+        <div class="coacq-ov-qui"><b>${T('Apport réduit')}</b><small>${T('La co-acquisition avec EquityLiving')}</small></div>
+        <button type="button" class="coacq-ov-conseiller" data-coacq-form>${T('Parler à un conseiller')}</button>
+        <button type="button" class="coacq-ov-fermer" id="coacq-ov-fermer" aria-label="${T('Fermer')}">×</button></div>
       <div class="coacq-ov-corps">${coacqFicheHTML()}</div>
-    </div>`;
+    </section>`;
   document.body.appendChild(ov);
+  ov.querySelectorAll('[data-coacq-form]').forEach(b => b.onclick = () => {
+    const f = ov.querySelector('#contact');
+    if (!f) return;
+    f.scrollIntoView({behavior: 'smooth', block: 'start'});
+    const champ = ov.querySelector('#c-nom');
+    if (champ) setTimeout(() => champ.focus({preventScroll: true}), 350);
+  });
   const html = document.documentElement;
   const avant = html.style.overflow;
   html.style.overflow = 'hidden';
   const fermer = () => {
     ov.remove();
+    if (place) place.replaceWith(autre);
     html.style.overflow = avant;
     document.removeEventListener('keydown', surEchap);
   };
@@ -8047,10 +8110,17 @@ function etapeChoixMode(zone) {
     <button type="button" class="etape-carte" data-choix="apport">
       <span class="etape-carte-corps"><b>${T('À partir de mon apport')}</b>
         <span class="note">${T('« J’ai 200.000 €, qu’est-ce que je peux acheter ? » Vous donnez la somme que vous avez, on calcule le prix que vous pouvez viser.')}</span></span>
-      <span class="radio" aria-hidden="true"></span></button>`;
+      <span class="radio" aria-hidden="true"></span></button>
+    ${DONNEES.marque ? '' : `<button type="button" class="etape-carte" data-choix="apport-reduit">
+      <span class="etape-carte-corps"><b>${T('Avec un apport réduit')}</b>
+        <span class="note">${T('Votre apport ne suffit pas pour acheter seul ? Découvrez la co-acquisition avec notre partenaire EquityLiving.')}</span></span>
+      <span class="radio" aria-hidden="true"></span></button>`}`;
   zone.querySelectorAll('[data-choix]').forEach(b => {
     b.onclick = () => {
       if (b.dataset.choix === 'prix-du-bien') { etapeChoixCredit(zone); return; }
+      // Une explication seulement, par-dessus le simulateur : pas de
+      // simulation co-acquisition pour le public (Hillel, 04/11/2026).
+      if (b.dataset.choix === 'apport-reduit') { compterVue('simu-apport-reduit'); ouvrirInfoCoacq(); return; }
       compterVue('simu-' + b.dataset.choix);
       choisirModeSimu(b.dataset.choix); vueSimulateurEtapes();
     };
@@ -10796,6 +10866,14 @@ const LOGO = document.querySelector('.pub-logo');
     const info = carte.querySelector('[data-hs-info]');
     if (info) info.onclick = () => ouvrirInfoCoacq();
   }
+  // « Apport réduit » dans le menu du haut, le menu du telephone et le pied
+  // de page (Hillel, 04/11/2026) : la fiche par-dessus la page.
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-apport-reduit]');
+    if (!a) return;
+    e.preventDefault();
+    ouvrirInfoCoacq();
+  });
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-simu-cle]');
     if (!b) return;
