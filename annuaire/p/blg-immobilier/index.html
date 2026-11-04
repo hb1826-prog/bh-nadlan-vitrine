@@ -4980,7 +4980,7 @@ function majBouton(n) {
    un visiteur tombait donc d'abord sur ce qu'on ne sait pas encore chiffrer.
    Ils sont desormais MELANGES aux autres, et c'est le classement qui decide :
 
-     1. Africa Israel ouvre la page — le seul promoteur sous contrat ;
+     1. le programme « vedette » (promoteur sous contrat, jamais nomme) ouvre la page ;
      2. puis les villes, Jerusalem d'abord, Tel Aviv ensuite, et apres elles
         celles ou l'on a le plus de programmes CHIFFRES a vendre ;
      3. dans chaque ville, ce qui a un prix passe avant ce qui n'en a pas.
@@ -4996,11 +4996,11 @@ function ordreGrille(vus, sd) {
     if (v.indexOf('tel aviv') === 0) return [1, 0, ''];
     return [2, -(poids[p.ville] || 0), p.ville || ''];
   };
-  const africa = x => (x.p.promoteur && /africa/i.test(x.p.promoteur.nom || '')) ? 0 : 1;
+  const enTete = x => x.p.vedette ? 0 : 1;
   const tous = vus.map(p => ({p: p, sd: false}))
     .concat(sd.map(p => ({p: p, sd: true})));
   tous.sort((a, b) => {
-    if (africa(a) !== africa(b)) return africa(a) - africa(b);
+    if (enTete(a) !== enTete(b)) return enTete(a) - enTete(b);
     const ra = rangVille(a.p), rb = rangVille(b.p);
     for (let i = 0; i < 3; i++) {
       if (ra[i] < rb[i]) return -1;
@@ -5143,13 +5143,9 @@ function carte(p) {
   const d = (DONNEES.demandes || {})[p.ville];
   const preuve = n ? T('Vue') + ' ' + n + ' ' + T('fois cette semaine')
     : (d ? d + ' ' + T('acheteurs cherchent à') + ' ' + esc(T(p.ville)) : '');
-  const marquePromoteur = p.promoteur ? `
-        <div class="promo-chip" title="${esc(p.promoteur.nom)}">
-          ${p.promoteur.logo_src
-            ? `<img src="${esc(p.promoteur.logo_src)}" alt="" loading="lazy"
-                    onerror="this.remove()">` : ''}
-          <span>${esc(p.promoteur.nom)}</span>
-        </div>` : '';
+  // Le promoteur n'est jamais nomme en public (Hillel, 04/11/2026) : la page
+  // ne recoit plus ni son nom ni son logo.
+  const marquePromoteur = '';
   // Carte d'un bien en seconde main : la photo du bien reste DANS sa fiche
   // (galerie reelle), jamais sur la carte — une seule mauvaise photo
   // (eclairage, cadrage, parfois une image tiree d'une video) suffit a
@@ -5604,13 +5600,6 @@ function offre(p) {
   return `
   <aside class="offre"><div class="offre-in">
     <h1>${esc(p.nom)}${boutonPartage(messagePartageBien(p.nom), '#/' + p.cle, false)}</h1>
-    ${p.promoteur ? `<div class="offre-promo">
-      ${p.promoteur.logo_src
-        ? `<img src="${esc(p.promoteur.logo_src)}" alt=""
-                onerror="this.remove()">` : ''}
-      <div><small>${T('Programme commercialisé par')}</small>
-        <b>${esc(p.promoteur.nom)}</b></div>
-    </div>` : ''}
     <p class="offre-lieu">◎ ${esc(p.quartier ? T(p.quartier) + ' · ' + T(p.ville)
                                              : T(p.ville))}</p>
     <div class="offre-prix"><span>${T('à partir de')}${aide(p.revente ? 'prix-revente' : 'prix')}</span>
