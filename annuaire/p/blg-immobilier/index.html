@@ -10649,7 +10649,7 @@ async function router() {
   // page — voir les regles `body.tunnel-plein` de `portail.css`.
   document.body.classList.toggle('tunnel-plein', cle === 'simulateur');
   // Une fiche de programme commence par le programme, pas par la banniere
-  // de l'accueil (`fiche_sans_banniere`, eteint par defaut : voir generer.py).
+  // de l'accueil (`fiche_sans_banniere`, voir generer.py).
   document.body.classList.toggle('fiche-sans-banniere', !!DONNEES.fiche_sans_banniere
     && [DONNEES.projets, DONNEES.reventes || [], DONNEES.sur_demande || []]
       .some(l => l.some(x => x.cle === cle)));
