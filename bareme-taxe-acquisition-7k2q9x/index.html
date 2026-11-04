@@ -3482,6 +3482,31 @@ body.simulateur-seul .ou.ha-ou{display:none}
  .ha-cherche .chercher.ha-go{width:100%;grid-column:1!important;grid-row:auto!important}
 }
 
+/* ---- Ordinateur : les ronds flottants ne mordent plus sur le contenu ----
+   (audit du 04/11/2026, 1366 px : simulateur, mail et WhatsApp couvraient la
+   flèche du carrousel des villes et la tuile EliA.) Sur ordinateur, le trio
+   et la flèche « haut de page » se serrent dans la marge de droite (42 px, à
+   10 px du bord), et le contenu garde toujours au moins 64 px de marge de
+   chaque côté : la colonne des ronds ne touche plus rien. Téléphone et
+   tablette (≤ 900 px) inchangés. */
+@media(min-width:901px){
+ .flottant{right:10px;width:42px;height:42px}
+ .flottant svg{width:20px;height:20px}
+ .flottant.wa{bottom:92px}
+ .flottant.mail{bottom:144px}
+ .flottant.simu{bottom:196px}
+ .remonter{right:10px;bottom:40px;padding:0;font-size:0;gap:0;width:42px;height:42px;justify-content:center}
+ .remonter span{font-size:18px}
+ .wrap{padding-left:max(22px, calc(64px - max(0px, (100vw - 1240px) / 2)));
+  padding-right:max(22px, calc(64px - max(0px, (100vw - 1240px) / 2)))}
+}
+@media(min-width:901px) and (max-width:1367px){
+ .ha-carres,.ou.ha-ou,.cherche.ha-cherche{width:calc(100% - 128px)!important}
+}
+/* Fiche de programme sans la banniere de l'accueil : classe posee par
+   annuaire.js seulement si `fiche_sans_banniere` est allume. */
+body.fiche-sans-banniere #hero{display:none!important}
+
 .tx{max-width:880px;margin:0 auto;padding:28px 18px 80px;line-height:1.6}
 .tx .marque{display:block;width:132px;margin:0 auto 8px}
 .tx h1{font-size:28px;text-align:center;margin:18px 0 6px}
