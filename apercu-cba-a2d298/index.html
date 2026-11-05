@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<!--bh-shabbat--><style>
+.bhs-voile{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;
+ justify-content:center;padding:24px 16px;overflow:auto;color:#F5EFE2;text-align:center;
+ background:radial-gradient(ellipse at 50% 30%,#22304F 0%,#0F172A 62%,#070B16 100%);
+ font:16px/1.55 Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;animation:bhsVenir .8s ease-out}
+.bhs-carte{max-width:520px;width:100%}
+.bhs-bougies{display:flex;justify-content:center;gap:56px;height:150px;align-items:flex-end;margin-bottom:-6px}
+.bhs-bougie{position:relative;width:22px;height:96px;border-radius:4px 4px 2px 2px;
+ background:linear-gradient(90deg,#E9E2D2,#FFFDF6 45%,#D8CFBC)}
+.bhs-bougie:before{content:"";position:absolute;left:50%;top:-9px;width:2px;height:10px;margin-left:-1px;background:#2A2118;border-radius:1px}
+.bhs-flamme{position:absolute;left:50%;bottom:100%;width:16px;height:30px;margin:0 0 6px -8px;
+ border-radius:50% 50% 50% 50%/60% 60% 40% 40%;transform-origin:50% 90%;
+ background:radial-gradient(ellipse at 50% 75%,#fff 0 18%,#FFE38A 32%,#FFA73A 62%,rgba(255,120,30,0) 72%);
+ animation:bhsVacille 1.6s ease-in-out infinite alternate}
+.bhs-bougie+.bhs-bougie .bhs-flamme{animation-duration:1.9s;animation-delay:-.7s}
+.bhs-halo{position:absolute;left:50%;bottom:100%;width:120px;height:120px;margin:0 0 -40px -60px;border-radius:50%;
+ background:radial-gradient(circle,rgba(255,196,90,.30),rgba(255,196,90,0) 65%);animation:bhsHalo 2.4s ease-in-out infinite alternate;pointer-events:none}
+.bhs-pied{width:150px;height:10px;margin:0 auto 18px;border-radius:5px;background:linear-gradient(#C9A227,#8C6D14)}
+.bhs-challah{width:200px;max-width:70%;height:auto;display:block;margin:0 auto 14px}
+.bhs-hebreu{font:600 clamp(40px,11vw,60px)/1.15 "Frank Ruhl Libre","David","Times New Roman",serif;
+ color:#C9A227;margin:6px 0 4px;letter-spacing:.5px;text-shadow:0 0 24px rgba(201,162,39,.35)}
+.bhs-latin{font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#CFC6B2;margin:0 0 20px}
+.bhs-txt{font-size:18px;margin:0 0 8px}
+.bhs-quand{font-size:17px;margin:0 0 8px;color:#fff}
+.bhs-quand b{color:#C9A227;font-weight:600}
+.bhs-merci{font-size:15px;color:#CFC6B2;margin:14px 0 0}
+.bhs-tov{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483646;max-width:460px;margin:0 auto;
+ background:#0F172A;color:#F5EFE2;border-radius:14px;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,.35);
+ font:15px/1.5 Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;animation:bhsMonter .5s ease-out}
+.bhs-tov h3{margin:0 34px 4px 0;font-size:18px;color:#C9A227}
+.bhs-tov[dir=rtl] h3{margin:0 0 4px 34px}
+.bhs-tov p{margin:0 0 12px}
+.bhs-tov button{font:inherit;cursor:pointer;border:0;border-radius:10px}
+.bhs-tov .bhs-ecrire{background:#0B6BD6;color:#fff;padding:10px 16px;font-weight:600}
+.bhs-tov .bhs-x{position:absolute;top:8px;right:8px;width:32px;height:32px;background:none;color:#CFC6B2;font-size:22px;line-height:1}
+.bhs-tov[dir=rtl] .bhs-x{right:auto;left:8px}
+@keyframes bhsVacille{0%{transform:scale(1,1) rotate(-2deg)}50%{transform:scale(.92,1.08) rotate(2deg)}100%{transform:scale(1.04,.95) rotate(-1deg)}}
+@keyframes bhsHalo{from{opacity:.7;transform:scale(.95)}to{opacity:1;transform:scale(1.06)}}
+@keyframes bhsVenir{from{opacity:0}to{opacity:1}}
+@keyframes bhsMonter{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.bhs-flamme,.bhs-halo,.bhs-voile,.bhs-tov{animation:none}}
+</style><script>(function(){
+var BASE="https://espace.bh-nadlan.com",T={"fr": {"locale": "fr-FR", "shabbat": "Le site ne fonctionne pas pendant Shabbat.", "fete": "Le site ne fonctionne pas pendant la fête.", "revenir": "Merci de revenir à partir de {quand} (heure de chez vous).", "merci": "Nous vous remercions pour votre compréhension.", "tov": "Shavoua tov !", "tov_fete": "Bonne semaine !", "fini": "Shabbat est terminé. Dites-nous ce que vous vouliez, nous vous répondons avec plaisir.", "fini_fete": "La fête est terminée. Dites-nous ce que vous vouliez, nous vous répondons avec plaisir.", "ecrire": "Nous écrire", "fermer": "Fermer"}, "en": {"locale": "en-GB", "shabbat": "This website is closed during Shabbat.", "fete": "This website is closed during the holiday.", "revenir": "Please come back from {quand} (your local time).", "merci": "Thank you for your understanding.", "tov": "Shavua tov!", "tov_fete": "Have a good week!", "fini": "Shabbat is over. Tell us what you were looking for, we will be happy to help.", "fini_fete": "The holiday is over. Tell us what you were looking for, we will be happy to help.", "ecrire": "Write to us", "fermer": "Close"}, "he": {"locale": "he-IL", "shabbat": "האתר אינו פעיל בשבת.", "fete": "האתר אינו פעיל בחג.", "revenir": "נשמח לראותכם שוב החל מ{quand} (לפי השעה אצלכם).", "merci": "תודה על ההבנה.", "tov": "שבוע טוב!", "tov_fete": "שבוע טוב!", "fini": "השבת יצאה. ספרו לנו מה חיפשתם, נשמח לעזור.", "fini_fete": "החג הסתיים. ספרו לנו מה חיפשתם, נשמח לעזור.", "ecrire": "כתבו לנו", "fermer": "סגירה"}, "es": {"locale": "es-ES", "shabbat": "El sitio no funciona durante Shabat.", "fete": "El sitio no funciona durante la fiesta.", "revenir": "Vuelva a partir del {quand} (hora local).", "merci": "Le agradecemos su comprensión.", "tov": "¡Shavúa tov!", "tov_fete": "¡Buena semana!", "fini": "Shabat ha terminado. Díganos qué buscaba, le responderemos con gusto.", "fini_fete": "La fiesta ha terminado. Díganos qué buscaba, le responderemos con gusto.", "ecrire": "Escribirnos", "fermer": "Cerrar"}, "pt": {"locale": "pt-PT", "shabbat": "O site não funciona durante o Shabat.", "fete": "O site não funciona durante a festa.", "revenir": "Volte a partir de {quand} (hora local).", "merci": "Agradecemos a sua compreensão.", "tov": "Shavua tov!", "tov_fete": "Boa semana!", "fini": "O Shabat terminou. Diga-nos o que procurava, teremos todo o gosto em ajudar.", "fini_fete": "A festa terminou. Diga-nos o que procurava, teremos todo o gosto em ajudar.", "ecrire": "Escrever-nos", "fermer": "Fechar"}, "ru": {"locale": "ru-RU", "shabbat": "Сайт не работает в Шаббат.", "fete": "Сайт не работает во время праздника.", "revenir": "Пожалуйста, возвращайтесь после {quand} (по вашему времени).", "merci": "Благодарим за понимание.", "tov": "Шавуа тов!", "tov_fete": "Хорошей недели!", "fini": "Шаббат закончился. Расскажите, что вы искали, — мы с радостью ответим.", "fini_fete": "Праздник закончился. Расскажите, что вы искали, — мы с радостью ответим.", "ecrire": "Написать нам", "fermer": "Закрыть"}},CHALLAH="<svg class=bhs-challah viewBox=\"0 0 220 90\" aria-hidden=true><defs><radialGradient id=bhsPain cx=.4 cy=.3 r=.8><stop offset=0 stop-color=#F6CF8A /><stop offset=.55 stop-color=#CC8433 /><stop offset=1 stop-color=#8A4E1C /></radialGradient></defs><ellipse cx=108 cy=80 rx=96 ry=7 fill=#000 opacity=.35 /><g fill=url(#bhsPain) stroke=#7A4316 stroke-width=1.1><ellipse cx=30 cy=44 rx=15 ry=11 transform=\"rotate(-32 30 44)\" /><ellipse cx=30 cy=56 rx=15 ry=11 transform=\"rotate(32 30 56)\" /><ellipse cx=52 cy=44 rx=19 ry=14 transform=\"rotate(32 52 44)\" /><ellipse cx=52 cy=56 rx=19 ry=14 transform=\"rotate(-32 52 56)\" /><ellipse cx=74 cy=44 rx=22 ry=16 transform=\"rotate(-32 74 44)\" /><ellipse cx=74 cy=56 rx=22 ry=16 transform=\"rotate(32 74 56)\" /><ellipse cx=96 cy=44 rx=24 ry=18 transform=\"rotate(32 96 44)\" /><ellipse cx=96 cy=56 rx=24 ry=18 transform=\"rotate(-32 96 56)\" /><ellipse cx=118 cy=44 rx=24 ry=18 transform=\"rotate(-32 118 44)\" /><ellipse cx=118 cy=56 rx=24 ry=18 transform=\"rotate(32 118 56)\" /><ellipse cx=140 cy=44 rx=22 ry=16 transform=\"rotate(32 140 44)\" /><ellipse cx=140 cy=56 rx=22 ry=16 transform=\"rotate(-32 140 56)\" /><ellipse cx=162 cy=44 rx=19 ry=14 transform=\"rotate(-32 162 44)\" /><ellipse cx=162 cy=56 rx=19 ry=14 transform=\"rotate(32 162 56)\" /><ellipse cx=184 cy=44 rx=15 ry=11 transform=\"rotate(32 184 44)\" /><ellipse cx=184 cy=56 rx=15 ry=11 transform=\"rotate(-32 184 56)\" /></g><g fill=#FFF4DC opacity=.9><ellipse cx=122 cy=36 rx=1.6 ry=1 transform=\"rotate(-33 122 36)\" /><ellipse cx=141 cy=33 rx=1.6 ry=1 transform=\"rotate(39 141 33)\" /><ellipse cx=58 cy=49 rx=1.6 ry=1 transform=\"rotate(-14 58 49)\" /><ellipse cx=64 cy=43 rx=1.6 ry=1 transform=\"rotate(23 64 43)\" /><ellipse cx=54 cy=48 rx=1.6 ry=1 transform=\"rotate(28 54 48)\" /><ellipse cx=94 cy=33 rx=1.6 ry=1 transform=\"rotate(14 94 33)\" /><ellipse cx=62 cy=45 rx=1.6 ry=1 transform=\"rotate(0 62 45)\" /><ellipse cx=147 cy=34 rx=1.6 ry=1 transform=\"rotate(19 147 34)\" /><ellipse cx=101 cy=34 rx=1.6 ry=1 transform=\"rotate(34 101 34)\" /><ellipse cx=148 cy=33 rx=1.6 ry=1 transform=\"rotate(18 148 33)\" /><ellipse cx=71 cy=39 rx=1.6 ry=1 transform=\"rotate(6 71 39)\" /><ellipse cx=55 cy=50 rx=1.6 ry=1 transform=\"rotate(-2 55 50)\" /><ellipse cx=141 cy=33 rx=1.6 ry=1 transform=\"rotate(-9 141 33)\" /><ellipse cx=96 cy=33 rx=1.6 ry=1 transform=\"rotate(-17 96 33)\" /><ellipse cx=74 cy=41 rx=1.6 ry=1 transform=\"rotate(-9 74 41)\" /><ellipse cx=147 cy=36 rx=1.6 ry=1 transform=\"rotate(-30 147 36)\" /><ellipse cx=178 cy=35 rx=1.6 ry=1 transform=\"rotate(33 178 35)\" /><ellipse cx=118 cy=49 rx=1.6 ry=1 transform=\"rotate(-2 118 49)\" /><ellipse cx=86 cy=35 rx=1.6 ry=1 transform=\"rotate(27 86 35)\" /><ellipse cx=88 cy=43 rx=1.6 ry=1 transform=\"rotate(23 88 43)\" /><ellipse cx=64 cy=49 rx=1.6 ry=1 transform=\"rotate(3 64 49)\" /><ellipse cx=56 cy=50 rx=1.6 ry=1 transform=\"rotate(17 56 50)\" /></g></svg>",CLE='bh-shabbat-reprise';
+var L=(document.documentElement.getAttribute('lang')||'fr').slice(0,2).toLowerCase();if(!T[L])L='fr';
+var t=T[L],voile=null,minuterie=null,signale=false;
+function lire(){try{return JSON.parse(localStorage.getItem(CLE)||'null');}catch(e){return null;}}
+function garder(v){try{if(v)localStorage.setItem(CLE,JSON.stringify(v));else localStorage.removeItem(CLE);}catch(e){}}
+function quand(ms){try{return new Intl.DateTimeFormat(t.locale,{weekday:'long',hour:'2-digit',minute:'2-digit'}).format(new Date(ms));}
+ catch(e){return new Date(ms).toLocaleString();}}
+function corps(f){if(document.body)f();else document.addEventListener('DOMContentLoaded',f);}
+function figer(oui){var e=document.body.children;for(var i=0;i<e.length;i++){if(e[i]===voile)continue;
+ if(oui)e[i].setAttribute('inert','');else e[i].removeAttribute('inert');}
+ document.documentElement.style.overflow=oui?'hidden':'';}
+function fermer(d){corps(function(){
+ var fete=d.raison==='fete';
+ if(!voile){voile=document.createElement('div');voile.className='bhs-voile';
+  voile.setAttribute('role','dialog');voile.setAttribute('aria-modal','true');
+  voile.setAttribute('dir',L==='he'?'rtl':'ltr');voile.setAttribute('lang',L);
+  voile.innerHTML='<div class=bhs-carte><div class=bhs-bougies>'+
+   '<div class=bhs-bougie><span class=bhs-halo></span><span class=bhs-flamme></span></div>'+
+   '<div class=bhs-bougie><span class=bhs-halo></span><span class=bhs-flamme></span></div></div>'+
+   '<div class=bhs-pied></div>'+CHALLAH+'<p class=bhs-hebreu lang=he dir=rtl></p><p class=bhs-latin></p>'+
+   '<p class=bhs-txt></p><p class=bhs-quand></p><p class=bhs-merci></p></div>';
+  document.body.appendChild(voile);}
+ voile.querySelector('.bhs-hebreu').textContent=fete?'חַג שָׂמֵחַ':'שַׁבָּת שָׁלוֹם';
+ voile.querySelector('.bhs-latin').textContent=fete?"Hag Saméa'h":'Shabbat Shalom';
+ voile.querySelector('.bhs-txt').textContent=fete?t.fete:t.shabbat;
+ var parts=t.revenir.split('{quand}'),q=voile.querySelector('.bhs-quand'),b=document.createElement('b');
+ q.textContent='';q.appendChild(document.createTextNode(parts[0]));b.textContent=quand(d.reprise);
+ q.appendChild(b);q.appendChild(document.createTextNode(parts[1]||''));
+ voile.querySelector('.bhs-merci').textContent=t.merci;
+ figer(true);garder({reprise:d.reprise,raison:d.raison});
+ if(!signale&&window.fbq){signale=true;try{fbq('trackCustom','VisiteShabbat',{raison:d.raison});}catch(e){}}
+ clearTimeout(minuterie);
+ minuterie=setTimeout(verifier,Math.min(Math.max(d.reprise-Date.now()+5000,5000),6*3600*1000));
+});}
+function bienvenue(fete){corps(function(){
+ var c=document.createElement('div');c.className='bhs-tov';c.setAttribute('role','status');
+ c.setAttribute('dir',L==='he'?'rtl':'ltr');
+ c.innerHTML='<button type=button class=bhs-x></button><h3></h3><p></p><button type=button class=bhs-ecrire></button>';
+ c.querySelector('h3').textContent=fete?t.tov_fete:t.tov;
+ c.querySelector('p').textContent=fete?t.fini_fete:t.fini;
+ var x=c.querySelector('.bhs-x');x.textContent='×';x.setAttribute('aria-label',t.fermer);
+ x.onclick=function(){c.remove();};
+ var e=c.querySelector('.bhs-ecrire');e.textContent=t.ecrire;
+ e.onclick=function(){c.remove();if(window.eliOuvrir){window.eliOuvrir(true);}
+  else{location.href='/'+(L==='fr'?'':L+'/')+'#/eli';}};
+ document.body.appendChild(c);});}
+function ouvrir(){
+ if(voile){figer(false);voile.remove();voile=null;}
+ var vu=lire();if(!vu)return;garder(null);
+ var depuis=Date.now()-vu.reprise;
+ if(depuis>=0&&depuis<3*864e5)bienvenue(vu.raison==='fete');}
+function verifier(){var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+ fetch(BASE+'/site/shabbat?tz='+encodeURIComponent(tz),{cache:'no-store'})
+ .then(function(r){return r.json();}).then(function(d){if(d&&d.ferme)fermer(d);else ouvrir();})
+ .catch(function(){});}
+verifier();setInterval(verifier,10*60*1000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)verifier();});
+})();</script><!--/bh-shabbat-->
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>CBA Cabinet Benayoun &amp; Associés · Préparer son alyah (maquette)</title>
+<link rel="icon" type="image/svg+xml" href="img/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --violet:#6f2e70;      /* couleur du logo CBA */
+  --nuit:#1c1a45;        /* bleu nuit du site cbavocats.com */
+  --lavande:#9fa0c4;     /* lavande du site cbavocats.com */
+  --lavande-clair:#eeeef6;
+  --texte:#2b2840;
+  --gris:#5d5a72;
+  --blanc:#fff;
+  --rayon:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Source Sans 3",system-ui,sans-serif;color:var(--texte);background:#fff;font-size:17px;line-height:1.55}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;font-weight:600;color:var(--nuit);line-height:1.15}
+a{color:var(--violet)}
+img{max-width:100%;display:block}
+.conteneur{max-width:1180px;margin:0 auto;padding:0 24px}
+.bouton{display:inline-flex;align-items:center;gap:10px;background:var(--violet);color:#fff;text-decoration:none;font-weight:600;padding:13px 24px;border-radius:var(--rayon);border:0;font-size:16px;cursor:pointer}
+.bouton:hover{background:#5a2459}
+.bouton.clair{background:transparent;color:var(--violet);border:1.5px solid var(--violet)}
+.fleche::after{content:"→"}
+
+/* bandeau du haut, comme sur cbavocats.com */
+.bandeau{background:var(--violet);color:#fff;font-size:14px}
+.bandeau .conteneur{display:flex;gap:28px;justify-content:flex-end;padding-top:8px;padding-bottom:8px}
+.bandeau a{color:#fff;text-decoration:none}
+
+/* en-tete */
+header{background:#fff;box-shadow:0 2px 14px rgba(28,26,69,.07);position:sticky;top:0;z-index:20}
+header .conteneur{display:flex;align-items:center;justify-content:space-between;height:84px}
+.logo img{height:58px;width:auto}
+nav{display:flex;gap:30px;align-items:center}
+nav a{color:var(--gris);text-decoration:none;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+nav a:hover{color:var(--violet)}
+nav .bouton{color:#fff;text-transform:none;letter-spacing:0;font-size:15px;padding:11px 18px}
+.burger{display:none;background:none;border:0;font-size:28px;color:var(--nuit);cursor:pointer}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(100deg,#fff 0%,#fff 46%,rgba(255,255,255,.55) 70%,rgba(255,255,255,.2) 100%),url(img/jerusalem.jpg) right center/cover no-repeat}
+.hero .conteneur{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-top:72px;padding-bottom:72px}
+.surtitre{color:var(--lavande);font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;font-weight:600}
+.hero h1{font-size:52px;margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--violet);display:block}
+.hero p.chapeau{font-size:19px;color:var(--gris);max-width:560px;margin-bottom:30px}
+.hero .actions{display:flex;gap:14px;flex-wrap:wrap}
+.video{position:relative;border-radius:10px;overflow:hidden;box-shadow:0 20px 50px rgba(28,26,69,.28);aspect-ratio:4/5;background:var(--nuit)}
+.video img{width:100%;height:100%;object-fit:cover;object-position:center 25%}
+.video .lire{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:26px;background:linear-gradient(transparent 45%,rgba(28,26,69,.85));color:#fff;text-align:center}
+.video .rond{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;margin-bottom:auto;margin-top:auto;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.video .rond::after{content:"";border-left:24px solid var(--violet);border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:6px}
+.video strong{font-family:"Source Serif 4",serif;font-size:21px;font-weight:600}
+.video span{font-size:14px;opacity:.85}
+
+/* reconnaissance */
+.reconnu{background:var(--lavande-clair)}
+.reconnu .conteneur{display:flex;gap:40px;align-items:center;padding-top:26px;padding-bottom:26px}
+.reconnu .etoiles{color:var(--violet);font-size:20px;letter-spacing:2px;white-space:nowrap}
+.reconnu p{color:var(--texte);font-size:16px}
+
+/* sections */
+section{padding:84px 0}
+.titre-section{text-align:center;max-width:720px;margin:0 auto 46px}
+.titre-section h2{font-size:40px;margin-bottom:12px}
+.titre-section p{color:var(--gris)}
+
+/* 3 parcours */
+.parcours{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.carte{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 10px 34px rgba(28,26,69,.10);display:flex;flex-direction:column;border-top:4px solid var(--violet)}
+.carte img{height:200px;width:100%;object-fit:cover}
+.carte .corps{padding:26px;display:flex;flex-direction:column;gap:12px;flex:1}
+.carte h3{font-size:24px}
+.carte p{color:var(--gris);font-size:16px;flex:1}
+.carte .videos{font-size:14px;color:var(--lavande);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.carte a{font-weight:600;text-decoration:none}
+
+/* etapes */
+.etapes{background:var(--nuit);color:#fff}
+.etapes h2{color:#fff;font-size:38px;margin-bottom:8px}
+.etapes .intro{color:#d9d8ea;margin-bottom:44px}
+.etapes .grille{display:grid;grid-template-columns:2fr 1fr;gap:48px;align-items:start}
+.frise{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;position:relative}
+.frise::before{content:"";position:absolute;top:19px;left:20px;right:20px;height:1px;background:rgba(255,255,255,.35)}
+.etape{position:relative}
+.etape .num{width:40px;height:40px;border-radius:50%;background:var(--lavande);color:var(--nuit);font-weight:600;display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative}
+.etape strong{display:block;font-size:17px;margin-bottom:6px}
+.etape span{color:#c9c8de;font-size:15px}
+.livre{background:#fff;color:var(--texte);border-radius:10px;padding:28px}
+.livre .icone{width:44px;height:54px;border:2px solid var(--violet);border-radius:4px;position:relative;margin-bottom:16px}
+.livre .icone::after{content:"";position:absolute;left:9px;right:9px;top:14px;height:16px;border-top:2px solid var(--violet);border-bottom:2px solid var(--violet)}
+.livre h3{font-size:24px;margin-bottom:8px}
+.livre p{color:var(--gris);font-size:15px;margin-bottom:18px}
+.badge{display:inline-block;background:var(--lavande-clair);color:var(--violet);font-size:13px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:12px}
+
+/* webinaires + analyses */
+.deux{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.webinaire{background:var(--lavande-clair);border-radius:10px;padding:34px;display:flex;flex-direction:column;gap:14px}
+.webinaire h3{font-size:28px}
+.webinaire p{color:var(--gris)}
+.replay{display:flex;gap:16px;align-items:center;background:#fff;border-radius:8px;padding:12px}
+.replay img{width:110px;height:74px;object-fit:cover;border-radius:6px}
+.replay small{color:var(--lavande);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.05em}
+.replay div{font-size:15px}
+.analyses h3{font-size:28px;margin-bottom:18px}
+.article{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #e3e2ee;text-decoration:none;color:var(--texte)}
+.article img{width:120px;height:80px;object-fit:cover;border-radius:6px;flex:none}
+.article small{color:var(--lavande);font-weight:600;font-size:13px}
+.article strong{display:block;font-family:"Source Serif 4",serif;font-size:18px;font-weight:600;color:var(--nuit);line-height:1.25}
+.article:hover strong{color:var(--violet)}
+
+/* l'avocat */
+.avocat{background:linear-gradient(180deg,#fff,var(--lavande-clair))}
+.avocat .conteneur{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+.avocat img{border-radius:10px;box-shadow:0 18px 44px rgba(28,26,69,.18)}
+.avocat h2{font-size:38px;margin-bottom:6px}
+.avocat .role{color:var(--violet);font-weight:600;margin-bottom:20px}
+.avocat p{color:var(--gris);margin-bottom:14px}
+
+/* consultation + contact */
+.rdv .conteneur{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.offre{border:1.5px solid var(--lavande);border-radius:10px;padding:34px}
+.offre h3{font-size:28px;margin-bottom:10px}
+.offre ul{list-style:none;margin:18px 0 26px}
+.offre li{padding:8px 0 8px 28px;position:relative;color:var(--gris)}
+.offre li::before{content:"";position:absolute;left:4px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--violet)}
+.offre .paiement{font-size:14px;color:var(--gris);margin-top:14px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+form h3{grid-column:1/-1;font-size:28px;margin-bottom:4px}
+form label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600;color:var(--nuit)}
+form .large{grid-column:1/-1}
+input,select,textarea{font:inherit;font-weight:400;border:1.5px solid #cfcde0;border-radius:var(--rayon);padding:11px 12px;color:var(--texte);background:#fff}
+select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%236f2e70' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;padding-right:40px}
+textarea{min-height:110px;resize:vertical}
+
+/* pied */
+footer{background:var(--nuit);color:#d0cfe3;padding:56px 0 28px;font-size:15px}
+footer .grille{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:40px;margin-bottom:36px}
+footer img{height:64px;width:auto;margin-bottom:14px}
+footer strong{color:#fff;display:block;margin-bottom:10px;font-family:"Source Serif 4",serif;font-size:18px;font-weight:600}
+footer a{color:#d0cfe3;text-decoration:none;display:block;padding:2px 0}
+footer .credits{border-top:1px solid rgba(255,255,255,.15);padding-top:18px;font-size:12px;color:#9a99b8}
+.maquette{position:fixed;bottom:14px;left:14px;background:var(--nuit);color:#fff;font-size:12px;padding:6px 12px;border-radius:20px;opacity:.85;z-index:30}
+
+/* mobile */
+@media (max-width:980px){
+  nav{display:none;position:absolute;top:84px;left:0;right:0;background:#fff;flex-direction:column;align-items:flex-start;padding:20px 24px;gap:18px;box-shadow:0 12px 20px rgba(28,26,69,.1)}
+  nav.ouvert{display:flex}
+  .burger{display:block}
+  .bandeau .conteneur{justify-content:center;gap:16px;font-size:13px}
+  .bandeau .adresse{display:none}
+  .hero{background:linear-gradient(180deg,rgba(255,255,255,.93),rgba(255,255,255,.97)),url(img/jerusalem.jpg) center/cover}
+  .hero .conteneur,.avocat .conteneur,.rdv .conteneur,.deux,.etapes .grille{grid-template-columns:1fr}
+  .hero .conteneur{padding-top:40px;padding-bottom:48px;gap:34px}
+  .hero h1{font-size:36px}
+  .video{aspect-ratio:4/3;max-width:520px}
+  .parcours{grid-template-columns:1fr}
+  .frise{grid-template-columns:1fr 1fr;row-gap:30px}
+  .frise::before{display:none}
+  .reconnu .conteneur{flex-direction:column;gap:8px;text-align:center}
+  section{padding:56px 0}
+  .titre-section h2,.etapes h2,.avocat h2{font-size:30px}
+  form label:not(.nom){grid-column:1/-1}
+  footer .grille{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="bandeau"><div class="conteneur">
+  <a href="tel:+33144965555">01 44 96 55 55</a>
+  <a href="mailto:info@cbavocats.com">info@cbavocats.com</a>
+  <span class="adresse">16, Avenue du Président Kennedy, 75016 Paris</span>
+</div></div>
+
+<header><div class="conteneur">
+  <a class="logo" href="#"><img src="img/logo.svg" alt="CBA Cabinet Benayoun Associés"></a>
+  <button class="burger" aria-label="Menu" onclick="document.querySelector('nav').classList.toggle('ouvert')">☰</button>
+  <nav>
+    <a href="#parcours">Je suis entrepreneur</a>
+    <a href="#parcours">Je prépare ma retraite</a>
+    <a href="#parcours">Mon patrimoine familial</a>
+    <a href="#webinaires">Webinaires</a>
+    <a class="bouton" href="#rdv">Consultation en ligne</a>
+  </nav>
+</div></header>
+
+<section class="hero" style="padding:0"><div class="conteneur">
+  <div>
+    <div class="surtitre">CBA · Fiscalité de l'alyah</div>
+    <h1>Vous préparez votre alyah. <em>Votre fiscalité française s'organise avant le départ.</em></h1>
+    <p class="chapeau">Résidence fiscale, société, revenus, patrimoine, exit tax : identifiez les décisions à anticiper pour organiser votre installation en toute sécurité.</p>
+    <div class="actions">
+      <a class="bouton fleche" href="#parcours">Étudier mon projet de départ</a>
+      <a class="bouton clair" href="#rdv">Prendre rendez-vous</a>
+    </div>
+  </div>
+  <a class="video" href="#" onclick="return false" aria-label="Vidéo de présentation">
+    <img src="img/gdb-video.jpg" alt="Me Georges-David Benayoun">
+    <div class="lire">
+      <div class="rond"></div>
+      <strong>Me Georges-David Benayoun</strong>
+      <span>Pourquoi une plateforme dédiée à l'alyah · vidéo de présentation</span>
+    </div>
+  </a>
+</div></section>
+
+<div class="reconnu"><div class="conteneur">
+  <div class="etoiles">★★★★★</div>
+  <p>CBA – Cabinet Benayoun &amp; Associés se distingue dans la huitième édition du Palmarès LE POINT des meilleurs cabinets d'avocats en France pour l'année 2026, avec la note maximale de 5 étoiles parmi les meilleurs cabinets d'avocats fiscalistes français.</p>
+</div></div>
+
+<section id="parcours"><div class="conteneur">
+  <div class="titre-section">
+    <h2>Quel est votre projet ?</h2>
+    <p>Accédez directement aux informations qui concernent votre situation en regardant nos courtes vidéos.</p>
+  </div>
+  <div class="parcours">
+    <article class="carte">
+      <img src="img/tel-aviv.jpg" alt="">
+      <div class="corps">
+        <div class="videos">Vidéos · réponses</div>
+        <h3>Je suis entrepreneur ou dirigeant</h3>
+        <p>Conserver ma société, me rémunérer, distribuer des dividendes, organiser la trésorerie, envisager une cession…</p>
+        <a class="fleche" href="#">Découvrir les enjeux </a>
+      </div>
+    </article>
+    <article class="carte">
+      <img src="img/netanya.jpg" alt="">
+      <div class="corps">
+        <div class="videos">Vidéos · réponses</div>
+        <h3>Je prépare ma retraite en Israël</h3>
+        <p>Pensions françaises et étrangères, placements, revenus locatifs, logement en France…</p>
+        <a class="fleche" href="#">Voir les principales questions </a>
+      </div>
+    </article>
+    <article class="carte">
+      <img src="img/raanana.jpg" alt="">
+      <div class="corps">
+        <div class="videos">Vidéos · réponses</div>
+        <h3>J'organise mon patrimoine familial</h3>
+        <p>Immobilier, SCI, donations, succession, enfants en France, transmission…</p>
+        <a class="fleche" href="#">Identifier les points d'attention </a>
+      </div>
+    </article>
+  </div>
+</div></section>
+
+<section class="etapes"><div class="conteneur">
+  <h2>Un parcours pour préparer votre départ</h2>
+  <p class="intro">Les principales étapes, de la réflexion initiale à votre installation.</p>
+  <div class="grille">
+    <div class="frise">
+      <div class="etape"><div class="num">1</div><strong>Faire le point sur votre situation</strong><span>Revenus, patrimoine, société, situation familiale.</span></div>
+      <div class="etape"><div class="num">2</div><strong>Identifier les décisions à anticiper</strong><span>Avant la date de départ.</span></div>
+      <div class="etape"><div class="num">3</div><strong>Mettre en œuvre les opérations</strong><span>Dans un calendrier adapté à votre situation.</span></div>
+      <div class="etape"><div class="num">4</div><strong>Assurer le suivi après l'installation</strong><span>Déclarations, obligations en France et en Israël.</span></div>
+    </div>
+    <div class="livre">
+      <div class="icone"></div>
+      <span class="badge">Bientôt disponible</span>
+      <h3>Notre livre blanc « Préparer son alyah »</h3>
+      <p>Les questions essentielles et le calendrier des principales démarches.</p>
+      <a class="bouton clair fleche" href="#rdv">Être prévenu de sa parution </a>
+    </div>
+  </div>
+</div></section>
+
+<section id="webinaires"><div class="conteneur deux">
+  <div class="webinaire">
+    <div class="surtitre" style="margin:0">Webinaires</div>
+    <h3>Un webinaire chaque mois, puis en replay</h3>
+    <p>Chaque mois, un webinaire en direct sur la fiscalité de l'alyah. Il reste ensuite disponible ici, en replay.</p>
+    <div class="replay"><img src="img/herzliya.jpg" alt=""><div><small>Prochain webinaire</small><br>Date et sujet à venir</div></div>
+    <div class="replay"><img src="img/haifa.jpg" alt=""><div><small>Replays</small><br>Les webinaires passés apparaîtront ici</div></div>
+    <a class="bouton fleche" href="#rdv" style="align-self:flex-start">M'inscrire au prochain webinaire </a>
+  </div>
+  <div class="analyses">
+    <div class="surtitre">Blog fiscal · Israël</div>
+    <h3>Nos analyses</h3>
+    <a class="article" href="https://cbavocats.com/blog/fiscalite-ce-quil-faut-savoir-avant-de-sexpatrier-en-israel/" target="_blank" rel="noopener">
+      <img src="img/jerusalem.jpg" alt=""><div><small>21.11.2023</small><strong>Fiscalité : Ce qu'il faut savoir avant de s'expatrier en Israël</strong></div></a>
+    <a class="article" href="https://cbavocats.com/blog/arret-concernant-la-definition-de-la-residence-fiscale-avec-israel/" target="_blank" rel="noopener">
+      <img src="img/tel-aviv.jpg" alt=""><div><small>18.11.2022</small><strong>Arrêt concernant la définition de la résidence fiscale avec Israël</strong></div></a>
+    <a class="article" href="https://cbavocats.com/blog/fiscalite-expatriation-fiscale-en-israel-avec-le-regime-de-lalyah/" target="_blank" rel="noopener">
+      <img src="img/netanya.jpg" alt=""><div><small>16.09.2022</small><strong>Fiscalité : Expatriation fiscale en Israël avec le régime de l'Alyah</strong></div></a>
+  </div>
+</div></section>
+
+<section class="avocat"><div class="conteneur">
+  <img src="img/gdb-portrait.jpg" alt="Me Georges-David Benayoun">
+  <div>
+    <div class="surtitre">Le cabinet</div>
+    <h2>Me Georges-David Benayoun</h2>
+    <div class="role">Avocat Associé · CBA – Cabinet Benayoun &amp; Associés, Paris</div>
+    <p>CBA société d'avocats accompagne, conseille et défend les entreprises, leur dirigeant et les particuliers. Nous intervenons en droit fiscal, droit des sociétés, droit commercial et droit social.</p>
+    <p>Le cabinet d'avocats détient un réel savoir-faire en matière d'expatriation fiscale et d'accompagnement fiscal des dirigeants d'entreprises françaises.</p>
+    <p>Chaque client du cabinet CBA est pris en charge par un avocat dit “référent” qui le suivra tout au long de la collaboration. Cela permet d'assurer la cohérence du suivi juridique des affaires mais également de proposer des solutions adaptées et non standardisées.</p>
+  </div>
+</div></section>
+
+<section class="rdv" id="rdv"><div class="conteneur">
+  <div class="offre">
+    <div class="surtitre">Consultation en ligne</div>
+    <h3>Un accompagnement sur mesure</h3>
+    <p style="color:var(--gris)">Chaque situation est différente. Nous vous aidons à identifier les enjeux prioritaires, comparer les options et sécuriser la mise en œuvre de vos décisions.</p>
+    <ul>
+      <li>Consultation d'une heure, en visio</li>
+      <li>Audit fiscal avant l'alyah</li>
+      <li>Domiciliation fiscale et exit tax</li>
+      <li>Déclaration fiscale de départ de France</li>
+      <li>Mise en œuvre et suivi</li>
+    </ul>
+    <a class="bouton fleche" href="#">Réserver ma consultation </a>
+    <div class="paiement">Réservation du créneau et paiement en ligne sécurisé.</div>
+  </div>
+  <form onsubmit="return false">
+    <h3>Nous écrire</h3>
+    <label class="nom">Nom<input type="text" autocomplete="family-name"></label>
+    <label class="nom">Prénom<input type="text" autocomplete="given-name"></label>
+    <label>E-mail<input type="email" autocomplete="email"></label>
+    <label>Téléphone<input type="tel" autocomplete="tel"></label>
+    <label class="large">Votre situation
+      <select>
+        <option>Choisissez votre situation</option>
+        <option>Je suis entrepreneur ou dirigeant</option>
+        <option>Je prépare ma retraite en Israël</option>
+        <option>J'organise mon patrimoine familial</option>
+        <option>Autre</option>
+      </select>
+    </label>
+    <label class="large">Votre message<textarea></textarea></label>
+    <div class="large"><button class="bouton fleche" type="submit">Envoyer </button></div>
+  </form>
+</div></section>
+
+<footer><div class="conteneur">
+  <div class="grille">
+    <div>
+      <img src="img/logo-blanc.svg" alt="CBA Cabinet Benayoun Associés">
+      <p>Fiscalité de l'alyah : entrepreneurs, retraités, patrimoine familial.</p>
+    </div>
+    <div>
+      <strong>Coordonnées</strong>
+      16, Avenue du Président<br>Kennedy – 75016 Paris<br>
+      <a href="tel:+33144965555">01 44 96 55 55</a>
+      <a href="mailto:info@cbavocats.com">info@cbavocats.com</a>
+    </div>
+    <div>
+      <strong>Le site</strong>
+      <a href="#parcours">Quel est votre projet ?</a>
+      <a href="#webinaires">Webinaires et replays</a>
+      <a href="#rdv">Consultation en ligne</a>
+      <a href="https://cbavocats.com/" target="_blank" rel="noopener">cbavocats.com</a>
+    </div>
+  </div>
+  <div class="credits">Photos d'Israël : Wikimedia Commons (David King CC BY 2.0 · Ynhockey CC BY-SA 4.0 · James Emery CC BY 2.0 · רובי ליבוביץ CC BY-SA 3.0 · Lev.Tsimbler CC BY-SA 4.0 · StateofIsrael CC BY-SA 2.0).</div>
+</div></footer>
+
+<div class="maquette">Maquette · 05/11/2026</div>
+</body>
+</html>
