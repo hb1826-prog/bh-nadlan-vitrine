@@ -5828,10 +5828,47 @@ const lecteurVideos = (function () {
       fr.contentWindow.postMessage(JSON.stringify({event: 'command', func: f, args: []}), '*');
     }
   };
+  // Garde-fou : si YouTube ne lance pas la video (adresse jugee suspecte,
+  // « Sign in to confirm you're not a bot », video retiree…), le lecteur
+  // s'efface au bout de 15 s et la photo reste : jamais un ecran d'erreur
+  // YouTube sur une fiche. Etat lu par le protocole de l'API iframe
+  // (« listening » puis infoDelivery / onStateChange, 1 = en lecture).
+  const ATTENTE_YT = 15000;
+  const echecYT = v => {
+    const fr = v.querySelector('iframe');
+    if (fr) fr.remove();
+    v.dataset.ytEchec = '1';
+    v.dataset.joue = '';
+  };
+  const surveillerYT = v => {
+    clearTimeout(v._minuteYT);
+    v._minuteYT = setTimeout(() => {
+      if (v.dataset.ytOk === '1' || v.dataset.ytEchec === '1') return;
+      if (v.dataset.joue === '1') echecYT(v);
+    }, ATTENTE_YT);
+  };
+  window.addEventListener('message', e => {
+    if (!/youtube(-nocookie)?\.com$/.test((e.origin || '').replace(/^https?:\/\//, ''))) return;
+    let d = e.data;
+    try { if (typeof d === 'string') d = JSON.parse(d); } catch (x) { return; }
+    if (!d) return;
+    const enLecture = (d.event === 'onStateChange' && d.info === 1)
+      || (d.event === 'infoDelivery' && d.info && d.info.playerState === 1);
+    const erreur = d.event === 'onError';
+    if (!enLecture && !erreur) return;
+    document.querySelectorAll('.vid-yt iframe').forEach(fr => {
+      if (fr.contentWindow !== e.source) return;
+      const v = fr.parentNode;
+      if (enLecture) v.dataset.ytOk = '1';
+      else echecYT(v);
+    });
+  });
   const jouer = v => {
     if (voile() || v.dataset.cache === '1') return;
     if (v.dataset.yt) {
+      if (v.dataset.ytEchec === '1') return;
       v.dataset.joue = '1';
+      if (v.dataset.ytOk !== '1') surveillerYT(v);
       if (!v.querySelector('iframe')) {
         const id = encodeURIComponent(v.dataset.yt);
         const fr = document.createElement('iframe');
@@ -5843,6 +5880,12 @@ const lecteurVideos = (function () {
         fr.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
         fr.setAttribute('tabindex', '-1');
         fr.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        fr.addEventListener('load', () => {
+          if (fr.contentWindow) {
+            fr.contentWindow.postMessage(JSON.stringify(
+              {event: 'listening', id: v.dataset.yt, channel: 'widget'}), '*');
+          }
+        });
         v.appendChild(fr);
       } else {
         ordreYT(v, 'playVideo');
