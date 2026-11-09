@@ -3691,7 +3691,16 @@ body.fiche-sans-banniere #hero{display:none!important}
  pointer-events:none}
 .galerie .grand video.g-video{position:absolute;inset:0;width:100%;height:100%;
  object-fit:cover;display:block;background:var(--fond-2)}
-.galerie .grand img[hidden],.galerie .grand video[hidden],.g-son[hidden]{display:none}
+.galerie .grand img[hidden],.galerie .grand video[hidden],.galerie .grand .vid-yt[hidden],.g-son[hidden]{display:none}
+/* Lecteur YouTube (Africa Israel seulement) : meme place que le mp4, la
+   photo en fond tant qu'il charge, l'iframe recadree pour couvrir le cadre
+   (16/9 agrandi), sans prise au doigt (le glisser de la galerie reste). */
+.vid-yt{position:absolute;inset:0;overflow:hidden;container-type:size;
+ background:#0b1220 center/cover no-repeat}
+.tile .shot .vid-yt.shot-video{z-index:2;pointer-events:none}
+.vid-yt iframe{position:absolute;top:50%;left:50%;border:0;display:block;
+ width:100%;height:100%;width:max(100cqw,177.78cqh);height:max(100cqh,56.25cqw);
+ transform:translate(-50%,-50%);pointer-events:none}
 .g-son{position:absolute;left:12px;bottom:12px;z-index:3;width:40px;height:40px;
  border-radius:999px;border:0;display:grid;place-items:center;cursor:pointer;
  background:rgba(9,14,26,.78);color:#fff}
@@ -5258,7 +5267,7 @@ function ordreGrille(vus, sd) {
     return [2, -(poids[p.ville] || 0), p.ville || ''];
   };
   const enTete = x => x.p.vedette ? 0 : 1;
-  const filme = x => x.p.video ? 0 : 1;
+  const filme = x => (x.p.video || x.p.youtube) ? 0 : 1;
   const tous = vus.map(p => ({p: p, sd: false}))
     .concat(sd.map(p => ({p: p, sd: true})));
   tous.sort((a, b) => {
@@ -5730,6 +5739,16 @@ function imagesDe(p) {
    charge d'avance. C'est `lecteurVideos()` qui la lance quand elle entre a
    l'ecran et l'arrete quand elle en sort. */
 function videoAuto(p, affiche, classe, id) {
+  // Lecteur YouTube : seulement pour Africa Israel (la fabrique ne pose
+  // `youtube` que pour un promoteur de NOMMES_EN_PUBLIC, le lecteur montrant
+  // le nom de la chaine). L'iframe n'est creee qu'a la premiere apparition a
+  // l'ecran (`lecteurVideos`), la photo sert d'attente.
+  if (p.youtube) {
+    return '<div class="vid-auto vid-yt ' + classe + '"' + (id ? ' id="' + id + '"' : '')
+      + ' data-yt="' + esc(p.youtube) + '" role="img"'
+      + (affiche ? ' style="background-image:url(\'' + esc(affiche) + '\')"' : '')
+      + ' aria-label="' + esc(T('Vidéo du programme')) + '"></div>';
+  }
   if (!p.video) return '';
   return '<video class="vid-auto ' + classe + '"' + (id ? ' id="' + id + '"' : '')
     + ' src="' + esc(p.video) + '"'
@@ -5757,20 +5776,55 @@ function boutonSon() {
 const lecteurVideos = (function () {
   let io = null;
   const voile = () => !!document.querySelector('.bhs-voile');
+  // YouTube (Africa Israel seulement) : youtube-nocookie, muet, en boucle,
+  // playsinline, sans controles ; pilote par postMessage (enablejsapi).
+  const ordreYT = (v, f) => {
+    const fr = v.querySelector('iframe');
+    if (fr && fr.contentWindow) {
+      fr.contentWindow.postMessage(JSON.stringify({event: 'command', func: f, args: []}), '*');
+    }
+  };
   const jouer = v => {
     if (voile() || v.dataset.cache === '1') return;
+    if (v.dataset.yt) {
+      v.dataset.joue = '1';
+      if (!v.querySelector('iframe')) {
+        const id = encodeURIComponent(v.dataset.yt);
+        const fr = document.createElement('iframe');
+        fr.src = 'https://www.youtube-nocookie.com/embed/' + id
+          + '?autoplay=1&mute=1&loop=1&playlist=' + id + '&playsinline=1&controls=0'
+          + '&disablekb=1&fs=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1'
+          + '&origin=' + encodeURIComponent(location.origin);
+        fr.title = v.getAttribute('aria-label') || '';
+        fr.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+        fr.setAttribute('tabindex', '-1');
+        fr.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        v.appendChild(fr);
+      } else {
+        ordreYT(v, 'playVideo');
+      }
+      return;
+    }
     const r = v.play();
     if (r && r.catch) r.catch(() => {});
+  };
+  const arreter = v => {
+    if (v.dataset.yt) {
+      if (v.dataset.joue === '1') ordreYT(v, 'pauseVideo');
+      v.dataset.joue = '';
+    } else if (!v.paused) {
+      v.pause();
+    }
   };
   function suivre(v) {
     if (v.dataset.suivie) return;
     v.dataset.suivie = '1';
-    v.muted = true;            // l'attribut seul ne suffit pas a tous les Safari
+    if (!v.dataset.yt) v.muted = true;  // l'attribut seul ne suffit pas a tous les Safari
     if (!io) { jouer(v); return; }
     io.observe(v);
   }
   function balayer(racine) {
-    (racine || document).querySelectorAll('video.vid-auto').forEach(suivre);
+    (racine || document).querySelectorAll('.vid-auto').forEach(suivre);
   }
   function demarrer() {
     if (window.IntersectionObserver) {
@@ -5778,14 +5832,14 @@ const lecteurVideos = (function () {
         const v = e.target;
         v.dataset.vue = e.isIntersecting ? '1' : '';
         if (e.isIntersecting && e.intersectionRatio >= 0.35) jouer(v);
-        else if (!v.paused) v.pause();
+        else arreter(v);
       }), {threshold: [0, 0.35]});
     }
     balayer(document);
     if (window.MutationObserver) {
       new MutationObserver(ms => {
         if (voile()) {
-          document.querySelectorAll('video.vid-auto').forEach(v => v.pause());
+          document.querySelectorAll('.vid-auto').forEach(arreter);
           return;
         }
         for (const m of ms) {
@@ -5794,20 +5848,20 @@ const lecteurVideos = (function () {
       }).observe(document.body, {childList: true, subtree: true});
     }
     document.addEventListener('visibilitychange', () => {
-      document.querySelectorAll('video.vid-auto').forEach(v => {
-        if (document.hidden) v.pause();
+      document.querySelectorAll('.vid-auto').forEach(v => {
+        if (document.hidden) arreter(v);
         else if (v.dataset.vue === '1') jouer(v);
       });
     });
   }
   if (document.body) demarrer();
   else document.addEventListener('DOMContentLoaded', demarrer);
-  return {balayer: balayer, jouer: jouer};
+  return {balayer: balayer, jouer: jouer, arreter: arreter};
 })();
 
 function galerie(p) {
   const photos = imagesDe(p);
-  const film = p.video && !p.revente;
+  const film = (p.video || p.youtube) && !p.revente;
   // La video prend la place de la premiere photo ; les photos suivent.
   const images = film ? ['#video'].concat(photos) : photos;
   if (!images.length) {
@@ -5884,7 +5938,7 @@ function wireGalerie(p) {
       // Hors de la video, elle s'arrete et ne repart pas toute seule.
       film.hidden = !surFilm;
       film.dataset.cache = surFilm ? '' : '1';
-      if (surFilm) lecteurVideos.jouer(film); else film.pause();
+      if (surFilm) lecteurVideos.jouer(film); else lecteurVideos.arreter(film);
       if (son) son.hidden = !surFilm;
     }
     grand.hidden = surFilm;
