@@ -3720,6 +3720,24 @@ body.fiche-sans-banniere #hero{display:none!important}
 /* Acces a Tel-Aviv, au-dessus du bloc « autour » (04/11/2026) */
 .tlv-ligne{margin:14px 0 6px;padding:10px 14px;border-inline-start:3px solid var(--or,#b8955a);background:rgba(184,149,90,.08);border-radius:6px;font-size:15px;line-height:1.5}
 
+/* La video d'un programme (09/11/2026) : elle se pose exactement a la place
+   de la premiere photo, sur la carte comme dans la fiche. */
+.tile .shot video.shot-video{position:absolute;inset:0;z-index:2;width:100%;
+ height:100%;object-fit:cover;display:block;background:transparent;
+ pointer-events:none}
+.galerie .grand video.g-video{position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;display:block;background:var(--fond-2)}
+.galerie .grand img[hidden],.galerie .grand video[hidden],.g-son[hidden]{display:none}
+.g-son{position:absolute;left:12px;bottom:12px;z-index:3;width:40px;height:40px;
+ border-radius:999px;border:0;display:grid;place-items:center;cursor:pointer;
+ background:rgba(9,14,26,.78);color:#fff}
+.g-son .g-son-on{display:none}
+.g-son.on .g-son-on{display:block}
+.g-son.on .g-son-off{display:none}
+.vg.vg-film{position:relative}
+.vg .vg-lecture{position:absolute;inset:0;display:grid;place-items:center;
+ color:#fff;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.7);pointer-events:none}
+
 /* ============================== Eli =====================================
    L'assistant du site (docs/chatbot-site.md). Uniquement les jetons de la
    peau (--carte, --fond, --encre, --trait, --action...), chacun avec un
@@ -5269,7 +5287,11 @@ function majBouton(n) {
      3. dans chaque ville, ce qui a un prix passe avant ce qui n'en a pas.
 
    La regle vaut pour tout ce qu'on ajoutera : un nouveau programme se range
-   tout seul au milieu des autres, jamais en tete. */
+   tout seul au milieu des autres, jamais en tete.
+
+   Sauf une chose, qui passe avant tout (Hillel, 09/11/2026) : les programmes
+   qui ont une VIDEO ouvrent la liste. Entre eux, et entre les autres,
+   l'ordre ci-dessus ne change pas. */
 function ordreGrille(vus, sd) {
   const poids = {};
   vus.forEach(p => { poids[p.ville] = (poids[p.ville] || 0) + 1; });
@@ -5280,9 +5302,11 @@ function ordreGrille(vus, sd) {
     return [2, -(poids[p.ville] || 0), p.ville || ''];
   };
   const enTete = x => x.p.vedette ? 0 : 1;
+  const filme = x => x.p.video ? 0 : 1;
   const tous = vus.map(p => ({p: p, sd: false}))
     .concat(sd.map(p => ({p: p, sd: true})));
   tous.sort((a, b) => {
+    if (filme(a) !== filme(b)) return filme(a) - filme(b);
     if (enTete(a) !== enTete(b)) return enTete(a) - enTete(b);
     const ra = rangVille(a.p), rb = rangVille(b.p);
     for (let i = 0; i < 3; i++) {
@@ -5450,6 +5474,7 @@ function carte(p) {
         ${boutonPartage(messagePartageBien(p.nom), '#/' + p.cle, true)}
         <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
         <img src="${esc(imgSrc)}" alt="" loading="lazy" onerror="this.remove()">
+        ${p.revente ? '' : videoAuto(p, imgSrc, 'shot-video')}
       </div>
       <div class="corps">
         <div class="prix"><small>${T('à partir de')}</small>${prixDoubleToggle(p.prix_min)}</div>
@@ -5492,6 +5517,7 @@ function carteSurDemande(p) {
         ${boutonPartage(messagePartageBien(p.nom), '#/' + p.cle, true)}
         <div class="fallback">${esc(p.nom.slice(0, 2).toUpperCase())}</div>
         <img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">
+        ${videoAuto(p, p.image, 'shot-video')}
       </div>
       <div class="corps">
         <div class="prix"><small>${T('Prix')}</small>${T('sur demande')}</div>
@@ -5741,17 +5767,107 @@ function imagesDe(p) {
   return (p.galerie && p.galerie.length ? p.galerie : [p.image]).filter(Boolean);
 }
 
+/* La video d'un programme (Hillel, 09/11/2026). Un fichier de chez nous,
+   jamais un lecteur Vimeo/YouTube : lui seul se lance tout seul. Sans le son
+   (sinon le navigateur refuse), en boucle, `playsinline` pour l'iPhone, la
+   premiere photo en image d'attente, et seulement l'en-tete du fichier
+   charge d'avance. C'est `lecteurVideos()` qui la lance quand elle entre a
+   l'ecran et l'arrete quand elle en sort. */
+function videoAuto(p, affiche, classe, id) {
+  if (!p.video) return '';
+  return '<video class="vid-auto ' + classe + '"' + (id ? ' id="' + id + '"' : '')
+    + ' src="' + esc(p.video) + '"'
+    + (affiche ? ' poster="' + esc(affiche) + '"' : '')
+    + ' muted loop playsinline preload="metadata" disablepictureinpicture'
+    + ' aria-label="' + esc(T('Vidéo du programme')) + '"'
+    + ' onerror="this.remove()"></video>';
+}
+
+function boutonSon() {
+  return '<button type="button" class="g-son" aria-pressed="false"'
+    + ' aria-label="' + esc(T('Activer le son')) + '">'
+    + '<span class="g-son-off" aria-hidden="true">'
+    + '<svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3z"/>'
+    + '<path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></span>'
+    + '<span class="g-son-on" aria-hidden="true">'
+    + '<svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3z"/>'
+    + '<path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></span>'
+    + '</button>';
+}
+
+/* Lecture automatique a l'ecran, pause hors de l'ecran, pour TOUTES les
+   videos de la page, ou qu'elles soient posees (cartes, fiche, et ce qu'on
+   ajoutera). Rien ne joue sous le voile de Shabbat. */
+const lecteurVideos = (function () {
+  let io = null;
+  const voile = () => !!document.querySelector('.bhs-voile');
+  const jouer = v => {
+    if (voile() || v.dataset.cache === '1') return;
+    const r = v.play();
+    if (r && r.catch) r.catch(() => {});
+  };
+  function suivre(v) {
+    if (v.dataset.suivie) return;
+    v.dataset.suivie = '1';
+    v.muted = true;            // l'attribut seul ne suffit pas a tous les Safari
+    if (!io) { jouer(v); return; }
+    io.observe(v);
+  }
+  function balayer(racine) {
+    (racine || document).querySelectorAll('video.vid-auto').forEach(suivre);
+  }
+  function demarrer() {
+    if (window.IntersectionObserver) {
+      io = new IntersectionObserver(es => es.forEach(e => {
+        const v = e.target;
+        v.dataset.vue = e.isIntersecting ? '1' : '';
+        if (e.isIntersecting && e.intersectionRatio >= 0.35) jouer(v);
+        else if (!v.paused) v.pause();
+      }), {threshold: [0, 0.35]});
+    }
+    balayer(document);
+    if (window.MutationObserver) {
+      new MutationObserver(ms => {
+        if (voile()) {
+          document.querySelectorAll('video.vid-auto').forEach(v => v.pause());
+          return;
+        }
+        for (const m of ms) {
+          if (m.addedNodes && m.addedNodes.length) { balayer(document); break; }
+        }
+      }).observe(document.body, {childList: true, subtree: true});
+    }
+    document.addEventListener('visibilitychange', () => {
+      document.querySelectorAll('video.vid-auto').forEach(v => {
+        if (document.hidden) v.pause();
+        else if (v.dataset.vue === '1') jouer(v);
+      });
+    });
+  }
+  if (document.body) demarrer();
+  else document.addEventListener('DOMContentLoaded', demarrer);
+  return {balayer: balayer, jouer: jouer};
+})();
+
 function galerie(p) {
-  const images = imagesDe(p);
+  const photos = imagesDe(p);
+  const film = p.video && !p.revente;
+  // La video prend la place de la premiere photo ; les photos suivent.
+  const images = film ? ['#video'].concat(photos) : photos;
   if (!images.length) {
     return '<div class="galerie"><div class="grand vide">'
       + esc(p.nom.slice(0, 2).toUpperCase()) + '</div></div>';
   }
   const vignettes = images.length > 1
     ? '<div class="vignettes">' + images.map(function (src, i) {
+        const estFilm = src === '#video';
         return '<button type="button" class="vg' + (i ? '' : ' on')
-          + '" data-i="' + i + '" aria-label="' + T('Visuel') + ' ' + (i + 1) + '">'
-          + '<img src="' + esc(src) + '" alt="" loading="lazy"></button>';
+          + (estFilm ? ' vg-film' : '')
+          + '" data-i="' + i + '" aria-label="'
+          + (estFilm ? esc(T('Vidéo du programme')) : T('Visuel') + ' ' + (i + 1)) + '">'
+          + '<img src="' + esc(estFilm ? (photos[0] || '') : src) + '" alt="" loading="lazy">'
+          + (estFilm ? '<span class="vg-lecture" aria-hidden="true">\u25B6</span>' : '')
+          + '</button>';
       }).join('') + '</div>'
     : '';
   const fleches = images.length > 1
@@ -5765,9 +5881,11 @@ function galerie(p) {
   const villeImg = p.revente ? photoVilleRevente(p) : null;
   return `
     <div class="galerie" id="galerie">
-      <div class="grand">
-        <img id="g-grand" src="${esc(images[0])}"
+      <div class="grand${film ? ' a-film' : ''}">
+        <img id="g-grand" src="${esc(film ? (photos[0] || '') : images[0])}"${film ? ' hidden' : ''}
              alt="${esc(p.nom)}${p.visuel_ville || p.visuel_neutre || p.revente ? '' : ' — vue d’artiste'}">
+        ${film ? videoAuto(p, photos[0], 'g-video', 'g-video') : ''}
+        ${film && p.video_son ? boutonSon() : ''}
         <span class="g-compte">1 / ${images.length}</span>
         ${fleches}
         ${villeImg ? creditHTML(villeImg) : ''}
@@ -5786,13 +5904,35 @@ function galerie(p) {
 function wireGalerie(p) {
   const zone = $('#galerie');
   if (!zone) return;
-  const images = imagesDe(p);
+  const photos = imagesDe(p);
+  const film = $('#g-video', zone);
+  const images = film ? ['#video'].concat(photos) : photos;
   const grand = $('#g-grand', zone);
   const compte = $('.g-compte', zone);
+  const son = $('.g-son', zone);
   let i = 0;
+  if (son && film) {
+    son.onclick = e => {
+      e.preventDefault(); e.stopPropagation();
+      film.muted = !film.muted;
+      son.setAttribute('aria-pressed', film.muted ? 'false' : 'true');
+      son.setAttribute('aria-label', T(film.muted ? 'Activer le son' : 'Couper le son'));
+      son.classList.toggle('on', !film.muted);
+      if (!film.muted) lecteurVideos.jouer(film);
+    };
+  }
   const montrer = n => {
     i = (n + images.length) % images.length;
-    grand.src = images[i];
+    const surFilm = !!film && i === 0;
+    if (film) {
+      // Hors de la video, elle s'arrete et ne repart pas toute seule.
+      film.hidden = !surFilm;
+      film.dataset.cache = surFilm ? '' : '1';
+      if (surFilm) lecteurVideos.jouer(film); else film.pause();
+      if (son) son.hidden = !surFilm;
+    }
+    grand.hidden = surFilm;
+    if (!surFilm) grand.src = images[i];
     if (compte) compte.textContent = (i + 1) + ' / ' + images.length;
     zone.querySelectorAll('.vg').forEach(b =>
       b.classList.toggle('on', +b.dataset.i === i));
@@ -5814,7 +5954,18 @@ function wireGalerie(p) {
     if (Math.abs(d) > 40) montrer(i + (d < 0 ? 1 : -1));
     x0 = null;
   }, {passive: true});
-  grand.onclick = () => plein(images, i);
+  if (film) {
+    film.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; },
+                          {passive: true});
+    film.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const d = e.changedTouches[0].clientX - x0;
+      if (Math.abs(d) > 40) montrer(i + (d < 0 ? 1 : -1));
+      x0 = null;
+    }, {passive: true});
+  }
+  // Le plein ecran ne montre que les photos : la video joue deja en grand.
+  grand.onclick = () => plein(photos, film ? i - 1 : i);
 }
 
 /* Le plein ecran : un rendu de facade se regarde en grand, pas dans un cadre

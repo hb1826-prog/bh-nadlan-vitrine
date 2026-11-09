@@ -3691,6 +3691,24 @@ body.fiche-sans-banniere #hero{display:none!important}
 /* Acces a Tel-Aviv, au-dessus du bloc « autour » (04/11/2026) */
 .tlv-ligne{margin:14px 0 6px;padding:10px 14px;border-inline-start:3px solid var(--or,#b8955a);background:rgba(184,149,90,.08);border-radius:6px;font-size:15px;line-height:1.5}
 
+/* La video d'un programme (09/11/2026) : elle se pose exactement a la place
+   de la premiere photo, sur la carte comme dans la fiche. */
+.tile .shot video.shot-video{position:absolute;inset:0;z-index:2;width:100%;
+ height:100%;object-fit:cover;display:block;background:transparent;
+ pointer-events:none}
+.galerie .grand video.g-video{position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;display:block;background:var(--fond-2)}
+.galerie .grand img[hidden],.galerie .grand video[hidden],.g-son[hidden]{display:none}
+.g-son{position:absolute;left:12px;bottom:12px;z-index:3;width:40px;height:40px;
+ border-radius:999px;border:0;display:grid;place-items:center;cursor:pointer;
+ background:rgba(9,14,26,.78);color:#fff}
+.g-son .g-son-on{display:none}
+.g-son.on .g-son-on{display:block}
+.g-son.on .g-son-off{display:none}
+.vg.vg-film{position:relative}
+.vg .vg-lecture{position:absolute;inset:0;display:grid;place-items:center;
+ color:#fff;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.7);pointer-events:none}
+
 .legal{max-width:760px;margin:0 auto;padding:32px 20px 96px;line-height:1.65}
 .legal h1{font-size:30px;margin:24px 0 8px}
 .legal h2{font-size:19px;margin:34px 0 10px}
