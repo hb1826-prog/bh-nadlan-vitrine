@@ -4676,11 +4676,18 @@ const DEPART = Date.now();            // sert a reconnaitre un robot
    sait s'il y a un courtier a chiffrer (achat comptant ou non).
    Aucun chiffre ne se calcule ni ne s'affiche avant l'envoi reussi des
    coordonnees – voir `vueSimulateurEtapes()`. */
-// Le forfait du courtier que Hillel recommande – 7 000 ₪, precise par lui
-// le 19/09/2026 (« meme pas 15 000 »). Une seule constante, lue par le
-// tunnel ET par le simulateur integre a une fiche, pour ne jamais afficher
-// deux chiffres differents pour le meme conseil.
-const COURTIER_RECOMMANDE = 7000;
+// Le courtier que Hillel recommande se paie un pourcentage HT du MONTANT
+// EMPRUNTE (1 %, ordre du 11/11/2026, « pour tout le site, pour tout le
+// temps » – fini le forfait de 7 000 ₪). Le taux vient de fiscalite.py par
+// generer.py (`DONNEES.courtier_pct`), il n'est jamais recopie ici. Choisir
+// « notre courtier » envoie `courtier: null` au guichet : c'est fiscalite.py
+// qui le chiffre sur le vrai credit du mini-site.
+function courtierPct() {
+  return (typeof DONNEES !== 'undefined' && DONNEES.courtier_pct) || 0;
+}
+function courtierRecommandeTexte() {
+  return String(courtierPct()).replace('.', ',') + ' % ' + T('du montant emprunté');
+}
 
 let TUNNEL = {
   etape: 1,
@@ -7849,7 +7856,8 @@ async function charger() {
    pour recalculer, et l'on refuse de descendre les baremes ici. Tout ce que
    le simulateur affiche est pourtant une fonction affine par morceaux du
    prix – la taxe est par tranches, les honoraires sont des pourcentages, le
-   courtier est un forfait, le credit est proportionnel a la part empruntee.
+   courtier est un pourcentage du credit, le credit est proportionnel a la
+   part empruntee.
    Entre deux points d'une meme portion lineaire, interpoler n'approxime donc
    rien : c'est exact. La grille fabriquee par `generer.py` contient les
    bornes de tranches, pour qu'aucun coude ne tombe au milieu d'un segment.
@@ -7920,7 +7928,12 @@ function fraisCalcules(f) {
   const avocat = Math.round(E.prix * (+t.avocat || 0) / 100 * tva);
   const agence = Math.round(E.prix * (+t.agence || 0) / 100 * tva);
   // Le courtier negocie un pret : sans credit, il n'y a rien a courtiser.
-  const courtier = E.comptant ? 0 : Math.round((+t.courtier || 0) * tva);
+  // `null` = notre courtier, un pourcentage du MONTANT EMPRUNTE (celui de la
+  // ligne de credit choisie) ; un nombre = le montant HT de SON courtier.
+  const lg = (f.g || {})[E.ltv + '|' + E.duree];
+  const emprunt = lg ? lg[5] : Math.round(E.prix * (+E.ltv || 0) / 100);
+  const courtierHT = t.courtier == null ? emprunt * courtierPct() / 100 : (+t.courtier || 0);
+  const courtier = E.comptant ? 0 : Math.round(courtierHT * tva);
   const total = f.taxe + avocat + agence + courtier;
   // La mise en place de la societe se paie le meme jour, mais elle n'est pas
   // un frais d'acquisition du bien : elle ne se deduira pas de la plus-value.
@@ -7962,7 +7975,7 @@ async function simulateur(zone, p) {
   if (accompagnementImpose) E.accompagnementMode = 'oui';
   if (!E.courtierMode) E.courtierMode = 'notre';
   if (!E.courtierLibreType) E.courtierLibreType = 'montant';
-  if (E.courtierLibre == null) E.courtierLibre = COURTIER_RECOMMANDE;
+  if (E.courtierLibre == null) E.courtierLibre = 0;
   const notesFrais = DONNEES.frais_notes || {};
   const aideHTML = (cle, texte) => `
     <span class="plus" data-s-aide="${cle}">${E['aide' + cle] ? T('Voir moins −') : T('En savoir plus +')}</span>
@@ -8058,7 +8071,7 @@ async function simulateur(zone, p) {
       <div class="f-choix" style="margin-top:18px">
         <b>${T('Courtier en crédit')}</b>${aideHTML('Courtier', notesFrais.courtier || '')}
         <div class="seg">
-          <button data-s-courtier="notre" class="${E.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant} ₪)').replace('{montant}', mil(COURTIER_RECOMMANDE))}</button>
+          <button data-s-courtier="notre" class="${E.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant})').replace('{montant}', courtierRecommandeTexte())}</button>
           <button data-s-courtier="libre" class="${E.courtierMode === 'libre' ? 'on' : ''}">${T('Votre courtier')}</button>
           <button data-s-courtier="non" class="${E.courtierMode === 'non' ? 'on' : ''}">${T('Sans courtier')}</button>
         </div>
@@ -8141,7 +8154,7 @@ async function simulateur(zone, p) {
     if (coLibre) E.courtierLibre = Math.max(0, +coLibre.value || 0);
     let courtier = 0;
     if (!E.comptant) {
-      if (E.courtierMode === 'notre') courtier = COURTIER_RECOMMANDE;
+      if (E.courtierMode === 'notre') courtier = null;
       else if (E.courtierMode === 'libre') {
         courtier = E.courtierLibreType === 'pct'
           ? Math.round(E.prix * E.courtierLibre / 100) : E.courtierLibre;
@@ -9108,7 +9121,7 @@ async function etapeFrais(zone) {
   if (accompagnementImpose) TUNNEL.accompagnementMode = 'oui';
   if (!TUNNEL.courtierMode) TUNNEL.courtierMode = 'notre';
   if (!TUNNEL.courtierLibreType) TUNNEL.courtierLibreType = 'montant';
-  if (TUNNEL.courtierLibre == null) TUNNEL.courtierLibre = COURTIER_RECOMMANDE;
+  if (TUNNEL.courtierLibre == null) TUNNEL.courtierLibre = 0;
 
   const aide = (cle, texte) => `
     <span class="plus" data-aide="${cle}">${TUNNEL['aide' + cle] ? T('Voir moins −') : T('En savoir plus +')}</span>
@@ -9157,7 +9170,7 @@ async function etapeFrais(zone) {
     <div class="f-choix" style="margin-top:18px">
       <b>${T('Courtier en crédit')}</b>${aide('Courtier', notes.courtier || '')}
       <div class="seg">
-        <button data-courtier="notre" class="${TUNNEL.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant} ₪)').replace('{montant}', mil(COURTIER_RECOMMANDE))}</button>
+        <button data-courtier="notre" class="${TUNNEL.courtierMode === 'notre' ? 'on' : ''}">${T('Le courtier que nous recommandons ({montant})').replace('{montant}', courtierRecommandeTexte())}</button>
         <button data-courtier="libre" class="${TUNNEL.courtierMode === 'libre' ? 'on' : ''}">${T('Votre courtier')}</button>
         <button data-courtier="non" class="${TUNNEL.courtierMode === 'non' ? 'on' : ''}">${T('Sans courtier')}</button>
       </div>
@@ -9201,7 +9214,7 @@ async function etapeFrais(zone) {
     // envoye) n'ait jamais besoin de savoir comment on y est arrive.
     let courtier = 0;
     if (!TUNNEL.comptant) {
-      if (TUNNEL.courtierMode === 'notre') courtier = COURTIER_RECOMMANDE;
+      if (TUNNEL.courtierMode === 'notre') courtier = null;
       else if (TUNNEL.courtierMode === 'libre') {
         courtier = TUNNEL.courtierLibreType === 'pct'
           ? Math.round(TUNNEL.prix * TUNNEL.courtierLibre / 100)
@@ -9536,7 +9549,7 @@ function v2LireFrais() {
     ? (accompagnementImpose ? 2 : (defaut.agence || 1)) : 0;
   let courtier = 0;
   if (!TUNNEL.comptant && !TUNNEL.coacquisition) {
-    if (TUNNEL.courtierMode === 'notre') courtier = COURTIER_RECOMMANDE;
+    if (TUNNEL.courtierMode === 'notre') courtier = null;
     else if (TUNNEL.courtierMode === 'libre') {
       courtier = TUNNEL.courtierLibreType === 'pct'
         ? Math.round(TUNNEL.prix * TUNNEL.courtierLibre / 100) : TUNNEL.courtierLibre;
@@ -9739,7 +9752,7 @@ function v2Cartes() {
       id: 'courtier', label: T('Courtier en crédit'),
       visible: () => !TUNNEL.comptant && !TUNNEL.coacquisition,
       resume: () => {
-        if (TUNNEL.courtierMode === 'notre') return T('Le courtier que nous recommandons') + ' · ' + mil(COURTIER_RECOMMANDE) + ' ₪';
+        if (TUNNEL.courtierMode === 'notre') return T('Le courtier que nous recommandons') + ' · ' + courtierRecommandeTexte();
         if (TUNNEL.courtierMode === 'non') return T('Sans courtier');
         return T('Mon propre courtier') + ' · ' + TUNNEL.courtierLibre
           + (TUNNEL.courtierLibreType === 'pct' ? ' %' : ' ₪');
@@ -9748,7 +9761,7 @@ function v2Cartes() {
       set: (v) => { TUNNEL.courtierMode = v; },
       choix: [
         {v:'notre', t:T('Le courtier que nous recommandons'),
-         s: mil(COURTIER_RECOMMANDE) + ' ₪, ' + T('prix constaté'), aide: notesFrais.courtier || '', defaut:true},
+         s: courtierRecommandeTexte(), aide: notesFrais.courtier || '', defaut:true},
         {v:'libre', t:T('Mon propre courtier'), s:T('Vous avez déjà quelqu’un en tête'),
          libre:{label:T('Ses honoraires'),
            modeGet:()=>TUNNEL.courtierLibreType||'montant', modeSet:(m)=>{TUNNEL.courtierLibreType=m;},
