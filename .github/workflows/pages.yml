@@ -1,0 +1,80 @@
+# Mise en ligne de bh-nadlan.com (Avig, 10/11/2026).
+# Remplace le deploiement automatique « pages build and deployment », dont
+# l'etape deploy tombait sur « Timeout reached, aborting! » (10 min par defaut,
+# 5 echecs sur 15 le 10/11/2026). Ici : pas de Jekyll, 30 min de delai,
+# deux relances automatiques, une seule mise en ligne a la fois.
+# Ne tourne que si la source de Pages est « GitHub Actions » (Settings > Pages).
+name: Mise en ligne du site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une seule mise en ligne a la fois ; celle en cours va au bout, seule la plus
+# recente des suivantes attend son tour (les intermediaires sont sautees).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      actions: ${{ steps.lire.outputs.actions }}
+    steps:
+      - id: lire
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          type=$(curl -fsS -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" \
+            | python3 -c 'import json,sys;print(json.load(sys.stdin).get("build_type",""))' || true)
+          echo "source de Pages : ${type:-inconnue}"
+          if [ "$type" = "workflow" ]; then echo "actions=oui" >> "$GITHUB_OUTPUT"; else echo "actions=non" >> "$GITHUB_OUTPUT"; fi
+
+  deploiement:
+    needs: source
+    if: needs.source.outputs.actions == 'oui'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment:
+      name: github-pages
+      url: ${{ steps.essai3.outputs.page_url || steps.essai2.outputs.page_url || steps.essai1.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          lfs: false
+      - run: touch .nojekyll
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: .
+          include-hidden-files: true
+      - id: essai1
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          timeout: 1800000
+      - if: steps.essai1.outcome == 'failure'
+        run: sleep 60
+      - id: essai2
+        if: steps.essai1.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          timeout: 1800000
+      - if: steps.essai1.outcome == 'failure' && steps.essai2.outcome == 'failure'
+        run: sleep 120
+      - id: essai3
+        if: steps.essai1.outcome == 'failure' && steps.essai2.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        with:
+          timeout: 1800000
