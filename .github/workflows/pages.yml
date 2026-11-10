@@ -38,6 +38,7 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/pages" \
             | python3 -c 'import json,sys;print(json.load(sys.stdin).get("build_type",""))' || true)
           echo "source de Pages : ${type:-inconnue}"
+          [ -z "$type" ] && echo "::warning::source de Pages illisible, mise en ligne sautee"
           if [ "$type" = "workflow" ]; then echo "actions=oui" >> "$GITHUB_OUTPUT"; else echo "actions=non" >> "$GITHUB_OUTPUT"; fi
 
   deploiement:
