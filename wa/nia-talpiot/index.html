@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang=fr><head><meta charset=utf-8>
+<!--bh-shabbat--><style>
+.bhs-voile{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;
+ justify-content:center;padding:24px 16px;overflow:auto;color:#F5EFE2;text-align:center;
+ background:radial-gradient(ellipse at 50% 30%,#22304F 0%,#0F172A 62%,#070B16 100%);
+ font:16px/1.55 Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;animation:bhsVenir .8s ease-out}
+.bhs-carte{max-width:520px;width:100%}
+.bhs-bougies{display:flex;justify-content:center;gap:56px;height:150px;align-items:flex-end;margin-bottom:-6px}
+.bhs-bougie{position:relative;width:22px;height:96px;border-radius:4px 4px 2px 2px;
+ background:linear-gradient(90deg,#E9E2D2,#FFFDF6 45%,#D8CFBC)}
+.bhs-bougie:before{content:"";position:absolute;left:50%;top:-9px;width:2px;height:10px;margin-left:-1px;background:#2A2118;border-radius:1px}
+.bhs-flamme{position:absolute;left:50%;bottom:100%;width:16px;height:30px;margin:0 0 6px -8px;
+ border-radius:50% 50% 50% 50%/60% 60% 40% 40%;transform-origin:50% 90%;
+ background:radial-gradient(ellipse at 50% 75%,#fff 0 18%,#FFE38A 32%,#FFA73A 62%,rgba(255,120,30,0) 72%);
+ animation:bhsVacille 1.6s ease-in-out infinite alternate}
+.bhs-bougie+.bhs-bougie .bhs-flamme{animation-duration:1.9s;animation-delay:-.7s}
+.bhs-halo{position:absolute;left:50%;bottom:100%;width:120px;height:120px;margin:0 0 -40px -60px;border-radius:50%;
+ background:radial-gradient(circle,rgba(255,196,90,.30),rgba(255,196,90,0) 65%);animation:bhsHalo 2.4s ease-in-out infinite alternate;pointer-events:none}
+.bhs-pied{width:150px;height:10px;margin:0 auto 18px;border-radius:5px;background:linear-gradient(#C9A227,#8C6D14)}
+.bhs-challah{width:200px;max-width:70%;height:auto;display:block;margin:0 auto 14px}
+.bhs-hebreu{font:600 clamp(40px,11vw,60px)/1.15 "Frank Ruhl Libre","David","Times New Roman",serif;
+ color:#C9A227;margin:6px 0 4px;letter-spacing:.5px;text-shadow:0 0 24px rgba(201,162,39,.35)}
+.bhs-latin{font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#CFC6B2;margin:0 0 20px}
+.bhs-txt{font-size:18px;margin:0 0 8px}
+.bhs-quand{font-size:17px;margin:0 0 8px;color:#fff}
+.bhs-quand b{color:#C9A227;font-weight:600}
+.bhs-merci{font-size:15px;color:#CFC6B2;margin:14px 0 0}
+.bhs-tov{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483646;max-width:460px;margin:0 auto;
+ background:#0F172A;color:#F5EFE2;border-radius:14px;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,.35);
+ font:15px/1.5 Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;animation:bhsMonter .5s ease-out}
+.bhs-tov h3{margin:0 34px 4px 0;font-size:18px;color:#C9A227}
+.bhs-tov[dir=rtl] h3{margin:0 0 4px 34px}
+.bhs-tov p{margin:0 0 12px}
+.bhs-tov button{font:inherit;cursor:pointer;border:0;border-radius:10px}
+.bhs-tov .bhs-ecrire{background:#0B6BD6;color:#fff;padding:10px 16px;font-weight:600}
+.bhs-tov .bhs-x{position:absolute;top:8px;right:8px;width:32px;height:32px;background:none;color:#CFC6B2;font-size:22px;line-height:1}
+.bhs-tov[dir=rtl] .bhs-x{right:auto;left:8px}
+@keyframes bhsVacille{0%{transform:scale(1,1) rotate(-2deg)}50%{transform:scale(.92,1.08) rotate(2deg)}100%{transform:scale(1.04,.95) rotate(-1deg)}}
+@keyframes bhsHalo{from{opacity:.7;transform:scale(.95)}to{opacity:1;transform:scale(1.06)}}
+@keyframes bhsVenir{from{opacity:0}to{opacity:1}}
+@keyframes bhsMonter{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.bhs-flamme,.bhs-halo,.bhs-voile,.bhs-tov{animation:none}}
+</style><script>(function(){
+var BASE="https://espace.bh-nadlan.com",T={"fr": {"locale": "fr-FR", "shabbat": "Le site ne fonctionne pas pendant Shabbat.", "fete": "Le site ne fonctionne pas pendant la fête.", "revenir": "Merci de revenir à partir de {quand} (heure de chez vous).", "merci": "Nous vous remercions pour votre compréhension.", "tov": "Shavoua tov !", "tov_fete": "Bonne semaine !", "fini": "Shabbat est terminé. Dites-nous ce que vous vouliez, nous vous répondons avec plaisir.", "fini_fete": "La fête est terminée. Dites-nous ce que vous vouliez, nous vous répondons avec plaisir.", "ecrire": "Nous écrire", "fermer": "Fermer"}, "en": {"locale": "en-GB", "shabbat": "This website is closed during Shabbat.", "fete": "This website is closed during the holiday.", "revenir": "Please come back from {quand} (your local time).", "merci": "Thank you for your understanding.", "tov": "Shavua tov!", "tov_fete": "Have a good week!", "fini": "Shabbat is over. Tell us what you were looking for, we will be happy to help.", "fini_fete": "The holiday is over. Tell us what you were looking for, we will be happy to help.", "ecrire": "Write to us", "fermer": "Close"}, "he": {"locale": "he-IL", "shabbat": "האתר אינו פעיל בשבת.", "fete": "האתר אינו פעיל בחג.", "revenir": "נשמח לראותכם שוב החל מ{quand} (לפי השעה אצלכם).", "merci": "תודה על ההבנה.", "tov": "שבוע טוב!", "tov_fete": "שבוע טוב!", "fini": "השבת יצאה. ספרו לנו מה חיפשתם, נשמח לעזור.", "fini_fete": "החג הסתיים. ספרו לנו מה חיפשתם, נשמח לעזור.", "ecrire": "כתבו לנו", "fermer": "סגירה"}, "es": {"locale": "es-ES", "shabbat": "El sitio no funciona durante Shabat.", "fete": "El sitio no funciona durante la fiesta.", "revenir": "Vuelva a partir del {quand} (hora local).", "merci": "Le agradecemos su comprensión.", "tov": "¡Shavúa tov!", "tov_fete": "¡Buena semana!", "fini": "Shabat ha terminado. Díganos qué buscaba, le responderemos con gusto.", "fini_fete": "La fiesta ha terminado. Díganos qué buscaba, le responderemos con gusto.", "ecrire": "Escribirnos", "fermer": "Cerrar"}, "pt": {"locale": "pt-PT", "shabbat": "O site não funciona durante o Shabat.", "fete": "O site não funciona durante a festa.", "revenir": "Volte a partir de {quand} (hora local).", "merci": "Agradecemos a sua compreensão.", "tov": "Shavua tov!", "tov_fete": "Boa semana!", "fini": "O Shabat terminou. Diga-nos o que procurava, teremos todo o gosto em ajudar.", "fini_fete": "A festa terminou. Diga-nos o que procurava, teremos todo o gosto em ajudar.", "ecrire": "Escrever-nos", "fermer": "Fechar"}, "ru": {"locale": "ru-RU", "shabbat": "Сайт не работает в Шаббат.", "fete": "Сайт не работает во время праздника.", "revenir": "Пожалуйста, возвращайтесь после {quand} (по вашему времени).", "merci": "Благодарим за понимание.", "tov": "Шавуа тов!", "tov_fete": "Хорошей недели!", "fini": "Шаббат закончился. Расскажите, что вы искали, — мы с радостью ответим.", "fini_fete": "Праздник закончился. Расскажите, что вы искали, — мы с радостью ответим.", "ecrire": "Написать нам", "fermer": "Закрыть"}},CHALLAH="<svg class=bhs-challah viewBox=\"0 0 220 90\" aria-hidden=true><defs><radialGradient id=bhsPain cx=.4 cy=.3 r=.8><stop offset=0 stop-color=#F6CF8A /><stop offset=.55 stop-color=#CC8433 /><stop offset=1 stop-color=#8A4E1C /></radialGradient></defs><ellipse cx=108 cy=80 rx=96 ry=7 fill=#000 opacity=.35 /><g fill=url(#bhsPain) stroke=#7A4316 stroke-width=1.1><ellipse cx=30 cy=44 rx=15 ry=11 transform=\"rotate(-32 30 44)\" /><ellipse cx=30 cy=56 rx=15 ry=11 transform=\"rotate(32 30 56)\" /><ellipse cx=52 cy=44 rx=19 ry=14 transform=\"rotate(32 52 44)\" /><ellipse cx=52 cy=56 rx=19 ry=14 transform=\"rotate(-32 52 56)\" /><ellipse cx=74 cy=44 rx=22 ry=16 transform=\"rotate(-32 74 44)\" /><ellipse cx=74 cy=56 rx=22 ry=16 transform=\"rotate(32 74 56)\" /><ellipse cx=96 cy=44 rx=24 ry=18 transform=\"rotate(32 96 44)\" /><ellipse cx=96 cy=56 rx=24 ry=18 transform=\"rotate(-32 96 56)\" /><ellipse cx=118 cy=44 rx=24 ry=18 transform=\"rotate(-32 118 44)\" /><ellipse cx=118 cy=56 rx=24 ry=18 transform=\"rotate(32 118 56)\" /><ellipse cx=140 cy=44 rx=22 ry=16 transform=\"rotate(32 140 44)\" /><ellipse cx=140 cy=56 rx=22 ry=16 transform=\"rotate(-32 140 56)\" /><ellipse cx=162 cy=44 rx=19 ry=14 transform=\"rotate(-32 162 44)\" /><ellipse cx=162 cy=56 rx=19 ry=14 transform=\"rotate(32 162 56)\" /><ellipse cx=184 cy=44 rx=15 ry=11 transform=\"rotate(32 184 44)\" /><ellipse cx=184 cy=56 rx=15 ry=11 transform=\"rotate(-32 184 56)\" /></g><g fill=#FFF4DC opacity=.9><ellipse cx=122 cy=36 rx=1.6 ry=1 transform=\"rotate(-33 122 36)\" /><ellipse cx=141 cy=33 rx=1.6 ry=1 transform=\"rotate(39 141 33)\" /><ellipse cx=58 cy=49 rx=1.6 ry=1 transform=\"rotate(-14 58 49)\" /><ellipse cx=64 cy=43 rx=1.6 ry=1 transform=\"rotate(23 64 43)\" /><ellipse cx=54 cy=48 rx=1.6 ry=1 transform=\"rotate(28 54 48)\" /><ellipse cx=94 cy=33 rx=1.6 ry=1 transform=\"rotate(14 94 33)\" /><ellipse cx=62 cy=45 rx=1.6 ry=1 transform=\"rotate(0 62 45)\" /><ellipse cx=147 cy=34 rx=1.6 ry=1 transform=\"rotate(19 147 34)\" /><ellipse cx=101 cy=34 rx=1.6 ry=1 transform=\"rotate(34 101 34)\" /><ellipse cx=148 cy=33 rx=1.6 ry=1 transform=\"rotate(18 148 33)\" /><ellipse cx=71 cy=39 rx=1.6 ry=1 transform=\"rotate(6 71 39)\" /><ellipse cx=55 cy=50 rx=1.6 ry=1 transform=\"rotate(-2 55 50)\" /><ellipse cx=141 cy=33 rx=1.6 ry=1 transform=\"rotate(-9 141 33)\" /><ellipse cx=96 cy=33 rx=1.6 ry=1 transform=\"rotate(-17 96 33)\" /><ellipse cx=74 cy=41 rx=1.6 ry=1 transform=\"rotate(-9 74 41)\" /><ellipse cx=147 cy=36 rx=1.6 ry=1 transform=\"rotate(-30 147 36)\" /><ellipse cx=178 cy=35 rx=1.6 ry=1 transform=\"rotate(33 178 35)\" /><ellipse cx=118 cy=49 rx=1.6 ry=1 transform=\"rotate(-2 118 49)\" /><ellipse cx=86 cy=35 rx=1.6 ry=1 transform=\"rotate(27 86 35)\" /><ellipse cx=88 cy=43 rx=1.6 ry=1 transform=\"rotate(23 88 43)\" /><ellipse cx=64 cy=49 rx=1.6 ry=1 transform=\"rotate(3 64 49)\" /><ellipse cx=56 cy=50 rx=1.6 ry=1 transform=\"rotate(17 56 50)\" /></g></svg>",CLE='bh-shabbat-reprise';
+var L=(document.documentElement.getAttribute('lang')||'fr').slice(0,2).toLowerCase();if(!T[L])L='fr';
+var t=T[L],voile=null,minuterie=null,signale=false;
+function lire(){try{return JSON.parse(localStorage.getItem(CLE)||'null');}catch(e){return null;}}
+function garder(v){try{if(v)localStorage.setItem(CLE,JSON.stringify(v));else localStorage.removeItem(CLE);}catch(e){}}
+function quand(ms){try{return new Intl.DateTimeFormat(t.locale,{weekday:'long',hour:'2-digit',minute:'2-digit'}).format(new Date(ms));}
+ catch(e){return new Date(ms).toLocaleString();}}
+function corps(f){if(document.body)f();else document.addEventListener('DOMContentLoaded',f);}
+function figer(oui){var e=document.body.children;for(var i=0;i<e.length;i++){if(e[i]===voile)continue;
+ if(oui)e[i].setAttribute('inert','');else e[i].removeAttribute('inert');}
+ document.documentElement.style.overflow=oui?'hidden':'';}
+function fermer(d){corps(function(){
+ var fete=d.raison==='fete';
+ if(!voile){voile=document.createElement('div');voile.className='bhs-voile';
+  voile.setAttribute('role','dialog');voile.setAttribute('aria-modal','true');
+  voile.setAttribute('dir',L==='he'?'rtl':'ltr');voile.setAttribute('lang',L);
+  voile.innerHTML='<div class=bhs-carte><div class=bhs-bougies>'+
+   '<div class=bhs-bougie><span class=bhs-halo></span><span class=bhs-flamme></span></div>'+
+   '<div class=bhs-bougie><span class=bhs-halo></span><span class=bhs-flamme></span></div></div>'+
+   '<div class=bhs-pied></div>'+CHALLAH+'<p class=bhs-hebreu lang=he dir=rtl></p><p class=bhs-latin></p>'+
+   '<p class=bhs-txt></p><p class=bhs-quand></p><p class=bhs-merci></p></div>';
+  document.body.appendChild(voile);}
+ voile.querySelector('.bhs-hebreu').textContent=fete?'חַג שָׂמֵחַ':'שַׁבָּת שָׁלוֹם';
+ voile.querySelector('.bhs-latin').textContent=fete?"Hag Saméa'h":'Shabbat Shalom';
+ voile.querySelector('.bhs-txt').textContent=fete?t.fete:t.shabbat;
+ var parts=t.revenir.split('{quand}'),q=voile.querySelector('.bhs-quand'),b=document.createElement('b');
+ q.textContent='';q.appendChild(document.createTextNode(parts[0]));b.textContent=quand(d.reprise);
+ q.appendChild(b);q.appendChild(document.createTextNode(parts[1]||''));
+ voile.querySelector('.bhs-merci').textContent=t.merci;
+ figer(true);garder({reprise:d.reprise,raison:d.raison});
+ if(!signale&&window.fbq){signale=true;try{fbq('trackCustom','VisiteShabbat',{raison:d.raison});}catch(e){}}
+ clearTimeout(minuterie);
+ minuterie=setTimeout(verifier,Math.min(Math.max(d.reprise-Date.now()+5000,5000),6*3600*1000));
+});}
+function bienvenue(fete){corps(function(){
+ var c=document.createElement('div');c.className='bhs-tov';c.setAttribute('role','status');
+ c.setAttribute('dir',L==='he'?'rtl':'ltr');
+ c.innerHTML='<button type=button class=bhs-x></button><h3></h3><p></p><button type=button class=bhs-ecrire></button>';
+ c.querySelector('h3').textContent=fete?t.tov_fete:t.tov;
+ c.querySelector('p').textContent=fete?t.fini_fete:t.fini;
+ var x=c.querySelector('.bhs-x');x.textContent='×';x.setAttribute('aria-label',t.fermer);
+ x.onclick=function(){c.remove();};
+ var e=c.querySelector('.bhs-ecrire');e.textContent=t.ecrire;
+ e.onclick=function(){c.remove();if(window.eliOuvrir){window.eliOuvrir(true);}
+  else{location.href='/'+(L==='fr'?'':L+'/')+'#/eli';}};
+ document.body.appendChild(c);});}
+function ouvrir(){
+ if(voile){figer(false);voile.remove();voile=null;}
+ var vu=lire();if(!vu)return;garder(null);
+ var depuis=Date.now()-vu.reprise;
+ if(depuis>=0&&depuis<3*864e5)bienvenue(vu.raison==='fete');}
+function verifier(){var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+ fetch(BASE+'/site/shabbat?tz='+encodeURIComponent(tz),{cache:'no-store'})
+ .then(function(r){return r.json();}).then(function(d){if(d&&d.ferme)fermer(d);else ouvrir();})
+ .catch(function(){});}
+verifier();setInterval(verifier,10*60*1000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)verifier();});
+})();</script><!--/bh-shabbat-->
+
+<link rel=icon href="../../favicon.ico?v=c8366042" sizes="any">
+<link rel=icon type="image/png" sizes="32x32" href="../../favicon-32.png?v=c8366042">
+<link rel=apple-touch-icon sizes="180x180" href="../../icone-180.png?v=c8366042">
+
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=color-scheme content="light dark">
+<title>Écrire à BH Nadlan sur WhatsApp</title>
+<meta name=description content="Nous ouvrons WhatsApp pour vous : il ne reste qu&#x27;à envoyer.">
+<meta name=robots content="noindex">
+<link rel=canonical href="https://bh-nadlan.com/wa/nia-talpiot/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BH Nadlan">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Écrire à BH Nadlan sur WhatsApp">
+<meta property="og:description" content="Nous ouvrons WhatsApp pour vous : il ne reste qu&#x27;à envoyer.">
+<meta property="og:url" content="https://bh-nadlan.com/wa/nia-talpiot/">
+<meta property="og:image" content="https://bh-nadlan.com/annuaire/img/og-bh-nadlan.png">
+<meta property="og:image:secure_url" content="https://bh-nadlan.com/annuaire/img/og-bh-nadlan.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logo BH Nadlan, L’immobilier autrement">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Écrire à BH Nadlan sur WhatsApp">
+<meta name="twitter:description" content="Nous ouvrons WhatsApp pour vous : il ne reste qu&#x27;à envoyer.">
+<meta name="twitter:image" content="https://bh-nadlan.com/annuaire/img/og-bh-nadlan.png">
+<style>/* IDENTITE:debut — ecrit par `python data/sources/identite.py --portail --ecrire`.
+   Ne pas retoucher a la main : la source est `identite.py`, et une
+   valeur corrigee ici serait effacee au prochain passage. */
+:root{
+ --or:#C9A227;
+ --or-fonce:#7A6013;
+ --or-clair:#FBF5E4;
+ --or-trait:#E6D9B0;
+ --encre:#0F172A;
+ --encre-2:#333B4D;
+ --gris:#5A6172;
+ --gris-clair:#6A7284;
+ --fond:#FAF7F1;
+ --fond-2:#F4F0E7;
+ --carte:#FFFFFF;
+ --trait:#E7E2D8;
+ --trait-fin:#F1EDE4;
+ --vert:#0B6E4F;
+ --vert-fond:#E9F7F0;
+ --alerte:#B4321F;
+ --alerte-fond:#FDF0ED;
+ --action:#0B6BD6;
+ --action-vive:#0A57AE;
+ --action-lavis:#EAF3FE;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+ --or:#DFBF52;
+ --or-fonce:#DFBF52;
+ --or-clair:#1E1B10;
+ --or-trait:#453B1E;
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+ --gris:#8C95A8;
+ --gris-clair:#79839A;
+ --fond:#0B0F18;
+ --fond-2:#101623;
+ --carte:#131926;
+ --trait:#242C3B;
+ --trait-fin:#1A2130;
+ --vert:#47CD89;
+ --vert-fond:#0C1F16;
+ --alerte:#F97066;
+ --alerte-fond:#22110F;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
+}}
+:root[data-theme=dark]{
+ --or:#DFBF52;
+ --or-fonce:#DFBF52;
+ --or-clair:#1E1B10;
+ --or-trait:#453B1E;
+ --encre:#EEF1F6;
+ --encre-2:#CBD2DE;
+ --gris:#8C95A8;
+ --gris-clair:#79839A;
+ --fond:#0B0F18;
+ --fond-2:#101623;
+ --carte:#131926;
+ --trait:#242C3B;
+ --trait-fin:#1A2130;
+ --vert:#47CD89;
+ --vert-fond:#0C1F16;
+ --alerte:#F97066;
+ --alerte-fond:#22110F;
+ --action:#6DAEFF;
+ --action-vive:#96C6FF;
+ --action-lavis:#0E1B2C;
+}
+/* IDENTITE:fin */
+
+@font-face{font-family:'Rubik';src:url('/annuaire/rubik.woff2') format('woff2');
+ font-weight:300 900;font-style:normal;font-display:swap}
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{margin:0;background:var(--fond);color:var(--encre);
+ font-family:'Rubik',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+ -webkit-text-size-adjust:100%}
+a{color:var(--action)}
+.haut{display:flex;align-items:center;justify-content:space-between;gap:12px;
+ max-width:640px;margin:0 auto;padding:14px 16px}
+.haut .logo{display:block;width:92px;color:var(--encre)}
+.haut .logo svg{display:block;width:100%;height:auto}
+.haut a.site{font-size:14px;font-weight:600;text-decoration:none}
+main{max-width:640px;margin:0 auto;padding:4px 16px 40px}
+h1{font-size:26px;line-height:1.25;margin:6px 0 6px}
+.chapeau{font-size:15px;line-height:1.55;color:var(--encre-2);margin:0 0 20px;
+ padding-bottom:14px;border-bottom:2px solid var(--or-trait)}
+h2.sec{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris);
+ margin:28px 0 10px;font-weight:600}
+.pub{background:var(--carte);border:1px solid var(--trait);border-left:4px solid var(--or);
+ border-radius:14px;padding:16px;margin:0 0 12px}
+.pub .quand{font-size:13px;color:var(--gris);margin:0 0 6px}
+.pub h3{font-size:18px;line-height:1.35;margin:0 0 14px;color:var(--encre)}
+.boutons{display:flex;flex-wrap:wrap;gap:8px}
+.bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:46px;padding:11px 12px;border-radius:12px;font-size:15px;
+ font-weight:600;text-decoration:none;flex:1 1 140px;text-align:center}
+.bouton.voir{background:var(--action);color:var(--carte)}
+.bouton.wa{background:#25D366;color:#0B1F13}
+.bouton.doux{background:var(--action-lavis);color:var(--action);border:1px solid var(--trait)}
+.vide{background:var(--carte);border:1px solid var(--trait);border-radius:14px;padding:16px;
+ font-size:15px;line-height:1.55;color:var(--encre-2)}
+.art{display:block;background:var(--carte);border:1px solid var(--trait);border-radius:12px;
+ padding:13px 14px;margin:0 0 8px;text-decoration:none;color:var(--encre);font-size:16px;
+ line-height:1.4}
+.art small{display:block;color:var(--gris);font-size:13px;margin-top:3px}
+.chaine{margin:26px 0 0;padding:18px 16px;background:var(--vert-fond);
+ border:1px solid var(--trait);border-radius:14px}
+.chaine p{margin:0 0 12px;font-size:15px;line-height:1.55;color:var(--encre-2)}
+.chaine strong{color:var(--encre)}
+.contact{margin:22px 0 0;font-size:15px;line-height:1.8;color:var(--encre-2)}
+.contact a{font-weight:600;text-decoration:none;white-space:nowrap}
+.bas{max-width:640px;margin:0 auto;padding:18px 16px 40px;font-size:13px;
+ color:var(--gris);border-top:1px solid var(--trait)}
+.bas a{color:var(--gris)}
+.relais{max-width:480px;margin:0 auto;padding:30px 16px 40px;text-align:center}
+.relais h1{font-size:22px}
+.relais .message{background:var(--carte);border:1px solid var(--trait);border-radius:12px;
+ padding:14px;margin:16px 0 18px;font-size:15px;line-height:1.5;color:var(--encre-2);
+ text-align:left}
+.relais .bouton{width:100%;flex:none}
+.relais .petit{font-size:13px;color:var(--gris);margin-top:16px;line-height:1.6}
+</style>
+</head><body>
+<header class=haut>
+ <a class=logo href="https://bh-nadlan.com/" data-site aria-label="BH Nadlan"><svg viewBox="0 0 152 64" width="95.00" height="40"
+ style="aspect-ratio:152/64;direction:ltr" role="img"
+ aria-label="BH" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="2" width="60" height="60" rx="17" fill="#0f172a"/>
+  <g transform="translate(13.25 12) scale(0.5)" fill="#c9a227"><path d="M5 76 V32 L19 22 V76 Z"/><path d="M25 76 V12 L42 0 V76 Z"/><path d="M48 76 V30 L62 40 V76 Z"/><rect x="0" y="75.5" width="67" height="4.5" rx="2.2"/></g>
+  <text x="74" y="47" font-family="Helvetica,Arial,sans-serif" font-size="40"
+        font-weight="800" letter-spacing="-1.5" fill="currentColor">BH</text>
+</svg></a>
+ <a class=site href="https://bh-nadlan.com/" data-site>Les programmes neufs</a>
+</header>
+<main class=relais>
+ <h1>Écrire à BH Nadlan sur WhatsApp</h1>
+ <p>Nous ouvrons WhatsApp pour vous : il ne reste qu&#x27;à envoyer.</p>
+ <div class=message>Votre message, déjà écrit :<br><strong>Bonjour, je veux la liste des lots de Nia Talpiot</strong></div>
+ <a class="bouton wa" id=ouvrir href="https://wa.me/972585678926?text=Bonjour%2C%20je%20veux%20la%20liste%20des%20lots%20de%20Nia%20Talpiot" rel=noopener>Ouvrir WhatsApp</a>
+ <p class=petit>WhatsApp ne s'ouvre pas ? Appuyez sur le bouton.<br>
+ <a href="mailto:hillel@bh-nadlan.com">hillel@bh-nadlan.com</a></p>
+</main>
+<script>(function(){var cible="https://wa.me/972585678926?text=Bonjour%2C%20je%20veux%20la%20liste%20des%20lots%20de%20Nia%20Talpiot",g="https://62-238-114-208.sslip.io",c="wa:nia-talpiot",parti=false;
+function aller(){if(parti)return;parti=true;location.replace(cible);}
+setTimeout(aller,900);
+if(g){try{fetch(g+'/vue',{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({cle:c}),keepalive:true}).then(aller,aller);}catch(e){aller();}}else{aller();}
+})();</script>
+</body></html>
