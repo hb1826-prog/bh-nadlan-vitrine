@@ -250,7 +250,7 @@ function filtre(q){
 function cellule(xs){return xs.map(x=>"<div>"+esc(x)+"</div>").join("");}
 function lien(l){return '<a class="fiche" href="'+esc(l.lien)+'" target="_blank" rel="noopener noreferrer">Voir la fiche</a>'+
  (/^https?:\/\//.test(l.site||"")?'<br><a class="site" href="'+esc(l.site)+'" target="_blank" rel="noopener noreferrer">Site du programme ↗</a>':"");}
-function tel(l){return l.tel?(l.contact?'<div class="qui">'+esc(l.contact)+'</div>':"")+'<a class="tel" href="tel:'+esc(String(l.tel_lien||"").replace(/[^0-9+]/g,""))+'">'+esc(l.tel)+'</a>':"";}
+function tel(l){return l.tel?(l.contact?'<div class="qui">'+esc(l.contact)+'</div>':"")+'<a class="tel" href="tel:'+esc(String(l.tel_lien||"").replace(/[^0-9+*]/g,""))+'">'+esc(l.tel)+'</a>':"";}
 function rendre(){
  const q=$("#q").value;$("#efface").style.display=q?"block":"none";
  const r=filtre(q);
