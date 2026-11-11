@@ -152,6 +152,11 @@ td.liv{min-width:120px}
 a.fiche{display:inline-block;white-space:nowrap;background:var(--action);color:#fff;text-decoration:none;
  font-weight:600;padding:9px 14px;border-radius:10px;font-size:16px}
 a.fiche:hover{background:var(--action-vive)}
+td.promo{font-weight:600;min-width:110px}
+td.contact{min-width:150px;font-size:15px}
+a.tel{display:inline-block;white-space:nowrap;font-weight:700;font-size:17px;color:var(--action);text-decoration:none;margin-top:2px}
+a.site{display:inline-block;white-space:nowrap;margin-top:8px;color:var(--action);font-weight:600;font-size:15px}
+.qui{color:var(--encre2)}
 .vide{font-size:20px;color:var(--gris);padding:30px 0}
 .pied{max-width:1700px;margin:0 auto;padding:0 20px 30px;color:var(--gris);font-size:14px}
 .cartes{display:none}
@@ -203,7 +208,7 @@ a.fiche:hover{background:var(--action-vive)}
 <main>
  <div id="accueil"></div>
  <table id="tableau"><thead><tr>
-  <th>Programme</th><th>Ville</th><th>Quartier</th><th>À proximité</th><th>Typologies</th>
+  <th>Programme</th><th>Promoteur</th><th>Contact</th><th>Ville</th><th>Quartier</th><th>À proximité</th><th>Typologies</th>
   <th>Prix à partir de</th><th>Conditions de paiement</th><th>Livraison</th><th></th>
  </tr></thead><tbody id="corps"></tbody></table>
  <div class="cartes" id="cartes"></div>
@@ -243,7 +248,9 @@ function filtre(q){
  return D.filter(l=>vs.has(l.ville)||(n.length>=3&&(norm(l.nom).includes(n)||norm(l.quartier).includes(n))));
 }
 function cellule(xs){return xs.map(x=>"<div>"+esc(x)+"</div>").join("");}
-function lien(l){return '<a class="fiche" href="'+esc(l.lien)+'" target="_blank" rel="noopener noreferrer">Voir la fiche</a>';}
+function lien(l){return '<a class="fiche" href="'+esc(l.lien)+'" target="_blank" rel="noopener noreferrer">Voir la fiche</a>'+
+ (/^https?:\/\//.test(l.site||"")?'<br><a class="site" href="'+esc(l.site)+'" target="_blank" rel="noopener noreferrer">Site du programme ↗</a>':"");}
+function tel(l){return l.tel?(l.contact?'<div class="qui">'+esc(l.contact)+'</div>':"")+'<a class="tel" href="tel:'+esc(String(l.tel_lien||"").replace(/[^0-9+]/g,""))+'">'+esc(l.tel)+'</a>':"";}
 function rendre(){
  const q=$("#q").value;$("#efface").style.display=q?"block":"none";
  const r=filtre(q);
@@ -258,12 +265,12 @@ function rendre(){
  $("#compteur").textContent=!r.length?"":(r.length+(r.length>1?" programmes":" programme")+(vs.length===1?" à "+vs[0]:" dans "+vs.length+" villes"));
  if(!r.length){$("#corps").innerHTML="";$("#cartes").innerHTML='<div class="vide">Aucun programme pour « '+esc(q)+' ».</div>';
   $("#tableau").style.visibility="hidden";if(innerWidth>1100)$("#accueil").innerHTML='<div class="vide">Aucun programme pour « '+esc(q)+' ».</div>';return;}
- $("#corps").innerHTML=r.map(l=>"<tr><td class=nom>"+esc(l.nom)+"</td><td class=ville>"+esc(l.ville)+"</td><td>"+esc(l.quartier)+
+ $("#corps").innerHTML=r.map(l=>"<tr><td class=nom>"+esc(l.nom)+"</td><td class=promo>"+esc(l.promoteur||"")+"</td><td class=contact>"+tel(l)+"</td><td class=ville>"+esc(l.ville)+"</td><td>"+esc(l.quartier)+
   "</td><td class=prox>"+cellule(l.proximite)+"</td><td>"+esc(l.typologies)+"</td><td class=prix>"+cellule(l.prix)+
   "</td><td>"+esc(l.conditions)+"</td><td class=liv>"+esc(l.livraison)+"</td><td>"+lien(l)+"</td></tr>").join("");
  const ligne=(t,v)=>v?"<dt>"+t+"</dt><dd>"+v+"</dd>":"";
  $("#cartes").innerHTML=r.map(l=>'<div class="carte"><h3>'+esc(l.nom)+'</h3><div class="lieu">'+esc(l.ville)+(l.quartier?" · "+esc(l.quartier):"")+
-  "</div><dl>"+ligne("Proximité",esc(l.proximite.join(" · ")))+ligne("Typologies",esc(l.typologies))+
+  "</div><dl>"+ligne("Promoteur",esc(l.promoteur||""))+ligne("Contact",tel(l))+ligne("Proximité",esc(l.proximite.join(" · ")))+ligne("Typologies",esc(l.typologies))+
   ligne("Prix",'<div class="prix">'+cellule(l.prix)+"</div>")+ligne("Paiement",esc(l.conditions))+ligne("Livraison",esc(l.livraison))+
   "</dl>"+lien(l)+"</div>").join("");
 }
