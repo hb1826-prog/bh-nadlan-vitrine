@@ -7069,7 +7069,7 @@ function quiSommesNous() {
   return `
       <p><b>${esc(M.nom)}</b>${M.baseline ? ' · ' + esc(M.baseline) : ''}.
         ${T('Nous accompagnons des acheteurs francophones dans l’achat d’un logement neuf en Israël, depuis le premier appel jusqu’à la signature, et jusqu’à la remise des clés si vous le souhaitez.')}${site}</p>
-      <p class="dim">${esc(M.mention)}. ${T('Les programmes présentés sur cette page, les prix négociés auprès des promoteurs et l’accompagnement sur place sont assurés dans ce cadre.')}</p>`
+      ${M.mention ? `<p class="dim">${esc(M.mention)}. ${T('Les programmes présentés sur cette page, les prix négociés auprès des promoteurs et l’accompagnement sur place sont assurés dans ce cadre.')}</p>` : ''}`
     + T(QUI_COMMUN);
 }
 
@@ -7094,7 +7094,7 @@ function pageTexte(cle) {
     .split('{TEL_ED}').join(esc(L.wa || DONNEES.wa))
     .split('{PARTENAIRE_ED}').join(DONNEES.marque
       ? `<p>${T('Cette page est publiée pour')} <b>${esc(DONNEES.marque.nom)}</b>,
-           ${T('partenaire apporteur d’affaires.')} ${esc(DONNEES.marque.mention)}.</p>`
+           ${T('partenaire apporteur d’affaires.')}${DONNEES.marque.mention ? ' ' + esc(DONNEES.marque.mention) + '.' : ''}</p>`
       : '')
     // Ceux-la, en revanche, sont les coordonnees auxquelles le visiteur
     // s'adresse : celles de la maison dont il lit la page.
