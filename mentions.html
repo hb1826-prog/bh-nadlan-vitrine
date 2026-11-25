@@ -551,7 +551,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero-preuves span{font-size:11px}
 }
 
-/* « 0 frais d'agence », le titre visuel de la banniere (Hillel, 24/09/2026 :
+/* L'argument des frais, le titre visuel de la banniere (Hillel, 24/09/2026 :
    « le plus evident possible »). Un zero geant, dore — l'or porte du texte
    ici parce que le fond est sombre (voile de la photo), jamais sur fond
    clair. Le h1 passe en second : il dit ce que le zero veut dire. */
@@ -564,7 +564,7 @@ button,input,select,textarea{font:inherit;color:inherit}
    porte du texte, voir identite.py). */
 /* Slogan ajoute le 18/10/2026 (Hillel : "le slogan c'est BH NADLAN
    L'immobilier autrement") — petit repere discret au-dessus du bandeau
-   "Frais d'agence", jamais plus gros que lui. */
+   le libelle des frais, jamais plus gros que lui. */
 .hero-slogan{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;
  text-transform:uppercase;color:var(--or-clair)}
 /* Agrandi et mis en capitales le 24/09/2026 (Hillel : « il est un peu
@@ -729,7 +729,7 @@ button,input,select,textarea{font:inherit;color:inherit}
    (Hillel, 24/09/2026, capture a l'appui : « que ce soit vraiment propre »).
    Une marge devinee (96px) ne tombait juste pour aucune langue ni largeur ;
    ici c'est la grille qui aligne. `.hero-texte` s'efface (display:contents)
-   pour que le bandeau « Frais d'agence », le panneau et les chiffres
+   pour que le bandeau des frais, le panneau et les chiffres
    deviennent trois lignes de la meme grille que la carte : le bandeau seul
    en haut a gauche, panneau et carte cote a cote et etires a la meme
    hauteur, les chiffres sur toute la largeur et centres dessous. */
@@ -737,7 +737,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero .dedans{grid-template-areas:"zf zf" "h1 simu" "pr pr";
   column-gap:40px;row-gap:0;align-items:stretch}
  .hero-texte{display:contents}
- /* « Frais d'agence : 0 % » centre au-dessus des DEUX blocs, en echo a la
+ /* Le bandeau des frais centre au-dessus des DEUX blocs, en echo a la
     ligne des chiffres centree dessous (Hillel, 24/09/2026). Au centre, il
     passe sur une partie plus claire de la photo : l'ombre le garde lisible. */
  .hero .zf-bandeau{grid-area:zf;text-align:center;
@@ -892,7 +892,7 @@ button,input,select,textarea{font:inherit;color:inherit}
  .hero p.chapeau{display:none}
  /* Les quatre chiffres cedent aussi leur place sur telephone : la carte du
     simulateur doit tenir au premier ecran SANS pousser la recherche dessous
-    (le « 0 frais d'agence » reste dit par la pastille du haut). */
+    (l'argument des frais reste dit par la pastille du haut). */
  .hero .hero-preuves{display:none}
  .hero .dedans{padding:26px 20px 58px}
  .hero-simu{padding:16px 16px 14px;gap:6px}
@@ -1040,7 +1040,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   margin-left:auto;margin-right:auto}
 }
 /* Fils direct seulement : sans cela, un gras a l'interieur d'une phrase
-   (« 0 frais d'agence ») passait a la ligne avec sa propre coche. */
+   (l'argument des frais) passait a la ligne avec sa propre coche. */
 .modele > div > b{display:block;font-size:16.5px;font-weight:700;
  margin-bottom:6px;line-height:1.3}
 .modele > div > b::before{content:"✓";display:inline-block;color:var(--or-fonce);
@@ -2257,7 +2257,7 @@ td.num small.eu{text-align:right;white-space:normal}
 
 
 /* ==================== l'equilibre des lignes de la banniere ==============
-   « 0 frais d'agence » se coupait entre le zero et le mot : la ligne se
+   l'argument des frais se coupait entre le chiffre et le mot : la ligne se
    terminait sur un « 0 » solitaire, et la promesse se lisait en deux temps.
    La rendre insecable suffit — mais tant qu'a faire, on laisse aussi le
    navigateur equilibrer les lignes plutot que de les remplir une a une, ce
@@ -3036,7 +3036,7 @@ table.ag th{width:64%}
    arrondie à droite avec la carte du simulateur posée en bas. Couleurs FIXES
    (jamais var(--fond)/var(--carte), qui basculent en mode sombre) : la
    bannière reste lisible quel que soit le thème du téléphone.
-   « Frais d'agence : 0 % » reste dans les quatre pastilles, pas de pastille
+   l'argument des frais reste dans les quatre pastilles, pas de pastille
    à part en haut (Hillel, 19/10/2026). */
 .hero{background:#fff!important;border-bottom:0}
 .hero .voile,.hero .ph-nuit,.nuit .hero .ph-nuit{display:none!important}
@@ -3501,6 +3501,7 @@ html.dans-cadre .retour-site{display:none}
 .hero-a .ha-titre em{font-style:normal;color:#E9CD7A;background:none;padding:0}
 .hero-a .ha-gages{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0;padding:0;list-style:none;font-size:13px;color:#DCE1EA}
 .hero-a .ha-gages li::before{content:"✓ ";color:#E9CD7A;font-weight:700}
+.hero-a .ha-gages-sous{margin:8px 0 0;font-size:13px;font-style:italic;color:#E9CD7A}
 
 .cherche.ha-cherche{position:relative;z-index:5;width:calc(100% - 24px)!important;max-width:1240px!important;margin:-66px auto 0!important;padding:0!important;background:none!important}
 .ha-cherche .boite{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;
@@ -3782,10 +3783,9 @@ estimations. Le taux réellement accordé par une banque dépend du dossier de
 l'emprunteur et n'est connu qu'après son examen.</p>
 
 <h2>5. Honoraires</h2>
-<p>BH Nadlan ne facture aucun honoraire d'agence à l'acquéreur : l'achat se
-fait directement auprès du promoteur, au prix négocié. Un accompagnement
-après la signature peut faire l'objet d'une rémunération distincte, annoncée
-à l'avance et acceptée par écrit.</p>
+<p>L'achat se fait directement auprès du promoteur, au prix négocié. Les
+frais d'accompagnement de BH Nadlan sont réduits ; ils sont annoncés à
+l'avance et acceptés par écrit.</p>
 
 <h2>6. Propriété intellectuelle</h2>
 <p>Les textes et l'habillage de ce site appartiennent à son éditeur. Les
