@@ -6282,7 +6282,7 @@ function rassureMini(revente) {
   // (Hillel, 07/10/2026 : les 2 % sont obligatoires sur une revente).
   const premier = revente
     ? `<div><b>${T('2 % de frais d’accompagnement, affichés d’avance')}</b><span>${T('Ce bien vous est confié par son propriétaire : nos frais sont indiqués sur la fiche, sans surprise.')}</span></div>`
-    : `<div><b>${T('Le prix du promoteur. Des frais d’accompagnement réduits.')}</b><span>${T("<b>Des honoraires justes, un accompagnement complet.</b> Vous achetez directement au prix du promoteur, et nous vous accompagnons à chaque étape, de la recherche jusqu’à la remise des clés.")}</span></div>`;
+    : `<div><b>${T('Le prix du promoteur. Des frais d’accompagnement réduits.')}</b><span>${T("<b>Des honoraires justes pour un accompagnement complet.</b> Vous achetez directement au prix du promoteur, et nous vous accompagnons à chaque étape, de la recherche jusqu’à la remise des clés.")}</span></div>`;
   // Les deux encarts suivants parlent de promoteur (« étage », « échéancier »
   // de chantier) : une revente n'a ni l'un ni l'autre, le propriétaire actuel
   // remet un bien deja construit, paye en une fois (Hillel, 07/10/2026).
@@ -9287,7 +9287,7 @@ function etapeCoordonnees(zone) {
   zone.innerHTML = `
     ${jaugeHTML(5)}
     ${eco > 0 ? `<div class="eco-teaser"><b>${T('Bonne nouvelle : vous économisez')} ${mil(eco)} ₪ · ${eur(eco)}</b>
-      <span>${T('Des honoraires justes, un accompagnement complet')}</span></div>` : ''}
+      <span>${T('Des honoraires justes pour un accompagnement complet')}</span></div>` : ''}
     <div class="si-lab">${T('Comment recevoir votre simulation')}</div>
     <div class="seg" id="t-canal">
       <button type="button" data-canal="whatsapp"
