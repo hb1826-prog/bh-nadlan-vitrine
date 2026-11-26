@@ -6987,23 +6987,25 @@ function avisHTML() {
    Quelqu'un qui s'apprete a engager deux millions de shekels a l'etranger
    cherche a savoir a qui il parle et ce qu'on fait de son numero. L'absence de
    ces trois pages est, a elle seule, un motif de fermeture d'onglet. */
-/* Ce qui est vrai quelle que soit la maison qui signe la page : la facon dont
-   on est paye, et ce qu'on ne fait pas. Ce sont les deux questions que se pose
+/* Ce qui est vrai quelle que soit la maison qui signe la page : nos
+   honoraires, et ce qu'on ne fait pas. Ce sont les deux questions que se pose
    quelqu'un qui s'apprete a donner son numero, et les reponses ne dependent
    pas de l'enseigne — c'est le meme metier, le meme promoteur, le meme prix.
    Ecrit une seule fois, lu par la page de Hillel et par celles de ses
    partenaires. */
 /* Format questions/reponses, demande par Hillel le 19/09/2026 : plus facile
    a parcourir qu'un mur de paragraphes, et surtout — sa raison — ca permet
-   de sortir « comment sommes-nous payes » de son coin pour en faire une
-   vraie question, posee tot. Un visiteur qui voit « gratuit » se demande
+   de sortir la question des honoraires de son coin pour en faire une
+   vraie question, posee tot. Depuis le 26/11/2026 (Hillel) : plus aucune
+   phrase ne dit qui remunere BH Nadlan, seulement nos honoraires (1 % HT,
+   inclus dans chaque offre). Un visiteur qui voit « gratuit » se demande
    d'abord ou est l'arnaque ; y repondre en 2e position (juste apres avoir
    dit qui on est) leve le doute vite, sans donner l'impression qu'on se
    defend avant meme qu'on ait demande — la mettre en tout premier, avant
    de s'etre presente, aurait fait l'effet inverse. */
 const QUI_PAYES = `
-      <h3>${T('Comment sommes-nous payés ?')}</h3>
-      <p>${T('Le promoteur nous rémunère au titre de l’apport d’affaires, et')} <b>${T('cette rémunération ne s’ajoute pas à votre prix')}</b> ${T(": vous signez au même prix que si vous poussiez seul la porte du bureau de vente, sauf que le prix, lui, a été négocié avant vous. Nos frais d’accompagnement, 1 % du prix hors TVA, sont inclus dans chaque offre : dossier, avocat, banque, suivi du chantier et réception du bien.")}</p>`;
+      <h3>${T('Quels sont nos honoraires ?')}</h3>
+      <p>${T('Des honoraires justes pour un accompagnement complet')}. <b>${T('Vous achetez au prix du promoteur')}</b> ${T(": vous signez au même prix que si vous poussiez seul la porte du bureau de vente, sauf que le prix, lui, a été négocié avant vous. Nos frais d’accompagnement, 1 % du prix hors TVA, sont inclus dans chaque offre : dossier, avocat, banque, suivi du chantier et réception du bien.")}</p>`;
 const QUI_NE_FAIT_PAS = `
       <h3>${T('Que ne faisons-nous pas ?')}</h3>
       <p>${T("Nous ne vendons pas de bien ancien entre particuliers, et nous ne sommes ni banquiers ni avocats : nous travaillons avec les vôtres, ou nous vous en présentons. Nous ne vous mettons jamais en relation avec un promoteur en échange de vos coordonnées.")}</p>`;
@@ -7068,7 +7070,7 @@ const PAGES = {
    apporteur, le visiteur croit parler a cette maison-la — et il a raison,
    c'est elle qui l'accompagne. On y met donc son nom, sa phrase, et la
    mention du partenariat, plutot qu'une presentation qu'il ne reconnait pas.
-   Le reste — la remuneration, ce qu'on ne fait pas — reste vrai mot pour mot
+   Le reste — nos honoraires, ce qu'on ne fait pas — reste vrai mot pour mot
    et ne bouge pas : c'est le meme metier. */
 function quiSommesNous() {
   const M = DONNEES.marque;
@@ -7904,9 +7906,9 @@ async function simulateur(zone, p) {
   // Les frais d'accompagnement s'appliquent d'office, jamais retirables
   // (Hillel, 26/11/2026).
   E.accompagnementMode = 'oui';
-  // Sur une revente autorisee, Hillel n'est pas remunere par le promoteur
-  // (ce n'est pas un achat direct) : le 1% de frais d'accompagnement est alors
-  // obligatoire, jamais retirable (Hillel, 06/10/2026).
+  // Sur une revente autorisee (ce n'est pas un achat direct au promoteur),
+  // les frais d'accompagnement sont de 2 %, jamais retirables (Hillel,
+  // 06-07/10/2026).
   const accompagnementImpose = !!(p && p.revente);
   if (accompagnementImpose) E.accompagnementMode = 'oui';
   if (!E.courtierMode) E.courtierMode = 'notre';
@@ -7997,7 +7999,7 @@ async function simulateur(zone, p) {
           <button data-s-accompagnement="oui" class="on">${accompagnementTexte(accompagnementImpose)}</button>
         </div>
         ${accompagnementImpose ? `
-        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'accompagnement de 2 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>` : ''}
+        <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier, d'où des frais d'accompagnement de 2 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>` : ''}
       </div>
 
       ${E.comptant ? '' : `
@@ -9090,7 +9092,7 @@ async function etapeFrais(zone) {
         <button data-accompagnement="oui" class="on">${accompagnementTexte(accompagnementImpose)}</button>
       </div>
       ${accompagnementImpose ? `
-      <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier. Nous ne sommes donc pas rémunérés par le promoteur sur cette transaction, d'où des frais d'accompagnement de 2 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>` : ''}
+      <p class="dim si-note" style="margin-top:8px">${T("Ce bien n'est pas acheté directement auprès du promoteur : il est racheté auprès d'un particulier, d'où des frais d'accompagnement de 2 %, non modifiables. (Agent immobilier homologué, licence n° 322921)")}</p>` : ''}
     </div>
 
     ${TUNNEL.comptant ? `
@@ -9659,7 +9661,7 @@ function v2Cartes() {
       set: (v) => { TUNNEL.accompagnementMode = v; },
       choix: accompagnementImpose ? [
         {v:'oui', t:T("Frais d'accompagnement"), s:T('2 % du prix, non négociables'),
-         aide:T('Comme nous ne sommes pas payés par un promoteur sur ce type de bien, ces frais couvrent la négociation, le dossier et le suivi jusqu’aux clés.')},
+         aide:T('Sur un bien racheté à un particulier, ces frais couvrent la négociation, le dossier et le suivi jusqu’aux clés.')},
       ] : [
         {v:'oui', t:T("Frais d'accompagnement"), s:accompagnementTexte(false),
          aide: notesFrais.agence || '', defaut:true},
