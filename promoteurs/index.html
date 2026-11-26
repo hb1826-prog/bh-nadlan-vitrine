@@ -366,8 +366,9 @@ gtag('js',new Date());}gtag('config','AW-18507495474');})();
       .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
       .then(function(rep){clearTimeout(minuteur); if(!rep||!rep.ok){return secours();}
         var m=document.getElementById("merci"); m.textContent=rep.retenu?T.merci_retenu:T.merci; m.hidden=false; form.hidden=true;
-        // Événement Lead du pixel (mesure seulement), jamais pour un essai ?test=1.
-        try{if(window.fbq&&!corps.test)fbq("track","Lead",{content_name:"promoteurs"});}catch(x){}
+        // Événement personnalisé « LeadPromoteur » (mesure seulement), jamais le Lead standard des clients
+        // sur lequel la pub « Site » est réglée ; jamais pour un essai ?test=1.
+        try{if(window.fbq&&!corps.test)fbq("trackCustom","LeadPromoteur",{content_name:"promoteurs"});}catch(x){}
         // Le lien personnel « Transmettre votre programme » (Avig, 26/11/2026) : textes et adresse viennent du guichet (depots_promoteurs.textes_merci).
         if(rep.lien){var q=document.createElement("p"); q.className="merci"; q.style.marginTop="12px"; q.textContent=rep.lien_texte||"";
           var a=document.createElement("a"); a.href=rep.lien; a.textContent=rep.lien_bouton||rep.lien;
