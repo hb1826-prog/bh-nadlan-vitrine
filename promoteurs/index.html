@@ -200,6 +200,24 @@ footer a:hover{color:#CBD2DE}
   .chiffre b{font-size:48px}
 }
 </style>
+<script>
+window.bhPixelInit=function(){
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','3820890624762303');fbq('track','PageView');
+};
+if(true) window.bhPixelInit();
+</script>
+<script>
+window.BH_ADS_CONVERSION='AW-18507495474/7gu2CMfgv5kdELLwh_lE';
+(function(){if(!window.gtag){var s=document.createElement('script');s.async=true;
+s.src='https://www.googletagmanager.com/gtag/js?id=AW-18507495474';document.head.appendChild(s);
+window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};
+gtag('js',new Date());}gtag('config','AW-18507495474');})();
+</script>
 </head>
 <body>
 <div class="bandeau">מבצע סוף שנה ליזמים: הצגת הפרויקט בחינם, עד 31 בדצמבר 2026</div>
@@ -348,6 +366,8 @@ footer a:hover{color:#CBD2DE}
       .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
       .then(function(rep){clearTimeout(minuteur); if(!rep||!rep.ok){return secours();}
         var m=document.getElementById("merci"); m.textContent=rep.retenu?T.merci_retenu:T.merci; m.hidden=false; form.hidden=true;
+        // Événement Lead du pixel (mesure seulement), jamais pour un essai ?test=1.
+        try{if(window.fbq&&!corps.test)fbq("track","Lead",{content_name:"promoteurs"});}catch(x){}
         // Le lien personnel « Transmettre votre programme » (Avig, 26/11/2026) : textes et adresse viennent du guichet (depots_promoteurs.textes_merci).
         if(rep.lien){var q=document.createElement("p"); q.className="merci"; q.style.marginTop="12px"; q.textContent=rep.lien_texte||"";
           var a=document.createElement("a"); a.href=rep.lien; a.textContent=rep.lien_bouton||rep.lien;
